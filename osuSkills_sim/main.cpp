@@ -100,21 +100,15 @@ int main()
 			CalcChaos(circles, time2index, CS, AR);
 		}
 
-		// \TODO: Get mouse wheel working to use for time scrolling
-		/*if (wheel == 0.0)
-		{
-			wheel = win.reciever.GetMouseState().wheelSpeed;
-			if (wheel > 0)
-			{
-				time_ms++;
-				wheel = 0.0;
-			}
-			else if (wheel < 0)
-			{
-				time_ms--;
-				wheel = 0.0;
-			}
-		}*/
+
+		// mouse wheel time control
+		double const step = -10; // amount of px to move by
+		double newTime_ms = time_ms + (step / res) * win.reciever.getWheel();
+		if (newTime_ms >= 0)
+			time_ms = newTime_ms;
+
+
+		// render stuff
 		win.driver->beginScene(true, true, SColor(255, 0, 0, 0));
 
 			for (int i = 0; i < circles.size(); i++)
