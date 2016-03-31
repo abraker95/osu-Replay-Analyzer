@@ -82,10 +82,13 @@ int main()
 
 	while (win.device->run())
 	{
+		// update stuff
 		AR = arSlider.getVal();
 		CS = csSlider.getVal();
 		res = resSlider.getVal();
 
+
+		// skill calculation
 		int time2index = getHitcircleAt(circles, time_ms) + 1;
 		if (BTWN(1, time2index, circles.size() - 2))
 		{
