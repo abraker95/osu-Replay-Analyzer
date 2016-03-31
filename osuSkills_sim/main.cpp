@@ -23,7 +23,7 @@ using namespace gui;
 
 void DrawDebug(Window &_win)
 {
-	double click = _win.reciever.GetMouseState().wheelSpeed;
+	double click = _win.reciever.GetMouseState().wheelMove;
 
 	/*win.font->draw(core::stringw(pos.X) + ", " + core::stringw(pos.Y),
 		core::rect<s32>(130, 10, 300, 50),
@@ -69,10 +69,6 @@ int main()
 			Hitcircle(120, 172, 4120),
 			Hitcircle(388, 208, 4311)
 		};
-		
-	Slider timeSlider(660, 40, 90, 0);
-		timeSlider.setRange(250, 4500);
-		//timeSlider.setAuto(true, Slider::LOOP);
 
 	Slider csSlider(660, 80, 90, 10);
 		csSlider.setRange(0, 10);
@@ -84,15 +80,15 @@ int main()
 		resSlider.setRange(0.155, 5);
 		double res;
 
-	double wheel = 0.0;
-
 	while (win.device->run())
 	{
-		time_ms = timeSlider.getVal();
+		// update stuff
 		AR = arSlider.getVal();
 		CS = csSlider.getVal();
 		res = resSlider.getVal();
 
+
+		// skill calculation
 		int time2index = getHitcircleAt(circles, time_ms) + 1;
 		if (BTWN(1, time2index, circles.size() - 2))
 		{
@@ -100,21 +96,15 @@ int main()
 			CalcChaos(circles, time2index, CS, AR);
 		}
 
-		// \TODO: Get mouse wheel working to use for time scrolling
-		/*if (wheel == 0.0)
-		{
-			wheel = win.reciever.GetMouseState().wheelSpeed;
-			if (wheel > 0)
-			{
-				time_ms++;
-				wheel = 0.0;
-			}
-			else if (wheel < 0)
-			{
-				time_ms--;
-				wheel = 0.0;
-			}
-		}*/
+
+		// mouse wheel time control
+		double const step = -10; // amount of px to move by
+		double newTime_ms = time_ms + (step / res) * win.reciever.getWheel();
+		if (newTime_ms >= 0)
+			time_ms = newTime_ms;
+
+
+		// render stuff
 		win.driver->beginScene(true, true, SColor(255, 0, 0, 0));
 
 			for (int i = 0; i < circles.size(); i++)
@@ -125,7 +115,6 @@ int main()
 
 			drawTimingGraphs(win, 0, 510, circles, true, time_ms, res, CS, AR);
 
-			timeSlider.Draw(win);
 			arSlider.Draw(win);
 			csSlider.Draw(win);
 			resSlider.Draw(win);
