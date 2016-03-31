@@ -23,7 +23,7 @@ using namespace gui;
 
 void DrawDebug(Window &_win)
 {
-	double click = _win.reciever.GetMouseState().wheelSpeed;
+	double click = _win.reciever.GetMouseState().wheelMove;
 
 	/*win.font->draw(core::stringw(pos.X) + ", " + core::stringw(pos.Y),
 		core::rect<s32>(130, 10, 300, 50),
