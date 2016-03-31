@@ -13,7 +13,8 @@ class EventReceiver : public IEventReceiver
 
 		struct SMouseState
 		{
-			double wheelSpeed;
+			int wheelCurr, wheelPrev;
+			int wheelMove;
 			core::position2di Position;
 			bool LeftButtonDown, LeftButtonEdge;
 			SMouseState() : LeftButtonDown(false), LeftButtonEdge(false) { }
@@ -22,6 +23,7 @@ class EventReceiver : public IEventReceiver
 
 		virtual bool OnEvent(const SEvent& event);
 		const SMouseState &GetMouseState(void) const;
+		int getWheel(bool _mode = false); // _mode = 0: 0 if no change,  _mode = 1: get the last value
 
 	private:
 		SMouseState MouseState;
