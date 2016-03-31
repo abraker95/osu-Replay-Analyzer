@@ -69,10 +69,6 @@ int main()
 			Hitcircle(120, 172, 4120),
 			Hitcircle(388, 208, 4311)
 		};
-		
-	Slider timeSlider(660, 40, 90, 0);
-		timeSlider.setRange(250, 4500);
-		//timeSlider.setAuto(true, Slider::LOOP);
 
 	Slider csSlider(660, 80, 90, 10);
 		csSlider.setRange(0, 10);
@@ -84,11 +80,8 @@ int main()
 		resSlider.setRange(0.155, 5);
 		double res;
 
-	double wheel = 0.0;
-
 	while (win.device->run())
 	{
-		time_ms = timeSlider.getVal();
 		AR = arSlider.getVal();
 		CS = csSlider.getVal();
 		res = resSlider.getVal();
@@ -119,7 +112,6 @@ int main()
 
 			drawTimingGraphs(win, 0, 510, circles, true, time_ms, res, CS, AR);
 
-			timeSlider.Draw(win);
 			arSlider.Draw(win);
 			csSlider.Draw(win);
 			resSlider.Draw(win);
