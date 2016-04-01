@@ -104,12 +104,11 @@ int main()
 		// render stuff
 		win.driver->beginScene(true, true, SColor(255, 0, 0, 0));
 
+			win.driver->draw2DRectangleOutline(recti(0, 0, 640, 480));
 			for (int i = 0; i < circles.size(); i++)
 				circles[i].Draw(win, 0, 0, time_ms, AR, CS);
 		
 			//DrawLine(win, circles[0], circles[1]);
-			win.driver->draw2DRectangleOutline(recti(0, 0, 640, 480));
-
 			if (BTWN(1, time2index, circles.size() - 2))
 				DrawAngle(win, circles[time2index - 1], circles[time2index], circles[time2index + 1]);
 			
