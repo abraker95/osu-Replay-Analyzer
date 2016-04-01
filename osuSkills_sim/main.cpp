@@ -91,10 +91,7 @@ int main()
 		// skill calculation
 		int time2index = getHitcircleAt(circles, time_ms) + 1;
 		if (BTWN(1, time2index, circles.size() - 2))
-		{
-			DrawAngle(win, circles[time2index - 1], circles[time2index], circles[time2index + 1]);
 			CalcChaos(circles, time2index, CS, AR);
-		}
 
 
 		// mouse wheel time control
@@ -113,6 +110,9 @@ int main()
 			//DrawLine(win, circles[0], circles[1]);
 			win.driver->draw2DRectangleOutline(recti(0, 0, 640, 480));
 
+			if (BTWN(1, time2index, circles.size() - 2))
+				DrawAngle(win, circles[time2index - 1], circles[time2index], circles[time2index + 1]);
+			
 			drawTimingGraphs(win, 0, 510, circles, true, time_ms, res, CS, AR);
 
 			arSlider.Draw(win);
