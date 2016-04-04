@@ -115,12 +115,13 @@ void drawEyeLatencyTimings(Window &_win, int _xoffset, int _yoffset, std::vector
 void drawVisibliltyTimings(Window &_win, int _xoffset, int _yoffset, std::vector<Hitcircle> &_hitcircles, int _shift, double _px_ms, double _FPS, double _AR)
 {
 	double updateLatency = (1000.0 / _FPS);
-
+	
 	// Show hitobject visibility
 	int layer = 1;
 	for (double i = 0; i < _hitcircles.size(); i++)
 	{
-		int xpos = (_hitcircles[i].getTime() - AR2ms(_AR)) * _px_ms + _xoffset;
+		int time = _hitcircles[i].getTime() - AR2ms(_AR);
+		int xpos = time * _px_ms + _xoffset;
 		int ypos = 0 + _yoffset;
 		int width = MAX(AR2ms(_AR), updateLatency)*_px_ms;
 
