@@ -38,6 +38,10 @@ void drawRefreshRateTimings(Window &_win, int _xoffset, int _yoffset, std::vecto
 			int width = resolution;
 			_win.driver->draw2DRectangle(SColor(255, 0, 0, 255), rect<s32>(xpos - _shift, ypos, xpos + resolution - _shift, ypos + 20));
 		}
+		if (xpos < _shift)
+			continue;
+		else if (xpos - width >= (_shift + 811))
+			break;
 	}
 }
 
@@ -52,6 +56,10 @@ void drawHitobjectTimings(Window &_win, int _xoffset, int _yoffset, std::vector<
 		int ypos = 0 + _yoffset + _xoffset;
 		int width = updateLatency*_px_ms;
 		_win.driver->draw2DRectangle(SColor(255, 255, 0, 255), rect<s32>(xpos - _shift, ypos, xpos + width - _shift, ypos + 5));
+		if (xpos < _shift)
+			continue;
+		else if (xpos - width >= (_shift + 811))
+			break;
 	}
 }
 
@@ -66,6 +74,11 @@ void drawHumanReactionTimings(Window &_win, int _xoffset, int _yoffset, std::vec
 		int xpos = time * _px_ms + _xoffset;
 		int ypos = 0 + _yoffset;
 		int width = HUMAN_REACTION*_px_ms;
+
+		if (xpos < _shift - AR2ms(_AR) * _px_ms)
+			continue;
+		else if (xpos - width >= (_shift + 811))
+			break;
 
 		_win.driver->draw2DRectangle(SColor(255, 0, 255, 0), rect<s32>(xpos - _shift, ypos+3, xpos + width - _shift, ypos+8));
 	}
@@ -103,6 +116,12 @@ void drawEyeLatencyTimings(Window &_win, int _xoffset, int _yoffset, std::vector
 		int ypos = 0 + _yoffset;
 		double distNext = getDist(_hitcircles[i].getPos(), _hitcircles[i + 1].getPos());
 		int width = EyeTime(px2Deg(distNext, 640, 50.0))*_px_ms;
+
+		if (xpos < _shift - AR2ms(_AR)*_px_ms)
+			continue;
+		else if (xpos - width >= (_shift + 811))
+			break;
+
 		_win.driver->draw2DRectangle(SColor(255, 0, 155, 0), rect<s32>(xpos - _shift, ypos + 3, xpos + width - _shift, ypos+8));
 	}
 }
@@ -118,6 +137,11 @@ void drawVisibliltyTimings(Window &_win, int _xoffset, int _yoffset, std::vector
 		int xpos = (_hitcircles[i].getTime() - AR2ms(_AR)) * _px_ms + _xoffset;
 		int ypos = 0 + _yoffset;
 		int width = MAX(AR2ms(_AR), updateLatency)*_px_ms;
+
+		if (xpos < _shift - AR2ms(_AR)*_px_ms)
+			continue;
+		else if (xpos - width >= (_shift + 811))
+			break;
 
 		if (layer <= 1)
 			layer = getNumVisibleAt(_hitcircles, i, _AR) + 1;
