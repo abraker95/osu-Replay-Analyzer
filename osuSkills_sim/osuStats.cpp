@@ -9,39 +9,25 @@
 using namespace irr;
 using namespace core;
 
-bool isAtTick(double _currVal, double _prevVal, double _targetLatency)
-{
-//	double prevMultStep = floor(_prevVal / _targetLatency)*(_targetLatency / floor(_targetLatency));
-//	double currMultStep = floor(_currVal / _targetLatency)*(_targetLatency / floor(_targetLatency));
-
-	double prevMultStep = _prevVal / floor(_targetLatency);
-	double currMultStep = _currVal / floor(_targetLatency);
-
-	return (prevMultStep != currMultStep);
-}
-
 void drawRefreshRateTimings(Window &_win, int _xoffset, int _yoffset, std::vector<Hitcircle> &_hitcircles, int _shift, double _px_ms, double _FPS)
 {
 	double updateLatency = (1000.0 / _FPS);
 
 	// simulate refresh rate
-	for (double t = 0.0; t <_hitcircles[_hitcircles.size() - 1].getTime(); t += _px_ms)
+	double start = 0;
+	double end = _hitcircles[_hitcircles.size() - 1].getTime() + updateLatency * 5;
+	for (double t = start; t < end; t += updateLatency)
 	{
-		double curr = (t + 0 * _px_ms) / updateLatency;
-		double next = (t + 1 * _px_ms) / updateLatency;
-		double resolution = ceil(next - curr);
+		int xpos = t*_px_ms + _xoffset;
+		int ypos = 0 + _yoffset;
+		int width = 1;
 
-		if (isAtTick(t, t - _px_ms, updateLatency))
-		{
-			int xpos = t*updateLatency + _xoffset;
-			int ypos = 0 + _yoffset;
-			int width = resolution;
-			_win.driver->draw2DRectangle(SColor(255, 0, 0, 255), rect<s32>(xpos - _shift, ypos, xpos + resolution - _shift, ypos + 20));
-		}
 		if (xpos < _shift)
 			continue;
 		else if (xpos - width >= (_shift + 811))
 			break;
+
+		_win.driver->draw2DRectangle(SColor(255, 0, 0, 255), rect<s32>(xpos - _shift, ypos, xpos + width - _shift, ypos + 20));
 	}
 }
 
