@@ -38,14 +38,18 @@ void drawHitobjectTimings(Window &_win, int _xoffset, int _yoffset, std::vector<
 	// Show hitobject timings (when need to hit)
 	for (double i = 0; i < _hitcircles.size(); i++)
 	{
-		int xpos = _hitcircles[i].getTime() * _px_ms;
+
+		int xpos = _hitcircles[i].getTime()*_px_ms;
 		int ypos = 0 + _yoffset + _xoffset;
 		int width = updateLatency*_px_ms;
-		_win.driver->draw2DRectangle(SColor(255, 255, 0, 255), rect<s32>(xpos - _shift, ypos, xpos + width - _shift, ypos + 5));
+
 		if (xpos < _shift)
 			continue;
 		else if (xpos - width >= (_shift + 811))
 			break;
+
+		_win.driver->draw2DRectangle(SColor(255, 255, 0, 255), rect<s32>(xpos - _shift, ypos, xpos + 1 - _shift, ypos + 5));
+		_win.driver->draw2DRectangle(SColor(255, 175, 0, 175), rect<s32>(xpos - _shift, ypos, xpos + width - _shift, ypos + 5));
 	}
 }
 
