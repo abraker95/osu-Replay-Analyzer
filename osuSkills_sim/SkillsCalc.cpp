@@ -5,46 +5,46 @@
 #include "Lambert.h"
 #include <iostream>
 
-double getThetaSum(std::vector<Hitcircle> &_hitcircles, int _ref, double _CS, double _AR)
-{
-	const double angleThreshold = deg2rad(60);
-	double thetaSum = 0.0;
+	double getThetaSum(std::vector<Hitcircle> &_hitcircles, int _ref, double _CS, double _AR)
+	{
+		const double angleThreshold = deg2rad(60);
+		double thetaSum = 0.0;
 
-	// can't do anthing angle based if it's the first or last circle
-	if (_ref == 0 || _ref == _hitcircles.size() - 1)
-	{
-		thetaSum = 0.1;
-	}
-	else
-	{
-		for (int i = _ref - 1; i < _hitcircles.size(); i++)
+		// can't do anthing angle based if it's the first or last circle
+		if (_ref == 0 || _ref == _hitcircles.size() - 1)
 		{
-			// make sure i is not the reference circle
-			if (i == _ref) i++;
-
-			// make sure we did go over bounds if we did skip ref
-			if (i >= _hitcircles.size())
-				break;
-
-			// if i is not visible from the next hitcircle, then abort
-			if (!_hitcircles[i].isVisible(_hitcircles[_ref].getTime(), _AR) && i > _ref)
-				break;
-
-			for (int j = i + 2; j < _hitcircles.size(); j++)
+			thetaSum = 0.1;
+		}
+		else
+		{
+			for (int i = _ref - 1; i < _hitcircles.size(); i++)
 			{
-				// if j is not visible from the next hitcircle, then abort
-				if (!_hitcircles[j].isVisible(_hitcircles[_ref].getTime(), _AR))
+				// make sure i is not the reference circle
+				if (i == _ref) i++;
+
+				// make sure we did go over bounds if we did skip ref
+				if (i >= _hitcircles.size())
 					break;
 
-				double theta = (M_PI - getAngle(_hitcircles[i].getPos(), _hitcircles[_ref].getPos(), _hitcircles[j].getPos()));
-				//std::cout << theta << " ";
-				thetaSum += theta / angleThreshold;
+				// if i is not visible from the next hitcircle, then abort
+				if (!_hitcircles[i].isVisible(_hitcircles[_ref].getTime(), _AR) && i > _ref)
+					break;
+
+				for (int j = i + 2; j < _hitcircles.size(); j++)
+				{
+					// if j is not visible from the next hitcircle, then abort
+					if (!_hitcircles[j].isVisible(_hitcircles[_ref].getTime(), _AR))
+						break;
+
+					double theta = (M_PI - getAngle(_hitcircles[i].getPos(), _hitcircles[_ref].getPos(), _hitcircles[j].getPos()));
+					//std::cout << theta << " ";
+					thetaSum += theta / angleThreshold;
+				}
 			}
 		}
-	}
 
-	return thetaSum;
-}
+		return thetaSum;
+	}
 
 double getDistSum(std::vector<Hitcircle> &_hitcircles, int _ref, double _CS, double _AR)
 {

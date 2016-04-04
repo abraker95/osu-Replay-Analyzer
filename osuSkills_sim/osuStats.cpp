@@ -9,35 +9,25 @@
 using namespace irr;
 using namespace core;
 
-bool isAtTick(double _currVal, double _prevVal, double _targetLatency)
-{
-//	double prevMultStep = floor(_prevVal / _targetLatency)*(_targetLatency / floor(_targetLatency));
-//	double currMultStep = floor(_currVal / _targetLatency)*(_targetLatency / floor(_targetLatency));
-
-	double prevMultStep = _prevVal / floor(_targetLatency);
-	double currMultStep = _currVal / floor(_targetLatency);
-
-	return (prevMultStep != currMultStep);
-}
-
 void drawRefreshRateTimings(Window &_win, int _xoffset, int _yoffset, std::vector<Hitcircle> &_hitcircles, int _shift, double _px_ms, double _FPS)
 {
 	double updateLatency = (1000.0 / _FPS);
 
 	// simulate refresh rate
-	for (double t = 0.0; t <_hitcircles[_hitcircles.size() - 1].getTime(); t += _px_ms)
+	double start = 0;
+	double end = _hitcircles[_hitcircles.size() - 1].getTime() + updateLatency * 5;
+	for (double t = start; t < end; t += updateLatency)
 	{
-		double curr = (t + 0 * _px_ms) / updateLatency;
-		double next = (t + 1 * _px_ms) / updateLatency;
-		double resolution = ceil(next - curr);
+		int xpos = t*_px_ms + _xoffset;
+		int ypos = 0 + _yoffset;
+		int width = 1;
 
-		if (isAtTick(t, t - _px_ms, updateLatency))
-		{
-			int xpos = t*updateLatency + _xoffset;
-			int ypos = 0 + _yoffset;
-			int width = resolution;
-			_win.driver->draw2DRectangle(SColor(255, 0, 0, 255), rect<s32>(xpos - _shift, ypos, xpos + resolution - _shift, ypos + 20));
-		}
+		if (xpos < _shift)
+			continue;
+		else if (xpos - width >= (_shift + 811))
+			break;
+
+		_win.driver->draw2DRectangle(SColor(255, 0, 0, 255), rect<s32>(xpos - _shift, ypos, xpos + width - _shift, ypos + 20));
 	}
 }
 
@@ -48,10 +38,18 @@ void drawHitobjectTimings(Window &_win, int _xoffset, int _yoffset, std::vector<
 	// Show hitobject timings (when need to hit)
 	for (double i = 0; i < _hitcircles.size(); i++)
 	{
-		int xpos = _hitcircles[i].getTime() * _px_ms;
+
+		int xpos = _hitcircles[i].getTime()*_px_ms;
 		int ypos = 0 + _yoffset + _xoffset;
 		int width = updateLatency*_px_ms;
-		_win.driver->draw2DRectangle(SColor(255, 255, 0, 255), rect<s32>(xpos - _shift, ypos, xpos + width - _shift, ypos + 5));
+
+		if (xpos < _shift)
+			continue;
+		else if (xpos - width >= (_shift + 811))
+			break;
+
+		_win.driver->draw2DRectangle(SColor(255, 255, 0, 255), rect<s32>(xpos - _shift, ypos, xpos + 1 - _shift, ypos + 5));
+		_win.driver->draw2DRectangle(SColor(255, 175, 0, 175), rect<s32>(xpos - _shift, ypos, xpos + width - _shift, ypos + 5));
 	}
 }
 
@@ -66,6 +64,11 @@ void drawHumanReactionTimings(Window &_win, int _xoffset, int _yoffset, std::vec
 		int xpos = time * _px_ms + _xoffset;
 		int ypos = 0 + _yoffset;
 		int width = HUMAN_REACTION*_px_ms;
+
+		if (xpos < _shift - AR2ms(_AR) * _px_ms)
+			continue;
+		else if (xpos - width >= (_shift + 811))
+			break;
 
 		_win.driver->draw2DRectangle(SColor(255, 0, 255, 0), rect<s32>(xpos - _shift, ypos+3, xpos + width - _shift, ypos+8));
 	}
@@ -103,6 +106,12 @@ void drawEyeLatencyTimings(Window &_win, int _xoffset, int _yoffset, std::vector
 		int ypos = 0 + _yoffset;
 		double distNext = getDist(_hitcircles[i].getPos(), _hitcircles[i + 1].getPos());
 		int width = EyeTime(px2Deg(distNext, 640, 50.0))*_px_ms;
+
+		if (xpos < _shift - AR2ms(_AR)*_px_ms)
+			continue;
+		else if (xpos - width >= (_shift + 811))
+			break;
+
 		_win.driver->draw2DRectangle(SColor(255, 0, 155, 0), rect<s32>(xpos - _shift, ypos + 3, xpos + width - _shift, ypos+8));
 	}
 }
@@ -110,14 +119,20 @@ void drawEyeLatencyTimings(Window &_win, int _xoffset, int _yoffset, std::vector
 void drawVisibliltyTimings(Window &_win, int _xoffset, int _yoffset, std::vector<Hitcircle> &_hitcircles, int _shift, double _px_ms, double _FPS, double _AR)
 {
 	double updateLatency = (1000.0 / _FPS);
-
+	
 	// Show hitobject visibility
 	int layer = 1;
 	for (double i = 0; i < _hitcircles.size(); i++)
 	{
-		int xpos = (_hitcircles[i].getTime() - AR2ms(_AR)) * _px_ms + _xoffset;
+		int time = _hitcircles[i].getTime() - AR2ms(_AR);
+		int xpos = time * _px_ms + _xoffset;
 		int ypos = 0 + _yoffset;
 		int width = MAX(AR2ms(_AR), updateLatency)*_px_ms;
+
+		if (xpos < _shift - AR2ms(_AR)*_px_ms)
+			continue;
+		else if (xpos - width >= (_shift + 811))
+			break;
 
 		if (layer <= 1)
 			layer = getNumVisibleAt(_hitcircles, i, _AR) + 1;
