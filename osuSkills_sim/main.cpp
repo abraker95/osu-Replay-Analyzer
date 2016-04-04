@@ -1,4 +1,6 @@
 #include <vector>
+#include <fstream>
+#include <string>
 
 #include "irrlicht/include/irrlicht.h"
 #include "Window.h"
@@ -34,6 +36,36 @@ void DrawDebug(Window &_win)
 		video::SColor(255, 255, 255, 255));
 }
 
+std::vector<Hitcircle> GetMap(std::string _filename)
+{
+	std::vector<Hitcircle> circles;
+
+	std::ifstream mapFile("mapObject.txt");
+	if (mapFile.is_open())
+	{
+		std::string line;
+		while (getline(mapFile, line))
+		{
+			int i = line.find_first_of(' ');
+			int x = stoi(line.substr(0, i));
+			
+			line = line.substr(i + 1);
+			
+			i = line.find_first_of(' ');
+			int y = stoi(line.substr(0, i));
+
+			line = line.substr(i + 1);
+
+			i = line.find_first_of(' ');
+			int t = stoi(line.substr(0, i));
+
+			circles.push_back(Hitcircle(x, y, t));
+		}
+
+		mapFile.close();
+	}
+	return circles;
+}
 
 int main()
 {
@@ -49,26 +81,7 @@ int main()
 	//int CS_px = 50;
 	int time_ms = 0;	
 
-	vector<Hitcircle> circles;
-		circles =
-		{ 
-			//         x    y    t
-			Hitcircle(231, 275, 300),
-			Hitcircle(398, 362, 491),
-			Hitcircle(389, 169, 682),
-			Hitcircle(500, 300, 873),
-			Hitcircle(373, 354, 1063),
-			Hitcircle(440, 249, 1255),
-			Hitcircle(342,  98, 1446),
-			Hitcircle(175, 203, 1637),
-			Hitcircle(312, 227, 2210),
-			Hitcircle(312, 227, 2783),
-			Hitcircle(272,  60, 3356),
-			Hitcircle(240, 324, 3547),
-			Hitcircle(272,  60, 3929),
-			Hitcircle(120, 172, 4120),
-			Hitcircle(388, 208, 4311)
-		};
+	vector<Hitcircle> circles = GetMap("mapObject.txt");
 
 	Slider csSlider(660, 80, 90, 10);
 		csSlider.setRange(0, 10);
