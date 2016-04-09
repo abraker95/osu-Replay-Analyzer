@@ -20,27 +20,16 @@
 			// make sure there isn't a long enough break before the note. Check 2*AR ms ahead of the prev note for a visible note.
 			if (_hitcircles[_ref].isVisible(MIN(_hitcircles[_ref - 1].getTime() + 2 * AR2ms(_AR), _hitcircles[_ref].getTime()), 0.0, _hidden))
 			{
-				// make sure i is not the reference circle
-				if (i == _ref) i++;
-
-				// make sure we did go over bounds if we did skip ref
-				if (i >= _hitcircles.size())
-					break;
-
-				// if i is not visible from the next hitcircle, then abort
-				if (!_hitcircles[i].isVisible(_hitcircles[_ref].getTime(), _AR) && i > _ref)
-					break;
-
-				for (int j = i + 2; j < _hitcircles.size(); j++)
+				int numVisible = getNumVisibleAt(_hitcircles, _ref, _AR, _hidden);
+				for (int i = _ref; i < numVisible + _ref - 1; i++)
 				{
-					// if j is not visible from the next hitcircle, then abort
-					if (!_hitcircles[j].isVisible(_hitcircles[_ref].getTime(), _AR))
-						break;
-
-					double theta = (M_PI - getAngle(_hitcircles[i].getPos(), _hitcircles[_ref].getPos(), _hitcircles[j].getPos()));
-					//std::cout << theta << " ";
-					thetaSum += theta / angleThreshold;
+					double theta = (M_PI - getAngle(_hitcircles[_ref - 1].getPos(), _hitcircles[_ref].getPos(), _hitcircles[i].getPos()));
+					thetaSum += (theta / angleThreshold) * (getDist(_hitcircles[_ref].getPos(), _hitcircles[i + 1].getPos()));
 				}
+			}
+			else
+			{
+				thetaSum = 0.1;
 			}
 		}
 
