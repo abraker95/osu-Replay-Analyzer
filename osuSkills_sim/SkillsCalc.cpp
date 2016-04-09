@@ -11,7 +11,7 @@
 		double thetaSum = 0.0;
 
 		// can't do anthing angle based if it's the first or last circle
-		if (_ref == 0 || _ref == _hitcircles.size() - 1)
+		if (_ref < 0 || _ref >= _hitcircles.size() - 1)
 		{
 			thetaSum = 0.1;
 		}
