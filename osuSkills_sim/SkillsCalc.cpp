@@ -17,7 +17,8 @@
 		}
 		else
 		{
-			for (int i = _ref - 1; i < _hitcircles.size(); i++)
+			// make sure there isn't a long enough break before the note. Check 2*AR ms ahead of the prev note for a visible note.
+			if (_hitcircles[_ref].isVisible(MIN(_hitcircles[_ref - 1].getTime() + 2 * AR2ms(_AR), _hitcircles[_ref].getTime()), 0.0, _hidden))
 			{
 				// make sure i is not the reference circle
 				if (i == _ref) i++;
