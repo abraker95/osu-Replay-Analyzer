@@ -126,28 +126,39 @@ double getTimeSum(std::vector<Hitcircle> &_hitcircles, int _ref, double _CS, dou
 {
 	//const double timeThreshold = 350; // ms
 	const double fov = 60.0; // in deg
-	double timeSum = 0.0;
+	double reqResponceTime = 0.0;
 
-	for (int i = _ref; i < _hitcircles.size(); i++)
+	if (_ref < 1)
 	{
-		if (!_hitcircles[i].isVisible(_hitcircles[_ref].getTime(), _AR))
-			break;
-
-		double dist = MAX(getDist(_hitcircles[i - 1].getPos(), _hitcircles[i].getPos()), 0.0);
-		double eyeLatency = EyeTime(px2Deg(dist, 640.0, fov));
-		timeSum += eyeLatency;
+		reqResponceTime = AR2ms(_AR);
 	}
-	
-	
-	//if (prevDuration > AR2ms(_AR))
-		timeSum = AR2ms(_AR) - timeSum;
-	//else
-	//	timeSum = AR2ms(_AR) - (prevDuration + eyeLatency);
+	else
+	{
+		double dist = MAX(getDist(_hitcircles[_ref].getPos(), _hitcircles[_ref - 1].getPos()), 0.0);
+		double eyeLatency = EyeTime(px2Deg(dist, 640.0, fov));
 
-	//	timeSum = timeThreshold * timeSum;
-	timeSum = react2Skill(timeSum);
+		// if the hitobject is not yet visible when the player is supposed to hit the note
+		if (!_hitcircles[_ref - 1].isVisible(_hitcircles[_ref].getTime(), _AR, false))
+		{
 
-	return timeSum;
+			reqResponceTime = AR2ms(_AR) - eyeLatency;
+		}
+		else
+		{
+			reqResponceTime = (_hitcircles[_ref].getTime() - _hitcircles[_ref - 1].getTime()) - eyeLatency;
+		}
+
+		//	const double PLAYER_MAX_VEL = 6.0;   // osu!px/ms
+		//	double minTime = getDist(_hitcircles[_ref].pos, _hitcircles[_ref - 1].pos) / PLAYER_MAX_VEL;
+		//	double remainderFocusTime = (_hitcircles[_ref].time - _hitcircles[_ref - 1].time) - minTime;
+
+		//	timeSum = MIN(AR2ms(_AR) - timeSum, remainderFocusTime);
+
+
+	}
+
+	reqResponceTime = react2Skill(reqResponceTime);
+	return reqResponceTime;
 }
 
 double CalcChaos(std::vector<Hitcircle> &_hitcircles, int _ref, double _CS, double _AR, bool _hidden)	
