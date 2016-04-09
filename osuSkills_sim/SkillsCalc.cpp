@@ -161,7 +161,7 @@ double CalcChaos(std::vector<Hitcircle> &_hitcircles, int _ref, double _CS, doub
 	if (distSum == 0.0) distSum = 0.1;
 	if (timeSum == 0.0) timeSum = 0.1;
 
-	double chaos = thetaSum*0.1 * timeSum;
+	double chaos = (thetaSum / 10.0) + timeSum;
 
 	//std::cout << "      " << thetaSum << std::endl;
 	std::cout << "thetaSum: " << thetaSum << "  distSum: " << distSum << "  timeSum: " << timeSum << "   chaos: " << chaos << std::endl;
