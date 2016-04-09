@@ -16,14 +16,14 @@ int getHitcircleAt(std::vector<Hitcircle> _hitcircles, int _time)
 }
 
 // TODO: Figure out if this is giving correct results or not
-int getNumVisibleAt(std::vector<Hitcircle> _hitcircles, int _index, double _AR)
+int getNumVisibleAt(std::vector<Hitcircle> _hitcircles, int _index, double _AR, bool _hidden)
 {
 	int refTime = _hitcircles[_index].getTime();
 	int count = 1;
 
 	for (int i = _index + 1; i < _hitcircles.size(); i++)
 	{
-		if (!(_hitcircles[i].isVisible(refTime, _AR)))
+		if (!(_hitcircles[i].isVisible(refTime, _AR, _hidden)))
 			break;
 
 		count++;
@@ -42,7 +42,7 @@ Hitcircle::Hitcircle(int _x, int _y, int _t)
 	edgeCol = IDLE_COLOR;
 }
 
-void Hitcircle::Draw(Window &_win, int _xOffset, int _yOffset, int _time, double _AR, double _CS)
+void Hitcircle::Draw(Window &_win, int _xOffset, int _yOffset, int _time, double _AR, double _CS, bool _hidden)
 {
 	// step is such that the circle is drawn with minimal
 	// amount of iterations while not showing any gaps
@@ -51,7 +51,7 @@ void Hitcircle::Draw(Window &_win, int _xOffset, int _yOffset, int _time, double
 	this->yOffset = this->y + _yOffset;
 
 	double step = PX_PER_RAD(radius);
-	if (this->isVisible(_time, _AR))
+	if (this->isVisible(_time, _AR, _hidden))
 	{
 		if (_win.device->isWindowActive())
 			update(_win);
@@ -68,9 +68,13 @@ void Hitcircle::setCS_px(int _CS)
 	radius = CS2px(_CS) / 2.0; // gives radius
 }
 
-bool Hitcircle::isVisible(int _time, double _AR)
+bool Hitcircle::isVisible(int _time, double _AR, bool _hidden)
 {
-	return BTWN(_time, this->t, _time + AR2ms(_AR));
+	// TODO: add a fade % threshold parameter
+	if (_hidden)
+		return BTWN(_time + AR2ms(_AR)*0.5, this->t, (double)_time + AR2ms(_AR));
+	else
+		return BTWN(_time, this->t, _time + AR2ms(_AR));
 }
 
 position2di Hitcircle::getPos(bool _absolute)

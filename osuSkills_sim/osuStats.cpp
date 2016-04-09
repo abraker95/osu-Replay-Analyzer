@@ -116,18 +116,23 @@ void drawEyeLatencyTimings(Window &_win, int _xoffset, int _yoffset, std::vector
 	}
 }
 
-void drawVisibliltyTimings(Window &_win, int _xoffset, int _yoffset, std::vector<Hitcircle> &_hitcircles, int _shift, double _px_ms, double _FPS, double _AR)
+void drawVisibliltyTimings(Window &_win, int _xoffset, int _yoffset, std::vector<Hitcircle> &_hitcircles, int _shift, double _px_ms, double _FPS, double _AR, bool _hidden)
 {
 	double updateLatency = (1000.0 / _FPS);
 	
 	// Show hitobject visibility
 	int layer = 1;
+	
+	double ARend = AR2ms(_AR);
+	if (_hidden)
+		ARend *= 0.5;
+
 	for (double i = 0; i < _hitcircles.size(); i++)
 	{
 		int time = _hitcircles[i].getTime() - AR2ms(_AR);
 		int xpos = time * _px_ms + _xoffset;
 		int ypos = 0 + _yoffset;
-		int width = MAX(AR2ms(_AR), updateLatency)*_px_ms;
+		int width = MAX(ARend, updateLatency)*_px_ms;
 
 		if (xpos < _shift - AR2ms(_AR)*_px_ms)
 			continue;
@@ -135,7 +140,7 @@ void drawVisibliltyTimings(Window &_win, int _xoffset, int _yoffset, std::vector
 			break;
 
 		if (layer <= 1)
-			layer = getNumVisibleAt(_hitcircles, i, _AR) + 1;
+			layer = getNumVisibleAt(_hitcircles, i, _AR, false) + 1;
 
 		_win.driver->draw2DRectangle(SColor(255, 255, 150, 255), rect<s32>(xpos - _shift, ypos + 2 - 5*layer, xpos + width - _shift, ypos + 5 - 5*layer));
 		layer--;
@@ -154,7 +159,7 @@ void drawCurrentTiming(Window &_win, int _xoffset, int _yoffset, std::vector<Hit
 }
 
 
-void drawTimingGraphs(Window &_win, int _xoffset, int _yoffset, std::vector<Hitcircle> &_hitcircles, bool _relative, int _time, double _res, double _CS, double _AR)
+void drawTimingGraphs(Window &_win, int _xoffset, int _yoffset, std::vector<Hitcircle> &_hitcircles, bool _relative, int _time, double _res, double _CS, double _AR, bool _hidden)
 {
 	const double SCREEN_WIDTH = 740.0;
 	const double FPS = 60.0;
@@ -168,7 +173,7 @@ void drawTimingGraphs(Window &_win, int _xoffset, int _yoffset, std::vector<Hitc
 	drawHitobjectTimings(_win, _xoffset, _yoffset, _hitcircles, shift, px_ms, FPS);
 	//drawHumanReactionTimings(_win, _xoffset, _yoffset, _hitcircles, shift, px_ms, FPS, _AR);
 	drawEyeLatencyTimings(_win, _xoffset, _yoffset, _hitcircles, shift, px_ms, FPS, _AR);
-	drawVisibliltyTimings(_win, _xoffset, _yoffset, _hitcircles, shift, px_ms, FPS, _AR);
+	drawVisibliltyTimings(_win, _xoffset, _yoffset, _hitcircles, shift, px_ms, FPS, _AR, _hidden);
 	drawCurrentTiming(_win, _xoffset, _yoffset, _hitcircles, shift, px_ms, FPS, _time);
 	
 	// TODO: simulate reaction time latency

@@ -5,7 +5,7 @@
 #include "Lambert.h"
 #include <iostream>
 
-	double getThetaSum(std::vector<Hitcircle> &_hitcircles, int _ref, double _CS, double _AR)
+	double getThetaSum(std::vector<Hitcircle> &_hitcircles, int _ref, double _CS, double _AR, bool _hidden)
 	{
 		const double angleThreshold = deg2rad(60);
 		double thetaSum = 0.0;
@@ -46,7 +46,7 @@
 		return thetaSum;
 	}
 
-double getDistSum(std::vector<Hitcircle> &_hitcircles, int _ref, double _CS, double _AR)
+double getDistSum(std::vector<Hitcircle> &_hitcircles, int _ref, double _CS, double _AR, bool _hidden)
 {
 	const double distThreshold = CS2px(_CS);
 	double distSum = 0.0;
@@ -122,7 +122,7 @@ double AcuityPx(double _fov, double _dist, double _cs_px, double _res)
 	return percievedCS;
 }
 
-double getTimeSum(std::vector<Hitcircle> &_hitcircles, int _ref, double _CS, double _AR)
+double getTimeSum(std::vector<Hitcircle> &_hitcircles, int _ref, double _CS, double _AR, bool _hidden)
 {
 	//const double timeThreshold = 350; // ms
 	const double fov = 60.0; // in deg
@@ -150,11 +150,11 @@ double getTimeSum(std::vector<Hitcircle> &_hitcircles, int _ref, double _CS, dou
 	return timeSum;
 }
 
-double CalcChaos(std::vector<Hitcircle> &_hitcircles, int _ref, double _CS, double _AR)
+double CalcChaos(std::vector<Hitcircle> &_hitcircles, int _ref, double _CS, double _AR, bool _hidden)	
 {
-	double thetaSum = getThetaSum(_hitcircles, _ref, _CS, _AR);
-	double distSum = getDistSum(_hitcircles, _ref, _CS, _AR);
-	double timeSum = getTimeSum(_hitcircles, _ref, _CS, _AR);
+	double thetaSum = getThetaSum(_hitcircles, _ref, _CS, _AR, _hidden);
+	double distSum = getDistSum(_hitcircles, _ref, _CS, _AR, _hidden);
+	double timeSum = getTimeSum(_hitcircles, _ref, _CS, _AR, _hidden);
 
 	if (thetaSum == 0.0 || thetaSum == INFINITY) thetaSum = 0.1;
 	if (distSum == 0.0) distSum = 0.1;

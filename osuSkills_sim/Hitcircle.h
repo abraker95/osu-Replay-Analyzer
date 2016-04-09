@@ -36,9 +36,9 @@ class Hitcircle: private Object
 	public:
 		Hitcircle(int _x, int _y, int _t);
 
-		void Draw(Window &_win, int _xOffset, int _yOffset, int _time, double _AR, double _CS);
+		void Draw(Window &_win, int _xOffset, int _yOffset, int _time, double _AR, double _CS, bool _hidden);
 
-		bool isVisible(int _time, double _AR);
+		bool isVisible(int _time, double _AR, bool _hidden);
 
 		position2di getPos(bool _absolute = false);
 
@@ -49,6 +49,6 @@ class Hitcircle: private Object
 
 int getHitcircleAt(std::vector<Hitcircle> _hitcircles, int _time);
 
-int getNumVisibleAt(std::vector<Hitcircle> _hitcircles, int _index, double _AR);
+int getNumVisibleAt(std::vector<Hitcircle> _hitcircles, int _index, double _AR, bool _hidden);
 
 #endif
