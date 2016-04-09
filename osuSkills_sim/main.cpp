@@ -128,6 +128,8 @@ int main()
 			
 			drawTimingGraphs(win, 0, 510, circles, true, time_ms, res, CS, AR, hidden);
 
+			win.font->draw(core::stringw(time_ms),core::rect<s32>(RESX - 100, 20, 100, 10), video::SColor(255, 255, 255, 255));
+
 			arSlider.Draw(win);
 			csSlider.Draw(win);
 			resSlider.Draw(win);
