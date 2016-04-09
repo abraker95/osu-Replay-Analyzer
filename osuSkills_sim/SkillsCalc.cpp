@@ -7,7 +7,7 @@
 
 	double getThetaSum(std::vector<Hitcircle> &_hitcircles, int _ref, double _CS, double _AR, bool _hidden)
 	{
-		const double angleThreshold = deg2rad(60);
+		const double angleThreshold = deg2rad(px2Deg(3 * CS2px(_CS), 640, 60)); //= deg2rad(60);
 		double thetaSum = 0.0;
 
 		// can't do anthing angle based if it's the first or last circle
