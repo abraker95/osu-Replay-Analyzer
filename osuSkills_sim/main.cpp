@@ -91,7 +91,7 @@ int main()
 		arSlider.setRange(0, 11);
 
 	Slider resSlider(660, 160, 90, 10);
-		resSlider.setRange(0.155, 5);
+		resSlider.setRange(0.05, 0.5);
 		double res;
 
 	while (win.device->run())
