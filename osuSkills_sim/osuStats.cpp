@@ -48,8 +48,10 @@ void drawHitobjectTimings(Window &_win, int _xoffset, int _yoffset, std::vector<
 		else if (xpos - width >= (_shift + 811))
 			break;
 
-		_win.driver->draw2DRectangle(SColor(255, 255, 0, 255), rect<s32>(xpos - _shift, ypos, xpos + 1 - _shift, ypos + 5));
-		_win.driver->draw2DRectangle(SColor(255, 175, 0, 175), rect<s32>(xpos - _shift, ypos, xpos + width - _shift, ypos + 5));
+		xpos -= _shift;
+
+		_win.driver->draw2DRectangle(SColor(255, 175, 0, 175), rect<s32>(xpos, ypos, xpos + width, ypos + 5));
+		_win.driver->draw2DRectangle(SColor(255, 255, 0, 255), rect<s32>(xpos, ypos, xpos + 1 , ypos + 5));
 	}
 }
 
