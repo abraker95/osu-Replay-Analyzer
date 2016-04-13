@@ -58,8 +58,8 @@ class Hitcircle: private Object
 		double getSizePx();
 };
 
-int getHitcircleAt(std::vector<Hitcircle> _hitcircles, int _time);
+int getHitcircleAt(std::vector<Hitcircle>& _hitcircles, int _time);
 
-int getNumVisibleAt(std::vector<Hitcircle> _hitcircles, int _index, double _AR, bool _hidden);
+int getNumVisibleAt(std::vector<Hitcircle>& _hitcircles, int _index, double _AR, bool _hidden);
 
 #endif

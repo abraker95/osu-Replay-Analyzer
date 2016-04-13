@@ -4,7 +4,7 @@
 
 #include <iostream>
 
-int getHitcircleAt(std::vector<Hitcircle> _hitcircles, int _time)
+int getHitcircleAt(std::vector<Hitcircle>& _hitcircles, int _time)
 {
 	for (int i = 0; i < _hitcircles.size() - 1; i++)
 	{
@@ -16,7 +16,7 @@ int getHitcircleAt(std::vector<Hitcircle> _hitcircles, int _time)
 }
 
 // TODO: Figure out if this is giving correct results or not
-int getNumVisibleAt(std::vector<Hitcircle> _hitcircles, int _index, double _AR, bool _hidden)
+int getNumVisibleAt(std::vector<Hitcircle>& _hitcircles, int _index, double _AR, bool _hidden)
 {
 	int refTime = _hitcircles[_index].getTime();
 	int count = 1;
