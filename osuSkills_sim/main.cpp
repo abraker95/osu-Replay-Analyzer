@@ -1,6 +1,7 @@
 #include <vector>
 #include <fstream>
 #include <string>
+#include <tuple>
 
 #include "irrlicht/include/irrlicht.h"
 #include "Window.h"
@@ -46,9 +47,11 @@ std::vector<Hitcircle> GetMap(std::string _filename)
 		std::string line;
 		while (getline(mapFile, line))
 		{
+			vector<tuple<int, int, int>> slider;
+
 			int i = line.find_first_of(' ');
 			int x = stoi(line.substr(0, i));
-			
+
 			line = line.substr(i + 1);
 			
 			i = line.find_first_of(' ');
@@ -59,7 +62,38 @@ std::vector<Hitcircle> GetMap(std::string _filename)
 			i = line.find_first_of(' ');
 			int t = stoi(line.substr(0, i));
 
-			circles.push_back(Hitcircle(x, y, t));
+			line = line.substr(i + 1);
+
+			i = line.find_first_of('|');
+			if (i != -1) // it's a slider!
+			{
+				line = line.substr(i + 2);
+
+				while (i != -1 || line.size() != 0)
+				{
+					i = line.find_first_of(' ');
+					int sliderX = stoi(line.substr(0, i));
+
+					line = line.substr(i + 1);
+
+					i = line.find_first_of(' ');
+					int sliderY = stoi(line.substr(0, i));
+
+					line = line.substr(i + 1);
+
+					i = line.find_first_of(' ');
+					int sliderT = stoi(line.substr(0, i));
+
+					slider.push_back(std::make_tuple(sliderX, sliderY, sliderT));
+
+					i = line.find_first_of(' ');
+					line = line.substr(i + 1);
+
+					i = line.find_first_of(' ');  // out leading condition
+				}
+			}
+
+			circles.push_back(Hitcircle(x, y, t, slider));
 		}
 
 		mapFile.close();
