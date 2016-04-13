@@ -32,11 +32,13 @@ int getNumVisibleAt(std::vector<Hitcircle> _hitcircles, int _index, double _AR, 
 	return count;
 }
 
-Hitcircle::Hitcircle(int _x, int _y, int _t)
+Hitcircle::Hitcircle(int _x, int _y, int _t, std::vector<std::tuple<int, int, int>> _sliders)
 {
 	x = _x;
 	y = _y;
 	t = _t;
+	sliders = _sliders;
+
 	radius = 100; // radius
 	state = IDLE;
 	edgeCol = IDLE_COLOR;
@@ -59,6 +61,15 @@ void Hitcircle::Draw(Window &_win, int _xOffset, int _yOffset, int _time, double
 		for (double i = 0; i < 2 * M_PI; i += step)
 		{
 			_win.driver->drawPixel(xOffset + cos(i)*radius, yOffset + sin(i)*radius, edgeCol);
+		}
+
+		for (int i = 1; i < sliders.size(); i++)
+		{
+			vector2di p1(std::get<XPOS>(sliders[i - 1]), std::get<YPOS>(sliders[i - 1]));
+			vector2di p2(std::get<XPOS>(sliders[i]), std::get<YPOS>(sliders[i]));
+			
+			_win.driver->draw2DLine(p1, p2, edgeCol);
+				
 		}
 	}
 }
@@ -94,6 +105,11 @@ int Hitcircle::getTime()
 double Hitcircle::getSizePx()
 {
 	return this->radius*2.0;
+}
+
+void Hitcircle::setTime(int _time)
+{
+	this->t = _time;
 }
 
 void Hitcircle::IdleLogic(Window &_win)
