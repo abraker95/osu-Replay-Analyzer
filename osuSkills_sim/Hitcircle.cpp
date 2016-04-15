@@ -54,7 +54,18 @@ void Hitcircle::Draw(Window &_win, int _xOffset, int _yOffset, int _time, double
 	this->yOffset = this->y + _yOffset;
 
 	double step = PX_PER_RAD(radius);
-	if (this->isVisible(_time, _AR, _hidden))
+	bool slider = (this->sliders.size() != 0);
+	
+	int sliderVisible = false;
+
+	if (slider && !_hidden)
+	{
+		sliderVisible = BTWN(this->t, _time, std::get<TIME>(sliders[sliders.size() - 1]));
+	}
+		
+		
+
+	if (this->isVisible(_time, _AR, _hidden) || sliderVisible)
 	{
 		if (_win.device->isWindowActive())
 			update(_win);
@@ -66,11 +77,16 @@ void Hitcircle::Draw(Window &_win, int _xOffset, int _yOffset, int _time, double
 
 		for (int i = 1; i < sliders.size(); i++)
 		{
-			vector2di p1(std::get<XPOS>(sliders[i - 1]), std::get<YPOS>(sliders[i - 1]));
-			vector2di p2(std::get<XPOS>(sliders[i]), std::get<YPOS>(sliders[i]));
-			
-			_win.driver->draw2DLine(p1, p2, edgeCol);
-				
+			vector2di slidePoint(std::get<XPOS>(sliders[i]), std::get<YPOS>(sliders[i]));
+			_win.driver->drawPixel(slidePoint.X, slidePoint.Y, edgeCol);
+
+			if (BTWN(std::get<TIME>(sliders[i - 1]), _time, std::get<TIME>(sliders[i])))
+			{
+				for (double i = 0; i < 2 * M_PI; i += step)
+				{
+					_win.driver->drawPixel(slidePoint.X + cos(i) * 5, slidePoint.Y + sin(i) * 5, edgeCol);
+				}
+			}
 		}
 	}
 }
