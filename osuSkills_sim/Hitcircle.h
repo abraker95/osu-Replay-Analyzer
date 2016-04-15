@@ -51,6 +51,10 @@ class Hitcircle: private Object
 
 		bool isVisible(int _time, double _AR, bool _hidden);
 
+		bool isSlider();
+
+		position2di getEndPoint();
+
 		position2di getPos(bool _absolute = false);
 
 		int getTime();
