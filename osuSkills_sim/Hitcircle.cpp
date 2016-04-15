@@ -129,6 +129,27 @@ void Hitcircle::setTime(int _time)
 	this->t = _time;
 }
 
+bool Hitcircle::isSlider()
+{
+	return (this->sliders.size() != 0);
+}
+
+position2di Hitcircle::getEndPoint()
+{
+	if (this->isSlider())
+	{
+		std::tuple<int, int, int> sliderPoint = this->sliders[this->sliders.size() - 1];
+		return position2di(std::get<XPOS>(sliderPoint), std::get<YPOS>(sliderPoint));
+	}
+	else
+	{
+		return position2di(this->x, this->y);
+	}
+		
+}
+
+// ------ [PRIVATE] ------
+
 void Hitcircle::IdleLogic(Window &_win)
 {
 	position2di pos = _win.reciever.GetMouseState().Position;
