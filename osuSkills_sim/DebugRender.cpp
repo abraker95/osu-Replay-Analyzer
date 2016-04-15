@@ -17,8 +17,8 @@ void DrawLine(Window &_win, Hitcircle &_hc1, Hitcircle &_hc2)
 
 void DrawAngle(Window &_win, Hitcircle &_hc1, Hitcircle &_hc2, Hitcircle &_hc3)
 {
-	_win.driver->draw2DLine(_hc1.getPos(), _hc2.getPos(), SColor(255, 255, 0, 0));
-	_win.driver->draw2DLine(_hc2.getPos(), _hc3.getPos(), SColor(255, 255, 0, 0));
+	_win.driver->draw2DLine(_hc1.getEndPoint(), _hc2.getPos(), SColor(255, 255, 0, 0));
+	_win.driver->draw2DLine(_hc2.getEndPoint(), _hc3.getPos(), SColor(255, 255, 0, 0));
 	
 	const int radius = 10;
 	double angle = getAngle(_hc1.getPos(), _hc2.getPos(), _hc3.getPos());
