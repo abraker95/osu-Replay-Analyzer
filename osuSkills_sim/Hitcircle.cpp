@@ -3,6 +3,7 @@
 #include "osuCalc.h"
 
 #include <iostream>
+#include <tuple>
 
 int getHitcircleAt(std::vector<Hitcircle>& _hitcircles, int _time)
 {
