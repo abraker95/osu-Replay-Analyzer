@@ -175,6 +175,11 @@ int Hitcircle::getEndTime()
 	}
 }
 
+int Hitcircle::getHoldPeriod()
+{
+	return this->getEndTime() - this->getTime();
+}
+
 position2di Hitcircle::getSliderPointAt(int _index)
 {
 	if (_index < sliders.size())

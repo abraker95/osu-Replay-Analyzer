@@ -61,6 +61,8 @@ class Hitcircle: private Object
 		int getTime();
 		int getEndTime();
 
+		int getHoldPeriod();
+
 
 		double getSizePx();
 };
