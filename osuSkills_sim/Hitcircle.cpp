@@ -187,6 +187,13 @@ position2di Hitcircle::getSliderPointAt(int _index)
 	else
 		return position2di(-1, -1);
 }
+
+int Hitcircle::getSliderTimeAt(int _index)
+{
+	if (_index < sliders.size())
+		return std::get<TIME>(sliders[_index]);
+	else
+		return -1;
 }
 
 // ------ [PRIVATE] ------

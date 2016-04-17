@@ -55,6 +55,7 @@ class Hitcircle: private Object
 
 		position2di getEndPoint();
 		position2di getSliderPointAt(int _index);
+		int getSliderTimeAt(int _index);
 
 		position2di getPos(bool _absolute = false);
 
