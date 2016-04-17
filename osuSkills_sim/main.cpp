@@ -110,12 +110,13 @@ int main()
 	win.device->setWindowCaption(L"osu!skill Formula Simulator");
 
 	double CS = 4;
-	double AR = 10.3;
-	bool hidden = true;
+	double AR = 9;
 	
-	//int CS_px = 50;
-	int time_ms = 0;	
+	double res = 0.5;
+	int time_ms = 0;
 
+	bool hidden = false;
+	
 	vector<Hitcircle> circles = GetMap("mapObject.txt");
 
 	Slider csSlider(660, 80, 90, 10);
