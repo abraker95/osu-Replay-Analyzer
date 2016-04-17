@@ -32,7 +32,7 @@ void Slider::Draw(Window &_win)
 
 	// draw text
 	_win.font->draw(core::stringw((int)min), rect<s32>(x - 10, y, x + 100, y + 10), SLIDER_COLOR);
-	_win.font->draw(core::stringw(val), rect<s32>(x + Val2pos(val), y - 15, x + 100, y + 10), SLIDER_COLOR);
+	_win.font->draw(core::stringw(val), rect<s32>(Val2pos(val), y - 15, x + 100, y + 10), SLIDER_COLOR);
 	_win.font->draw(core::stringw((int)max), rect<s32>(x + width + 10, y, x + 100, y + 10), SLIDER_COLOR);
 
 	_win.driver->draw2DLine(position2d<s32>(x, y), position2d<s32>(x + width, y), SLIDER_COLOR);

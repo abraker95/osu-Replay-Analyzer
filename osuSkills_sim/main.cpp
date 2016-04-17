@@ -1,6 +1,7 @@
 #include <vector>
 #include <fstream>
 #include <string>
+#include <tuple>
 
 #include "irrlicht/include/irrlicht.h"
 #include "Window.h"
@@ -46,9 +47,11 @@ std::vector<Hitcircle> GetMap(std::string _filename)
 		std::string line;
 		while (getline(mapFile, line))
 		{
+			vector<tuple<int, int, int>> slider;
+
 			int i = line.find_first_of(' ');
 			int x = stoi(line.substr(0, i));
-			
+
 			line = line.substr(i + 1);
 			
 			i = line.find_first_of(' ');
@@ -59,7 +62,38 @@ std::vector<Hitcircle> GetMap(std::string _filename)
 			i = line.find_first_of(' ');
 			int t = stoi(line.substr(0, i));
 
-			circles.push_back(Hitcircle(x, y, t));
+			line = line.substr(i + 1);
+
+			i = line.find_first_of('|');
+			if (i != -1) // it's a slider!
+			{
+				line = line.substr(i + 2);
+
+				while (i != -1 || line.size() != 0)
+				{
+					i = line.find_first_of(' ');
+					int sliderX = stoi(line.substr(0, i));
+
+					line = line.substr(i + 1);
+
+					i = line.find_first_of(' ');
+					int sliderY = stoi(line.substr(0, i));
+
+					line = line.substr(i + 1);
+
+					i = line.find_first_of(' ');
+					int sliderT = stoi(line.substr(0, i));
+
+					slider.push_back(std::make_tuple(sliderX, sliderY, sliderT));
+
+					i = line.find_first_of(' ');
+					line = line.substr(i + 1);
+
+					i = line.find_first_of(' ');  // out leading condition
+				}
+			}
+
+			circles.push_back(Hitcircle(x, y, t, slider));
 		}
 
 		mapFile.close();
@@ -76,11 +110,13 @@ int main()
 	win.device->setWindowCaption(L"osu!skill Formula Simulator");
 
 	double CS = 4;
-	double AR = 10.3;
+	double AR = 9;
 	
-	//int CS_px = 50;
-	int time_ms = 0;	
+	double res = 0.5;
+	int time_ms = 0;
 
+	bool hidden = false;
+	
 	vector<Hitcircle> circles = GetMap("mapObject.txt");
 
 	Slider csSlider(660, 80, 90, 10);
@@ -89,29 +125,31 @@ int main()
 	Slider arSlider(660, 120, 90, 10);
 		arSlider.setRange(0, 11);
 
-	Slider resSlider(660, 160, 90, 10);
-		resSlider.setRange(0.155, 5);
-		double res;
-
 	while (win.device->run())
 	{
 		// update stuff
 		AR = arSlider.getVal();
 		CS = csSlider.getVal();
-		res = resSlider.getVal();
-
 
 		// skill calculation
-		int time2index = getHitcircleAt(circles, time_ms) + 1;
-		if (BTWN(1, time2index, circles.size() - 2))
-			CalcChaos(circles, time2index, CS, AR);
+		CalcChaos(circles, time_ms, CS, AR, hidden);
 
 
 		// mouse wheel time control
-		double const step = -10; // amount of px to move by
-		double newTime_ms = time_ms + (step / res) * win.reciever.getWheel();
-		if (newTime_ms >= 0)
-			time_ms = newTime_ms;
+		if (win.reciever.IsKeyDown(KEY_KEY_Z))
+		{
+			double step = -res/10.0; // amount of units to zoom in/out by
+			double newRes = res + step*win.reciever.getWheel();
+			if (newRes >= 0)
+				res = newRes;
+		}
+		else
+		{
+			double const step = -10; // amount of px to move by
+			double newTime_ms = time_ms + (step / res) * win.reciever.getWheel();
+			if (newTime_ms >= 0)
+				time_ms = newTime_ms;
+		}
 
 
 		// render stuff
@@ -119,17 +157,20 @@ int main()
 
 			win.driver->draw2DRectangleOutline(recti(0, 0, 640, 480));
 			for (int i = 0; i < circles.size(); i++)
-				circles[i].Draw(win, 0, 0, time_ms, AR, CS);
+				circles[i].Draw(win, 0, 0, time_ms, AR, CS, hidden);
 		
 			//DrawLine(win, circles[0], circles[1]);
+			int time2index = getHitcircleAt(circles, time_ms) + 1;
 			if (BTWN(1, time2index, circles.size() - 2))
 				DrawAngle(win, circles[time2index - 1], circles[time2index], circles[time2index + 1]);
 			
-			drawTimingGraphs(win, 0, 510, circles, true, time_ms, res, CS, AR);
+			drawTimingGraphs(win, 0, 510, circles, true, time_ms, res, CS, AR, hidden);
+
+			win.font->draw(core::stringw(time_ms),core::rect<s32>(RESX - 100, 20, 100, 10), video::SColor(255, 255, 255, 255));
+			win.font->draw(core::stringw(win.reciever.GetMouseState().Position.X) + ", " + core::stringw(win.reciever.GetMouseState().Position.Y), core::rect<s32>(RESX - 100, 40, 100, 10), video::SColor(255, 255, 255, 255));
 
 			arSlider.Draw(win);
 			csSlider.Draw(win);
-			resSlider.Draw(win);
 		
 			DrawDebug(win);
 		win.driver->endScene();

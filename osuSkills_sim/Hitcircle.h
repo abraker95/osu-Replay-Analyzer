@@ -3,18 +3,22 @@
 
 #include <math.h>
 #include <vector>
+#include <tuple>
+
 #include "Object.h"
 #include "Window.h"
 
 class Hitcircle: private Object
 {
 	private:
-		int x, y;		// in osu!px
+		int x, y;		 // in osu!px
 		double radius;   // in osu!px
-		double t;		// in ms
+		double t;		 // in ms
+		std::vector<std::tuple<int, int, int>> sliders;  // x, y, t
+
 		SColor edgeCol;
-		
-		enum state
+
+		enum STATE
 		{
 			IDLE = 0,
 			HIGHLIGHTED = 1,
@@ -34,21 +38,38 @@ class Hitcircle: private Object
 		void update(Window &_win);
 
 	public:
-		Hitcircle(int _x, int _y, int _t);
+		enum PROPERTIES
+		{
+			XPOS = 0,
+			YPOS = 1,
+			TIME = 2
+		};
 
-		void Draw(Window &_win, int _xOffset, int _yOffset, int _time, double _AR, double _CS);
+		Hitcircle(int _x, int _y, int _t, std::vector<std::tuple<int, int, int>> _sliders = {});
 
-		bool isVisible(int _time, double _AR);
+		void Draw(Window &_win, int _xOffset, int _yOffset, int _time, double _AR, double _CS, bool _hidden);
+
+		bool isVisible(int _time, double _AR, bool _hidden);
+		bool isSlider();
+
+		position2di getEndPoint();
+		position2di getSliderPointAt(int _index);
+		int getSliderTimeAt(int _index);
 
 		position2di getPos(bool _absolute = false);
 
 		int getTime();
+		int getEndTime();
+
+		int getHoldPeriod();
+
+		void setTime(int _time);
 
 		double getSizePx();
 };
 
-int getHitcircleAt(std::vector<Hitcircle> _hitcircles, int _time);
+int getHitcircleAt(std::vector<Hitcircle>& _hitcircles, int _time);
 
-int getNumVisibleAt(std::vector<Hitcircle> _hitcircles, int _index, double _AR);
+int getNumVisibleAt(std::vector<Hitcircle>& _hitcircles, int _index, double _AR, bool _hidden);
 
 #endif

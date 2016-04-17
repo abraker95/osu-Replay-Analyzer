@@ -3,8 +3,9 @@
 #include "osuCalc.h"
 
 #include <iostream>
+#include <tuple>
 
-int getHitcircleAt(std::vector<Hitcircle> _hitcircles, int _time)
+int getHitcircleAt(std::vector<Hitcircle>& _hitcircles, int _time)
 {
 	for (int i = 0; i < _hitcircles.size() - 1; i++)
 	{
@@ -15,15 +16,25 @@ int getHitcircleAt(std::vector<Hitcircle> _hitcircles, int _time)
 	return -1;
 }
 
-// TODO: Figure out if this is giving correct results or not
-int getNumVisibleAt(std::vector<Hitcircle> _hitcircles, int _index, double _AR)
+int getNumVisibleAt(std::vector<Hitcircle>& _hitcircles, int _index, double _AR, bool _hidden)
 {
 	int refTime = _hitcircles[_index].getTime();
 	int count = 1;
 
 	for (int i = _index + 1; i < _hitcircles.size(); i++)
 	{
-		if (!(_hitcircles[i].isVisible(refTime, _AR)))
+		bool sliderCase = _hitcircles[i].isSlider();
+		if (sliderCase)
+		{
+			// If not hidden check if it is visible from the slider end time to when it needs to be pressed. 
+			// If hidden then check half the duration from when the slider ends
+			if (!_hidden)
+				sliderCase = _hitcircles[i].isVisible(_hitcircles[_index].getEndTime(), _hitcircles[_index].getHoldPeriod(), _hidden);
+			else
+				sliderCase = _hitcircles[i].isVisible(_hitcircles[_index].getEndTime() - _hitcircles[_index].getHoldPeriod()*0.5, _hitcircles[_index].getHoldPeriod()*0.5, _hidden);
+		}
+
+		if (!(_hitcircles[i].isVisible(refTime, AR2ms(_AR), _hidden) || sliderCase))
 			break;
 
 		count++;
@@ -32,17 +43,19 @@ int getNumVisibleAt(std::vector<Hitcircle> _hitcircles, int _index, double _AR)
 	return count;
 }
 
-Hitcircle::Hitcircle(int _x, int _y, int _t)
+Hitcircle::Hitcircle(int _x, int _y, int _t, std::vector<std::tuple<int, int, int>> _sliders)
 {
 	x = _x;
 	y = _y;
 	t = _t;
+	sliders = _sliders;
+
 	radius = 100; // radius
 	state = IDLE;
 	edgeCol = IDLE_COLOR;
 }
 
-void Hitcircle::Draw(Window &_win, int _xOffset, int _yOffset, int _time, double _AR, double _CS)
+void Hitcircle::Draw(Window &_win, int _xOffset, int _yOffset, int _time, double _AR, double _CS, bool _hidden)
 {
 	// step is such that the circle is drawn with minimal
 	// amount of iterations while not showing any gaps
@@ -51,7 +64,9 @@ void Hitcircle::Draw(Window &_win, int _xOffset, int _yOffset, int _time, double
 	this->yOffset = this->y + _yOffset;
 
 	double step = PX_PER_RAD(radius);
-	if (this->isVisible(_time, _AR))
+	bool slider = (this->sliders.size() != 0);
+		
+	if (this->isVisible(_time, AR2ms(_AR), _hidden))
 	{
 		if (_win.device->isWindowActive())
 			update(_win);
@@ -59,6 +74,20 @@ void Hitcircle::Draw(Window &_win, int _xOffset, int _yOffset, int _time, double
 		for (double i = 0; i < 2 * M_PI; i += step)
 		{
 			_win.driver->drawPixel(xOffset + cos(i)*radius, yOffset + sin(i)*radius, edgeCol);
+		}
+
+		for (int i = 1; i < sliders.size(); i++)
+		{
+			vector2di slidePoint(std::get<XPOS>(sliders[i]), std::get<YPOS>(sliders[i]));
+			_win.driver->drawPixel(slidePoint.X, slidePoint.Y, edgeCol);
+
+			if (BTWN(std::get<TIME>(sliders[i - 1]), _time, std::get<TIME>(sliders[i])))
+			{
+				for (double i = 0; i < 2 * M_PI; i += step)
+				{
+					_win.driver->drawPixel(slidePoint.X + cos(i) * 5, slidePoint.Y + sin(i) * 5, edgeCol);
+				}
+			}
 		}
 	}
 }
@@ -68,9 +97,26 @@ void Hitcircle::setCS_px(int _CS)
 	radius = CS2px(_CS) / 2.0; // gives radius
 }
 
-bool Hitcircle::isVisible(int _time, double _AR)
+bool Hitcircle::isVisible(int _time, double _range, bool _hidden)
 {
-	return BTWN(_time, this->t, _time + AR2ms(_AR));
+	// TODO: add a fade % return value and rename this to getVisiblity
+	bool visible = true;
+
+	if (_hidden)
+	{
+		visible &= BTWN(this->t - _range, _time, this->t - _range*0.5); // between preamp time and half preamp time later
+		if (this->isSlider())
+			visible |= BTWN(this->t - _range, _time, std::get<TIME>(this->sliders[sliders.size() * 0.5])); // between hold start and half point to hold end
+	}
+	else
+	{
+		visible &= BTWN(this->t - _range, _time, this->t); // between preamp time and when hitobject needs to be hit
+		if (this->isSlider())
+			visible |= BTWN(this->t, _time, std::get<TIME>(this->sliders[sliders.size() - 1])); // between hold start and hold end
+	}
+
+	return visible;
+		
 }
 
 position2di Hitcircle::getPos(bool _absolute)
@@ -91,6 +137,66 @@ double Hitcircle::getSizePx()
 {
 	return this->radius*2.0;
 }
+
+void Hitcircle::setTime(int _time)
+{
+	this->t = _time;
+}
+
+bool Hitcircle::isSlider()
+{
+	return (this->sliders.size() != 0);
+}
+
+position2di Hitcircle::getEndPoint()
+{
+	if (this->isSlider())
+	{
+		std::tuple<int, int, int> sliderPoint = this->sliders[this->sliders.size() - 1];
+		return position2di(std::get<XPOS>(sliderPoint), std::get<YPOS>(sliderPoint));
+	}
+	else
+	{
+		return position2di(this->x, this->y);
+	}
+}
+
+
+int Hitcircle::getEndTime()
+{
+	if (this->isSlider())
+	{
+		std::tuple<int, int, int> sliderPoint = this->sliders[this->sliders.size() - 1];
+		return std::get<TIME>(sliderPoint);
+	}
+	else
+	{
+		return this->t;
+	}
+}
+
+int Hitcircle::getHoldPeriod()
+{
+	return this->getEndTime() - this->getTime();
+}
+
+position2di Hitcircle::getSliderPointAt(int _index)
+{
+	if (_index < sliders.size())
+		return position2di(std::get<XPOS>(sliders[_index]), std::get<YPOS>(sliders[_index]));
+	else
+		return position2di(-1, -1);
+}
+
+int Hitcircle::getSliderTimeAt(int _index)
+{
+	if (_index < sliders.size())
+		return std::get<TIME>(sliders[_index]);
+	else
+		return -1;
+}
+
+// ------ [PRIVATE] ------
 
 void Hitcircle::IdleLogic(Window &_win)
 {
@@ -156,20 +262,20 @@ void Hitcircle::update(Window &_win)
 {
 	switch (state)
 	{
-	case IDLE:
-		IdleLogic(_win);
-		break;
+		case IDLE:
+			IdleLogic(_win);
+			break;
 
-	case HIGHLIGHTED:
-		HighlightedLogic(_win);
-		break;
+		case HIGHLIGHTED:
+			HighlightedLogic(_win);
+			break;
 
-	case SELECTED:
-		SelectedLogic(_win);
-		break;
+		case SELECTED:
+			SelectedLogic(_win);
+			break;
 
-	default:
-		// ???
-		break;
+		default:
+			// ???
+			break;
 	}
 }
