@@ -174,6 +174,14 @@ int Hitcircle::getEndTime()
 		return this->t;
 	}
 }
+
+position2di Hitcircle::getSliderPointAt(int _index)
+{
+	if (_index < sliders.size())
+		return position2di(std::get<XPOS>(sliders[_index]), std::get<YPOS>(sliders[_index]));
+	else
+		return position2di(-1, -1);
+}
 }
 
 // ------ [PRIVATE] ------
