@@ -3,55 +3,28 @@
 #include "mathUtils.h"
 #include "osuCalc.h"
 #include "Lambert.h"
+
 #include <iostream>
-
-	double getThetaSum(std::vector<Hitcircle> &_hitcircles, int _ref, double _CS, double _AR, bool _hidden)
-	{
-		const double angleThreshold = deg2rad(px2Deg(3 * CS2px(_CS), 640, 60)); //= deg2rad(60);
-		double thetaSum = 0.0;
-
-		// can't do anthing angle based if it's the first or last circle
-		if (_ref < 0 || _ref >= _hitcircles.size() - 1)
-		{
-			thetaSum = 0.1;
-		}
-		else
-		{
-			// make sure there isn't a long enough break before the note. Check 2*AR ms ahead of the prev note for a visible note.
-			if (_hitcircles[_ref].isVisible(MIN(_hitcircles[_ref - 1].getTime() + 2 * AR2ms(_AR), _hitcircles[_ref].getTime()), 0.0, _hidden))
-			{
-				int numVisible = getNumVisibleAt(_hitcircles, _ref, _AR, _hidden);
-				for (int i = _ref; i < numVisible + _ref - 1; i++)
-				{
-					double theta = (M_PI - getAngle(_hitcircles[_ref - 1].getPos(), _hitcircles[_ref].getPos(), _hitcircles[i].getPos()));
-					thetaSum += (theta / angleThreshold) * (getDist(_hitcircles[_ref].getPos(), _hitcircles[i + 1].getPos()));
-				}
-			}
-			else
-			{
-				thetaSum = 0.1;
-			}
-		}
-
-		return thetaSum;
-	}
+#include <assert.h>
 
 double getDistSum(std::vector<Hitcircle> &_hitcircles, int _ref, double _CS, double _AR, bool _hidden)
 {
 	const double distThreshold = CS2px(_CS);
-	double distSum = 0.0;
+	double distSum1 = 0.0, distSum2 = 0.0;
 
-	for (int i = _ref; i < _hitcircles.size() - 1; i++)
+	int numVisible = getNumVisibleAt(_hitcircles, _ref, _AR, _hidden);
+	for (int i = _ref; i < numVisible + _ref - 1; i++)
 	{
-		// if i is not visible from the ref hitcircle, then abort
-		if (!_hitcircles[i].isVisible(_hitcircles[_ref].getTime(), _AR) && i >_ref)
-			break;
-
-		double dist = getDist(_hitcircles[i].getPos(), _hitcircles[i + 1].getPos());
-		distSum += dist / distThreshold;
+		distSum1 += getDist(_hitcircles[_ref].getPos(), _hitcircles[i + 1].getPos()) / CS2px(_CS);
 	}
 
-	return distSum;
+	for (int i = _ref; i < numVisible + _ref - 1; i++)
+	{
+		double dist = getDist(_hitcircles[_ref].getPos(), _hitcircles[i + 1].getPos()) / CS2px(_CS);
+		distSum2 += dist*dist;
+	}
+
+	return ((1.0 / numVisible*distSum1)*(1.0 / numVisible*distSum1)) / ((1.0 / numVisible)*distSum2);
 }
 
 double react2Skill(double _timeToReact)
@@ -112,61 +85,150 @@ double AcuityPx(double _fov, double _dist, double _cs_px, double _res)
 	return percievedCS;
 }
 
-double getTimeSum(std::vector<Hitcircle> &_hitcircles, int _ref, double _CS, double _AR, bool _hidden)
+double PatternReq(std::tuple<int, int, int> _p1, std::tuple<int, int, int> _p2, std::tuple<int, int, int> _p3)
 {
-	//const double timeThreshold = 350; // ms
-	const double fov = 60.0; // in deg
-	double reqResponceTime = 0.0;
+	double dist_12 = getDist(position2di(std::get<Hitcircle::XPOS>(_p1), std::get<Hitcircle::YPOS>(_p1)), 
+							 position2di(std::get<Hitcircle::XPOS>(_p2), std::get<Hitcircle::YPOS>(_p2)));
+	double dist_23 = getDist(position2di(std::get<Hitcircle::XPOS>(_p2), std::get<Hitcircle::YPOS>(_p2)),
+							 position2di(std::get<Hitcircle::XPOS>(_p3), std::get<Hitcircle::YPOS>(_p3)));
+	double dist = dist_12 + dist_23;
 
-	if (_ref < 1)
+	double angle = getAngle(position2di(std::get<Hitcircle::XPOS>(_p1), std::get<Hitcircle::YPOS>(_p1)),
+							position2di(std::get<Hitcircle::XPOS>(_p2), std::get<Hitcircle::YPOS>(_p2)),
+							position2di(std::get<Hitcircle::XPOS>(_p3), std::get<Hitcircle::YPOS>(_p3)));
+
+	double time = std::get<Hitcircle::TIME>(_p3) - std::get<Hitcircle::TIME>(_p1);
+
+	return time / (dist*(M_PI - angle));
+}
+
+double Pattern2Reaction(std::tuple<int, int, int> _p1, std::tuple<int, int, int> _p2, std::tuple<int, int, int> _p3, double _AR)
+{
+	const double sensitivity = 5.0;
+	double curveSteepness = (300.0 / AR2ms(_AR)) * sensitivity;
+	double patReq = PatternReq(_p1, _p2, _p3);
+
+	return AR2ms(_AR) - AR2ms(_AR)*std::exp(-curveSteepness*patReq);
+}
+
+std::tuple<int, int, int> getPointAt(Hitcircle &_hitcircle, int _index)
+{
+	position2di pos = _hitcircle.getPos();
+	int time = _hitcircle.getTime();
+
+	if (_hitcircle.isSlider())
 	{
-		reqResponceTime = AR2ms(_AR);
+		pos = _hitcircle.getSliderPointAt(_index);
+		time = _hitcircle.getSliderTimeAt(_index);
+	}
+	
+	return std::tuple<int, int, int>(pos.X, pos.Y, time);
+}
+
+std::vector<std::tuple<int, int, int>> getPattern(std::vector<Hitcircle> &_hitcircles, int _time, int _index, double _CS, int _quant = 3)
+{
+	Hitcircle &circle = _hitcircles[_index];
+	std::vector<std::tuple<int, int, int>> points;
+
+	// If it is a slider, then iterate through and find reaction points.
+	if (circle.isSlider())
+	{
+		int i = 0, prev_i = i;
+		int timeDelta = circle.getSliderTimeAt(1) - circle.getSliderTimeAt(0) + 1;
+		int pointTime = 0;
+
+		// find the last point before current time
+		for (; pointTime < _time && pointTime + timeDelta < circle.getEndTime(); i++)
+			pointTime = circle.getSliderTimeAt(i);
+		
+		// record the point
+		points.push_back(getPointAt(circle, i--));
+		prev_i = i;
+		
+		// get 2 points before the current point which are at least a circle size apart
+		while (i >= 0 && points.size() < _quant)
+		{
+			int dist = 0;
+
+			// find the next point that is at least a circle size apart
+			while (dist < CS2px(_CS) && i >= 0 && points.size() < 3)
+			{
+				// \TODO: make this more accurate
+				dist = getDist(circle.getSliderPointAt(prev_i), circle.getSliderPointAt(i--));
+			}
+
+			// record the point if the position is different
+			position2di prevPos = position2di(std::get<Hitcircle::XPOS>(points[points.size() - 1]), std::get<Hitcircle::YPOS>(points[points.size() - 1]));
+			position2di newPos = circle.getSliderPointAt(1 + i);
+			if (getDist(prevPos, newPos) > CS2px(_CS))
+				points.push_back(getPointAt(circle, 1 + i--));
+		}
 	}
 	else
 	{
-		double dist = MAX(getDist(_hitcircles[_ref].getPos(), _hitcircles[_ref - 1].getPos()), 0.0);
-		double eyeLatency = EyeTime(px2Deg(dist, 640.0, fov));
-
-		// if the hitobject is not yet visible when the player is supposed to hit the note
-		if (!_hitcircles[_ref - 1].isVisible(_hitcircles[_ref].getTime(), _AR, false))
-		{
-
-			reqResponceTime = AR2ms(_AR) - eyeLatency;
-		}
-		else
-		{
-			reqResponceTime = (_hitcircles[_ref].getTime() - _hitcircles[_ref - 1].getTime()) - eyeLatency;
-		}
-
-		//	const double PLAYER_MAX_VEL = 6.0;   // osu!px/ms
-		//	double minTime = getDist(_hitcircles[_ref].pos, _hitcircles[_ref - 1].pos) / PLAYER_MAX_VEL;
-		//	double remainderFocusTime = (_hitcircles[_ref].time - _hitcircles[_ref - 1].time) - minTime;
-
-		//	timeSum = MIN(AR2ms(_AR) - timeSum, remainderFocusTime);
-
-
+		position2di pos = circle.getPos();
+		points.push_back(std::tuple<int, int, int>(pos.X, pos.Y, circle.getTime()));
 	}
 
-	reqResponceTime = react2Skill(reqResponceTime);
-	return reqResponceTime;
+	// check if we have the required amount of points
+	if (points.size() < _quant && _index > 0)
+	{
+		// if not, go to the previous hitobject
+		std::vector<std::tuple<int, int, int>> pattern = getPattern(_hitcircles, _time, _index - 1, _CS, _quant - points.size());
+		
+		points.insert(points.end(),
+			std::make_move_iterator(pattern.begin()),
+			std::make_move_iterator(pattern.end()));		
+
+		assert(points.size() != 0);
+		return points;
+	}
+	else
+	{
+		assert(points.size() != 0);
+		return points;
+	}
 }
 
-double CalcChaos(std::vector<Hitcircle> &_hitcircles, int _ref, double _CS, double _AR, bool _hidden)	
+double getTimeSum(std::vector<Hitcircle> &_hitcircles, int _time, double _CS, double _AR, bool _hidden)
 {
-	double thetaSum = getThetaSum(_hitcircles, _ref, _CS, _AR, _hidden);
-	double distSum = getDistSum(_hitcircles, _ref, _CS, _AR, _hidden);
-	double timeSum = getTimeSum(_hitcircles, _ref, _CS, _AR, _hidden);
+	double timeToReact = 0.0;
+	int index = getHitcircleAt(_hitcircles, _time) + 1;
 
-	if (thetaSum == 0.0 || thetaSum == INFINITY) thetaSum = 0.1;
-	if (distSum == 0.0) distSum = 0.1;
+	if (index > _hitcircles.size() - 1)
+	{
+		timeToReact = 0;
+	}
+	else if (index < 2)
+	{
+		timeToReact = AR2ms(_AR);
+	}
+	else
+	{
+		std::vector<std::tuple<int, int, int>> pattern = getPattern(_hitcircles, _time, index, _CS, 3);
+		timeToReact = Pattern2Reaction(pattern[2], pattern[1], pattern[0], _AR);
+	}
+
+	return react2Skill(timeToReact);
+}
+
+double CalcChaos(std::vector<Hitcircle> &_hitcircles, int _time, double _CS, double _AR, bool _hidden)	
+{
+	double timeSum = getTimeSum(_hitcircles, _time, _CS, _AR, _hidden);
+
 	if (timeSum == 0.0) timeSum = 0.1;
 
-	double chaos = (thetaSum / 10.0) + timeSum;
+	double chaos =  timeSum;
+
+	// \TODO: 
+	//		1) To what extent does theta, distance and time sums affect note[x] from current note
+	//		2) How dord distance, time and theta sums go together?'
+	//
 
 	//std::cout << "      " << thetaSum << std::endl;
-	std::cout << "thetaSum: " << thetaSum << "  distSum: " << distSum << "  timeSum: " << timeSum << "   chaos: " << chaos << std::endl;
+	std::cout << "  timeSum: " << timeSum << "   chaos: " << chaos << std::endl;
  
-	return thetaSum;
+	return timeSum;
 }
 
 // Eye latency is actually dependent factors which are yet to be simulated.
