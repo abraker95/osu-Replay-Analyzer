@@ -58,6 +58,8 @@ class Hitcircle: private Object
 		position2di getPos(bool _absolute = false);
 
 		int getTime();
+		int getEndTime();
+
 
 		double getSizePx();
 };

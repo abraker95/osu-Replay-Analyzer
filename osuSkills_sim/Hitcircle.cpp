@@ -159,7 +159,21 @@ position2di Hitcircle::getEndPoint()
 	{
 		return position2di(this->x, this->y);
 	}
-		
+}
+
+
+int Hitcircle::getEndTime()
+{
+	if (this->isSlider())
+	{
+		std::tuple<int, int, int> sliderPoint = this->sliders[this->sliders.size() - 1];
+		return std::get<TIME>(sliderPoint);
+	}
+	else
+	{
+		return this->t;
+	}
+}
 }
 
 // ------ [PRIVATE] ------
