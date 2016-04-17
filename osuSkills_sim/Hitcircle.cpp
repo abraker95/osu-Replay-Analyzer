@@ -16,7 +16,6 @@ int getHitcircleAt(std::vector<Hitcircle>& _hitcircles, int _time)
 	return -1;
 }
 
-// TODO: Figure out if this is giving correct results or not
 int getNumVisibleAt(std::vector<Hitcircle>& _hitcircles, int _index, double _AR, bool _hidden)
 {
 	int refTime = _hitcircles[_index].getTime();
@@ -24,7 +23,18 @@ int getNumVisibleAt(std::vector<Hitcircle>& _hitcircles, int _index, double _AR,
 
 	for (int i = _index + 1; i < _hitcircles.size(); i++)
 	{
-		if (!(_hitcircles[i].isVisible(refTime, _AR, _hidden)))
+		bool sliderCase = _hitcircles[i].isSlider();
+		if (sliderCase)
+		{
+			// If not hidden check if it is visible from the slider end time to when it needs to be pressed. 
+			// If hidden then check half the duration from when the slider ends
+			if (!_hidden)
+				sliderCase = _hitcircles[i].isVisible(_hitcircles[_index].getEndTime(), _hitcircles[_index].getHoldPeriod(), _hidden);
+			else
+				sliderCase = _hitcircles[i].isVisible(_hitcircles[_index].getEndTime() - _hitcircles[_index].getHoldPeriod()*0.5, _hitcircles[_index].getHoldPeriod()*0.5, _hidden);
+		}
+
+		if (!(_hitcircles[i].isVisible(refTime, AR2ms(_AR), _hidden) || sliderCase))
 			break;
 
 		count++;
@@ -55,17 +65,8 @@ void Hitcircle::Draw(Window &_win, int _xOffset, int _yOffset, int _time, double
 
 	double step = PX_PER_RAD(radius);
 	bool slider = (this->sliders.size() != 0);
-	
-	int sliderVisible = false;
-
-	if (slider && !_hidden)
-	{
-		sliderVisible = BTWN(this->t, _time, std::get<TIME>(sliders[sliders.size() - 1]));
-	}
 		
-		
-
-	if (this->isVisible(_time, _AR, _hidden) || sliderVisible)
+	if (this->isVisible(_time, AR2ms(_AR), _hidden))
 	{
 		if (_win.device->isWindowActive())
 			update(_win);
@@ -96,13 +97,26 @@ void Hitcircle::setCS_px(int _CS)
 	radius = CS2px(_CS) / 2.0; // gives radius
 }
 
-bool Hitcircle::isVisible(int _time, double _AR, bool _hidden)
+bool Hitcircle::isVisible(int _time, double _range, bool _hidden)
 {
-	// TODO: add a fade % threshold parameter
+	// TODO: add a fade % return value and rename this to getVisiblity
+	bool visible = true;
+
 	if (_hidden)
-		return BTWN(_time + AR2ms(_AR)*0.5, this->t, (double)_time + AR2ms(_AR));
+	{
+		visible &= BTWN(this->t - _range, _time, this->t - _range*0.5); // between preamp time and half preamp time later
+		if (this->isSlider())
+			visible |= BTWN(this->t - _range, _time, std::get<TIME>(this->sliders[sliders.size() * 0.5])); // between hold start and half point to hold end
+	}
 	else
-		return BTWN(_time, this->t, _time + AR2ms(_AR));
+	{
+		visible &= BTWN(this->t - _range, _time, this->t); // between preamp time and when hitobject needs to be hit
+		if (this->isSlider())
+			visible |= BTWN(this->t, _time, std::get<TIME>(this->sliders[sliders.size() - 1])); // between hold start and hold end
+	}
+
+	return visible;
+		
 }
 
 position2di Hitcircle::getPos(bool _absolute)
