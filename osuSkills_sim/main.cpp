@@ -124,17 +124,11 @@ int main()
 	Slider arSlider(660, 120, 90, 10);
 		arSlider.setRange(0, 11);
 
-	Slider resSlider(660, 160, 90, 10);
-		resSlider.setRange(0.05, 0.5);
-		double res;
-
 	while (win.device->run())
 	{
 		// update stuff
 		AR = arSlider.getVal();
 		CS = csSlider.getVal();
-		res = resSlider.getVal();
-
 
 		// skill calculation
 		int time2index = getHitcircleAt(circles, time_ms) + 1;
@@ -143,10 +137,20 @@ int main()
 
 
 		// mouse wheel time control
-		double const step = -10; // amount of px to move by
-		double newTime_ms = time_ms + (step / res) * win.reciever.getWheel();
-		if (newTime_ms >= 0)
-			time_ms = newTime_ms;
+		if (win.reciever.IsKeyDown(KEY_KEY_Z))
+		{
+			double step = -res/10.0; // amount of units to zoom in/out by
+			double newRes = res + step*win.reciever.getWheel();
+			if (newRes >= 0)
+				res = newRes;
+		}
+		else
+		{
+			double const step = -10; // amount of px to move by
+			double newTime_ms = time_ms + (step / res) * win.reciever.getWheel();
+			if (newTime_ms >= 0)
+				time_ms = newTime_ms;
+		}
 
 
 		// render stuff
@@ -167,7 +171,6 @@ int main()
 
 			arSlider.Draw(win);
 			csSlider.Draw(win);
-			resSlider.Draw(win);
 		
 			DrawDebug(win);
 		win.driver->endScene();
