@@ -5,9 +5,21 @@
 #include "osuCalc.h"
 #include "Geometry.h"
 #include "SkillsCalc.h"
+#include <iostream>
 
 using namespace irr;
 using namespace core;
+
+int UpdateHitobjectTimings(Window &_win, std::vector<Hitcircle> &_hitcircles, int _i, int _xpos, int _ypos, int _width, int _height)
+{
+	position2di pos = _win.reciever.GetMouseState().Position;
+	bool cursorOverObject = (BTWN(_xpos, pos.X, _xpos + _width) &&
+							 BTWN(_ypos, pos.Y, _ypos + _height));
+	
+	// TODO: Allow hitObject timing minipulation
+
+	return _xpos;
+}
 
 void drawRefreshRateTimings(Window &_win, int _xoffset, int _yoffset, std::vector<Hitcircle> &_hitcircles, int _shift, double _px_ms, double _FPS)
 {
@@ -36,10 +48,15 @@ void drawHitobjectTimings(Window &_win, int _xoffset, int _yoffset, std::vector<
 	double updateLatency = (1000.0 / _FPS);
 
 	// Show hitobject timings (when need to hit)
-	for (double i = 0; i < _hitcircles.size(); i++)
+	for (int i = 0; i < _hitcircles.size(); i++)
 	{
+		// Code that snaps timings to FPS
+			//double t1 = ((double)_hitcircles[i].getTime() / updateLatency);
+			//double time = ceil(t1)*updateLatency;
 
-		int xpos = _hitcircles[i].getTime()*_px_ms;
+
+		int time = _hitcircles[i].getTime();
+		int xpos = time*_px_ms;
 		int ypos = 0 + _yoffset + _xoffset;
 		int width = updateLatency*_px_ms;
 
@@ -134,17 +151,18 @@ void drawVisibliltyTimings(Window &_win, int _xoffset, int _yoffset, std::vector
 		int time = _hitcircles[i].getTime() - AR2ms(_AR);
 		int xpos = time * _px_ms + _xoffset;
 		int ypos = 0 + _yoffset;
-		int width = MAX(ARend, updateLatency)*_px_ms;
+		int width = MAX(ARend + (_hitcircles[i].getEndTime() - _hitcircles[i].getTime()), updateLatency)*_px_ms;
 
-		if (xpos < _shift - AR2ms(_AR)*_px_ms)
+		if (xpos < _shift - AR2ms(_AR)*_px_ms) // if it goes out the left side of the visible area
 			continue;
-		else if (xpos - width >= (_shift + 811))
+		else if (xpos - width >= (_shift + 811)) // if it goes out the right side of the visible area
 			break;
 
+		// \TODO: Account for prev notes being visible when the following notes appear0
 		if (layer <= 1)
 			layer = getNumVisibleAt(_hitcircles, i, _AR, false) + 1;
 
-		_win.driver->draw2DRectangle(SColor(255, 255, 150, 255), rect<s32>(xpos - _shift, ypos + 2 - 5*layer, xpos + width - _shift, ypos + 5 - 5*layer));
+		_win.driver->draw2DRectangle(SColor(255, 255, 150, 255), rect<s32>(xpos - _shift, ypos + 2 - 5*layer, xpos + width - _shift, ypos + 5 - 5*layer));	
 		layer--;
 	}
 }
@@ -174,7 +192,7 @@ void drawTimingGraphs(Window &_win, int _xoffset, int _yoffset, std::vector<Hitc
 	drawRefreshRateTimings(_win, _xoffset, _yoffset, _hitcircles, shift, px_ms, FPS);
 	drawHitobjectTimings(_win, _xoffset, _yoffset, _hitcircles, shift, px_ms, FPS);
 	//drawHumanReactionTimings(_win, _xoffset, _yoffset, _hitcircles, shift, px_ms, FPS, _AR);
-	drawEyeLatencyTimings(_win, _xoffset, _yoffset, _hitcircles, shift, px_ms, FPS, _AR);
+	//drawEyeLatencyTimings(_win, _xoffset, _yoffset, _hitcircles, shift, px_ms, FPS, _AR);
 	drawVisibliltyTimings(_win, _xoffset, _yoffset, _hitcircles, shift, px_ms, FPS, _AR, _hidden);
 	drawCurrentTiming(_win, _xoffset, _yoffset, _hitcircles, shift, px_ms, FPS, _time);
 	
