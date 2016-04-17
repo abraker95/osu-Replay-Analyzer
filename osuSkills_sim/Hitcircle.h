@@ -25,13 +25,6 @@ class Hitcircle: private Object
 			SELECTED = 2
 		}state;
 
-		enum PROPERTIES
-		{
-			XPOS = 0,
-			YPOS = 1,
-			TIME = 2
-		};
-
 		const SColor IDLE_COLOR		   = SColor(255, 150, 150, 150);
 		const SColor HIGHLIGHTED_COLOR = SColor(255, 255, 255, 255);
 		const SColor SELECTED_COLOR    = SColor(255, 255, 100, 100);
@@ -45,12 +38,18 @@ class Hitcircle: private Object
 		void update(Window &_win);
 
 	public:
+		enum PROPERTIES
+		{
+			XPOS = 0,
+			YPOS = 1,
+			TIME = 2
+		};
+
 		Hitcircle(int _x, int _y, int _t, std::vector<std::tuple<int, int, int>> _sliders = {});
 
 		void Draw(Window &_win, int _xOffset, int _yOffset, int _time, double _AR, double _CS, bool _hidden);
 
 		bool isVisible(int _time, double _AR, bool _hidden);
-
 		bool isSlider();
 
 		position2di getEndPoint();
