@@ -132,9 +132,7 @@ int main()
 		CS = csSlider.getVal();
 
 		// skill calculation
-		int time2index = getHitcircleAt(circles, time_ms) + 1;
-		if (BTWN(1, time2index, circles.size() - 2))
-			CalcChaos(circles, time2index, CS, AR, hidden);
+		CalcChaos(circles, time_ms, CS, AR, hidden);
 
 
 		// mouse wheel time control
@@ -162,6 +160,7 @@ int main()
 				circles[i].Draw(win, 0, 0, time_ms, AR, CS, hidden);
 		
 			//DrawLine(win, circles[0], circles[1]);
+			int time2index = getHitcircleAt(circles, time_ms) + 1;
 			if (BTWN(1, time2index, circles.size() - 2))
 				DrawAngle(win, circles[time2index - 1], circles[time2index], circles[time2index + 1]);
 			
