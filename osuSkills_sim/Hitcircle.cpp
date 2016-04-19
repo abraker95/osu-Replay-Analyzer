@@ -97,7 +97,19 @@ void Hitcircle::setCS_px(int _CS)
 	radius = CS2px(_CS) / 2.0; // gives radius
 }
 
-bool Hitcircle::isVisible(int _time, double _range, bool _hidden)
+bool Hitcircle::isVisible(int _time, double _AR, bool _hidden)
+{
+	double opacity = getOpacity(_time, _AR, _hidden);
+	if (opacity > 0.0)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
 double Hitcircle::getOpacity(int _time, double _AR, bool _hidden)
 {
 	double preampTime = this->t - AR2ms(_AR);	// Time when the AR goes into effect
