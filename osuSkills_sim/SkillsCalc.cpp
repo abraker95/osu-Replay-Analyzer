@@ -173,7 +173,7 @@ std::vector<std::tuple<int, int, int, int>> getPattern(std::vector<Hitcircle> &_
 	}
 }
 
-double getTimeSum(std::vector<Hitcircle> &_hitcircles, int _time, double _CS, double _AR, bool _hidden)
+double getReactionSkill(std::vector<Hitcircle> &_hitcircles, int _time, double _CS, double _AR, bool _hidden)
 {
 	double timeToReact = 0.0;
 	int index = getHitcircleAt(_hitcircles, _time) + 1;

@@ -132,7 +132,7 @@ int main()
 		CS = csSlider.getVal();
 
 		// skill calculation
-		CalcChaos(circles, time_ms, CS, AR, hidden);
+		cout << "Reaction: " << getReactionSkill(circles, time_ms, CS, AR, hidden) << endl;
 
 
 		// mouse wheel time control
