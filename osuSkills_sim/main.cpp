@@ -115,7 +115,7 @@ int main()
 	double res = 0.5;
 	int time_ms = 0;
 
-	bool hidden = false;
+	bool hidden = true;
 	
 	vector<Hitcircle> circles = GetMap("mapObject.txt");
 
@@ -125,11 +125,15 @@ int main()
 	Slider arSlider(660, 120, 90, 10);
 		arSlider.setRange(0, 11);
 
+	Slider hdSlider(660, 160, 90, 10);
+		hdSlider.setRange(0, 1);
+
 	while (win.device->run())
 	{
 		// update stuff
 		AR = arSlider.getVal();
 		CS = csSlider.getVal();
+		hidden = hdSlider.getVal() < 0.5? false: true;
 
 		// skill calculation
 		cout << "Reaction: " << getReactionSkill(circles, time_ms, CS, AR, hidden) << endl;
@@ -171,7 +175,8 @@ int main()
 
 			arSlider.Draw(win);
 			csSlider.Draw(win);
-		
+			hdSlider.Draw(win);
+
 			DrawDebug(win);
 		win.driver->endScene();
 	}
