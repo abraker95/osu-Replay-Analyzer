@@ -24,6 +24,11 @@ static inline double getPercent(double _min, double _val, double _max)
 	return 1.0 - ((_max - BOUND(_min, _val, _max)) / (_max - _min));
 }
 
+static inline double getValue(double _min, double _max, double _percent)
+{
+	return  _max - (1.0 - _percent)*(_max - _min);
+}
+
 static inline double PX_PER_RAD(double radius)
 {
 	return (M_PI / (4.0*radius));
