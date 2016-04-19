@@ -192,25 +192,6 @@ double getTimeSum(std::vector<Hitcircle> &_hitcircles, int _time, double _CS, do
 	return react2Skill(timeToReact);
 }
 
-double CalcChaos(std::vector<Hitcircle> &_hitcircles, int _time, double _CS, double _AR, bool _hidden)	
-{
-	double timeSum = getTimeSum(_hitcircles, _time, _CS, _AR, _hidden);
-
-	if (timeSum == 0.0) timeSum = 0.1;
-
-	double chaos =  timeSum;
-
-	// \TODO: 
-	//		1) To what extent does theta, distance and time sums affect note[x] from current note
-	//		2) How dord distance, time and theta sums go together?'
-	//
-
-	//std::cout << "      " << thetaSum << std::endl;
-	std::cout << "  timeSum: " << timeSum << "   chaos: " << chaos << std::endl;
- 
-	return timeSum;
-}
-
 // Eye latency is actually dependent factors which are yet to be simulated.
 // Assume eye latatency is always true for now
 void calc()
