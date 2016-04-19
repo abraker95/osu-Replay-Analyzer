@@ -98,13 +98,87 @@ void Hitcircle::setCS_px(int _CS)
 }
 
 bool Hitcircle::isVisible(int _time, double _range, bool _hidden)
+double Hitcircle::getOpacity(int _time, double _AR, bool _hidden)
 {
-	// TODO: add a fade % return value and rename this to getVisiblity
-	bool visible = true;
+	double preampTime = this->t - AR2ms(_AR);	// Time when the AR goes into effect
 
 	if (_hidden)
+	{ 
+		double fadeinDuration = 0.4*AR2ms(_AR);				// how long the fadein period is
+		double fadeinTimeEnd = preampTime + fadeinDuration; // When it is fully faded in
+		
+		// Fadein period always lasts from preamp time to 40% from preamp time to hit time
+		double percentFadeIn = getPercent(preampTime, _time, fadeinTimeEnd);
+
+		// If it's not fully faded in, then we haven't gotten up to the later stuff 
+		if (percentFadeIn < 1.0)
+		{
+			return percentFadeIn;
+		}
+		else // fadeout
+		{
+			// If it's a slider, then the fade out period lasts from when it's fadedin to
+			// 70% to the time it the slider ends
+			if (this->isSlider())
+			{
+				double fadeoutDuration = (this->getEndTime() - fadeinTimeEnd); // how long the fadeout period is
+				double fadeoutTimeEnd = fadeinTimeEnd + fadeoutDuration;		   // When it is fully faded out
+				return (1.0 - getPercent(fadeinTimeEnd, _time, fadeoutTimeEnd));
+			}
+			else
+			{
+				double fadeoutDuration = 0.7*(this->t - fadeinTimeEnd);		// how long the fadeout period is
+				double fadeoutTimeEnd = fadeinTimeEnd + fadeoutDuration;	// When it is fully faded out
+				return (1.0 - getPercent(fadeinTimeEnd, _time, fadeoutTimeEnd));
+			}
+		}
+	}
+	else
 	{
-		visible &= BTWN(this->t - _range, _time, this->t - _range*0.5); // between preamp time and half preamp time later
+		double fadeinDuration = MIN(AR2ms(_AR), 400);		// how long the fadein period is
+		double fadeinTimeEnd = preampTime + fadeinDuration; // When it is fully faded in
+
+		// Fadein period always lasts from preamp time to 400 ms after preamp time or
+		// when the object needs to be hit, which ever is smaller
+		double percentFadeIn = getPercent(preampTime, _time, fadeinTimeEnd);
+
+		// If it's not fully faded in, then we haven't gotten up to the later stuff 
+		if (percentFadeIn < 1.0)
+		{
+			return percentFadeIn;
+		}
+		else // fadeout
+		{
+			// If it is during the slider hold period, then it's fully visible.
+			// Otherwise, it's not visible anymore.
+			if (this->isSlider())
+			{
+				if (_time > this->getEndTime())
+				{
+					// \TODO: Opacity when pressed and when missed
+					return 0.0; 
+				}
+				else
+				{
+					return 1.0;
+				}
+			}
+			else
+			{
+				if (_time > this->t)
+				{
+					// \TODO: Opacity when pressed and when missed
+					return 0.0;
+				}
+				else
+				{
+					return 1.0;
+				}
+			}
+		}
+	}
+}
+
 		if (this->isSlider())
 			visible |= BTWN(this->t - _range, _time, std::get<TIME>(this->sliders[sliders.size() * 0.5])); // between hold start and half point to hold end
 	}

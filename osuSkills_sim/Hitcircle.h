@@ -60,6 +60,8 @@ class Hitcircle: private Object
 
 		int getTime();
 		int getEndTime();
+		double getOpacity(int _time, double _AR, bool _hidden);
+
 
 		int getHoldPeriod();
 
