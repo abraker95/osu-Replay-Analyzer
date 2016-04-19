@@ -192,26 +192,3 @@ double getTimeSum(std::vector<Hitcircle> &_hitcircles, int _time, double _CS, do
 	return react2Skill(timeToReact);
 }
 
-// Eye latency is actually dependent factors which are yet to be simulated.
-// Assume eye latatency is always true for now
-void calc()
-{
-	/*
-	double cs_px = CS2px(_CS);
-	double dist = getDist(_hitcircles[0].getPos(), _hitcircles[1].getPos()) - cs_px;
-	double percievedCSpx = AcuityPx(fov, dist, cs_px, 640.0);
-
-	// for targeting. If the player can't hit the note because the note is too unfocused
-	// in the player's periheral vision, then the player will move their eyes before hitting it
-	if (getPrecisionAbility(player precision skill) < percievedCSpx)
-		eyeLatency = EyeTime(px2Deg(dist, 640.0, fov));
-
-	// for note order based clutter reading. The player will need to look through notes to find which
-	// note to hit next
-	if(getNoteOrderReadingAbility(player note order reading skill) < noteOrderChaos)
-	{
-		for(i -> allVisible)
-			eyeLatency += EyeTime(px2Deg(dist, 640.0, fov));
-	}
-	*/
-}
