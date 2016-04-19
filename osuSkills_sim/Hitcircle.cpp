@@ -16,25 +16,15 @@ int getHitcircleAt(std::vector<Hitcircle>& _hitcircles, int _time)
 	return -1;
 }
 
-int getNumVisibleAt(std::vector<Hitcircle>& _hitcircles, int _index, double _AR, bool _hidden)
+int getNumVisibleAt(std::vector<Hitcircle>& _hitcircles, int _time, double _AR, bool _hidden, double _opacity)
 {
-	int refTime = _hitcircles[_index].getTime();
+	int index = getHitcircleAt(_hitcircles, _time);
 	int count = 1;
 
-	for (int i = _index + 1; i < _hitcircles.size(); i++)
+	for (int i = index + 1; i < _hitcircles.size(); i++)
 	{
-		bool sliderCase = _hitcircles[i].isSlider();
-		if (sliderCase)
-		{
-			// If not hidden check if it is visible from the slider end time to when it needs to be pressed. 
-			// If hidden then check half the duration from when the slider ends
-			if (!_hidden)
-				sliderCase = _hitcircles[i].isVisible(_hitcircles[_index].getEndTime(), _hitcircles[_index].getHoldPeriod(), _hidden);
-			else
-				sliderCase = _hitcircles[i].isVisible(_hitcircles[_index].getEndTime() - _hitcircles[_index].getHoldPeriod()*0.5, _hitcircles[_index].getHoldPeriod()*0.5, _hidden);
-		}
-
-		if (!(_hitcircles[i].isVisible(refTime, AR2ms(_AR), _hidden) || sliderCase))
+		std::pair<int, int> visibilityTimes = _hitcircles[i].getVisiblityTimes(_AR, _hidden, _opacity, _opacity);
+		if (!BTWN(visibilityTimes.first, _time, visibilityTimes.second))
 			break;
 
 		count++;
