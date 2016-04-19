@@ -56,26 +56,31 @@ void Hitcircle::Draw(Window &_win, int _xOffset, int _yOffset, int _time, double
 	double step = PX_PER_RAD(radius);
 	bool slider = (this->sliders.size() != 0);
 		
-	if (this->isVisible(_time, AR2ms(_AR), _hidden))
+	if (this->isVisible(_time, _AR, _hidden))
 	{
 		if (_win.device->isWindowActive())
 			update(_win);
 
+		double opacity = this->getOpacity(_time, _AR, _hidden);
+		SColor fade = SColor(255, edgeCol.getRed() * opacity, edgeCol.getGreen() * opacity, edgeCol.getBlue() * opacity);
+
 		for (double i = 0; i < 2 * M_PI; i += step)
 		{
-			_win.driver->drawPixel(xOffset + cos(i)*radius, yOffset + sin(i)*radius, edgeCol);
+			
+			_win.driver->drawPixel(xOffset + cos(i)*radius, yOffset + sin(i)*radius, fade);
 		}
 
 		for (int i = 1; i < sliders.size(); i++)
 		{
 			vector2di slidePoint(std::get<XPOS>(sliders[i]), std::get<YPOS>(sliders[i]));
-			_win.driver->drawPixel(slidePoint.X, slidePoint.Y, edgeCol);
+			_win.driver->drawPixel(slidePoint.X, slidePoint.Y, fade);
 
 			if (BTWN(std::get<TIME>(sliders[i - 1]), _time, std::get<TIME>(sliders[i])))
 			{
+				// draw slider point
 				for (double i = 0; i < 2 * M_PI; i += step)
 				{
-					_win.driver->drawPixel(slidePoint.X + cos(i) * 5, slidePoint.Y + sin(i) * 5, edgeCol);
+					_win.driver->drawPixel(slidePoint.X + cos(i) * 5, slidePoint.Y + sin(i) * 5, fade);
 				}
 			}
 		}
