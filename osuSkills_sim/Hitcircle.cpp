@@ -179,18 +179,60 @@ double Hitcircle::getOpacity(int _time, double _AR, bool _hidden)
 	}
 }
 
+std::pair<int, int> Hitcircle::getVisiblityTimes(double _AR, bool _hidden, double _opacityStart, double _opacityEnd)
+{
+	double preampTime = this->t - AR2ms(_AR);	// Time when the AR goes into effect
+	std::pair<int, int> times;
+
+	if (_hidden)
+	{
+		double fadeinDuration = 0.4*AR2ms(_AR);				// how long the fadein period is
+		double fadeinTimeEnd = preampTime + fadeinDuration; // When it is fully faded in
+
+		times.first = getValue(preampTime, fadeinTimeEnd, _opacityStart);
+		
+		
+		// If it's a slider, then the fade out period lasts from when it's fadedin to
+		// 70% to the time it the slider ends
 		if (this->isSlider())
-			visible |= BTWN(this->t - _range, _time, std::get<TIME>(this->sliders[sliders.size() * 0.5])); // between hold start and half point to hold end
+		{
+			double fadeoutDuration = (this->getEndTime() - fadeinTimeEnd); // how long the fadeout period is
+			double fadeoutTimeEnd = fadeinTimeEnd + fadeoutDuration;		   // When it is fully faded out
+			times.second = getValue(fadeinTimeEnd, fadeoutTimeEnd, 1.0 - _opacityEnd);
+
+			return times;
+		}
+		else
+		{
+			double fadeoutDuration = 0.7*(this->t - fadeinTimeEnd);		// how long the fadeout period is
+			double fadeoutTimeEnd = fadeinTimeEnd + fadeoutDuration;	// When it is fully faded out
+			times.second = getValue(fadeinTimeEnd, fadeoutTimeEnd, 1.0 - _opacityStart); // <-- no this is not a mistake :D
+
+			return times;
+		}
 	}
 	else
 	{
-		visible &= BTWN(this->t - _range, _time, this->t); // between preamp time and when hitobject needs to be hit
-		if (this->isSlider())
-			visible |= BTWN(this->t, _time, std::get<TIME>(this->sliders[sliders.size() - 1])); // between hold start and hold end
-	}
+		double fadeinDuration = MIN(AR2ms(_AR), 400);		// how long the fadein period is
+		double fadeinTimeEnd = preampTime + fadeinDuration; // When it is fully faded in
 
-	return visible;
-		
+		// Fadein period always lasts from preamp time to 400 ms after preamp time or
+		// when the object needs to be hit, which ever is smaller
+		times.first = getValue(preampTime, fadeinTimeEnd, _opacityStart);
+
+		// If it is during the slider hold period, then it's fully visible.
+		// Otherwise, it's not visible anymore.
+		if (this->isSlider())
+		{
+			times.second = this->getEndTime();
+			return times;
+		}
+		else
+		{
+			times.second = this->t;
+			return times;
+		}
+	}
 }
 
 position2di Hitcircle::getPos(bool _absolute)

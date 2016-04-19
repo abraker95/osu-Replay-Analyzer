@@ -62,6 +62,7 @@ class Hitcircle: private Object
 		int getEndTime();
 		double getOpacity(int _time, double _AR, bool _hidden);
 
+		std::pair<int, int> getVisiblityTimes(double _AR, bool _hidden, double _opacityStart, double _opacityEnd);
 
 		int getHoldPeriod();
 
