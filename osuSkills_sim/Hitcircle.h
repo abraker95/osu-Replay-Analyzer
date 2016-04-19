@@ -73,6 +73,6 @@ class Hitcircle: private Object
 
 int getHitcircleAt(std::vector<Hitcircle>& _hitcircles, int _time);
 
-int getNumVisibleAt(std::vector<Hitcircle>& _hitcircles, int _index, double _AR, bool _hidden);
+int getNumVisibleAt(std::vector<Hitcircle>& _hitcircles, int _index, double _AR, bool _hidden, double _opacity);
 
 #endif
