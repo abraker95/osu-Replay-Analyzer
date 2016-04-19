@@ -7,26 +7,6 @@
 #include <iostream>
 #include <assert.h>
 
-double getDistSum(std::vector<Hitcircle> &_hitcircles, int _ref, double _CS, double _AR, bool _hidden)
-{
-	const double distThreshold = CS2px(_CS);
-	double distSum1 = 0.0, distSum2 = 0.0;
-
-	int numVisible = getNumVisibleAt(_hitcircles, _ref, _AR, _hidden);
-	for (int i = _ref; i < numVisible + _ref - 1; i++)
-	{
-		distSum1 += getDist(_hitcircles[_ref].getPos(), _hitcircles[i + 1].getPos()) / CS2px(_CS);
-	}
-
-	for (int i = _ref; i < numVisible + _ref - 1; i++)
-	{
-		double dist = getDist(_hitcircles[_ref].getPos(), _hitcircles[i + 1].getPos()) / CS2px(_CS);
-		distSum2 += dist*dist;
-	}
-
-	return ((1.0 / numVisible*distSum1)*(1.0 / numVisible*distSum1)) / ((1.0 / numVisible)*distSum2);
-}
-
 double react2Skill(double _timeToReact)
 {
 	// Original model can be found at https://www.desmos.com/calculator/lg2jqyesnu
