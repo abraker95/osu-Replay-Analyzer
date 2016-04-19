@@ -65,7 +65,7 @@ double AcuityPx(double _fov, double _dist, double _cs_px, double _res)
 	return percievedCS;
 }
 
-double PatternReq(std::tuple<int, int, int> _p1, std::tuple<int, int, int> _p2, std::tuple<int, int, int> _p3)
+double PatternReq(std::tuple<int, int, int, int> _p1, std::tuple<int, int, int, int> _p2, std::tuple<int, int, int, int> _p3)
 {
 	double dist_12 = getDist(position2di(std::get<Hitcircle::XPOS>(_p1), std::get<Hitcircle::YPOS>(_p1)), 
 							 position2di(std::get<Hitcircle::XPOS>(_p2), std::get<Hitcircle::YPOS>(_p2)));
@@ -82,33 +82,36 @@ double PatternReq(std::tuple<int, int, int> _p1, std::tuple<int, int, int> _p2, 
 	return time / (dist*(M_PI - angle));
 }
 
-double Pattern2Reaction(std::tuple<int, int, int> _p1, std::tuple<int, int, int> _p2, std::tuple<int, int, int> _p3, double _AR)
+// Original model can be found at https://www.desmos.com/calculator/f2brlvcjmf
+double Pattern2Reaction(std::tuple<int, int, int, int> _p1, std::tuple<int, int, int, int> _p2, std::tuple<int, int, int, int> _p3, double _ARms)
 {
-	const double sensitivity = 5.0;
-	double curveSteepness = (300.0 / AR2ms(_AR)) * sensitivity;
+	const double damping = 25.0;
+	double curveSteepness = (300.0 / _ARms) * damping;
 	double patReq = PatternReq(_p1, _p2, _p3);
 
-	return AR2ms(_AR) - AR2ms(_AR)*std::exp(-curveSteepness*patReq);
+	return _ARms  - _ARms*std::exp(-curveSteepness*patReq) /*+ curveSteepness*sqrt(curveSteepness*patReq)*/;
 }
 
-std::tuple<int, int, int> getPointAt(Hitcircle &_hitcircle, int _index)
+std::tuple<int, int, int, int> getPointAt(Hitcircle &_hitcircle, int _index)
 {
 	position2di pos = _hitcircle.getPos();
 	int time = _hitcircle.getTime();
+	int timeSinceStart = 0;
 
 	if (_hitcircle.isSlider())
 	{
 		pos = _hitcircle.getSliderPointAt(_index);
 		time = _hitcircle.getSliderTimeAt(_index);
+		timeSinceStart = time - _hitcircle.getTime();
 	}
 	
-	return std::tuple<int, int, int>(pos.X, pos.Y, time);
+	return std::tuple<int, int, int, int>(pos.X, pos.Y, time, timeSinceStart);
 }
 
-std::vector<std::tuple<int, int, int>> getPattern(std::vector<Hitcircle> &_hitcircles, int _time, int _index, double _CS, int _quant = 3)
+std::vector<std::tuple<int, int, int, int>> getPattern(std::vector<Hitcircle> &_hitcircles, int _time, int _index, double _CS, int _quant = 3)
 {
 	Hitcircle &circle = _hitcircles[_index];
-	std::vector<std::tuple<int, int, int>> points;
+	std::vector<std::tuple<int, int, int, int>> points;
 
 	// If it is a slider, then iterate through and find reaction points.
 	if (circle.isSlider())
@@ -147,14 +150,14 @@ std::vector<std::tuple<int, int, int>> getPattern(std::vector<Hitcircle> &_hitci
 	else
 	{
 		position2di pos = circle.getPos();
-		points.push_back(std::tuple<int, int, int>(pos.X, pos.Y, circle.getTime()));
+		points.push_back(std::tuple<int, int, int, int>(pos.X, pos.Y, circle.getTime(), 0));
 	}
 
 	// check if we have the required amount of points
 	if (points.size() < _quant && _index > 0)
 	{
 		// if not, go to the previous hitobject
-		std::vector<std::tuple<int, int, int>> pattern = getPattern(_hitcircles, _time, _index - 1, _CS, _quant - points.size());
+		std::vector<std::tuple<int, int, int, int>> pattern = getPattern(_hitcircles, _time, _index - 1, _CS, _quant - points.size());
 		
 		points.insert(points.end(),
 			std::make_move_iterator(pattern.begin()),
@@ -181,12 +184,18 @@ double getTimeSum(std::vector<Hitcircle> &_hitcircles, int _time, double _CS, do
 	}
 	else if (index < 2)
 	{
-		timeToReact = AR2ms(_AR);
+		std::pair<int, int> visibilityTimes = _hitcircles[0].getVisiblityTimes(_AR, _hidden, 0.3, 1.0);
+		timeToReact = _hitcircles[0].getTime() - visibilityTimes.first;
 	}
 	else
 	{
-		std::vector<std::tuple<int, int, int>> pattern = getPattern(_hitcircles, _time, index, _CS, 3);
-		timeToReact = Pattern2Reaction(pattern[2], pattern[1], pattern[0], _AR);
+		std::vector<std::tuple<int, int, int, int>> pattern = getPattern(_hitcircles, _time, index, _CS, 3);
+		double timeSinceStart = std::get<3>(pattern[2]);  // Time since started holding slider
+		
+		std::pair<int, int> visibilityTimes = _hitcircles[0].getVisiblityTimes(_AR, _hidden, 0.3, 1.0);
+		double actualARTime = (_hitcircles[0].getTime() - visibilityTimes.first) + timeSinceStart;
+
+		timeToReact = Pattern2Reaction(pattern[2], pattern[1], pattern[0], actualARTime);
 	}
 
 	return react2Skill(timeToReact);
