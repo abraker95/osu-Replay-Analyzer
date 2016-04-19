@@ -19,6 +19,11 @@ static inline bool BTWN(double lss, double val, double gtr)
 	return ((lss <= val) && (val <= gtr));
 }
 
+static inline double getPercent(double _min, double _val, double _max)
+{
+	return 1.0 - ((_max - BOUND(_min, _val, _max)) / (_max - _min));
+}
+
 static inline double PX_PER_RAD(double radius)
 {
 	return (M_PI / (4.0*radius));
