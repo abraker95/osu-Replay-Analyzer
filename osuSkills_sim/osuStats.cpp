@@ -142,25 +142,28 @@ void drawVisibliltyTimings(Window &_win, int _xoffset, int _yoffset, std::vector
 	// Show hitobject visibility
 	int layer = 1;
 	
-	double ARend = AR2ms(_AR);
+	/*double ARend = AR2ms(_AR);
 	if (_hidden)
-		ARend *= 0.5;
+		ARend *= 0.5;*/
 
 	for (double i = 0; i < _hitcircles.size(); i++)
 	{
-		int time = _hitcircles[i].getTime() - AR2ms(_AR);
+		std::pair<int, int> visibilityTimes = _hitcircles[i].getVisiblityTimes(_AR, _hidden, 0.1, 0.7);
+
+		int time = visibilityTimes.first;
 		int xpos = time * _px_ms + _xoffset;
 		int ypos = 0 + _yoffset;
-		int width = MAX(ARend + (_hitcircles[i].getEndTime() - _hitcircles[i].getTime()), updateLatency)*_px_ms;
+		int width = MAX((visibilityTimes.second - visibilityTimes.first) + (_hitcircles[i].getEndTime() - _hitcircles[i].getTime()), updateLatency)*_px_ms;
 
-		if (xpos < _shift - AR2ms(_AR)*_px_ms) // if it goes out the left side of the visible area
+		if (xpos < _shift - visibilityTimes.first*_px_ms) // if it goes out the left side of the visible area
 			continue;
 		else if (xpos - width >= (_shift + 811)) // if it goes out the right side of the visible area
 			break;
 
 		// \TODO: Account for prev notes being visible when the following notes appear0
 		if (layer <= 1)
-			layer = getNumVisibleAt(_hitcircles, i, _AR, false) + 1;
+			layer = MAX(getNumVisibleAt(_hitcircles, visibilityTimes.first, _AR, _hidden, 0.1) + 1,
+						getNumVisibleAt(_hitcircles, visibilityTimes.second, _AR, _hidden, 0.1) + 1);
 
 		_win.driver->draw2DRectangle(SColor(255, 255, 150, 255), rect<s32>(xpos - _shift, ypos + 2 - 5*layer, xpos + width - _shift, ypos + 5 - 5*layer));	
 		layer--;
