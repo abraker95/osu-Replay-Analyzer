@@ -7,7 +7,7 @@
 double getSlope(position2di _p1, position2di _p2)
 {
 	if ((_p2.X - _p1.X) == 0)
-		return DBL_MAX;
+		return INFINITY;
 	else
 		return ((double)(_p2.Y - _p1.Y)) / ((double)(_p2.X - _p1.X));
 }
