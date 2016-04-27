@@ -5,6 +5,7 @@
 #include <iostream>
 #include <tuple>
 
+// TODO: Use better search methods
 int getHitcircleAt(std::vector<Hitcircle>& _hitcircles, int _time)
 {
 	for (int i = 0; i < _hitcircles.size() - 1; i++)
