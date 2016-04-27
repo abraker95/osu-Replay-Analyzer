@@ -47,3 +47,8 @@ Window::Window(int _width , int _height)
 			exit(1);
 		}
 }
+
+dimension2di Window::getDimentions()
+{
+	return dimension2di(this->width, this->height);
+}

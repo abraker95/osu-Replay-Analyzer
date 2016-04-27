@@ -26,6 +26,7 @@ class Window
 		EventReceiver reciever;
 
 		Window(int _width = 640, int _height = 480);
+		dimension2di getDimentions();
 
 	private:
 		int width;
