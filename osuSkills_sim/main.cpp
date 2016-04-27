@@ -136,8 +136,7 @@ int main()
 		hidden = hdSlider.getVal() < 0.5? false: true;
 
 		// skill calculation
-		cout << "Reaction: " << getReactionSkill(circles, time_ms, CS, AR, hidden) << endl;
-
+		double reaction = getReactionSkill(circles, time_ms, CS, AR, hidden);
 
 		// mouse wheel time control
 		if (win.reciever.IsKeyDown(KEY_KEY_Z))
@@ -172,6 +171,7 @@ int main()
 
 			win.font->draw(core::stringw(time_ms),core::rect<s32>(RESX - 100, 20, 100, 10), video::SColor(255, 255, 255, 255));
 			win.font->draw(core::stringw(win.reciever.GetMouseState().Position.X) + ", " + core::stringw(win.reciever.GetMouseState().Position.Y), core::rect<s32>(RESX - 100, 40, 100, 10), video::SColor(255, 255, 255, 255));
+			win.font->draw(core::stringw("Reaction: ") + core::stringw(reaction), core::rect<s32>(RESX - 150, 300, 100, 10), video::SColor(255, 255, 255, 255));
 
 			arSlider.Draw(win);
 			csSlider.Draw(win);
