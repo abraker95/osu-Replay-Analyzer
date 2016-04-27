@@ -20,7 +20,7 @@ static inline double BOUND(double _min, double _val, double _max)
 
 static inline bool BTWN(double lss, double val, double gtr)
 {
-	return ((lss <= val) && (val <= gtr));
+	return ((MIN(lss, gtr) <= val) && (val <= MAX(lss, gtr)));
 }
 
 static inline double getPercent(double _min, double _val, double _max)
