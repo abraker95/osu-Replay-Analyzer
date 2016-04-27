@@ -1,6 +1,8 @@
 #include "Geometry.h" 
 #include "mathUtils.h"
+
 #include <math.h>
+#include "irrlicht\include\irrlicht.h"
 
 double getSlope(position2di _p1, position2di _p2)
 {
@@ -15,6 +17,51 @@ double getDist(position2di _p1, position2di _p2)
 	double distX = _p2.X - _p1.X;
 	double distY = _p2.Y - _p1.Y;
 	return sqrt((double)(distX*distX + distY*distY));
+}
+
+bool isPointOnLine(position2di _point, std::pair<position2di, position2di> _line)
+{
+	position2di checkPoint = position2di(_line.first.X, _point.Y);
+	
+	// Just make sure the point has the same slope going to any of the other points on the line and
+	// it's between the 2 points of the line
+	if (getSlope(_line.first, checkPoint) != getSlope(_line.first, _line.second))
+	{
+		return false;
+	}
+	else if (!(BTWN(_line.first.X, _point.X, _line.second.X) && BTWN(_line.first.Y, _point.Y, _line.second.Y)))
+	{
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+
+}
+
+// Thanks http://www.softwareandfinance.com/Visual_CPP/VCPP_Intersection_Two_lines_EndPoints.html
+bool HasIntersectionPoint(std::pair<position2di, position2di> _line1, std::pair<position2di, position2di> _line2)
+{
+	bool l1_checkX1 = BTWN(_line2.first.X, _line1.first.X, _line2.second.X);
+	bool l1_checkX2 = BTWN(_line2.first.X, _line1.second.X, _line2.second.X);
+	bool l1_checkY1 = BTWN(_line2.first.Y, _line1.first.Y, _line2.second.Y);
+	bool l1_checkY2 = BTWN(_line2.first.Y, _line1.second.Y, _line2.second.Y);
+
+	bool l2_checkX1 = BTWN(_line1.first.X, _line2.first.X, _line1.second.X);
+	bool l2_checkX2 = BTWN(_line1.first.X, _line2.second.X, _line1.second.X);
+	bool l2_checkY1 = BTWN(_line1.first.Y, _line2.first.Y, _line1.second.Y);
+	bool l2_checkY2 = BTWN(_line1.first.Y, _line2.second.Y, _line1.second.Y);
+
+	bool result = ( l2_checkX1 && l2_checkX2 && l1_checkY1 && l1_checkY2) ||
+				  ( l1_checkX1 && l1_checkX2 && l2_checkY1 && l2_checkY2); 
+
+	// make sure it's not detecting connected points
+	result &= (_line1.second != _line2.first) && (_line1.first != _line2.second);
+	
+	return result;
+
+
 }
 
 double px2Deg(double _px, double _res, double _fov)
