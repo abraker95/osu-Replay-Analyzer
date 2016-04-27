@@ -2,7 +2,11 @@
 #define MATHUTILS_H
 
 #define	M_PI	(3.14159265358979323846)
-#define MAX(a, b) (a >= b? a: b)
+
+static inline double MAX(double a, double b)
+{
+	return (a >= b ? a : b);
+}
 
 static inline double MIN(double a, double b)
 {
