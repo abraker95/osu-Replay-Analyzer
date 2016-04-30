@@ -8,7 +8,7 @@ double CS2px(double _CS)
 
 double px2CS(double _px)
 {
-	return (104 - _px) / 8;
+	return (109 - _px) / 9;
 }
 
 double AR2ms(double _AR)
