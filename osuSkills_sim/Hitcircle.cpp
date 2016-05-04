@@ -1,6 +1,7 @@
 #include "Hitcircle.h"
 #include "mathUtils.h"
 #include "osuCalc.h"
+#include "drawUtils.h"
 
 #include <iostream>
 #include <tuple>
@@ -65,11 +66,7 @@ void Hitcircle::Draw(Window &_win, int _xOffset, int _yOffset, int _time, double
 		double opacity = this->getOpacity(_time, _AR, _hidden);
 		SColor fade = SColor(255, edgeCol.getRed() * opacity, edgeCol.getGreen() * opacity, edgeCol.getBlue() * opacity);
 
-		for (double i = 0; i < 2 * M_PI; i += step)
-		{
-			
-			_win.driver->drawPixel(xOffset + cos(i)*radius, yOffset + sin(i)*radius, fade);
-		}
+		DrawArc(_win, xOffset, yOffset, radius, fade);
 
 		for (int i = 1; i < sliders.size(); i++)
 		{
@@ -78,11 +75,7 @@ void Hitcircle::Draw(Window &_win, int _xOffset, int _yOffset, int _time, double
 
 			if (BTWN(std::get<TIME>(sliders[i - 1]), _time, std::get<TIME>(sliders[i])))
 			{
-				// draw slider point
-				for (double i = 0; i < 2 * M_PI; i += step)
-				{
-					_win.driver->drawPixel(slidePoint.X + cos(i) * 5, slidePoint.Y + sin(i) * 5, fade);
-				}
+				DrawArc(_win, slidePoint.X, slidePoint.Y, 5, fade);  // draw slider point
 			}
 		}
 	}
