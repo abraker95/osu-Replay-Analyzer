@@ -73,7 +73,7 @@ double AcuityPx(double _fov, double _dist, double _cs_px, double _res)
 // Original model can be found at https://www.desmos.com/calculator/f2brlvcjmf
 double Pattern2Reaction(std::tuple<int, int, int, int> _p1, std::tuple<int, int, int, int> _p2, std::tuple<int, int, int, int> _p3, double _ARms, double _CSpx)
 {
-	const double damping = 0.1;
+	const double damping = 0.36;
 	double curveSteepness = (300.0 / (_ARms + 250.)) * damping;
 	double patReq = PatternReq(_p1, _p2, _p3, _CSpx);
 
