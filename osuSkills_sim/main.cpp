@@ -27,7 +27,6 @@ using namespace gui;
 
 #ifdef _IRR_WINDOWS_
 	#pragma comment(lib, "irrlicht/lib/Win32-visualstudio/Irrlicht.lib")
-	//#pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup")
 	//#pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup")  // show/hide console
 #endif
 
@@ -185,7 +184,6 @@ int main()
 				time_ms = newTime_ms;
 		}
 
-
 		// render stuff
 		win.driver->beginScene(true, true, SColor(255, 0, 0, 0));
 
@@ -193,6 +191,7 @@ int main()
 			for (int i = 0; i < circles.size(); i++)
 				circles[i].Draw(win, 0, 0, time_ms, AR, CS, hidden);
 		
+		// \TODO: Angle drawing screws up on sliders
 			//DrawLine(win, circles[0], circles[1]);
 			int time2index = getHitcircleAt(circles, time_ms) + 1;
 			if (BTWN(1, time2index, circles.size() - 2))
