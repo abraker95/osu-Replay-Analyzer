@@ -124,9 +124,14 @@ int main()
 
 	Slider arSlider(660, 120, 90, 10);
 		arSlider.setRange(0, 11);
-
+		arSlider.setVal(10 + 1.0 / 3.0);
+			
 	Slider hdSlider(660, 160, 90, 10);
 		hdSlider.setRange(0, 1);
+
+	// \TODO: Figure out how to exit this thread safely when closing window
+//	std::function<double(double)> reactFoo = [&circles, &CS, &AR, &hidden](int _x) { return getReactionSkill(circles, _x, CS, AR, hidden); };
+//	std::thread first(DrawGraph, winGraph, reactFoo, &time_ms, 10.0, 1, 0.5);
 
 	while (win.device->run())
 	{
