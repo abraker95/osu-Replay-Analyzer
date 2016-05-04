@@ -18,6 +18,10 @@ double px2Deg(double _px, double _res, double _fov);
 
 double getVelocity(position2di _p1, position2di _p2, double _t1, double _t2);
 
+// Gets the directional angle in rads (-pi -> pi)
+double getDirAngle(position2di a, position2di b, position2di c);
+
+// Gets the normal angle in rads (0 -> pi)
 double getAngle(position2di _p1, position2di _ref, position2di _p3);
 double getAbsoluteAngle(position2di _p1, position2di _p2);
 

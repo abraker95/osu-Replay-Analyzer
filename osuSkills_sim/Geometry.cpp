@@ -81,6 +81,19 @@ double getVelocity(position2di _p1, position2di _p2, double _t1, double _t2)
 	return dist / time;
 }
 
+// Positive is counter-clock wise and negative is clock-wise
+// Returns values in radians between -pi and +pi
+double getDirAngle(position2di a, position2di b, position2di c)
+{
+	vector2df ab(b.X - a.X, b.Y - a.Y);
+	vector2df cb(b.X - c.X, b.Y - c.Y);
+
+	double dot = (ab.X * cb.X + ab.Y * cb.Y); // dot product
+	double cross = (ab.X * cb.Y - ab.Y * cb.X); // cross product
+
+	return atan2(cross, dot);;
+}
+
 double getAngle(position2di _p1, position2di _ref, position2di _p2)
 {
 	double a = (_ref.X - _p1.X)*(_ref.X - _p1.X) + (_ref.Y - _p1.Y)*(_ref.Y - _p1.Y);
