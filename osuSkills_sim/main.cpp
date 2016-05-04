@@ -28,6 +28,7 @@ using namespace gui;
 #ifdef _IRR_WINDOWS_
 	#pragma comment(lib, "irrlicht/lib/Win32-visualstudio/Irrlicht.lib")
 	//#pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup")
+	//#pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup")  // show/hide console
 #endif
 
 void DrawDebug(Window &_win)
