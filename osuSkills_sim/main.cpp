@@ -31,17 +31,35 @@ using namespace gui;
 	//#pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup")  // show/hide console
 #endif
 
-void DrawDebug(Window &_win)
+void DrawDebug(Window &_win, std::vector<Hitcircle> &_hitcircles, int _time, double _CS, int _quant)
 {
-	double click = _win.reciever.GetMouseState().wheelMove;
+	int index = getHitcircleAt(_hitcircles, _time) + 1;
 
-	/*win.font->draw(core::stringw(pos.X) + ", " + core::stringw(pos.Y),
-		core::rect<s32>(130, 10, 300, 50),
-		video::SColor(255, 255, 255, 255));*/
+	if (index > _hitcircles.size() - 1) 	// if it's beyond the end
+	{
+		//
+	}
+	else if (index < 3) // if it's at or before the beggining
+	{
+		//
+	}
+	else
+	{
+		std::vector<std::tuple<int, int, int, int>> pattern;
 
-	_win.font->draw(core::stringw(click),
-		core::rect<s32>(10, 10, 100, 10),
-		video::SColor(255, 255, 255, 255));
+		if (_hitcircles[index - 1].isSlider())
+			if (_time < _hitcircles[index - 1].getEndTime())
+				index--;
+
+		pattern = getPattern(_hitcircles, _time, index, _CS, _quant);
+
+		DrawArc(_win, std::get<Hitcircle::XPOS>(pattern[0]), std::get<Hitcircle::YPOS>(pattern[0]), 5, SColor(255, 0, 255, 128), 0.0, 2.0*M_PI);
+		DrawArc(_win, std::get<Hitcircle::XPOS>(pattern[1]), std::get<Hitcircle::YPOS>(pattern[1]), 5, SColor(255, 0, 255, 128), 0.0, 2.0*M_PI);
+		DrawArc(_win, std::get<Hitcircle::XPOS>(pattern[2]), std::get<Hitcircle::YPOS>(pattern[2]), 5, SColor(255, 0, 255, 128), 0.0, 2.0*M_PI);
+	}
+
+
+}
 }
 
 std::vector<Hitcircle> GetMap(std::string _filename)
@@ -190,7 +208,7 @@ int main()
 			csSlider.Draw(win);
 			hdSlider.Draw(win);
 
-			DrawDebug(win);
+			DrawDebug(win, circles, time_ms, CS, 3);
 		win.driver->endScene();
 	}
 
