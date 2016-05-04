@@ -91,7 +91,7 @@ double getReactionSkill(std::vector<Hitcircle> &_hitcircles, int _time, double _
 	{
 		timeToReact = 0;
 	}
-	else if (index < 2)
+	else if (index < 3) // if it's at or before the beggining
 	{
 		std::pair<int, int> visibilityTimes = _hitcircles[0].getVisiblityTimes(_AR, _hidden, 0.1, 1.0);
 		timeToReact = _hitcircles[0].getTime() - visibilityTimes.first;
