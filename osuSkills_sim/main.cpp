@@ -5,12 +5,18 @@
 
 #include "irrlicht/include/irrlicht.h"
 #include "Window.h"
+#include "drawUtils.h"
+
+#include "mathUtils.h"
+
 #include "Hitcircle.h"
 #include "Slider.h"
-#include "DebugRender.h"
-#include "SkillsCalc.h"
-#include "mathUtils.h"
 #include "osuStats.h"
+#include "analysis.h"
+#include "osuCalc.h"
+
+#include "reaction.h"
+#include "reading.h"
 
 using namespace std;
 
