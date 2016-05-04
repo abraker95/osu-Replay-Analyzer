@@ -17,6 +17,8 @@ void DrawLine(Window &_win, Hitcircle &_hc1, Hitcircle &_hc2)
 
 void DrawArc(Window &_win, int _xpos, int _ypos, int _radius, SColor _color, double _startAngle, double _radAngle)
 {
+	// step is such that the circle is drawn with minimal
+	// amount of iterations while not showing any gaps
 	for (double i = _startAngle; i < _startAngle + _radAngle; i += PX_PER_RAD(_radius))
 		_win.driver->drawPixel(_xpos + cos(i)*_radius, _ypos + sin(i)*_radius, _color);
 }

@@ -49,8 +49,6 @@ Hitcircle::Hitcircle(int _x, int _y, int _t, std::vector<std::tuple<int, int, in
 
 void Hitcircle::Draw(Window &_win, int _xOffset, int _yOffset, int _time, double _AR, double _CS, bool _hidden)
 {
-	// step is such that the circle is drawn with minimal
-	// amount of iterations while not showing any gaps
 	this->setCS_px(_CS);
 	this->xOffset = this->x + _xOffset;
 	this->yOffset = this->y + _yOffset;
