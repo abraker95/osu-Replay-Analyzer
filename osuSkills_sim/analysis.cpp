@@ -42,7 +42,10 @@ std::vector<std::tuple<int, int, int, int>> getPattern(std::vector<Hitcircle> &_
 			position2di prevPos = position2di(std::get<Hitcircle::XPOS>(points[points.size() - 1]), std::get<Hitcircle::YPOS>(points[points.size() - 1]));
 			position2di newPos = circle.getSliderPointAt(1 + i);
 			if (getDist(prevPos, newPos) > CS2px(_CS))
+			{
+				prev_i = i;
 				points.push_back(getPointAt(circle, 1 + i--));
+			}
 		}
 	}
 	else
