@@ -88,7 +88,7 @@ double PatternReq(std::tuple<int, int, int, int> _p1, std::tuple<int, int, int, 
 
 	double time = std::get<Hitcircle::TIME>(_p3) - std::get<Hitcircle::TIME>(_p1);
 
-	return time / ((dist / (3 * CSpx))*((M_PI - angle)/M_PI));
+	return time / ((dist / (2 * CSpx))*((M_PI - angle)/M_PI));
 }
 
 std::tuple<int, int, int, int> getPointAt(Hitcircle &_hitcircle, int _index)
