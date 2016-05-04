@@ -94,16 +94,12 @@ double getDirAngle(position2di a, position2di b, position2di c)
 	return atan2(cross, dot);;
 }
 
+// Returns 3 points make in radians between 0 and pi
 double getAngle(position2di _p1, position2di _ref, position2di _p2)
 {
-	double a = (_ref.X - _p1.X)*(_ref.X - _p1.X) + (_ref.Y - _p1.Y)*(_ref.Y - _p1.Y);
-	double b = (_ref.X - _p2.X)*(_ref.X - _p2.X) + (_ref.Y - _p2.Y)*(_ref.Y - _p2.Y);
-	double c = (_p2.X - _p1.X)*(_p2.X - _p1.X) + (_p2.Y - _p1.Y)*(_p2.Y - _p1.Y);
+	return abs(getDirAngle(_p1, _ref, _p2));
+}
 
-	if (a == 0 || b == 0)
-		return 0.0;
-	else
-		return acos((a + b - c) / sqrt(4 * a*b));
 /// \TODO: check what happends if point are on top of each other
 bool getRotDir(position2di a, position2di b, position2di c)
 {

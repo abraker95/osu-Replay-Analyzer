@@ -23,6 +23,8 @@ double getDirAngle(position2di a, position2di b, position2di c);
 
 // Gets the normal angle in rads (0 -> pi)
 double getAngle(position2di _p1, position2di _ref, position2di _p3);
+
+// Gets the angular direction of a vector
 double getAbsoluteAngle(position2di _p1, position2di _p2);
 
 // Get the rotational direction
