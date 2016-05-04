@@ -101,6 +101,10 @@ double getReactionSkill(std::vector<Hitcircle> &_hitcircles, int _time, double _
 		std::vector<std::tuple<int, int, int, int>> pattern = getPattern(_hitcircles, _time, index, _CS, 3);
 		double timeSinceStart = 0;
 		
+		if (_hitcircles[index - 1].isSlider())
+			if(_time < _hitcircles[index - 1].getEndTime())
+				index--;
+
 		if (_hitcircles[index].isSlider())
 			timeSinceStart = std::get<3>(pattern[2]);  // Time since started holding slider
 		
