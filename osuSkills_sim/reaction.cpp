@@ -87,7 +87,7 @@ double getReactionSkill(std::vector<Hitcircle> &_hitcircles, int _time, double _
 	double timeToReact = 0.0;
 	int index = getHitcircleAt(_hitcircles, _time) + 1;
 
-	if (index > _hitcircles.size() - 1)
+	if (index > _hitcircles.size() - 1) 	// if it's beyond the end
 	{
 		timeToReact = 0;
 	}
