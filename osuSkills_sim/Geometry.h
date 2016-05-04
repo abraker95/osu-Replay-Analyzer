@@ -25,6 +25,9 @@ double getDirAngle(position2di a, position2di b, position2di c);
 double getAngle(position2di _p1, position2di _ref, position2di _p3);
 double getAbsoluteAngle(position2di _p1, position2di _p2);
 
+// Get the rotational direction
+bool getRotDir(position2di _p1, position2di _ref, position2di _p3);
+
 position2di getMidpoint(position2di _p1, position2di _p2);
 double getNormal(position2di _p1, position2di _p2);
 

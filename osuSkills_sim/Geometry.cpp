@@ -104,6 +104,10 @@ double getAngle(position2di _p1, position2di _ref, position2di _p2)
 		return 0.0;
 	else
 		return acos((a + b - c) / sqrt(4 * a*b));
+/// \TODO: check what happends if point are on top of each other
+bool getRotDir(position2di a, position2di b, position2di c)
+{
+	return (getDirAngle(a, b, c) < 0);
 }
 
 double getAbsoluteAngle(position2di _p1, position2di _p2)
