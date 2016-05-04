@@ -55,7 +55,7 @@ std::vector<std::tuple<int, int, int, int>> getPattern(std::vector<Hitcircle> &_
 	if (points.size() < _quant && _index > 0)
 	{
 		// if not, go to the previous hitobject
-		std::vector<std::tuple<int, int, int, int>> pattern = getPattern(_hitcircles, _time, _index - 1, _CS, _quant - points.size());
+		std::vector<std::tuple<int, int, int, int>> pattern = getPattern(_hitcircles, _hitcircles[_index - 1].getEndTime(), _index - 1, _CS, _quant - points.size());
 
 		points.insert(points.end(),
 			std::make_move_iterator(pattern.begin()),
