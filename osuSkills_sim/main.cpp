@@ -148,6 +148,7 @@ int main()
 
 		// skill calculation
 		double reaction = getReactionSkill(circles, time_ms, CS, AR, hidden);
+		double reading = getReadingSkill(circles, time_ms, CS, AR, hidden);
 
 		// mouse wheel time control
 		if (win.reciever.IsKeyDown(KEY_KEY_Z))
