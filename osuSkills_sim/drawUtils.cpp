@@ -25,13 +25,13 @@ void DrawArc(Window &_win, int _xpos, int _ypos, int _radius, SColor _color, dou
 
 void DrawAngle(Window &_win, Hitcircle &_hc1, Hitcircle &_hc2, Hitcircle &_hc3)
 {
+	const int RADIUS = 10;
 	double thetaRot;
+	double angle = getAngle(_hc1.getPos(), _hc2.getPos(), _hc3.getPos());
+	
 
 	_win.driver->draw2DLine(_hc1.getEndPoint(), _hc2.getPos(), SColor(255, 255, 0, 0));
 	_win.driver->draw2DLine(_hc2.getEndPoint(), _hc3.getPos(), SColor(255, 255, 0, 0));
-	
-	const int radius = 10;
-	double angle = getAngle(_hc1.getPos(), _hc2.getPos(), _hc3.getPos());
 	
 	_win.font->draw(core::stringw(rad2deg(angle)),
 		core::rect<s32>(_hc2.getPos().X + 10, _hc2.getPos().Y + 10, 100, 10),
