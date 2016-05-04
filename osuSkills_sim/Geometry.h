@@ -44,7 +44,7 @@ double addAngle(double _rad1, double rad2);
 double rad2deg(double _rad); 
 double deg2rad(double _deg);
 
-
+double getCircleArea(double _radius);
 
 #endif
 

@@ -141,4 +141,9 @@ double rad2deg(double _rad)
 double deg2rad(double _deg)
 {
 	return (_deg * M_PI) / 180.0;
+
+double getCircleArea(double _radius)
+{
+	return M_PI*_radius*_radius;
+}
 }
