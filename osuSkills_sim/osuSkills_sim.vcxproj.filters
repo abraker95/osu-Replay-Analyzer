@@ -13,84 +13,120 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\osu!">
+      <UniqueIdentifier>{0e8bfce2-d818-4cc5-8120-c389905d5d02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\osu!\Skills">
+      <UniqueIdentifier>{23911ad5-30ef-4440-acc4-07f8f3d9548b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\osu!">
+      <UniqueIdentifier>{440f2137-0c85-46de-ac56-7c7d7f0fd364}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ui">
+      <UniqueIdentifier>{229b9872-ada9-4cac-b8fe-aad9fcea271f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ui">
+      <UniqueIdentifier>{13d556fa-178f-42cb-9901-d7eb666e182c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\math">
+      <UniqueIdentifier>{24f9e66e-1793-4c8e-9211-ff276f78ff7a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\math">
+      <UniqueIdentifier>{b3d1ce74-c772-48c5-a96d-d483bba0184c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\osu!\Skills">
+      <UniqueIdentifier>{2bc4d5b3-e6ee-4615-b2cd-1ceba30d1395}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Event.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Hitcircle.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\osu!</Filter>
     </ClCompile>
     <ClCompile Include="osuCalc.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\osu!</Filter>
     </ClCompile>
     <ClCompile Include="Slider.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Window.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="DebugRender.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Geometry.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SkillsCalc.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Lambert.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\osu!</Filter>
     </ClCompile>
     <ClCompile Include="osuStats.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\osu!</Filter>
+    </ClCompile>
+    <ClCompile Include="analysis.cpp">
+      <Filter>Source Files\osu!</Filter>
+    </ClCompile>
+    <ClCompile Include="reaction.cpp">
+      <Filter>Source Files\osu!\Skills</Filter>
+    </ClCompile>
+    <ClCompile Include="reading.cpp">
+      <Filter>Source Files\osu!\Skills</Filter>
+    </ClCompile>
+    <ClCompile Include="Event.cpp">
+      <Filter>Source Files\ui</Filter>
     </ClCompile>
     <ClCompile Include="Object.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="Window.cpp">
+      <Filter>Source Files\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="Geometry.cpp">
+      <Filter>Source Files\math</Filter>
+    </ClCompile>
+    <ClCompile Include="Lambert.cpp">
+      <Filter>Source Files\math</Filter>
+    </ClCompile>
+    <ClCompile Include="drawUtils.cpp">
+      <Filter>Source Files\ui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Event.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Window.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="analysis.h">
+      <Filter>Header Files\osu!</Filter>
     </ClInclude>
     <ClInclude Include="Hitcircle.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\osu!</Filter>
     </ClInclude>
     <ClInclude Include="osuCalc.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\osu!</Filter>
     </ClInclude>
     <ClInclude Include="Slider.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="mathUtils.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DebugRender.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Geometry.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SkillsCalc.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Lambert.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="LambertW.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\osu!</Filter>
     </ClInclude>
     <ClInclude Include="osuStats.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\osu!</Filter>
+    </ClInclude>
+    <ClInclude Include="reaction.h">
+      <Filter>Header Files\osu!\Skills</Filter>
+    </ClInclude>
+    <ClInclude Include="reading.h">
+      <Filter>Header Files\osu!\Skills</Filter>
+    </ClInclude>
+    <ClInclude Include="Event.h">
+      <Filter>Header Files\ui</Filter>
     </ClInclude>
     <ClInclude Include="Object.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="Window.h">
+      <Filter>Header Files\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="Geometry.h">
+      <Filter>Header Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="Lambert.h">
+      <Filter>Header Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="LambertW.h">
+      <Filter>Header Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="mathUtils.h">
+      <Filter>Header Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="drawUtils.h">
+      <Filter>Header Files\ui</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
