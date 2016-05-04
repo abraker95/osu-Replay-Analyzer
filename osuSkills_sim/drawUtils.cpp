@@ -34,7 +34,7 @@ void DrawAngle(Window &_win, Hitcircle &_hc1, Hitcircle &_hc2, Hitcircle &_hc3)
 	double angle = getAngle(_hc1.getPos(), _hc2.getPos(), _hc3.getPos());
 	
 	_win.font->draw(core::stringw(rad2deg(angle)),
-		core::rect<s32>(_hc2.getPos().X, _hc2.getPos().Y, 100, 10),
+		core::rect<s32>(_hc2.getPos().X + 10, _hc2.getPos().Y + 10, 100, 10),
 		video::SColor(255, 255, 255, 255));
 
 	if (getRotDir(_hc1.getPos(), _hc2.getPos(), _hc3.getPos()) == DIR::CW)
