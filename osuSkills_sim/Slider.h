@@ -27,6 +27,8 @@ class Slider
 
 		void setRange(double _min, double _max);
 
+		void setVal(double _val);
+
 		void setWidth(double _width);
 
 		void setAuto(bool _auto, AUTO_MODE _autoMode);

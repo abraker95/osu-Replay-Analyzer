@@ -66,6 +66,11 @@ double Slider::getVal()
 	return val;
 }
 
+void Slider::setVal(double _val)
+{
+	val = _val;
+}
+
 void Slider::setAuto(bool _auto, AUTO_MODE _autoMode)
 {
 	automate = _auto;
