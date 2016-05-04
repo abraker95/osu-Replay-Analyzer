@@ -64,7 +64,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="DebugRender.cpp" />
+    <ClCompile Include="drawUtils.cpp" />
     <ClCompile Include="Event.cpp" />
     <ClCompile Include="Hitcircle.cpp" />
     <ClCompile Include="Lambert.cpp" />
@@ -72,13 +72,16 @@
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="osuCalc.cpp" />
     <ClCompile Include="osuStats.cpp" />
-    <ClCompile Include="SkillsCalc.cpp" />
+    <ClCompile Include="reaction.cpp" />
+    <ClCompile Include="reading.cpp" />
     <ClCompile Include="Slider.cpp" />
     <ClCompile Include="Geometry.cpp" />
+    <ClCompile Include="analysis.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="DebugRender.h" />
+    <ClInclude Include="analysis.h" />
+    <ClInclude Include="drawUtils.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="Hitcircle.h" />
     <ClInclude Include="Lambert.h" />
@@ -88,7 +91,8 @@
     <ClInclude Include="osuCalc.h" />
     <ClInclude Include="Geometry.h" />
     <ClInclude Include="osuStats.h" />
-    <ClInclude Include="SkillsCalc.h" />
+    <ClInclude Include="reaction.h" />
+    <ClInclude Include="reading.h" />
     <ClInclude Include="Slider.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
