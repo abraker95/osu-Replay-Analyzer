@@ -141,9 +141,15 @@ double rad2deg(double _rad)
 double deg2rad(double _deg)
 {
 	return (_deg * M_PI) / 180.0;
+}
 
 double getCircleArea(double _radius)
 {
 	return M_PI*_radius*_radius;
 }
+
+// thanks http://jwilson.coe.uga.edu/EMAT6680Su12/Carreras/EMAT6690/Essay2/essay2.html
+double getCircleOverlapArea(double _radius, double _dist)
+{
+	return _radius*_radius*acos(_dist / (2.0*_radius)) - (_dist / 4.0)*sqrt(4.0*_radius*_radius - _dist*_dist);
 }

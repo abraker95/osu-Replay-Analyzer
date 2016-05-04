@@ -45,6 +45,7 @@ double rad2deg(double _rad);
 double deg2rad(double _deg);
 
 double getCircleArea(double _radius);
+double getCircleOverlapArea(double _radius, double _dist);
 
 #endif
 
