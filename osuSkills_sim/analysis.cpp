@@ -153,6 +153,36 @@ int getNumIntersections(std::vector<Hitcircle> &_hitcircles, int _index, double 
 	}
 
 	return numIntersections;
+}
+
+vector2df getParamVelVec(std::vector<Hitcircle> &_hitcircles, int _time, double _CS)
+{
+	int index = getHitcircleAt(_hitcircles, _time) + 1;
+
+	if (index > _hitcircles.size() - 1)
+	{
+		return vector2df(0.0, 0.0);
+	}
+	else if (index < 2)
+	{
+		return vector2df(0.0, 0.0);
+	}
+	else
+	{
+		std::vector<std::tuple<int, int, int, int>> pattern = getPattern(_hitcircles, _time, index, _CS, 3);
+		vector2df velXY;
+
+		if (_hitcircles[index].isSlider())
+			velXY = getParamVel(pattern[2], pattern[1]);
+		else
+			velXY = getParamVel(pattern[0], pattern[1]);
+
+		//std::cout << velXY.X << ", " << velXY.Y << std::endl;
+
+		return velXY;
+	}
+}
+
 
 // TODO: Use better search methods
 int getHitcircleAt(std::vector<Hitcircle>& _hitcircles, int _time)
