@@ -182,4 +182,23 @@ int getNumVisibleAt(std::vector<Hitcircle>& _hitcircles, int _time, double _AR, 
 
 	return count;
 }
+
+std::vector<Hitcircle> getAllVisibleAt(std::vector<Hitcircle>& _hitcircles, int _time, double _AR, bool _hidden, double _opacity)
+{
+	int index = getHitcircleAt(_hitcircles, _time);
+	std::vector<Hitcircle> hitcircles;
+
+	if (index >= 0)
+		hitcircles.push_back(_hitcircles[index]);
+
+	for (int i = index + 1; i < _hitcircles.size(); i++)
+	{
+		std::pair<int, int> visibilityTimes = _hitcircles[i].getVisiblityTimes(_AR, _hidden, _opacity, _opacity);
+		if (!BTWN(visibilityTimes.first, _time, visibilityTimes.second))
+			break;
+
+		hitcircles.push_back(_hitcircles[i]);
+	}
+
+	return hitcircles;
 }

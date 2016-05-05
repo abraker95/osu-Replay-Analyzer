@@ -23,3 +23,5 @@ int getNumIntersections(std::vector<Hitcircle> &_hitcircles, int _index, double 
 
 // Gets the number of visible hitcircles at a certain time
 int getNumVisibleAt(std::vector<Hitcircle>& _hitcircles, int _time, double _AR, bool _hidden, double _opacity);
+
+std::vector<Hitcircle> getAllVisibleAt(std::vector<Hitcircle> &_hitcircles, int _time, double _AR, bool _hidden, double _opacity);
