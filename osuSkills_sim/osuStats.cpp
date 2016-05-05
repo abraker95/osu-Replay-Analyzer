@@ -5,6 +5,7 @@
 #include "osuCalc.h"
 #include "Geometry.h"
 #include "reaction.h"
+#include "analysis.h"
 #include <iostream>
 
 using namespace irr;
