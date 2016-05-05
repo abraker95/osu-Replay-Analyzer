@@ -153,4 +153,33 @@ int getNumIntersections(std::vector<Hitcircle> &_hitcircles, int _index, double 
 	}
 
 	return numIntersections;
+
+// TODO: Use better search methods
+int getHitcircleAt(std::vector<Hitcircle>& _hitcircles, int _time)
+{
+	for (int i = 0; i < _hitcircles.size() - 1; i++)
+	{
+		if (BTWN(_hitcircles[i].getTime(), _time, _hitcircles[i + 1].getTime()))
+			return i;
+	}
+
+	return -1;
+}
+
+int getNumVisibleAt(std::vector<Hitcircle>& _hitcircles, int _time, double _AR, bool _hidden, double _opacity)
+{
+	int index = getHitcircleAt(_hitcircles, _time);
+	int count = 1;
+
+	for (int i = index + 1; i < _hitcircles.size(); i++)
+	{
+		std::pair<int, int> visibilityTimes = _hitcircles[i].getVisiblityTimes(_AR, _hidden, _opacity, _opacity);
+		if (!BTWN(visibilityTimes.first, _time, visibilityTimes.second))
+			break;
+
+		count++;
+	}
+
+	return count;
+}
 }
