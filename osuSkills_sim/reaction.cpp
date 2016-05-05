@@ -118,31 +118,3 @@ double getReactionSkill(std::vector<Hitcircle> &_hitcircles, int _time, double _
 
 	return react2Skill(timeToReact);
 }
-
-{
-	double timeToReact = 0.0;
-	int index = getHitcircleAt(_hitcircles, _time) + 1;
-
-	if (index > _hitcircles.size() - 1)
-	{
-		timeToReact = 0;
-	}
-	else if (index < 2)
-	{
-		std::pair<int, int> visibilityTimes = _hitcircles[0].getVisiblityTimes(_AR, _hidden, 0.3, 1.0);
-		timeToReact = _hitcircles[0].getTime() - visibilityTimes.first;
-	}
-	else
-	{
-		std::vector<std::tuple<int, int, int, int>> pattern = getPattern(_hitcircles, _time, index, _CS, 3);
-		double timeSinceStart = std::get<3>(pattern[2]);  // Time since started holding slider
-		
-		std::pair<int, int> visibilityTimes = _hitcircles[0].getVisiblityTimes(_AR, _hidden, 0.3, 1.0);
-		double actualARTime = (_hitcircles[0].getTime() - visibilityTimes.first) + timeSinceStart;
-
-		timeToReact = Pattern2Reaction(pattern[2], pattern[1], pattern[0], actualARTime);
-	}
-
-	return react2Skill(timeToReact);
-}
-
