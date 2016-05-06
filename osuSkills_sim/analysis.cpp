@@ -120,32 +120,26 @@ vector2df getParamVel(std::tuple<int, int, int, int> _p1, std::tuple<int, int, i
 }
 
 // \TODO: Take account sliders. It currently only does start time of the current note
-int getNumIntersections(std::vector<Hitcircle> &_hitcircles, int _index, double _ARms)
+int getNumIntersectionsAt(std::vector<Hitcircle> &_hitcircles, int _time, double _AR, bool _hidden, double _opacity)
 {
-	int timeEnd = _hitcircles[_index].getTime();
-	int timeStart = timeEnd - _ARms;
-	int indexStart = getHitcircleAt(_hitcircles, timeStart);
-	
+	std::vector<Hitcircle> visible = getAllVisibleAt(_hitcircles, _time, _AR, _hidden, _opacity);
+
 	// \TODO: to be applied when doing slider intersection check
 	//getPattern(_hitcircles, timeEnd, _index, _CS, getNumVisibleAt(_hitcircles, _AR, _hidden, 0.1));
 
-	// out of bounds check
-	if (indexStart == -1)
-		return 0;
-
 	int numIntersections = 0;
-	std::pair<position2di, position2di> path;
-		path.first = _hitcircles[_index - 1].getPos();
-		path.second = _hitcircles[_index].getPos();
 
-	for (int i = indexStart; i < _index; i++)
+	for (int i = 1; i < visible.size(); i++)
 	{
-		// out of bounds check
-		if (i > 2)
+		std::pair<position2di, position2di> path;
+			path.first = visible[i - 1].getPos();
+			path.second = visible[i].getPos();
+
+		for (int j = i + 1; j < visible.size(); j++)
 		{
 			std::pair<position2di, position2di> checkPath;
-			checkPath.first = _hitcircles[i - 1].getPos();
-			checkPath.second = _hitcircles[i].getPos();
+				checkPath.first = visible[j - 1].getPos();
+				checkPath.second = visible[j].getPos();
 
 			if (HasIntersectionPoint(path, checkPath))
 				numIntersections++;

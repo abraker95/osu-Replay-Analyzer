@@ -19,7 +19,7 @@ vector2df getParamVel(std::tuple<int, int, int, int> _p1, std::tuple<int, int, i
 std::tuple<int, int, int, int> getPointAt(Hitcircle &_hitcircle, int _index);
 
 // Gets number of path intersects
-int getNumIntersections(std::vector<Hitcircle> &_hitcircles, int _index, double _ARms);
+int getNumIntersectionsAt(std::vector<Hitcircle> &_hitcircles, int _time, double _AR, bool _hidden, double _opacity);
 
 // Gets the number of visible hitcircles at a certain time
 int getNumVisibleAt(std::vector<Hitcircle>& _hitcircles, int _time, double _AR, bool _hidden, double _opacity);
