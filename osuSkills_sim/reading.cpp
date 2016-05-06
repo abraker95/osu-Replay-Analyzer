@@ -8,9 +8,9 @@
 
 double Pattern2Reading(std::tuple<int, int, int, int> _p1, std::tuple<int, int, int, int> _p2, std::tuple<int, int, int, int> _p3, double _ARms, double _CSpx)
 {
-	std::cout << rad2deg(getDirAngle(position2di(std::get<Hitcircle::XPOS>(_p3), std::get<Hitcircle::YPOS>(_p3)), 
+	/*std::cout << rad2deg(getDirAngle(position2di(std::get<Hitcircle::XPOS>(_p3), std::get<Hitcircle::YPOS>(_p3)), 
 			   						 position2di(std::get<Hitcircle::XPOS>(_p2), std::get<Hitcircle::YPOS>(_p2)), 
-									 position2di(std::get<Hitcircle::XPOS>(_p1), std::get<Hitcircle::YPOS>(_p1)))) << std::endl;
+									 position2di(std::get<Hitcircle::XPOS>(_p1), std::get<Hitcircle::YPOS>(_p1)))) << std::endl;*/
 
 	return 0.0;
 }
