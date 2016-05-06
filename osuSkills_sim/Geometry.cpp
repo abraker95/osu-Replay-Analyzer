@@ -151,5 +151,10 @@ double getCircleArea(double _radius)
 // thanks http://jwilson.coe.uga.edu/EMAT6680Su12/Carreras/EMAT6690/Essay2/essay2.html
 double getCircleOverlapArea(double _radius, double _dist)
 {
-	return _radius*_radius*acos(_dist / (2.0*_radius)) - (_dist / 4.0)*sqrt(4.0*_radius*_radius - _dist*_dist);
+	if (_dist == 0.0)
+		return getCircleArea(_radius);
+	else if (_radius == 0.0 || _radius*2.0 <= _dist)
+		return 0.0;
+	else
+		return 2*_radius*_radius*acos(_dist / (2.0*_radius)) - (_dist / 4.0)*sqrt(4.0*_radius*_radius - _dist*_dist);
 }
