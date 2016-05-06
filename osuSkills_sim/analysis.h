@@ -25,4 +25,5 @@ int getNumIntersectionsAt(std::vector<Hitcircle> &_hitcircles, int _time, double
 int getNumVisibleAt(std::vector<Hitcircle>& _hitcircles, int _time, double _AR, bool _hidden, double _opacity);
 
 std::vector<Hitcircle> getAllVisibleAt(std::vector<Hitcircle> &_hitcircles, int _time, double _AR, bool _hidden, double _opacity);
+
 double getOverLapSurfaceArea(std::vector<Hitcircle> &_hitcircles, int _time, double _AR, double _CS, bool _hidden, double _opacity);
