@@ -30,7 +30,7 @@ using namespace gui;
 	//#pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup")  // show/hide console
 #endif
 
-void DrawDebug(Window &_win, std::vector<Hitcircle> &_hitcircles, int _time, double _CS, int _quant)
+void DrawDebug(Window &_win, std::vector<Hitcircle> &_hitcircles, int _time, double _AR, double _CS, bool _hidden)
 {
 	int index = getHitcircleAt(_hitcircles, _time) + 1;
 
@@ -50,7 +50,7 @@ void DrawDebug(Window &_win, std::vector<Hitcircle> &_hitcircles, int _time, dou
 			if (_time < _hitcircles[index - 1].getEndTime())
 				index--;
 
-		pattern = getPattern(_hitcircles, _time, index, _CS, _quant);
+		pattern = getPattern(_hitcircles, _time, index, _CS, 3);
 
 		DrawArc(_win, std::get<Hitcircle::XPOS>(pattern[0]), std::get<Hitcircle::YPOS>(pattern[0]), 5, SColor(255, 0, 255, 128), 0.0, 2.0*M_PI);
 		DrawArc(_win, std::get<Hitcircle::XPOS>(pattern[1]), std::get<Hitcircle::YPOS>(pattern[1]), 5, SColor(255, 0, 255, 128), 0.0, 2.0*M_PI);
