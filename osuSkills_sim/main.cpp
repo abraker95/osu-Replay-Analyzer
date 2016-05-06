@@ -231,7 +231,7 @@ int main()
 			csSlider.Draw(win);
 			hdSlider.Draw(win);
 
-			DrawDebug(win, circles, time_ms, CS, 3);
+			DrawDebug(win, circles, time_ms, AR, CS, hidden);
 		win.driver->endScene();
 	}
 
