@@ -46,6 +46,10 @@ double getReadingSkill(std::vector<Hitcircle> &_hitcircles, int _time, double _C
 		//double actualARTime = (_hitcircles[0].getTime() - visibilityTimes.first) + timeSinceStart;
 
 		reading = Pattern2Reading(pattern[2], pattern[1], pattern[0], 0.0, CS2px(_CS) / 2.0);
+		
+		double overlapFactor = getOverLapSurfaceArea(_hitcircles, _time, _AR, px2CS(CS2px(_CS)*1.5), _hidden, 0.3) / getCircleArea(CS2px(_CS) / 2.0) + 1;
+		double numPathIntersects = getNumIntersectionsAt(_hitcircles, _time, _AR, _hidden, 0.3) + 1;
+		std::cout << overlapFactor*numPathIntersects << std::endl;
 	}
 
 	return reading;
