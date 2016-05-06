@@ -1,11 +1,13 @@
 #include "osuCalc.h"
 #include "mathUtils.h"
 
+// diameter
 double CS2px(double _CS)
 {
-	return 104 - 8 * _CS;
+	return 109 - 9 * _CS;
 }
 
+// diameter
 double px2CS(double _px)
 {
 	return (109 - _px) / 9;
