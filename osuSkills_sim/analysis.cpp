@@ -226,3 +226,19 @@ std::vector<Hitcircle> getAllVisibleAt(std::vector<Hitcircle>& _hitcircles, int 
 
 	return hitcircles;
 }
+
+double getOverLapSurfaceArea(std::vector<Hitcircle> &_hitcircles, int _time, double _AR, double _CS, bool _hidden, double _opacity)
+{
+	std::vector<Hitcircle> visible = getAllVisibleAt(_hitcircles, _time, _AR, _hidden, _opacity);
+	double area = 0.0;
+
+	for (int i = 0; i < visible.size(); i++)
+	{
+		for (int j = i + 1; j < visible.size(); j++)
+		{
+			area += getCircleOverlapArea(CS2px(_CS) / 2.0, getDist(visible[i].getPos(), visible[j].getPos()));
+		}
+	}
+
+	return area;
+}
