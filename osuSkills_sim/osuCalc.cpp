@@ -21,7 +21,7 @@ double AR2ms(double _AR)
 
 double ms2AR(double _ms)
 {
-	if (_ms <= 1200.0) return (1800 - _ms) / 120.0;
+	if (_ms >= 1200.0) return (1800 - _ms) / 120.0;
 	else			   return (1950 - _ms) / 150.0;
 }
 
