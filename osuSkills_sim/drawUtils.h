@@ -9,7 +9,7 @@
 #include "Hitcircle.h"
 
 void DrawLine(Window &_win, Hitcircle &_hc1, Hitcircle &_hc2);
-void DrawArc(Window &_win, int _xpos, int _ypos, int _radius, SColor _color = SColor(255, 255, 255, 255), double _startAngle = 0.0, double _radAngle = 2 * M_PI);
+void DrawArc(Window &_win, int _xpos, int _ypos, double _radius, SColor _color = SColor(255, 255, 255, 255), double _startAngle = 0.0, double _radAngle = 2 * M_PI);
 void DrawAngle(Window &_win, Hitcircle &_hc1, Hitcircle &_hc2, Hitcircle &_hc3);
 
 

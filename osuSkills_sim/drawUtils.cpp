@@ -15,7 +15,7 @@ void DrawLine(Window &_win, Hitcircle &_hc1, Hitcircle &_hc2)
 	// \TODO draw dist or velocity label
 }
 
-void DrawArc(Window &_win, int _xpos, int _ypos, int _radius, SColor _color, double _startAngle, double _radAngle)
+void DrawArc(Window &_win, int _xpos, int _ypos, double _radius, SColor _color, double _startAngle, double _radAngle)
 {
 	// step is such that the circle is drawn with minimal
 	// amount of iterations while not showing any gaps
