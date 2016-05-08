@@ -1,7 +1,7 @@
 #include "agility.h"
 #include "analysis.h"
 
-double getControlSkill(std::vector<Hitcircle> &_hitcircles, int _time, double _CS, double _AR, bool _hidden)
+double getAgilitySkill(std::vector<Hitcircle> &_hitcircles, int _time, double _CS, double _AR, bool _hidden)
 {
 	double agility = 0;
 	int index = getHitcircleAt(_hitcircles, _time) + 1;
