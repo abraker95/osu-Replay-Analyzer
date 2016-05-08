@@ -17,6 +17,10 @@
 
 #include "reaction.h"
 #include "reading.h"
+#include "precision.h"
+#include "agility.h"
+#include "tenacity.h"
+#include "control.h"
 
 using namespace std;
 
