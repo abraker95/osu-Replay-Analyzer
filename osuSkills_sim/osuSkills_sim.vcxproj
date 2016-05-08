@@ -64,6 +64,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="agility.cpp" />
+    <ClCompile Include="control.cpp" />
     <ClCompile Include="drawUtils.cpp" />
     <ClCompile Include="Event.cpp" />
     <ClCompile Include="Hitcircle.cpp" />
@@ -72,15 +74,19 @@
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="osuCalc.cpp" />
     <ClCompile Include="osuStats.cpp" />
+    <ClCompile Include="precision.cpp" />
     <ClCompile Include="reaction.cpp" />
     <ClCompile Include="reading.cpp" />
     <ClCompile Include="Slider.cpp" />
     <ClCompile Include="Geometry.cpp" />
     <ClCompile Include="analysis.cpp" />
+    <ClCompile Include="tenacity.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="agility.h" />
     <ClInclude Include="analysis.h" />
+    <ClInclude Include="control.h" />
     <ClInclude Include="drawUtils.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="Hitcircle.h" />
@@ -91,9 +97,11 @@
     <ClInclude Include="osuCalc.h" />
     <ClInclude Include="Geometry.h" />
     <ClInclude Include="osuStats.h" />
+    <ClInclude Include="precision.h" />
     <ClInclude Include="reaction.h" />
     <ClInclude Include="reading.h" />
     <ClInclude Include="Slider.h" />
+    <ClInclude Include="tenacity.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

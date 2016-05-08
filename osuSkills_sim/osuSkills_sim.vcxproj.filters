@@ -81,6 +81,18 @@
     <ClCompile Include="drawUtils.cpp">
       <Filter>Source Files\ui</Filter>
     </ClCompile>
+    <ClCompile Include="agility.cpp">
+      <Filter>Source Files\osu!\Skills</Filter>
+    </ClCompile>
+    <ClCompile Include="control.cpp">
+      <Filter>Source Files\osu!\Skills</Filter>
+    </ClCompile>
+    <ClCompile Include="precision.cpp">
+      <Filter>Source Files\osu!\Skills</Filter>
+    </ClCompile>
+    <ClCompile Include="tenacity.cpp">
+      <Filter>Source Files\osu!\Skills</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="analysis.h">
@@ -127,6 +139,18 @@
     </ClInclude>
     <ClInclude Include="drawUtils.h">
       <Filter>Header Files\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="precision.h">
+      <Filter>Header Files\osu!\Skills</Filter>
+    </ClInclude>
+    <ClInclude Include="agility.h">
+      <Filter>Header Files\osu!\Skills</Filter>
+    </ClInclude>
+    <ClInclude Include="control.h">
+      <Filter>Header Files\osu!\Skills</Filter>
+    </ClInclude>
+    <ClInclude Include="tenacity.h">
+      <Filter>Header Files\osu!\Skills</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
