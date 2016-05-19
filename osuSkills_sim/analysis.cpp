@@ -178,13 +178,20 @@ vector2df getParamVelVec(std::vector<Hitcircle> &_hitcircles, int _time, double 
 }
 
 
-// TODO: Use better search methods
 int getHitcircleAt(std::vector<Hitcircle>& _hitcircles, int _time)
 {
-	for (int i = 0; i < _hitcircles.size() - 1; i++)
+	int start = 0;
+	int end = _hitcircles.size() - 2;
+	int mid;
+
+	while (start <= end)
 	{
-		if (BTWN(_hitcircles[i].getTime(), _time, _hitcircles[i + 1].getTime()))
-			return i;
+		mid = (start + end) / 2;
+		if (BTWN(_hitcircles[mid].getTime(), _time, _hitcircles[mid + 1].getTime() - 1))
+			return mid;
+		else if (_time < _hitcircles[mid].getTime())
+			end = mid - 1;
+		else start = mid + 1;
 	}
 
 	return -1;
