@@ -53,6 +53,9 @@ void EventReceiver::Update()
 {
 	MouseState.wheelMove = MouseState.wheelCurr - MouseState.wheelPrev;
 	MouseState.wheelPrev = MouseState.wheelCurr;
+
+	MouseState.positionMove = MouseState.positionCurr - MouseState.positionPrev;
+	MouseState.positionPrev = MouseState.positionCurr;
 }
 
 const EventReceiver::SMouseState &EventReceiver::GetMouseState(void) const
@@ -69,4 +72,9 @@ int EventReceiver::getWheel(bool _mode)
 bool EventReceiver::IsKeyDown(EKEY_CODE keyCode) const
 {
 	return KeyIsDown[keyCode];
+}
+
+vector2di EventReceiver::getCursorDelta()
+{
+	return MouseState.positionMove;
 }
