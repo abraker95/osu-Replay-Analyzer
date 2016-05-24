@@ -187,6 +187,8 @@ int main()
 
 	while (win.device->run())
 	{
+		win.reciever.Update();
+
 		// update stuff
 		AR = arSlider.getVal();
 		CS = csSlider.getVal();

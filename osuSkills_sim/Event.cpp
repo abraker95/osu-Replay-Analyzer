@@ -26,8 +26,8 @@ bool EventReceiver::OnEvent(const SEvent& event)
 				break;
 
 			case EMIE_MOUSE_MOVED:
-				MouseState.Position.X = event.MouseInput.X;
-				MouseState.Position.Y = event.MouseInput.Y;
+				MouseState.positionCurr.X = event.MouseInput.X;
+				MouseState.positionCurr.Y = event.MouseInput.Y;
 				break;
 
 			case EMIE_MOUSE_WHEEL:
@@ -49,6 +49,12 @@ bool EventReceiver::OnEvent(const SEvent& event)
 	return false;
 }
 
+void EventReceiver::Update()
+{
+	MouseState.wheelMove = MouseState.wheelCurr - MouseState.wheelPrev;
+	MouseState.wheelPrev = MouseState.wheelCurr;
+}
+
 const EventReceiver::SMouseState &EventReceiver::GetMouseState(void) const
 {
 	return MouseState;
@@ -56,19 +62,7 @@ const EventReceiver::SMouseState &EventReceiver::GetMouseState(void) const
 
 int EventReceiver::getWheel(bool _mode)
 {
-	if (MouseState.wheelCurr == MouseState.wheelPrev)
-	{
-		if (_mode == false)
-			return 0;
-		else
-			return MouseState.wheelMove;
-	}
-	else
-	{
-		MouseState.wheelMove = MouseState.wheelCurr - MouseState.wheelPrev;
-		MouseState.wheelPrev = MouseState.wheelCurr;
-		return MouseState.wheelMove;
-	}	
+	return MouseState.wheelMove;
 }
 
 // This is used to check whether a key is being held down
