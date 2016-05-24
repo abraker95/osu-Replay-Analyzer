@@ -286,7 +286,7 @@ int Hitcircle::getSliderTimeAt(int _index)
 
 void Hitcircle::IdleLogic(Window &_win)
 {
-	position2di pos = _win.reciever.GetMouseState().Position;
+	position2di pos = _win.reciever.GetMouseState().positionCurr;
 	bool cursorOverCircle = (BTWN(this->xOffset - radius, pos.X, this->xOffset + radius) && 
 		                     BTWN(this->yOffset - radius, pos.Y, this->yOffset + radius));
 
@@ -300,7 +300,7 @@ void Hitcircle::IdleLogic(Window &_win)
 
 void Hitcircle::HighlightedLogic(Window &_win)
 {
-	position2di pos = _win.reciever.GetMouseState().Position;
+	position2di pos = _win.reciever.GetMouseState().positionCurr;
 	bool cursorOverCircle = (BTWN(this->xOffset - radius, pos.X, this->xOffset + radius) &&
 							 BTWN(this->yOffset - radius, pos.Y, this->yOffset + radius));
 
@@ -324,7 +324,8 @@ void Hitcircle::HighlightedLogic(Window &_win)
 // To fix this, an environment manager is needed, but currently not planned.
 void Hitcircle::SelectedLogic(Window &_win)
 {
-	position2di pos = _win.reciever.GetMouseState().Position;
+	position2di pos = _win.reciever.GetMouseState().positionCurr;
+	position2di mouseDelta = _win.reciever.getCursorDelta();
 	bool leftButton = _win.reciever.GetMouseState().LeftButtonDown;
 	bool leftEdge = _win.reciever.GetMouseState().LeftButtonEdge;
 	bool cursorOverCircle = (BTWN(this->xOffset - radius, pos.X, this->xOffset + radius) &&
@@ -337,8 +338,8 @@ void Hitcircle::SelectedLogic(Window &_win)
 		// has to be += due the fact that x - xoffset = 0, 
 		// resolving the assignment to x = pos.x
 		// this->x = pos.X - this->xOffset + this->x  => this->x = pos.X - 0;
-		this->x += pos.X - this->xOffset;
-		this->y += pos.Y - this->yOffset;
+		this->x += mouseDelta.X;
+		this->y += mouseDelta.Y;
 
 		edgeCol = SELECTED_COLOR;
 	}

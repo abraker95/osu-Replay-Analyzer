@@ -165,9 +165,9 @@ void Slider::UpdateAuto()
 
 void Slider::IdleLogic(Window &_win)
 {
-	position2di pos = _win.reciever.GetMouseState().Position;
+	position2di pos = _win.reciever.GetMouseState().positionCurr;
 	bool cursorOverCircle = (BTWN(Val2pos(val) - SLIDER_POINT_RADIUS, pos.X, Val2pos(val) + SLIDER_POINT_RADIUS) &&
-		BTWN(y - SLIDER_POINT_RADIUS, pos.Y, y + SLIDER_POINT_RADIUS));
+							 BTWN(y - SLIDER_POINT_RADIUS, pos.Y, y + SLIDER_POINT_RADIUS));
 	bool leftEdge = _win.reciever.GetMouseState().LeftButtonEdge;
 
 	if (cursorOverCircle && leftEdge)
@@ -194,7 +194,7 @@ void Slider::HoldLogic(Window &_win)
 	}
 	else
 	{
-		double mouseVal = Pos2val(_win.reciever.GetMouseState().Position.X);
+		double mouseVal = Pos2val(_win.reciever.GetMouseState().positionCurr.X);
 		if (BTWN(min, mouseVal, max))
 			val = mouseVal;
 	}

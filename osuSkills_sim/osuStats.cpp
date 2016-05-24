@@ -13,7 +13,7 @@ using namespace core;
 
 int UpdateHitobjectTimings(Window &_win, std::vector<Hitcircle> &_hitcircles, int _i, int _xpos, int _ypos, int _width, int _height)
 {
-	position2di pos = _win.reciever.GetMouseState().Position;
+	position2di pos = _win.reciever.GetMouseState().positionCurr;
 	bool cursorOverObject = (BTWN(_xpos, pos.X, _xpos + _width) &&
 							 BTWN(_ypos, pos.Y, _ypos + _height));
 	

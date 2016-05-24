@@ -230,7 +230,7 @@ int main()
 			drawTimingGraphs(win, 0, 510, circles, true, time_ms, res, CS, AR, hidden);
 
 			win.font->draw(core::stringw(time_ms),core::rect<s32>(RESX - 100, 20, 100, 10), video::SColor(255, 255, 255, 255));
-			win.font->draw(core::stringw(win.reciever.GetMouseState().Position.X) + ", " + core::stringw(win.reciever.GetMouseState().Position.Y), core::rect<s32>(RESX - 100, 40, 100, 10), video::SColor(255, 255, 255, 255));
+			win.font->draw(core::stringw(win.reciever.GetMouseState().positionCurr.X) + ", " + core::stringw(win.reciever.GetMouseState().positionCurr.Y), core::rect<s32>(RESX - 100, 40, 100, 10), video::SColor(255, 255, 255, 255));
 			win.font->draw(core::stringw("Reaction: ") + core::stringw(reaction), core::rect<s32>(RESX - 150, 300, 100, 10), video::SColor(255, 255, 255, 255));
 
 			arSlider.Draw(win);
