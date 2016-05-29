@@ -24,6 +24,6 @@ int getNumIntersectionsAt(std::vector<Hitcircle> &_hitcircles, int _time, double
 // Gets the number of visible hitcircles at a certain time
 int getNumVisibleAt(std::vector<Hitcircle>& _hitcircles, int _time, double _AR, bool _hidden, double _opacity);
 
-std::vector<Hitcircle> getAllVisibleAt(std::vector<Hitcircle> &_hitcircles, int _time, double _AR, bool _hidden, double _opacity);
+std::pair<int, int> getIndicesVisibleAt(std::vector<Hitcircle> &_hitcircles, int _time, double _AR, bool _hidden, double _opacity);
 
 double getOverLapSurfaceArea(std::vector<Hitcircle> &_hitcircles, int _time, double _AR, double _CS, bool _hidden, double _opacity);

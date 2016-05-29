@@ -63,22 +63,22 @@ void DrawDebug(Window &_win, std::vector<Hitcircle> &_hitcircles, int _time, dou
 
 
 
-	std::vector<Hitcircle> visible = getAllVisibleAt(_hitcircles, _time, _AR, _hidden, 0.3);
+	std::pair<int, int> range = getIndicesVisibleAt(_hitcircles, _time, _AR, _hidden, 0.3);
 
 	// \TODO: to be applied when doing slider intersection check
 	//getPattern(_hitcircles, timeEnd, _index, _CS, getNumVisibleAt(_hitcircles, _AR, _hidden, 0.1));
 
-	for (int i = 1; i < visible.size(); i++)
+	for (int i = range.first + 1; i < range.second; i++)
 	{
 		std::pair<vector2di, vector2di> path;
-			path.first = visible[i - 1].getPos();
-			path.second = visible[i].getPos();
+			path.first = _hitcircles[i - 1].getPos();
+			path.second = _hitcircles[i].getPos();
 
-		for (int j = i + 1; j < visible.size(); j++)
+		for (int j = i + 1; j < range.second; j++)
 		{
 			std::pair<vector2di, vector2di> checkPath;
-				checkPath.first = visible[j - 1].getPos();
-				checkPath.second = visible[j].getPos();
+				checkPath.first = _hitcircles[j - 1].getPos();
+				checkPath.second = _hitcircles[j].getPos();
 
 			_win.driver->draw2DLine(path.first, path.second, SColor(255, 0, 255, 128));
 			_win.driver->draw2DLine(checkPath.first, checkPath.second, SColor(255, 0, 255, 128));

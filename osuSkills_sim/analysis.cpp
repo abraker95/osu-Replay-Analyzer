@@ -122,24 +122,24 @@ vector2df getParamVel(std::tuple<int, int, int, int> _p1, std::tuple<int, int, i
 // \TODO: Take account sliders. It currently only does start time of the current note
 int getNumIntersectionsAt(std::vector<Hitcircle> &_hitcircles, int _time, double _AR, bool _hidden, double _opacity)
 {
-	std::vector<Hitcircle> visible = getAllVisibleAt(_hitcircles, _time, _AR, _hidden, _opacity);
+	std::pair<int, int> range = getIndicesVisibleAt(_hitcircles, _time, _AR, _hidden, _opacity);
 
 	// \TODO: to be applied when doing slider intersection check
 	//getPattern(_hitcircles, timeEnd, _index, _CS, getNumVisibleAt(_hitcircles, _AR, _hidden, 0.1));
 
 	int numIntersections = 0;
 
-	for (int i = 1; i < visible.size(); i++)
+	for (int i = range.first + 1; i < range.second; i++)
 	{
 		std::pair<position2di, position2di> path;
-			path.first = visible[i - 1].getPos();
-			path.second = visible[i].getPos();
+			path.first = _hitcircles[i - 1].getPos();
+			path.second = _hitcircles[i].getPos();
 
-		for (int j = i + 1; j < visible.size(); j++)
+		for (int j = i + 1; j < range.second; j++)
 		{
 			std::pair<position2di, position2di> checkPath;
-				checkPath.first = visible[j - 1].getPos();
-				checkPath.second = visible[j].getPos();
+				checkPath.first = _hitcircles[j - 1].getPos();
+				checkPath.second = _hitcircles[j].getPos();
 
 			if (HasIntersectionPoint(path, checkPath))
 				numIntersections++;
@@ -214,36 +214,48 @@ int getNumVisibleAt(std::vector<Hitcircle>& _hitcircles, int _time, double _AR, 
 	return count;
 }
 
-std::vector<Hitcircle> getAllVisibleAt(std::vector<Hitcircle>& _hitcircles, int _time, double _AR, bool _hidden, double _opacity)
+std::pair<int, int> getIndicesVisibleAt(std::vector<Hitcircle>& _hitcircles, int _time, double _AR, bool _hidden, double _opacity)
 {
 	int index = getHitcircleAt(_hitcircles, _time);
-	std::vector<Hitcircle> hitcircles;
+	std::pair<int, int> range;
 
 	if (index >= 0)
-		hitcircles.push_back(_hitcircles[index]);
-
-	for (int i = index + 1; i < _hitcircles.size(); i++)
 	{
-		std::pair<int, int> visibilityTimes = _hitcircles[i].getVisiblityTimes(_AR, _hidden, _opacity, _opacity);
-		if (!BTWN(visibilityTimes.first, _time, visibilityTimes.second))
-			break;
-
-		hitcircles.push_back(_hitcircles[i]);
+		// Find first note visible
+		for (; index < _hitcircles.size(); index++)
+		{
+			if (_hitcircles[index].isVisible(_time, _AR, _hidden))
+			{
+				range.first = index;
+				break;
+			}
+		}
+		
+		// Find last note visible
+		for (; index < _hitcircles.size(); index++)
+		{
+			std::pair<int, int> visibilityTimes = _hitcircles[index].getVisiblityTimes(_AR, _hidden, _opacity, _opacity);
+			if (!BTWN(visibilityTimes.first, _time, visibilityTimes.second))
+			{
+				range.second = index;
+				break;
+			}
+		}
 	}
 
-	return hitcircles;
+	return range;
 }
 
 double getOverLapSurfaceArea(std::vector<Hitcircle> &_hitcircles, int _time, double _AR, double _CS, bool _hidden, double _opacity)
 {
-	std::vector<Hitcircle> visible = getAllVisibleAt(_hitcircles, _time, _AR, _hidden, _opacity);
+	std::pair<int, int> range = getIndicesVisibleAt(_hitcircles, _time, _AR, _hidden, _opacity);
 	double area = 0.0;
 
-	for (int i = 0; i < visible.size(); i++)
+	for (int i = range.first; i < range.second; i++)
 	{
-		for (int j = i + 1; j < visible.size(); j++)
+		for (int j = i + 1; j < range.second; j++)
 		{
-			area += getCircleOverlapArea(CS2px(_CS) / 2.0, getDist(visible[i].getPos(), visible[j].getPos()));
+			area += getCircleOverlapArea(CS2px(_CS) / 2.0, getDist(_hitcircles[i].getPos(), _hitcircles[j].getPos()));
 		}
 	}
 
