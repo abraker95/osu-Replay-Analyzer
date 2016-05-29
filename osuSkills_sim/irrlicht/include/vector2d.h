@@ -144,6 +144,19 @@ public:
 		return vector2d<T>(X - other.X, Y - other.Y).getLengthSQ();
 	}
 
+	vector2d<T> midPoint(vector2d<T> o)
+	{
+		return vector2d<T>((X + o.X) / 2., (Y + o.Y) / 2.);
+	}
+
+	vector2d<T> nor()
+	{
+		vector2d<T> tmp;
+			tmp.X = -Y;
+			tmp.Y = X;
+		return tmp;
+	}
+
 	//! rotates the point anticlockwise around a center by an amount of degrees.
 	/** \param degrees Amount of degrees to rotate by, anticlockwise.
 	\param center Rotation center.
