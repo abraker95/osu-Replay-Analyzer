@@ -1,0 +1,189 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{9E1BA188-D9C0-4193-B287-0FC63FE05011}</ProjectGuid>
+    <RootNamespace>osuSkills_sim</RootNamespace>
+    <ProjectName>osu-Replay-Analyzer</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="osu!\Drawable\GamemodeRenderer.cpp" />
+    <ClCompile Include="osu!\Drawable\Hitcircle.cpp" />
+    <ClCompile Include="osu!\Drawable\HitNote.cpp" />
+    <ClCompile Include="osu!\Drawable\OsuManiaRenderercpp.cpp" />
+    <ClCompile Include="osu!\Drawable\OsuStdRenderer.cpp" />
+    <ClCompile Include="osu!\Drawable\TimingGraph.cpp" />
+    <ClCompile Include="osu!\Drawable\TimingObject.cpp" />
+    <ClCompile Include="osu!\Filestructure\Beatmap.cpp" />
+    <ClCompile Include="osu!\Filestructure\Bezier.cpp" />
+    <ClCompile Include="osu!\Filestructure\CircumscribedCircle.cpp" />
+    <ClCompile Include="osu!\Filestructure\Hitobject.cpp" />
+    <ClCompile Include="osu!\Filestructure\LZMA.cpp" />
+    <ClCompile Include="osu!\Filestructure\LZMA\easylzma\common_internal.c" />
+    <ClCompile Include="osu!\Filestructure\LZMA\easylzma\compress.c" />
+    <ClCompile Include="osu!\Filestructure\LZMA\easylzma\decompress.c" />
+    <ClCompile Include="osu!\Filestructure\LZMA\easylzma\lzip_header.c" />
+    <ClCompile Include="osu!\Filestructure\LZMA\easylzma\lzma_header.c" />
+    <ClCompile Include="osu!\Filestructure\LZMA\easylzma\pavlov\7zBuf.c" />
+    <ClCompile Include="osu!\Filestructure\LZMA\easylzma\pavlov\7zBuf2.c" />
+    <ClCompile Include="osu!\Filestructure\LZMA\easylzma\pavlov\7zCrc.c" />
+    <ClCompile Include="osu!\Filestructure\LZMA\easylzma\pavlov\7zFile.c" />
+    <ClCompile Include="osu!\Filestructure\LZMA\easylzma\pavlov\7zStream.c" />
+    <ClCompile Include="osu!\Filestructure\LZMA\easylzma\pavlov\Alloc.c" />
+    <ClCompile Include="osu!\Filestructure\LZMA\easylzma\pavlov\Bcj2.c" />
+    <ClCompile Include="osu!\Filestructure\LZMA\easylzma\pavlov\Bra.c" />
+    <ClCompile Include="osu!\Filestructure\LZMA\easylzma\pavlov\Bra86.c" />
+    <ClCompile Include="osu!\Filestructure\LZMA\easylzma\pavlov\BraIA64.c" />
+    <ClCompile Include="osu!\Filestructure\LZMA\easylzma\pavlov\LzFind.c" />
+    <ClCompile Include="osu!\Filestructure\LZMA\easylzma\pavlov\LzmaDec.c" />
+    <ClCompile Include="osu!\Filestructure\LZMA\easylzma\pavlov\LzmaEnc.c" />
+    <ClCompile Include="osu!\Filestructure\LZMA\easylzma\pavlov\LzmaLib.c" />
+    <ClCompile Include="osu!\Filestructure\Play.cpp" />
+    <ClCompile Include="osu!\Filestructure\Replay.cpp" />
+    <ClCompile Include="osu!\Filestructure\ScoreEngine.cpp" />
+    <ClCompile Include="osu!\Filestructure\SliderHitobject.cpp" />
+    <ClCompile Include="osu!\Filestructure\TimingPoint.cpp" />
+    <ClCompile Include="osu!\osuCalc.cpp" />
+    <ClCompile Include="osu!\Skills\osu!std\agility.cpp" />
+    <ClCompile Include="osu!\Skills\osu!std\analysis.cpp" />
+    <ClCompile Include="osu!\Skills\osu!std\control.cpp" />
+    <ClCompile Include="osu!\Skills\osu!std\precision.cpp" />
+    <ClCompile Include="osu!\Skills\osu!std\reaction.cpp" />
+    <ClCompile Include="osu!\Skills\osu!std\reading.cpp" />
+    <ClCompile Include="osu!\Skills\osu!std\tenacity.cpp" />
+    <ClCompile Include="ui\Button.cpp" />
+    <ClCompile Include="ui\Dialog.cpp" />
+    <ClCompile Include="ui\drawUtils.cpp" />
+    <ClCompile Include="ui\Event.cpp" />
+    <ClCompile Include="ui\GuiObj.cpp" />
+    <ClCompile Include="ui\pane.cpp" />
+    <ClCompile Include="ui\Scrollbar.cpp" />
+    <ClCompile Include="ui\Slider.cpp" />
+    <ClCompile Include="ui\Window.cpp" />
+    <ClCompile Include="utils\Geometry.cpp" />
+    <ClCompile Include="utils\Lambert.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="osu!\Drawable\GamemodeRenderer.h" />
+    <ClInclude Include="osu!\Drawable\Hitcircle.h" />
+    <ClInclude Include="osu!\Drawable\HitNote.h" />
+    <ClInclude Include="osu!\Drawable\OsuManiaRenderer.h" />
+    <ClInclude Include="osu!\Drawable\OsuStdRenderer.h" />
+    <ClInclude Include="osu!\Drawable\TimingGraph.h" />
+    <ClInclude Include="osu!\Drawable\TimingObject.h" />
+    <ClInclude Include="osu!\Filestructure\Beatmap.h" />
+    <ClInclude Include="osu!\Filestructure\Bezier.h" />
+    <ClInclude Include="osu!\Filestructure\dirent.h" />
+    <ClInclude Include="osu!\Filestructure\filereader.h" />
+    <ClInclude Include="osu!\Filestructure\Hitobject.h" />
+    <ClInclude Include="osu!\Filestructure\LZMA.h" />
+    <ClInclude Include="osu!\Filestructure\LZMA\easylzma\common.h" />
+    <ClInclude Include="osu!\Filestructure\LZMA\easylzma\common_internal.h" />
+    <ClInclude Include="osu!\Filestructure\LZMA\easylzma\compress.h" />
+    <ClInclude Include="osu!\Filestructure\LZMA\easylzma\decompress.h" />
+    <ClInclude Include="osu!\Filestructure\LZMA\easylzma\lzip_header.h" />
+    <ClInclude Include="osu!\Filestructure\LZMA\easylzma\lzma_header.h" />
+    <ClInclude Include="osu!\Filestructure\LZMA\easylzma\pavlov\7zBuf.h" />
+    <ClInclude Include="osu!\Filestructure\LZMA\easylzma\pavlov\7zCrc.h" />
+    <ClInclude Include="osu!\Filestructure\LZMA\easylzma\pavlov\7zFile.h" />
+    <ClInclude Include="osu!\Filestructure\LZMA\easylzma\pavlov\7zVersion.h" />
+    <ClInclude Include="osu!\Filestructure\LZMA\easylzma\pavlov\Alloc.h" />
+    <ClInclude Include="osu!\Filestructure\LZMA\easylzma\pavlov\Bcj2.h" />
+    <ClInclude Include="osu!\Filestructure\LZMA\easylzma\pavlov\Bra.h" />
+    <ClInclude Include="osu!\Filestructure\LZMA\easylzma\pavlov\CpuArch.h" />
+    <ClInclude Include="osu!\Filestructure\LZMA\easylzma\pavlov\LzFind.h" />
+    <ClInclude Include="osu!\Filestructure\LZMA\easylzma\pavlov\LzHash.h" />
+    <ClInclude Include="osu!\Filestructure\LZMA\easylzma\pavlov\LzmaDec.h" />
+    <ClInclude Include="osu!\Filestructure\LZMA\easylzma\pavlov\LzmaEnc.h" />
+    <ClInclude Include="osu!\Filestructure\LZMA\easylzma\pavlov\LzmaLib.h" />
+    <ClInclude Include="osu!\Filestructure\LZMA\easylzma\pavlov\Types.h" />
+    <ClInclude Include="osu!\Filestructure\Play.h" />
+    <ClInclude Include="osu!\Filestructure\Replay.h" />
+    <ClInclude Include="osu!\Filestructure\ScoreEngine.h" />
+    <ClInclude Include="osu!\Filestructure\TimingPoint.h" />
+    <ClInclude Include="osu!\osuCalc.h" />
+    <ClInclude Include="osu!\osuEnums.h" />
+    <ClInclude Include="osu!\Skills\osu!std\agility.h" />
+    <ClInclude Include="osu!\Skills\osu!std\analysis.h" />
+    <ClInclude Include="osu!\Skills\osu!std\control.h" />
+    <ClInclude Include="osu!\Skills\osu!std\precision.h" />
+    <ClInclude Include="osu!\Skills\osu!std\reaction.h" />
+    <ClInclude Include="osu!\Skills\osu!std\reading.h" />
+    <ClInclude Include="osu!\Skills\osu!std\tenacity.h" />
+    <ClInclude Include="ui\Button.h" />
+    <ClInclude Include="ui\Dialog.h" />
+    <ClInclude Include="ui\drawUtils.h" />
+    <ClInclude Include="ui\Event.h" />
+    <ClInclude Include="ui\GuiObj.h" />
+    <ClInclude Include="ui\pane.h" />
+    <ClInclude Include="ui\Scrollbar.h" />
+    <ClInclude Include="ui\Slider.h" />
+    <ClInclude Include="ui\Window.h" />
+    <ClInclude Include="utils\Geometry.h" />
+    <ClInclude Include="utils\Lambert.h" />
+    <ClInclude Include="utils\LambertW.h" />
+    <ClInclude Include="utils\mathUtils.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
