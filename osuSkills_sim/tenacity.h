@@ -1,4 +1,4 @@
 #include <vector>
-#include "Hitcircle.h"
+#include "Beatmap.h"
 
-double getTenacitySkill(std::vector<Hitcircle> &_hitcircles, int _time, double _CS, double _AR, bool _hidden);
+double getTenacitySkill(Beatmap* _beatmap, int _time, bool _hidden);

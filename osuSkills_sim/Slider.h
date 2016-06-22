@@ -2,11 +2,12 @@
 #define SLIDER_H
 
 #include "Window.h"
-
+#include "GuiObj.h"
 #include <iostream>
+
 using namespace std;
 
-class Slider
+class Slider: public GuiObj
 {
 	public:
 		enum AUTO_DIR
@@ -23,8 +24,6 @@ class Slider
 
 		Slider(int _x, int _y, double _width, double _val = 0.0);
 
-		void Draw(Window &_win);
-
 		void setRange(double _min, double _max);
 
 		void setVal(double _val);
@@ -37,9 +36,6 @@ class Slider
 
 	private:
 		double max, min, val;
-		int x, y;
-		double width;
-
 		bool automate;
 		
 		AUTO_DIR autoDir;
@@ -68,7 +64,8 @@ class Slider
 
 		void HoldLogic(Window &_win);
 
-		void Update(Window &_win);
+		virtual void Draw(Window &_win);
+		virtual void UpdateInternal(Window &_win);
 };
 
 #endif

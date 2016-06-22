@@ -27,10 +27,18 @@ class Window
 
 		Window(int _width = 640, int _height = 480);
 		dimension2di getDimentions();
+		
+		void updateFPS();
+		double getFPS() const;
 
 	private:
-		int width;
-		int height;
+		long prevMs, currMs;
+
+		void initOsWindow();
+
+		void initWindow();
+		void initLinux();
+		void initMac();
 };
 
 #endif

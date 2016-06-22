@@ -1,12 +1,8 @@
 #include "Slider.h"
 #include "mathUtils.h"
 
-Slider::Slider(int _x, int _y, double _width, double _val)
+Slider::Slider(int _x, int _y, double _width, double _val) : GuiObj(_x, _y, _width, 10)
 {
-	x = _x;
-	y = _y;
-	width = _width;
-
 	automate = false;
 	autoDir = FORWARD;
 	state = IDLE;
@@ -24,27 +20,6 @@ Slider::Slider(int _x, int _y, double _width, double _val)
 		val = _val;
 	}
 		
-}
-
-void Slider::Draw(Window &_win)
-{
-	Update(_win);
-
-	// draw text
-	_win.font->draw(core::stringw((int)min), rect<s32>(x - 10, y, x + 100, y + 10), SLIDER_COLOR);
-	_win.font->draw(core::stringw(val), rect<s32>(Val2pos(val), y - 15, x + 100, y + 10), SLIDER_COLOR);
-	_win.font->draw(core::stringw((int)max), rect<s32>(x + width + 10, y, x + 100, y + 10), SLIDER_COLOR);
-
-	_win.driver->draw2DLine(position2d<s32>(x, y), position2d<s32>(x + width, y), SLIDER_COLOR);
-
-	for (int radius = 0; radius < 5; radius++)
-	{
-		for (double i = 0; i < 2 * M_PI; i += PX_PER_RAD(radius))
-		{
-			_win.driver->drawPixel(Val2pos(val) + cos(i)*radius, y + sin(i)*radius, SLIDER_COLOR);
-		}
-	}
-	// \TODO:  Implement render: slider and text
 }
 
 void Slider::setRange(double _min, double _max)
@@ -79,7 +54,7 @@ void Slider::setAuto(bool _auto, AUTO_MODE _autoMode)
 
 double Slider::Pos2percent(int _pos)
 {
-	return (_pos - x) / width;
+	return ((double)_pos - (double)absXpos) / (double)width;
 }
 
 double Slider::Pos2val(int _pos)
@@ -89,7 +64,7 @@ double Slider::Pos2val(int _pos)
 
 int Slider::Percent2pos(double _percent)
 {
-	return (_percent * width) + x;
+	return (_percent * width) + absXpos;
 }
 
 int Slider::Val2pos(double _val)
@@ -165,12 +140,8 @@ void Slider::UpdateAuto()
 
 void Slider::IdleLogic(Window &_win)
 {
-	position2di pos = _win.reciever.GetMouseState().positionCurr;
-	bool cursorOverCircle = (BTWN(Val2pos(val) - SLIDER_POINT_RADIUS, pos.X, Val2pos(val) + SLIDER_POINT_RADIUS) &&
-							 BTWN(y - SLIDER_POINT_RADIUS, pos.Y, y + SLIDER_POINT_RADIUS));
 	bool leftEdge = _win.reciever.GetMouseState().LeftButtonEdge;
-
-	if (cursorOverCircle && leftEdge)
+	if (this->isMouseOnObj(_win) && leftEdge)
 	{
 		state = HOLD;
 	}
@@ -200,20 +171,39 @@ void Slider::HoldLogic(Window &_win)
 	}
 }
 
-void Slider::Update(Window &_win)
+void Slider::Draw(Window &_win)
+{
+	// draw text
+	_win.font->draw(core::stringw((int)min), rect<s32>(absXpos - 10, absYpos, absXpos + 100, absYpos + 10), SLIDER_COLOR);
+	_win.font->draw(core::stringw(val), rect<s32>(Val2pos(val), absYpos - 15, absXpos + 100, absYpos + 10), SLIDER_COLOR);
+	_win.font->draw(core::stringw((int)max), rect<s32>(absXpos + width + 10, absYpos, absXpos + 100, absYpos + 10), SLIDER_COLOR);
+
+	_win.driver->draw2DLine(position2d<s32>(absXpos, this->getMid().Y), position2d<s32>(absXpos + width, this->getMid().Y), SLIDER_COLOR);
+
+	for (int radius = 0; radius < 5; radius++)
+	{
+		for (double i = 0; i < 2 * M_PI; i += PX_PER_RAD(radius))
+		{
+			_win.driver->drawPixel(Val2pos(val) + cos(i)*radius, this->getMid().Y + sin(i)*radius, SLIDER_COLOR);
+		}
+	}
+	// \TODO:  Implement render: text
+}
+
+void Slider::UpdateInternal(Window &_win)
 {
 	switch (state)
 	{
-	case IDLE:
-		IdleLogic(_win);
-		break;
+		case IDLE:
+			IdleLogic(_win);
+			break;
 
-	case HOLD:
-		HoldLogic(_win);
-		break;
+		case HOLD:
+			HoldLogic(_win);
+			break;
 
-	default:
-		// ???
-		break;
+		default:
+			// ???
+			break;
 	}
 }

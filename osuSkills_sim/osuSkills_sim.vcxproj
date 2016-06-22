@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -18,13 +18,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -65,43 +65,118 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="agility.cpp" />
+    <ClCompile Include="Beatmap.cpp" />
+    <ClCompile Include="Bezier.cpp" />
+    <ClCompile Include="Button.cpp" />
+    <ClCompile Include="CircumscribedCircle.cpp" />
     <ClCompile Include="control.cpp" />
+    <ClCompile Include="Dialog.cpp" />
     <ClCompile Include="drawUtils.cpp" />
     <ClCompile Include="Event.cpp" />
+    <ClCompile Include="GamemodeRenderer.cpp" />
+    <ClCompile Include="GuiObj.cpp" />
     <ClCompile Include="Hitcircle.cpp" />
+    <ClCompile Include="HitNote.cpp" />
+    <ClCompile Include="Hitobject.cpp" />
     <ClCompile Include="Lambert.cpp" />
+    <ClCompile Include="LZMA.cpp" />
+    <ClCompile Include="LZMA\easylzma\common_internal.c" />
+    <ClCompile Include="LZMA\easylzma\decompress.c" />
+    <ClCompile Include="LZMA\easylzma\lzip_header.c" />
+    <ClCompile Include="LZMA\easylzma\lzma_header.c" />
+    <ClCompile Include="LZMA\easylzma\pavlov\7zBuf.c" />
+    <ClCompile Include="LZMA\easylzma\pavlov\7zBuf2.c" />
+    <ClCompile Include="LZMA\easylzma\pavlov\7zCrc.c" />
+    <ClCompile Include="LZMA\easylzma\pavlov\7zFile.c" />
+    <ClCompile Include="LZMA\easylzma\pavlov\7zStream.c" />
+    <ClCompile Include="LZMA\easylzma\pavlov\Alloc.c" />
+    <ClCompile Include="LZMA\easylzma\pavlov\Bcj2.c" />
+    <ClCompile Include="LZMA\easylzma\pavlov\Bra.c" />
+    <ClCompile Include="LZMA\easylzma\pavlov\Bra86.c" />
+    <ClCompile Include="LZMA\easylzma\pavlov\BraIA64.c" />
+    <ClCompile Include="LZMA\easylzma\pavlov\LzFind.c" />
+    <ClCompile Include="LZMA\easylzma\pavlov\LzmaDec.c" />
+    <ClCompile Include="LZMA\easylzma\pavlov\LzmaEnc.c" />
+    <ClCompile Include="LZMA\easylzma\pavlov\LzmaLib.c" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="osuCalc.cpp" />
-    <ClCompile Include="osuStats.cpp" />
+    <ClCompile Include="OsuManiaRenderercpp.cpp" />
+    <ClCompile Include="OsuStdRenderer.cpp" />
+    <ClCompile Include="ScoreEngine.cpp" />
+    <ClCompile Include="TimingGraph.cpp" />
+    <ClCompile Include="pane.cpp" />
+    <ClCompile Include="Play.cpp" />
     <ClCompile Include="precision.cpp" />
     <ClCompile Include="reaction.cpp" />
     <ClCompile Include="reading.cpp" />
+    <ClCompile Include="Replay.cpp" />
+    <ClCompile Include="Scrollbar.cpp" />
     <ClCompile Include="Slider.cpp" />
     <ClCompile Include="Geometry.cpp" />
     <ClCompile Include="analysis.cpp" />
+    <ClCompile Include="SliderHitobject.cpp" />
     <ClCompile Include="tenacity.cpp" />
+    <ClCompile Include="TimingObject.cpp" />
+    <ClCompile Include="TimingPoint.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="agility.h" />
     <ClInclude Include="analysis.h" />
+    <ClInclude Include="Beatmap.h" />
+    <ClInclude Include="Bezier.h" />
+    <ClInclude Include="Button.h" />
     <ClInclude Include="control.h" />
+    <ClInclude Include="Dialog.h" />
+    <ClInclude Include="dirent.h" />
     <ClInclude Include="drawUtils.h" />
     <ClInclude Include="Event.h" />
+    <ClInclude Include="filereader.h" />
+    <ClInclude Include="GamemodeRenderer.h" />
+    <ClInclude Include="GuiObj.h" />
     <ClInclude Include="Hitcircle.h" />
+    <ClInclude Include="HitNote.h" />
+    <ClInclude Include="Hitobject.h" />
     <ClInclude Include="Lambert.h" />
     <ClInclude Include="LambertW.h" />
+    <ClInclude Include="LZMA.h" />
+    <ClInclude Include="LZMA\easylzma\common.h" />
+    <ClInclude Include="LZMA\easylzma\decompress.h" />
+    <ClInclude Include="LZMA\easylzma\pavlov\7zBuf.h" />
+    <ClInclude Include="LZMA\easylzma\pavlov\7zCrc.h" />
+    <ClInclude Include="LZMA\easylzma\pavlov\7zFile.h" />
+    <ClInclude Include="LZMA\easylzma\pavlov\7zVersion.h" />
+    <ClInclude Include="LZMA\easylzma\pavlov\Alloc.h" />
+    <ClInclude Include="LZMA\easylzma\pavlov\Bcj2.h" />
+    <ClInclude Include="LZMA\easylzma\pavlov\Bra.h" />
+    <ClInclude Include="LZMA\easylzma\pavlov\CpuArch.h" />
+    <ClInclude Include="LZMA\easylzma\pavlov\LzFind.h" />
+    <ClInclude Include="LZMA\easylzma\pavlov\LzHash.h" />
+    <ClInclude Include="LZMA\easylzma\pavlov\LzmaDec.h" />
+    <ClInclude Include="LZMA\easylzma\pavlov\LzmaEnc.h" />
+    <ClInclude Include="LZMA\easylzma\pavlov\LzmaLib.h" />
+    <ClInclude Include="LZMA\easylzma\pavlov\Types.h" />
     <ClInclude Include="mathUtils.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="osuCalc.h" />
     <ClInclude Include="Geometry.h" />
-    <ClInclude Include="osuStats.h" />
+    <ClInclude Include="osuEnums.h" />
+    <ClInclude Include="OsuManiaRenderer.h" />
+    <ClInclude Include="OsuStdRenderer.h" />
+    <ClInclude Include="ScoreEngine.h" />
+    <ClInclude Include="TimingGraph.h" />
+    <ClInclude Include="pane.h" />
+    <ClInclude Include="Play.h" />
     <ClInclude Include="precision.h" />
     <ClInclude Include="reaction.h" />
     <ClInclude Include="reading.h" />
+    <ClInclude Include="Replay.h" />
+    <ClInclude Include="Scrollbar.h" />
     <ClInclude Include="Slider.h" />
     <ClInclude Include="tenacity.h" />
+    <ClInclude Include="TimingObject.h" />
+    <ClInclude Include="TimingPoint.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

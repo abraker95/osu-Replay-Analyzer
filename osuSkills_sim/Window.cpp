@@ -1,11 +1,11 @@
 #include "Window.h"
+#include <chrono>
 
 Window::Window(int _width , int _height)
 {
-	width = _width;
-	height = _height;
+	initOsWindow();
 
-	device = createDevice(video::EDT_SOFTWARE, dimension2d<u32>(width, height), 16, false, false, false, &reciever);
+	device = createDevice(video::EDT_SOFTWARE, dimension2d<u32>(_width, _height), 16, false, false, false, &reciever);
 		if (!device)
 		{
 			// \TODO: Print cause of error
@@ -46,9 +46,55 @@ Window::Window(int _width , int _height)
 
 			exit(1);
 		}
+
+	currMs = 0;
+	prevMs = 0;
 }
 
 dimension2di Window::getDimentions()
 {
-	return dimension2di(this->width, this->height);
+	return dimension2di(driver->getScreenSize());
+}
+
+void Window::updateFPS()
+{
+	prevMs = currMs;
+	currMs = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+}
+
+double Window::getFPS() const
+{
+	return 1000.0/ (double)(currMs - prevMs);
+}
+
+
+//  ----------- [PRIVATE] ------------
+void Window::initOsWindow()
+{
+	#ifdef _WIN32
+		initWindow();
+	#endif
+
+	#ifdef LINUX
+		initLinux();
+	#endif
+
+	#ifdef _MAC
+		initMac();
+	#endif
+}
+
+void Window::initWindow()
+{
+
+}
+
+void Window::initLinux()
+{
+
+}
+
+void Window::initMac()
+{
+
 }

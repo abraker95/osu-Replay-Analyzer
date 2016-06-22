@@ -75,7 +75,7 @@ double Pattern2Reaction(std::tuple<int, int, int, int> _p1, std::tuple<int, int,
 {
 	const double damping = 0.36;
 	double curveSteepness = (300.0 / (_ARms + 250.)) * damping;
-	double patReq = PatternReq(_p1, _p2, _p3, _CSpx);
+	double patReq = JumpPatternReq(_p1, _p2, _p3, _CSpx);
 
 	//std::cout << patReq << "   " << _ARms - _ARms*std::exp(-curveSteepness*patReq)<< "   " << _ARms << std::endl;
 
@@ -85,7 +85,7 @@ double Pattern2Reaction(std::tuple<int, int, int, int> _p1, std::tuple<int, int,
 double getReactionSkill(std::vector<Hitcircle> &_hitcircles, int _time, double _CS, double _AR, bool _hidden)
 {
 	double timeToReact = 0.0;
-	int index = getHitcircleAt(_hitcircles, _time) + 1;
+	/*int index = getHitcircleAt(_hitcircles, _time) + 1;
 
 	if (index > _hitcircles.size() - 1) 	// if it's beyond the end
 	{
@@ -115,6 +115,6 @@ double getReactionSkill(std::vector<Hitcircle> &_hitcircles, int _time, double _
 		actualARTime = (_hitcircles[0].getTime() - visibilityTimes.first) + timeSinceStart;
 		timeToReact = Pattern2Reaction(pattern[2], pattern[1], pattern[0], actualARTime, CS2px(_CS)/2.0);
 	}
-
+	*/
 	return react2Skill(timeToReact);
 }
