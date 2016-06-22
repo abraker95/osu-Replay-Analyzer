@@ -1,6 +1,9 @@
 #ifndef MATHUTILS_H
 #define MATHUTILS_H
 
+#include <algorithm>
+#include <stdint.h>
+
 #define	M_PI	(3.14159265358979323846)
 
 static inline double MAX(double a, double b)
@@ -46,6 +49,44 @@ static inline double ABS(double val)
 static inline double PARITY(double val)
 {
 	return ((ABS(val) / val - 1) / 2);
+}
+
+static inline double lerp(double a, double b, double t)
+{
+	return a * (1 - t) + b * t;
+}
+
+static long binomialCoefficient(int n, int k)
+{
+	if (k < 0 || k > n)		return 0;
+	if (k == 0 || k == n)	return 1;
+
+	k = std::fmin(k, n - k);  // take advantage of symmetry
+	long c = 1;
+	for (int i = 0; i < k; i++)
+		c = c * (n - i) / (i + 1);
+
+	return c;
+}
+
+static inline double bernstein(int i, int n, double t)
+{
+	return binomialCoefficient(n, i) * pow(t, i) * pow(1 - t, n - i);
+}
+
+// Thanks http://llvm.org/docs/doxygen/html/LEB128_8h_source.html
+static uint64_t decodeULEB128(const uint8_t *p, unsigned *n = nullptr)
+{
+	const uint8_t *orig_p = p;
+	uint64_t Value = 0;
+	unsigned Shift = 0;
+	do
+	{
+		Value += uint64_t(*p & 0x7f) << Shift;
+		Shift += 7;
+	} while (*p++ >= 128);
+
+	return Value;
 }
 
 

@@ -7,16 +7,16 @@
 using namespace irr;
 using namespace core;
 
-double getSlope(position2di _p1, position2di _p2);
-double getDist(position2di _p1, position2di _p2);
+double getSlope(position2d<double> _p1, position2d<double> _p2);
+double getDist(position2d<double> _p1, position2d<double> _p2);
 
-bool isPointOnLine(position2di _point, std::pair<position2di, position2di> _line);
-bool HasIntersectionPoint(std::pair<position2di, position2di> _line1, std::pair<position2di, position2di> _line2);
+bool isPointOnLine(position2d<double> _point, std::pair<position2d<double>, position2d<double>> _line);
+bool HasIntersectionPoint(std::pair<position2d<double>, position2d<double>> _line1, std::pair<position2d<double>, position2d<double>> _line2);
 
 double Deg2px(double _deg, double _res, double _fov);
 double px2Deg(double _px, double _res, double _fov);
 
-double getVelocity(position2di _p1, position2di _p2, double _t1, double _t2);
+double getVelocity(position2d<double> _p1, position2d<double> _p2, double _t1, double _t2);
 
 enum DIR
 {
@@ -25,19 +25,19 @@ enum DIR
 };
 
 // Gets the directional angle in rads (-pi -> pi)
-double getDirAngle(position2di a, position2di b, position2di c);
+double getDirAngle(position2d<double> a, position2d<double> b, position2d<double> c);
 
 // Gets the normal angle in rads (0 -> pi)
-double getAngle(position2di _p1, position2di _ref, position2di _p3);
+double getAngle(position2d<double> _p1, position2d<double> _ref, position2d<double> _p3);
 
 // Gets the angular direction of a vector
-double getAbsoluteAngle(position2di _p1, position2di _p2);
+double getAbsoluteAngle(position2d<double> _p1, position2d<double> _p2);
 
 // Get the rotational direction
-DIR getRotDir(position2di _p1, position2di _ref, position2di _p3);
+DIR getRotDir(position2d<double> _p1, position2d<double> _ref, position2d<double> _p3);
 
-position2di getMidpoint(position2di _p1, position2di _p2);
-double getNormal(position2di _p1, position2di _p2);
+position2d<double> getMidpoint(position2d<double> _p1, position2d<double> _p2);
+double getNormal(position2d<double> _p1, position2d<double> _p2);
 
 double addAngle(double _rad1, double rad2);
 

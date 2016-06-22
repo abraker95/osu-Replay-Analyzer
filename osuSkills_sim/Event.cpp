@@ -1,15 +1,21 @@
 #include "Event.h"
+#include <iostream>
 
 EventReceiver::EventReceiver()
 {
-	for (u32 i = 0; i<KEY_KEY_CODES_COUNT; ++i)
-		KeyIsDown[i] = false;
+	for (u32 i = 0; i < KEY_KEY_CODES_COUNT; ++i)
+	{
+		keyState[i] = false;
+		currKeyState[i] = false;
+		prevKeyState[i] = false;
+	}
+		
 }
 
 bool EventReceiver::OnEvent(const SEvent& event)
 {
-	MouseState.LeftButtonEdge = false;
-	
+	MouseState.LeftButtonEdge = false;		
+
 	// Remember the mouse state
 	if (event.EventType == irr::EET_MOUSE_INPUT_EVENT)
 	{
@@ -35,7 +41,6 @@ bool EventReceiver::OnEvent(const SEvent& event)
 				break;
 
 			default:
-				// Wheel
 				break;
 		}		
 	}
@@ -43,7 +48,7 @@ bool EventReceiver::OnEvent(const SEvent& event)
 	// Remember whether each key is down or up
 	if (event.EventType == EET_KEY_INPUT_EVENT)
 	{
-		KeyIsDown[event.KeyInput.Key] = event.KeyInput.PressedDown;
+		keyState[event.KeyInput.Key] = event.KeyInput.PressedDown;
 	}
 
 	return false;
@@ -56,6 +61,12 @@ void EventReceiver::Update()
 
 	MouseState.positionMove = MouseState.positionCurr - MouseState.positionPrev;
 	MouseState.positionPrev = MouseState.positionCurr;
+
+	for (u32 i = 0; i < KEY_KEY_CODES_COUNT; ++i)
+	{
+		 prevKeyState[i] = currKeyState[i];
+		 currKeyState[i] = keyState[i];
+	}
 }
 
 const EventReceiver::SMouseState &EventReceiver::GetMouseState(void) const
@@ -71,7 +82,17 @@ int EventReceiver::getWheel(bool _mode)
 // This is used to check whether a key is being held down
 bool EventReceiver::IsKeyDown(EKEY_CODE keyCode) const
 {
-	return KeyIsDown[keyCode];
+	return currKeyState[keyCode];
+}
+
+bool EventReceiver::IsKeyEdgeDown(EKEY_CODE keyCode) const
+{
+	return (prevKeyState[keyCode] ^ currKeyState[keyCode]) && (currKeyState[keyCode] == true);
+}
+
+bool EventReceiver::IsKeyEdgeUp(EKEY_CODE keyCode) const
+{
+	return (prevKeyState[keyCode] ^ currKeyState[keyCode]) && (currKeyState[keyCode] == false);
 }
 
 vector2di EventReceiver::getCursorDelta()

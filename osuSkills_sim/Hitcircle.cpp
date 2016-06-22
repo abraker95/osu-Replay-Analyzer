@@ -6,235 +6,50 @@
 #include <iostream>
 #include <tuple>
 
-Hitcircle::Hitcircle(int _x, int _y, int _t, std::vector<std::tuple<int, int, int>> _sliders)
+Hitcircle::Hitcircle(Beatmap* _beatmap, Hitobject* _hitobject, int* _viewTime)
+	: GuiObj(_hitobject->getPos().X, _hitobject->getPos().Y, CS2px(_beatmap->getDiff().cs), CS2px(_beatmap->getDiff().cs))
 {
-	x = _x;
-	y = _y;
-	t = _t;
-	sliders = _sliders;
+	beatmap = _beatmap;
+	hitobject = _hitobject;
+	viewTime = _viewTime;
 
-	radius = 100; // radius
 	state = IDLE;
 	edgeCol = IDLE_COLOR;
 }
 
-void Hitcircle::Draw(Window &_win, int _xOffset, int _yOffset, int _time, double _AR, double _CS, bool _hidden)
+void Hitcircle::Draw(Window &_win)
 {
-	this->setCS_px(_CS);
-	this->xOffset = this->x + _xOffset;
-	this->yOffset = this->y + _yOffset;
+	// \TODO: Known problem: pixel perfect overlaps causes circles to "blink"
+	// \TODO: Fix ratio not being perfectly applied to sliders
 
-	double step = PX_PER_RAD(radius);
-	bool slider = (this->sliders.size() != 0);
-		
-	if (this->isVisible(_time, _AR, _hidden))
+	double opacity = hitobject->getOpacityAt(*(this->viewTime), beatmap->getDiff().ar, beatmap->getModifiers().hidden);
+	SColor fade = SColor(255, edgeCol.getRed() * opacity, edgeCol.getGreen() * opacity, edgeCol.getBlue() * opacity);
+	
+	// draw the hitcircle
+	int radius = std::min(this->width / 2.0, this->height / 2.0);
+	DrawArc(_win, this->absXpos + radius, this->absYpos + radius, radius, fade);
+	
+	// draw slider
+	if (hitobject->IsHitObjectType(SLIDER))
 	{
-		if (_win.device->isWindowActive())
-			update(_win);
-
-		double opacity = this->getOpacity(_time, _AR, _hidden);
-		SColor fade = SColor(255, edgeCol.getRed() * opacity, edgeCol.getGreen() * opacity, edgeCol.getBlue() * opacity);
-
-		DrawArc(_win, xOffset, yOffset, radius, fade);
-
-		for (int i = 1; i < sliders.size(); i++)
+		double velocity = hitobject->slider->getVelocity();
+		if (velocity != 0.0)
 		{
-			vector2di slidePoint(std::get<XPOS>(sliders[i]), std::get<YPOS>(sliders[i]));
-			_win.driver->drawPixel(slidePoint.X, slidePoint.Y, fade);
-
-			if (BTWN(std::get<TIME>(sliders[i - 1]), _time, std::get<TIME>(sliders[i])))
+			for (double t = hitobject->getTime(); t < hitobject->slider->getEndTime(); t += (1.0 / velocity))
 			{
-				DrawArc(_win, slidePoint.X, slidePoint.Y, 5, fade);  // draw slider point
-			}
-		}
-	}
-}
+				vector2di sliderPoint = hitobject->slider->GetSliderPos(t);
+				_win.driver->drawPixel(sliderPoint.X*getWidthRatio() + radius, sliderPoint.Y*getHeightRatio() + radius, fade);
 
-void Hitcircle::setCS_px(int _CS)
-{
-	radius = CS2px(_CS) / 2.0; // gives radius
-}
-
-bool Hitcircle::isVisible(int _time, double _AR, bool _hidden)
-{
-	double opacity = getOpacity(_time, _AR, _hidden);
-	if (opacity > 0.0)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
-
-double Hitcircle::getOpacity(int _time, double _AR, bool _hidden)
-{
-	double preampTime = this->t - AR2ms(_AR);	// Time when the AR goes into effect
-
-	if (_hidden)
-	{ 
-		double fadeinDuration = 0.4*AR2ms(_AR);				// how long the fadein period is
-		double fadeinTimeEnd = preampTime + fadeinDuration; // When it is fully faded in
-		
-		// Fadein period always lasts from preamp time to 40% from preamp time to hit time
-		double percentFadeIn = getPercent(preampTime, _time, fadeinTimeEnd);
-
-		// If it's not fully faded in, then we haven't gotten up to the later stuff 
-		if (percentFadeIn < 1.0)
-		{
-			return percentFadeIn;
-		}
-		else // fadeout
-		{
-			// If it's a slider, then the fade out period lasts from when it's fadedin to
-			// 70% to the time it the slider ends
-			if (this->isSlider())
-			{
-				double fadeoutDuration = (this->getEndTime() - fadeinTimeEnd); // how long the fadeout period is
-				double fadeoutTimeEnd = fadeinTimeEnd + fadeoutDuration;		   // When it is fully faded out
-				return (1.0 - getPercent(fadeinTimeEnd, _time, fadeoutTimeEnd));
-			}
-			else
-			{
-				double fadeoutDuration = 0.7*(this->t - fadeinTimeEnd);		// how long the fadeout period is
-				double fadeoutTimeEnd = fadeinTimeEnd + fadeoutDuration;	// When it is fully faded out
-				return (1.0 - getPercent(fadeinTimeEnd, _time, fadeoutTimeEnd));
-			}
-		}
-	}
-	else
-	{
-		double fadeinDuration = MIN(AR2ms(_AR), 400);		// how long the fadein period is
-		double fadeinTimeEnd = preampTime + fadeinDuration; // When it is fully faded in
-
-		// Fadein period always lasts from preamp time to 400 ms after preamp time or
-		// when the object needs to be hit, which ever is smaller
-		double percentFadeIn = getPercent(preampTime, _time, fadeinTimeEnd);
-
-		// If it's not fully faded in, then we haven't gotten up to the later stuff 
-		if (percentFadeIn < 1.0)
-		{
-			return percentFadeIn;
-		}
-		else // fadeout
-		{
-			// If it is during the slider hold period, then it's fully visible.
-			// Otherwise, it's not visible anymore.
-			if (this->isSlider())
-			{
-				if (_time > this->getEndTime())
+				if (BTWN(t - (1.0 / velocity), *(this->viewTime), t + (1.0 / velocity)))
 				{
-					// \TODO: Opacity when pressed and when missed
-					return 0.0; 
-				}
-				else
-				{
-					return 1.0;
-				}
-			}
-			else
-			{
-				if (_time > this->t)
-				{
-					// \TODO: Opacity when pressed and when missed
-					return 0.0;
-				}
-				else
-				{
-					return 1.0;
+					DrawArc(_win, sliderPoint.X*getWidthRatio() + radius, sliderPoint.Y*getHeightRatio() + radius, 5, fade);  // draw slider point
 				}
 			}
 		}
 	}
 }
 
-std::pair<int, int> Hitcircle::getVisiblityTimes(double _AR, bool _hidden, double _opacityStart, double _opacityEnd)
-{
-	double preampTime = this->t - AR2ms(_AR);	// Time when the AR goes into effect
-	std::pair<int, int> times;
-
-	if (_hidden)
-	{
-		double fadeinDuration = 0.4*AR2ms(_AR);				// how long the fadein period is
-		double fadeinTimeEnd = preampTime + fadeinDuration; // When it is fully faded in
-
-		times.first = getValue(preampTime, fadeinTimeEnd, _opacityStart);
-		
-		
-		// If it's a slider, then the fade out period lasts from when it's fadedin to
-		// 70% to the time it the slider ends
-		if (this->isSlider())
-		{
-			double fadeoutDuration = (this->getEndTime() - fadeinTimeEnd); // how long the fadeout period is
-			double fadeoutTimeEnd = fadeinTimeEnd + fadeoutDuration;		   // When it is fully faded out
-			times.second = getValue(fadeinTimeEnd, fadeoutTimeEnd, 1.0 - _opacityEnd);
-
-			return times;
-		}
-		else
-		{
-			double fadeoutDuration = 0.7*(this->t - fadeinTimeEnd);		// how long the fadeout period is
-			double fadeoutTimeEnd = fadeinTimeEnd + fadeoutDuration;	// When it is fully faded out
-			times.second = getValue(fadeinTimeEnd, fadeoutTimeEnd, 1.0 - _opacityStart); // <-- no this is not a mistake :D
-
-			return times;
-		}
-	}
-	else
-	{
-		double fadeinDuration = MIN(AR2ms(_AR), 400);		// how long the fadein period is
-		double fadeinTimeEnd = preampTime + fadeinDuration; // When it is fully faded in
-
-		// Fadein period always lasts from preamp time to 400 ms after preamp time or
-		// when the object needs to be hit, which ever is smaller
-		times.first = getValue(preampTime, fadeinTimeEnd, _opacityStart);
-
-		// If it is during the slider hold period, then it's fully visible.
-		// Otherwise, it's not visible anymore.
-		if (this->isSlider())
-		{
-			times.second = this->getEndTime();
-			return times;
-		}
-		else
-		{
-			times.second = this->t;
-			return times;
-		}
-	}
-}
-
-position2di Hitcircle::getPos(bool _absolute)
-{
-	if (_absolute)
-		return position2di(this->xOffset, this->yOffset);
-	else
-		return position2di(this->x, this->y);
-}
-
-int Hitcircle::getTime()
-{
-	return this->t;
-}
-
-// return diameter osu osu!px
-double Hitcircle::getSizePx()
-{
-	return this->radius*2.0;
-}
-
-void Hitcircle::setTime(int _time)
-{
-	this->t = _time;
-}
-
-bool Hitcircle::isSlider()
-{
-	return (this->sliders.size() != 0);
-}
-
-position2di Hitcircle::getEndPoint()
+/*position2di Hitcircle::getEndPoint()
 {
 	if (this->isSlider())
 	{
@@ -245,22 +60,9 @@ position2di Hitcircle::getEndPoint()
 	{
 		return position2di(this->x, this->y);
 	}
-}
+}*/
 
-
-int Hitcircle::getEndTime()
-{
-	if (this->isSlider())
-	{
-		std::tuple<int, int, int> sliderPoint = this->sliders[this->sliders.size() - 1];
-		return std::get<TIME>(sliderPoint);
-	}
-	else
-	{
-		return this->t;
-	}
-}
-
+/*
 int Hitcircle::getHoldPeriod()
 {
 	return this->getEndTime() - this->getTime();
@@ -280,19 +82,13 @@ int Hitcircle::getSliderTimeAt(int _index)
 		return std::get<TIME>(sliders[_index]);
 	else
 		return -1;
-}
+}*/
 
 // ------ [PRIVATE] ------
 
 void Hitcircle::IdleLogic(Window &_win)
 {
-	position2di pos = _win.reciever.GetMouseState().positionCurr;
-	bool cursorOverCircle = (BTWN(this->xOffset - radius, pos.X, this->xOffset + radius) && 
-		                     BTWN(this->yOffset - radius, pos.Y, this->yOffset + radius));
-
-	//std::cout << pos.X << std::endl;
-
-	if (cursorOverCircle)
+	if (this->isMouseOnObj(_win, true))
 		state = HIGHLIGHTED;
 	else
 		edgeCol = IDLE_COLOR;
@@ -300,11 +96,7 @@ void Hitcircle::IdleLogic(Window &_win)
 
 void Hitcircle::HighlightedLogic(Window &_win)
 {
-	position2di pos = _win.reciever.GetMouseState().positionCurr;
-	bool cursorOverCircle = (BTWN(this->xOffset - radius, pos.X, this->xOffset + radius) &&
-							 BTWN(this->yOffset - radius, pos.Y, this->yOffset + radius));
-
-	if (!cursorOverCircle)
+	if (!this->isMouseOnObj(_win, true))
 		state = IDLE;
 	else
 	{
@@ -318,35 +110,32 @@ void Hitcircle::HighlightedLogic(Window &_win)
 	}
 }
 
-// A known problem is that the when circles overlap, selecting them
-// forces them to collapse into the same position. Further interaction
-// with the circles will result the same effect as if there is one circle
-// To fix this, an environment manager is needed, but currently not planned.
 void Hitcircle::SelectedLogic(Window &_win)
 {
-	position2di pos = _win.reciever.GetMouseState().positionCurr;
 	position2di mouseDelta = _win.reciever.getCursorDelta();
 	bool leftButton = _win.reciever.GetMouseState().LeftButtonDown;
 	bool leftEdge = _win.reciever.GetMouseState().LeftButtonEdge;
-	bool cursorOverCircle = (BTWN(this->xOffset - radius, pos.X, this->xOffset + radius) &&
-						  	 BTWN(this->yOffset - radius, pos.Y, this->yOffset + radius));
+	
+	// \TODO: Slider points; See if slider gen and update code can be simplified
 
-	if (!cursorOverCircle && leftEdge)
+	if (!this->isMouseOnObj(_win, true) && leftEdge)
 		state = IDLE;
 	else if (leftButton)
 	{
 		// has to be += due the fact that x - xoffset = 0, 
 		// resolving the assignment to x = pos.x
 		// this->x = pos.X - this->xOffset + this->x  => this->x = pos.X - 0;
-		this->x += mouseDelta.X;
-		this->y += mouseDelta.Y;
+		vector2d<double> newPos(hitobject->getPos().X + (double)mouseDelta.X/this->getWidthRatio(), hitobject->getPos().Y + (double)mouseDelta.Y/this->getHeightRatio());
+		hitobject->setPos(newPos);
 
 		edgeCol = SELECTED_COLOR;
 	}
 }
 
-void Hitcircle::update(Window &_win)
+void Hitcircle::UpdateInternal(Window &_win)
 {
+	UpdateDimentions();
+
 	switch (state)
 	{
 		case IDLE:
@@ -365,4 +154,26 @@ void Hitcircle::update(Window &_win)
 			// ???
 			break;
 	}
+}
+
+void Hitcircle::UpdateDimentions()
+{
+	xpos = hitobject->getPos().X*getWidthRatio();
+	ypos = hitobject->getPos().Y*getHeightRatio();
+
+	int diameter = std::min(CS2px(beatmap->getDiff().cs)*getWidthRatio(),
+							CS2px(beatmap->getDiff().cs)*getHeightRatio());
+
+	width = diameter;
+	height = diameter;
+}
+
+double Hitcircle::getWidthRatio()
+{
+	return parent->getDim().Width / 640.0;
+}
+
+double Hitcircle::getHeightRatio()
+{
+	return parent->getDim().Height / 480.0;
 }

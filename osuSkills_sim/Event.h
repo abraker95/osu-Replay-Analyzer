@@ -23,6 +23,9 @@ class EventReceiver : public IEventReceiver
 		void Update();
 
 		virtual bool IsKeyDown(EKEY_CODE keyCode) const;
+		bool IsKeyEdgeDown(EKEY_CODE keyCode) const;
+		bool IsKeyEdgeUp(EKEY_CODE keyCode) const;
+
 		const SMouseState &GetMouseState(void) const;
 		int getWheel(bool _mode = false); // _mode = 0: 0 if no change,  _mode = 1: get the last value
 		vector2di getCursorDelta();
@@ -31,7 +34,9 @@ class EventReceiver : public IEventReceiver
 		SMouseState MouseState;
 
 		// We use this array to store the current state of each key
-		bool KeyIsDown[KEY_KEY_CODES_COUNT];
+		bool keyState[KEY_KEY_CODES_COUNT];
+		bool currKeyState[KEY_KEY_CODES_COUNT];
+		bool prevKeyState[KEY_KEY_CODES_COUNT];
 };
 
 #endif

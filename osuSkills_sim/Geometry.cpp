@@ -4,7 +4,7 @@
 #include <math.h>
 #include "irrlicht\include\irrlicht.h"
 
-double getSlope(position2di _p1, position2di _p2)
+double getSlope(position2d<double> _p1, position2d<double> _p2)
 {
 	if ((_p2.X - _p1.X) == 0)
 		return DBL_MAX;
@@ -12,16 +12,16 @@ double getSlope(position2di _p1, position2di _p2)
 		return ((double)(_p2.Y - _p1.Y)) / ((double)(_p2.X - _p1.X));
 }
 
-double getDist(position2di _p1, position2di _p2)
+double getDist(position2d<double> _p1, position2d<double> _p2)
 {
 	double distX = _p2.X - _p1.X;
 	double distY = _p2.Y - _p1.Y;
 	return sqrt((double)(distX*distX + distY*distY));
 }
 
-bool isPointOnLine(position2di _point, std::pair<position2di, position2di> _line)
+bool isPointOnLine(position2d<double> _point, std::pair<position2d<double>, position2d<double>> _line)
 {
-	position2di checkPoint = position2di(_line.first.X, _point.Y);
+	position2d<double> checkPoint = position2d<double>(_line.first.X, _point.Y);
 	
 	// Just make sure the point has the same slope going to any of the other points on the line and
 	// it's between the 2 points of the line
@@ -41,7 +41,7 @@ bool isPointOnLine(position2di _point, std::pair<position2di, position2di> _line
 }
 
 // Thanks http://www.softwareandfinance.com/Visual_CPP/VCPP_Intersection_Two_lines_EndPoints.html
-bool HasIntersectionPoint(std::pair<position2di, position2di> _line1, std::pair<position2di, position2di> _line2)
+bool HasIntersectionPoint(std::pair<position2d<double>, position2d<double>> _line1, std::pair<position2d<double>, position2d<double>> _line2)
 {
 	bool l1_checkX1 = BTWN(_line2.first.X, _line1.first.X, _line2.second.X);
 	bool l1_checkX2 = BTWN(_line2.first.X, _line1.second.X, _line2.second.X);
@@ -74,7 +74,7 @@ double Deg2px(double _deg, double _res, double _fov)
 	return _res * (atan(deg2rad(_deg) / 2.0) / atan(deg2rad(_fov) / 2.0));
 }
 
-double getVelocity(position2di _p1, position2di _p2, double _t1, double _t2)
+double getVelocity(position2d<double> _p1, position2d<double> _p2, double _t1, double _t2)
 {
 	double dist = getDist(_p1, _p2);
 	double time = _t2 - _t1;
@@ -83,7 +83,7 @@ double getVelocity(position2di _p1, position2di _p2, double _t1, double _t2)
 
 // Positive is counter-clock wise and negative is clock-wise
 // Returns values in radians between -pi and +pi
-double getDirAngle(position2di a, position2di b, position2di c)
+double getDirAngle(position2d<double> a, position2d<double> b, position2d<double> c)
 {
 	vector2df ab(b.X - a.X, b.Y - a.Y);
 	vector2df cb(b.X - c.X, b.Y - c.Y);
@@ -95,30 +95,30 @@ double getDirAngle(position2di a, position2di b, position2di c)
 }
 
 // Returns 3 points make in radians between 0 and pi
-double getAngle(position2di _p1, position2di _ref, position2di _p2)
+double getAngle(position2d<double> _p1, position2d<double> _ref, position2d<double> _p2)
 {
 	return abs(getDirAngle(_p1, _ref, _p2));
 }
 
 /// \TODO: check what happends if point are on top of each other
-DIR getRotDir(position2di a, position2di b, position2di c)
+DIR getRotDir(position2d<double> a, position2d<double> b, position2d<double> c)
 {
 	return (DIR)(getDirAngle(a, b, c) < 0);
 }
 
-double getAbsoluteAngle(position2di _p1, position2di _p2)
+double getAbsoluteAngle(position2d<double> _p1, position2d<double> _p2)
 {
 	double theta = atan(getSlope(_p1, _p2));
 	double a = M_PI * PARITY((double)_p2.X - (double)_p1.X);
 	return theta - a - 2*M_PI*PARITY(theta - a/2);
 }
 
-position2di getMidpoint(position2di _p1, position2di _p2)
+position2d<double> getMidpoint(position2d<double> _p1, position2d<double> _p2)
 {
-	return position2di(_p2.X + (_p1.X - _p2.X) / 2, _p2.Y + (_p1.Y - _p2.Y) / 2);
+	return position2d<double>(_p2.X + (_p1.X - _p2.X) / 2, _p2.Y + (_p1.Y - _p2.Y) / 2);
 }
 
-double getNormal(position2di _p1, position2di _p2)
+double getNormal(position2d<double> _p1, position2d<double> _p2)
 {
 	return -1 / (getSlope(_p1, _p2));
 }

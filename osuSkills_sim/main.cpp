@@ -2,6 +2,8 @@
 #include <fstream>
 #include <string>
 #include <tuple>
+#include <functional>
+#include <thread>
 
 #include "irrlicht/include/irrlicht.h"
 #include "Window.h"
@@ -9,9 +11,18 @@
 
 #include "mathUtils.h"
 
-#include "Hitcircle.h"
 #include "Slider.h"
-#include "osuStats.h"
+#include "Button.h"
+#include "Scrollbar.h"
+#include "Pane.h"
+#include "Dialog.h"
+
+#include "Play.h"
+#include "ScoreEngine.h"
+
+#include "GamemodeRenderer.h"
+#include "Hitcircle.h"
+#include "TimingGraph.h"
 #include "analysis.h"
 #include "osuCalc.h"
 
@@ -34,6 +45,7 @@ using namespace gui;
 	//#pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup")  // show/hide console
 #endif
 
+/*
 void DrawDebug(Window &_win, std::vector<Hitcircle> &_hitcircles, int _time, double _AR, double _CS, bool _hidden)
 {
 	int index = getHitcircleAt(_hitcircles, _time) + 1;
@@ -65,7 +77,7 @@ void DrawDebug(Window &_win, std::vector<Hitcircle> &_hitcircles, int _time, dou
 
 	std::pair<int, int> range = getIndicesVisibleAt(_hitcircles, _time, _AR, _hidden, 0.3);
 
-	// \TODO: to be applied when doing slider intersection check
+	/// \TODO: to be applied when doing slider intersection check
 	//getPattern(_hitcircles, timeEnd, _index, _CS, getNumVisibleAt(_hitcircles, _AR, _hidden, 0.1));
 
 	for (int i = range.first + 1; i < range.second; i++)
@@ -86,71 +98,46 @@ void DrawDebug(Window &_win, std::vector<Hitcircle> &_hitcircles, int _time, dou
 	}
 
 
-}
-}
+}*/
 
-std::vector<Hitcircle> GetMap(std::string _filename)
+void DrawGraph(Window &_win, std::function<double(double)> _y, int* _ref, double _step = 1, double _xscale = 1, double _yscale = 1)
 {
-	std::vector<Hitcircle> circles;
-
-	std::ifstream mapFile("mapObject.txt");
-	if (mapFile.is_open())
+	dimension2di dim = _win.getDimentions();
+	while (_win.device->run())
 	{
-		std::string line;
-		while (getline(mapFile, line))
-		{
-			vector<tuple<int, int, int>> slider;
+		vector2di prev = vector2di(0, 0);
+		_win.driver->beginScene(true, true, SColor(255, 0, 0, 0));
 
-			int i = line.find_first_of(' ');
-			int x = stoi(line.substr(0, i));
-
-			line = line.substr(i + 1);
-			
-			i = line.find_first_of(' ');
-			int y = stoi(line.substr(0, i));
-
-			line = line.substr(i + 1);
-
-			i = line.find_first_of(' ');
-			int t = stoi(line.substr(0, i));
-
-			line = line.substr(i + 1);
-
-			i = line.find_first_of('|');
-			if (i != -1) // it's a slider!
+			for (int x = *_ref; x <= (*_ref + dim.Width)/_xscale; x += _step)
 			{
-				line = line.substr(i + 2);
-
-				while (i != -1 || line.size() != 0)
-				{
-					i = line.find_first_of(' ');
-					int sliderX = stoi(line.substr(0, i));
-
-					line = line.substr(i + 1);
-
-					i = line.find_first_of(' ');
-					int sliderY = stoi(line.substr(0, i));
-
-					line = line.substr(i + 1);
-
-					i = line.find_first_of(' ');
-					int sliderT = stoi(line.substr(0, i));
-
-					slider.push_back(std::make_tuple(sliderX, sliderY, sliderT));
-
-					i = line.find_first_of(' ');
-					line = line.substr(i + 1);
-
-					i = line.find_first_of(' ');  // out leading condition
-				}
+				vector2di curr = vector2di((x - *_ref)*_xscale, dim.Height - _y(x)*_yscale);
+				_win.driver->draw2DLine(prev, curr, SColor(255, 255, 255, 255));
+				prev = curr;
 			}
 
-			circles.push_back(Hitcircle(x, y, t, slider));
-		}
-
-		mapFile.close();
+		_win.driver->endScene();
 	}
-	return circles;
+}
+
+std::pair<std::string, std::string> getAnalyzerTXT()
+{
+	const std::string file = "C:\\Users\\abraker\\Documents\\C++\\Repos\\osuskills-analysis-tool\\analyze.txt";
+	std::string beatmapFile, replayFile;
+
+	std::ifstream analyzeFile(file);
+	if (analyzeFile.is_open())
+	{
+		getline(analyzeFile, beatmapFile);
+		getline(analyzeFile, replayFile);
+		analyzeFile.close();
+	}
+	else
+	{
+		beatmapFile = "";
+		replayFile = "";
+	}
+
+	return std::pair<std::string, std::string>(beatmapFile, replayFile);
 }
 
 int main()
@@ -159,86 +146,106 @@ int main()
 	const int RESY =  50+480;
 
 	Window win(RESX, RESY);
-	win.device->setWindowCaption(L"osu!skill Formula Simulator");
+	win.device->setWindowCaption(L"osu!skill Replay Analyzer");
+	win.device->setResizable(true);
+
+	//Window winGraph(RESX, RESY);
+	//win.device->setWindowCaption(L"Reaction Skill Graph");
 
 	double CS = 4;
 	double AR = 9;
-	
-	double res = 0.5;
-	int time_ms = 0;
+	int viewTime = 0;
 
-	bool hidden = true;
-	
-	vector<Hitcircle> circles = GetMap("mapObject.txt");
+	bool hidden = false;
 
-	Slider csSlider(660, 80, 90, 10);
+	Slider csSlider(-75, 25, 120, 10);
 		csSlider.setRange(0, 10);
+		csSlider.ClipPosTo(GuiObj::TOPRIGHT);
 
-	Slider arSlider(660, 120, 90, 10);
+	Slider arSlider(-75, 100, 120, 10);
 		arSlider.setRange(0, 11);
 		arSlider.setVal(10 + 1.0 / 3.0);
-			
-	Slider hdSlider(660, 160, 90, 10);
-		hdSlider.setRange(0, 1);
+		arSlider.ClipPosTo(GuiObj::TOPRIGHT);
 
-	// \TODO: Figure out how to exit this thread safely when closing window
+	Slider hdSlider(-75, 175, 120, 10);
+		hdSlider.setRange(0, 1);
+		hdSlider.ClipPosTo(GuiObj::TOPRIGHT);
+
+	/// \TODO: Figure out how to exit this thread safely when closing window
 //	std::function<double(double)> reactFoo = [&circles, &CS, &AR, &hidden](int _x) { return getReactionSkill(circles, _x, CS, AR, hidden); };
 //	std::thread first(DrawGraph, winGraph, reactFoo, &time_ms, 10.0, 1, 0.5);
 
+	/// \TODO: Open file dialog box
+
+	//Scrollbar scrollbar(10, 10, Scrollbar::VERTICAL, 300, 550);
+	//Pane pane(50, 50, 500, 300, 500, 500);
+	//	pane.addObj(&scrollbar);	*/
+
+	//Dialog dialogBox(20, 20, 500, 300);
+
+	//std::string beatmapFile = "C:\\My Games\\Games\\osu!\\Songs\\3 Ni-Ni - 1,2,3,4, 007 [Wipeout Series]\\Ni-Ni - 1,2,3,4, 007 [Wipeout Series] (MCXD) [-Sweatin-].osu";
+	//std::string replayFile = "C:\\Users\\abraker\\Documents\\C++\\Repos\\osuskills-analysis-tool\\abraker - Ni-Ni - 1,2,3,4, 007 [Wipeout Series] [-Sweatin-] (2016-05-15) Osu.osr";
+
+	std::pair<std::string, std::string> toAnalyze = getAnalyzerTXT();
+	Play play(toAnalyze.first, toAnalyze.second);
+
+	cout << play.scoreEngine->getTotalAccScore() << endl;
+
+	TimingGraph timingGraph(win, play.beatmap);
+		timingGraph.ClipPosTo(GuiObj::BTMLEFT);
+		timingGraph.addClipDimTo(GuiObj::RIGHT);
+		timingGraph.DisableLayer(TimingGraph::LAYER::HITOBJECT_VISIBILTITY);
+
+	GamemodeRenderer renderer(10, 10, win.getDimentions().Width, win.getDimentions().Height, &play, &viewTime);
+		renderer.ClipPosTo(GuiObj::TOPLEFT);
+		renderer.addClipDimTo(GuiObj::BTM);
+		renderer.addClipDimTo(GuiObj::RIGHT);
+		renderer.setMargin(250, 100);
+
+	/// \TODO: Are there no memory leaks?
+	/// \TODO: Implement a textbox gui object (OH BOY... >.>)
 	while (win.device->run())
 	{
 		win.reciever.Update();
+		win.updateFPS();
 
 		// update stuff
 		AR = arSlider.getVal();
 		CS = csSlider.getVal();
 		hidden = hdSlider.getVal() < 0.5? false: true;
 
-		// skill calculation
-		double reaction = getReactionSkill(circles, time_ms, CS, AR, hidden);
-		double reading = getReadingSkill(circles, time_ms, CS, AR, hidden);
+		viewTime = timingGraph.getViewTime();
 
-		// mouse wheel time control
-		if (win.reciever.IsKeyDown(KEY_KEY_Z))
-		{
-			double step = -res/10.0; // amount of units to zoom in/out by
-			double newRes = res + step*win.reciever.getWheel();
-			if (newRes >= 0)
-				res = newRes;
-		}
-		else
-		{
-			double const step = -10; // amount of px to move by
-			double newTime_ms = time_ms + (step / res) * win.reciever.getWheel();
-			if (newTime_ms >= 0)
-				time_ms = newTime_ms;
-		}
+		// skill calculation
+		//double reaction = getReactionSkill(circles, time_ms, CS, AR, hidden);
+		//double reading = getReadingSkill(circles, time_ms, CS, AR, hidden);
+		//double precision = getPrecisionSkill(circles, time_ms, CS, AR, hidden);
+
 
 		// render stuff
 		win.driver->beginScene(true, true, SColor(255, 0, 0, 0));
 
-			win.driver->draw2DRectangleOutline(recti(0, 0, 640, 480));
-			for (int i = 0; i < circles.size(); i++)
-				circles[i].Draw(win, 0, 0, time_ms, AR, CS, hidden);
-		
-		// \TODO: Angle drawing screws up on sliders
+			/// \TODO: Angle drawing screws up on sliders
 			//DrawLine(win, circles[0], circles[1]);
-			int time2index = getHitcircleAt(circles, time_ms) + 1;
+			/*int time2index = getHitcircleAt(circles, time_ms) + 1;
 			if (BTWN(1, time2index, circles.size() - 2))
-				DrawAngle(win, circles[time2index - 1], circles[time2index], circles[time2index + 1]);
+				DrawAngle(win, circles[time2index - 1], circles[time2index], circles[time2index + 1]);*/
 			
-			drawTimingGraphs(win, 0, 510, circles, true, time_ms, res, CS, AR, hidden);
-
-			win.font->draw(core::stringw(time_ms),core::rect<s32>(RESX - 100, 20, 100, 10), video::SColor(255, 255, 255, 255));
+			//cout << getNumIntersections(circles, time2index, AR2ms(AR)) <<endl;
+			//getNumIntersections(circles, time2index, AR2ms(AR));
 			win.font->draw(core::stringw(win.reciever.GetMouseState().positionCurr.X) + ", " + core::stringw(win.reciever.GetMouseState().positionCurr.Y), core::rect<s32>(RESX - 100, 40, 100, 10), video::SColor(255, 255, 255, 255));
-			win.font->draw(core::stringw("Reaction: ") + core::stringw(reaction), core::rect<s32>(RESX - 150, 300, 100, 10), video::SColor(255, 255, 255, 255));
+			//win.font->draw(core::stringw("Reaction: ") + core::stringw(reaction), core::rect<s32>(RESX - 150, 300, 100, 10), video::SColor(255, 255, 255, 255));
 
-			arSlider.Draw(win);
-			csSlider.Draw(win);
-			hdSlider.Draw(win);
+			//getParamVelVec(circles, time_ms, CS);
 
-			DrawDebug(win, circles, time_ms, AR, CS, hidden);
+			UpdateGuiObjs(win);
+			
+			//dialogBox.Update(win);
+			//scrollbar.Draw(win);
+
+			//DrawDebug(win, circles, time_ms, AR, CS, hidden);
 		win.driver->endScene();
+		win.device->yield();
 	}
 
 	win.device->drop();

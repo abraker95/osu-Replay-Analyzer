@@ -5,16 +5,20 @@
 #include <vector>
 #include <tuple>
 
-#include "Object.h"
+#include "GuiObj.h"
 #include "Window.h"
+#include "Hitobject.h"
+#include "Beatmap.h"
 
-class Hitcircle: private Object
+class Hitcircle: public GuiObj
 {
+	public:
+		Hitcircle(Beatmap* _beatmap, Hitobject* _hitobject, int* _viewTime);
+
 	private:
-		int x, y;		 // in osu!px
-		double radius;   // in osu!px
-		double t;		 // in ms
-		std::vector<std::tuple<int, int, int>> sliders;  // x, y, t
+		Beatmap *beatmap;
+		Hitobject *hitobject;
+		int *viewTime;
 
 		SColor edgeCol;
 
@@ -25,50 +29,21 @@ class Hitcircle: private Object
 			SELECTED = 2
 		}state;
 
-		const SColor IDLE_COLOR		   = SColor(255, 150, 150, 150);
+		const SColor IDLE_COLOR = SColor(255, 150, 150, 150);
 		const SColor HIGHLIGHTED_COLOR = SColor(255, 255, 255, 255);
-		const SColor SELECTED_COLOR    = SColor(255, 255, 100, 100);
-		
+		const SColor SELECTED_COLOR = SColor(255, 255, 100, 100);
+
 		void IdleLogic(Window &_win);
 		void HighlightedLogic(Window &_win);
 		void SelectedLogic(Window &_win);
 
-		void setCS_px(int _CS_px);
+		virtual void UpdateInternal(Window &_win);
+		void UpdateDimentions();
 
-		void update(Window &_win);
+		virtual void Draw(Window &_win);
 
-	public:
-		enum PROPERTIES
-		{
-			XPOS = 0,
-			YPOS = 1,
-			TIME = 2
-		};
-
-		Hitcircle(int _x, int _y, int _t, std::vector<std::tuple<int, int, int>> _sliders = {});
-
-		void Draw(Window &_win, int _xOffset, int _yOffset, int _time, double _AR, double _CS, bool _hidden);
-
-		bool isVisible(int _time, double _AR, bool _hidden);
-		bool isSlider();
-
-		position2di getEndPoint();
-		position2di getSliderPointAt(int _index);
-		int getSliderTimeAt(int _index);
-
-		position2di getPos(bool _absolute = false);
-
-		int getTime();
-		int getEndTime();
-		double getOpacity(int _time, double _AR, bool _hidden);
-
-		std::pair<int, int> getVisiblityTimes(double _AR, bool _hidden, double _opacityStart, double _opacityEnd);
-
-		int getHoldPeriod();
-
-		void setTime(int _time);
-
-		double getSizePx();
+		inline double getWidthRatio();
+		inline double getHeightRatio();
 };
 
 #endif
