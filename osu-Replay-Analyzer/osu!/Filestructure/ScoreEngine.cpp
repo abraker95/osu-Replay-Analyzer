@@ -21,9 +21,9 @@ std::pair<double, double> ScoreEngine::getTotalScore()
 	double missesPunisher = 1.0;
 
 	// max score calc
-	for (int i = 1; i < play->beatmap->hitObjects.size(); i++)
+	for (int i = 1; i < tappingStrains.size(); i++)
 	{
-		maxScore += diffMaxScores[i].timingDiff * log(accTimings.size());
+		maxScore += tappingStrains[i].timingDiff * log(i);
 	}
 
 	// score calc
@@ -31,7 +31,7 @@ std::pair<double, double> ScoreEngine::getTotalScore()
 	{
 		if (diffPlyScores[i].timingDiff != -1) // if not missed
 		{
-			score += (Time2AccScore(abs(accTimings[i].timingDiff)) * diffPlyScores[i].timingDiff * log(accTimings.size())) / missesPunisher;
+			score += (Time2AccScore(abs(accTimings[i].timingDiff)) * diffPlyScores[i].timingDiff * log(i)) / missesPunisher;
 
 			if (missesPunisher > 1.0)
 				missesPunisher /= 2.0;
