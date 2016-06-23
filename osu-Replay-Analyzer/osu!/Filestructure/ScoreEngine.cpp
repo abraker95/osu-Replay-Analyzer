@@ -380,7 +380,7 @@ double ScoreEngine::Time2AccScore(int _ms)
 
 double ScoreEngine::PressStrain(int _ms)
 {
-	return exp((2.0*_ms) / 7.0 - 1.0);
+	return exp((2.0*_ms) / 7.0) - 1.0;
 }
 
 std::tuple<long, int, int> ScoreEngine::getNextEvent(int* _iFrame)
