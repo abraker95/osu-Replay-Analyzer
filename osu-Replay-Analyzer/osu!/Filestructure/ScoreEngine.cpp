@@ -49,11 +49,6 @@ double ScoreEngine::getTotalAccScore()
 		totalScore.first = (score / maxScore) * 1000000.0;
 		totalScore.second = score / 100.0;
 
-double ScoreEngine::getDiffScoreFor(int _time)
-{
-	return 0; /// \TODO
-}
-
 double ScoreEngine::getTotalScore()
 {
 	// (diffScore[i] * accScore[i] * log10(i)) / missesPunisher 

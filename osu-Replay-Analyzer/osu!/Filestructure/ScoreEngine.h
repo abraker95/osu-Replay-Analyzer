@@ -29,10 +29,6 @@ class ScoreEngine
 		void genAccTimings();
 		void genDifficulties();
 
-		double getAccScoreFor(int _time);
-		double getDiffScoreFor(int _time);
-		double getScoreFor(int _time);
-
 		
 		std::vector<double> TotalScore;
 
