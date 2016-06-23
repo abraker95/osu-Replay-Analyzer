@@ -246,7 +246,9 @@ void ScoreEngine::genMaxTappingDiffs()
 		{
 			bool isHoldObject = !(play->beatmap->hitObjects[i]->getHitobjectType() & HITOBJECTYPE::CIRCLE);
 			int noteXpos = play->beatmap->hitObjects[i]->getPos().X;
-			int column = (noteXpos - 64) / 128;
+			
+			float localWDivisor = 512.0f / KEYS;
+			int column = std::min((int)std::floor(noteXpos / localWDivisor), KEYS - 1);
 
 			//shift: prev <- curr, curr <- next
 			hitPeriodPrev[column] = hitPeriodCurr[column];
@@ -417,8 +419,11 @@ Hitobject* ScoreEngine::getNextNoteOnColumn(int _column, int* _iNote)
 	(*_iNote) += 1;
 	for (; (*_iNote) < play->beatmap->hitObjects.size(); (*_iNote)++)
 	{
+		int KEYS = play->beatmap->getDiff().cs;
 		int noteXpos = play->beatmap->hitObjects[*_iNote]->getPos().X;
-		int column = (noteXpos - 64) / 128;
+
+		float localWDivisor = 512.0f / KEYS;
+		int column = std::min((int)std::floor(noteXpos / localWDivisor), KEYS - 1);
 
 		if (column == _column)
 			return play->beatmap->hitObjects[*_iNote];
