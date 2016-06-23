@@ -124,7 +124,16 @@ void Play::ApplyTimings()
 
 	for (auto &hitobject : beatmap->hitObjects)
 	{
-		hitobject->setTime(this->beatmap, hitobject->getTime() / divisor);
+		hitobject->time /= divisor;
+		int type = hitobject->getHitobjectType();
+
+		if (type == HITOBJECTYPE::MANIALONG || type == HITOBJECTYPE::SLIDER || type == HITOBJECTYPE::SPINNER)
+			hitobject->slider->endTime /= divisor;
+	}
+
+	for (auto &frame : replay->replayStream)
+	{
+		std::get<0>(frame) /= divisor;
 	}
 }
 

@@ -13,6 +13,8 @@
 
 class Replay
 {
+	friend class Play;
+
 	public:
 		Replay(std::string _filepath);
 

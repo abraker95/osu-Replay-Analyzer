@@ -24,6 +24,8 @@ enum CurveType
 
 class Hitobject
 {
+	friend class Play;
+
 	public:
 		Hitobject(std::vector<std::string> &_objectData, std::vector<std::string> &_sliderData);
 		Hitobject();
