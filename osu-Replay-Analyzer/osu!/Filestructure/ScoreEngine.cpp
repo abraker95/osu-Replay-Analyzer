@@ -53,6 +53,8 @@ void ScoreEngine::genScores()
 	genAccTimings();
 
 	genMaxTappingDiffs();
+	genMaxTappingStains();
+
 	genPlyTappingDiffs();
 }
 
@@ -287,6 +289,30 @@ void ScoreEngine::genMaxTappingDiffs()
 	}
 }
 
+void ScoreEngine::genMaxTappingStains()
+{
+	int KEYS = play->beatmap->getDiff().cs;
+	std::vector<TIMING> tappingStrain;
+		tappingStrain.resize(KEYS);
+
+	for (int key = 0; key < KEYS; key++)
+	{
+		tappingStrain[key].key = key;
+		tappingStrain[key].timingDiff = 0;
+	}
+
+	for (TIMING &tappingDiff : tappingDiffs)
+	{
+		int key = tappingDiff.key;
+
+		tappingStrain[key].timingDiff = 0.5*tappingStrain[key].timingDiff + 0.5*tappingDiff.timingDiff;
+		tappingStrain[key].time = tappingDiff.time;
+		tappingStrain[key].key = key;
+		tappingStrain[key].press = tappingDiff.press;
+
+		tappingStrains.push_back(tappingStrain[key]);
+	}
+}
 
 void ScoreEngine::genPlyTappingDiffs()
 {

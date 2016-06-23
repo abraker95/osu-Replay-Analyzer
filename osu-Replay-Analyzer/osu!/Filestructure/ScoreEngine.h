@@ -23,6 +23,7 @@ class ScoreEngine
 
 		std::vector<TIMING> accTimings;
 		std::vector<TIMING> diffPlyScores, diffMaxScores;
+		std::vector<TIMING> tappingDiffs, tappingStrains;
 
 	private:
 		void genScores();
@@ -31,6 +32,7 @@ class ScoreEngine
 		// Difficulty calc
 		void genPlyTappingDiffs();
 		void genMaxTappingDiffs();
+		void genMaxTappingStains();
 		
 		std::vector<double> TotalScore;
 
