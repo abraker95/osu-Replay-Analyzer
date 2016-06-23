@@ -31,7 +31,7 @@ std::pair<double, double> ScoreEngine::getTotalScore()
 	{
 		if (diffPlyScores[i].timingDiff != -1) // if not missed
 		{
-			score += (Time2AccScore(abs(accTimings[i].timingDiff)) * diffPlyScores[i].timingDiff * log(i)) / missesPunisher;
+			score += (Time2AccScore(abs(accTimings[i].timingDiff)) * tappingStrains[i].timingDiff * log(i)) / missesPunisher;
 
 			if (missesPunisher > 1.0)
 				missesPunisher /= 2.0;
