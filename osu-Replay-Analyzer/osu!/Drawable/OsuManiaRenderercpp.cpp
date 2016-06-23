@@ -83,15 +83,6 @@ void OsuManiaRenderer::RenderVisible(Window& _win)
 {
 	Beatmap* beatmap = play->beatmap;
 	std::vector<Hitobject*>& hitobjects = beatmap->hitObjects;
-	/*std::pair<int, int> visibilityTimes = std::pair<int, int>(beatmap->FindHitobjectAt(getStartTime()), beatmap->FindHitobjectAt(getEndTime()));
-
-	for (int i = visibilityTimes.first; i <= visibilityTimes.second; i++)
-	{
-		hitNotes[i]->Update(_win);
-		
-
-		visiblityPool;
-	}*/
 
 	for (int i = 0; i < hitobjects.size(); i++)
 	{
