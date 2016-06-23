@@ -122,7 +122,7 @@ void DrawGraph(Window &_win, std::function<double(double)> _y, int* _ref, double
 
 std::pair<std::string, std::string> getAnalyzerTXT()
 {
-	const std::string file = "C:\\Users\\abraker\\Documents\\C++\\Repos\\osuskills-analysis-tool\\analyze.txt";
+	const std::string file = "C:\\Users\\abraker\\Documents\\C++\\Repos\\osu-Replay-Analyzer\\analyze.txt";
 	std::string beatmapFile, replayFile;
 
 	std::ifstream analyzeFile(file);
