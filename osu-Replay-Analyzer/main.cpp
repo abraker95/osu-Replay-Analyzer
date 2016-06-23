@@ -190,7 +190,8 @@ int main()
 	std::pair<std::string, std::string> toAnalyze = getAnalyzerTXT();
 	Play play(toAnalyze.first, toAnalyze.second);
 
-	cout << play.scoreEngine->getTotalAccScore() << endl;
+	std::pair<double, double> totalScore = play.scoreEngine->getTotalScore();
+	cout << "Score: " << totalScore.first << "   Performance: " << totalScore.second << endl;
 
 	TimingGraph timingGraph(win, play.beatmap);
 		timingGraph.ClipPosTo(GuiObj::BTMLEFT);
