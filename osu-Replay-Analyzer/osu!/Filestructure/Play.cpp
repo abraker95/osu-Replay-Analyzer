@@ -11,14 +11,15 @@ Play::Play(std::string _beatmapFile, std::string _replayFile)
 {
 	beatmap = new Beatmap(_beatmapFile);
 	replay = new Replay(_replayFile);
+
+	ProcessBeatmap();
+
 	scoreEngine = new ScoreEngine(this);
 
 	/*  \TODO: Implement ability to compare beatmap MD5 hash to validate replay
 		if(beatmap->getMD5() != replay->getBeatmapMD5())
 			delete replay;
 	*/
-
-	ProcessBeatmap();
 }
 
 Play::~Play()
