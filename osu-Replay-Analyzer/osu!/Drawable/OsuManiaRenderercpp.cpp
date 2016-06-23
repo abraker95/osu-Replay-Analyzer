@@ -72,6 +72,11 @@ void OsuManiaRenderer::Draw(Window& _win)
 	{
 		this->RenderHitTimings(_win);
 	}
+
+	if (layerState & TAPPINGDIFFS)
+	{
+		this->RenderTappingDiffs(_win);
+	}
 }
 
 void OsuManiaRenderer::RenderVisible(Window& _win)
@@ -169,6 +174,24 @@ void OsuManiaRenderer::RenderHitTimings(Window& _win)
 
 				_win.driver->draw2DRectangle(SColor(255, 255, 0, 0), rect<s32>(absXpos + hitXpos, absYpos + hitYpos, absXpos + hitXpos + 50, absYpos + hitYpos + 2));
 			}	
+		}
+	}
+}
+
+void OsuManiaRenderer::RenderTappingDiffs(Window& _win)
+{
+	const int KEYS = play->beatmap->getDiff().cs;
+
+	for (ScoreEngine::TIMING timing : play->scoreEngine->diffMaxScores)
+	{
+		if (BTWN(getStartTime(), timing.time, getEndTime())) // hits
+		{
+			int hitXpos = timing.key * (this->width / KEYS) + (this->width / (4.0 * KEYS));
+
+			int hitPos = (*viewTime) - timing.time;
+			int hitYpos = hitPos*zoom + height;
+
+			_win.font->draw(core::stringw(timing.timingDiff), core::rect<s32>(absXpos + hitXpos, absYpos + hitYpos, 100, 10), video::SColor(255, 255, 255, 255));
 		}
 	}
 }

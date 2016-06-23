@@ -71,7 +71,7 @@ void GamemodeRenderer::InitRenderer(Play* _play, int* _viewTime)
 				maniaRenderer->addClipDimTo(GuiObj::CENTERX);
 				maniaRenderer->addClipDimTo(GuiObj::BTM);
 				maniaRenderer->setPos(this->width / 2 - 300, 0);  /// \TODO: Set width and pos based on key amount
-				maniaRenderer->SetLayers(OsuManiaRenderer::VISIBLE | OsuManiaRenderer::REPLAY | OsuManiaRenderer::TIMINGS | OsuManiaRenderer::HITIMINGS);
+				maniaRenderer->SetLayers(OsuManiaRenderer::VISIBLE | OsuManiaRenderer::REPLAY | OsuManiaRenderer::TIMINGS | OsuManiaRenderer::HITIMINGS | OsuManiaRenderer::TAPPINGDIFFS);
 			break;
 
 		case OSU_DODGE:
