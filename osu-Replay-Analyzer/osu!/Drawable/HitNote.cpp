@@ -101,7 +101,7 @@ void HitNote::UpdateInternal(Window &_win)
 
 void HitNote::UpdateAbsPos(Window& _win)
 {
-	const int KEYS = 4;
+	const int KEYS = beatmap->getDiff().cs;
 	int key = (hitobject->getPos().X - 64) / 128;
 
 	xpos = key * (parent->getDim().Width / KEYS) + (parent->getDim().Width / (4.0 * KEYS));

@@ -76,9 +76,9 @@ void ScoreEngine::genAccTimings()
 	bool stop = false;
 
 	// process each column individualy
-	const int KEYS = 4;		/// \TODO: Detect number of keys
-	int iNote[KEYS];
-	bool nextNote[KEYS];
+	int KEYS = play->beatmap->getDiff().cs;		/// \TODO: Detect number of keys
+	int* iNote = new int[KEYS];
+	bool* nextNote = new bool[KEYS];
 
 	// init vars for each column
 	{
@@ -231,8 +231,8 @@ void ScoreEngine::genAccTimings()
 
 void ScoreEngine::genDifficulties()
 {
-	const int KEYS = 4; /// \TODO
-	TIMING diffScore[KEYS];
+	int KEYS = play->beatmap->getDiff().cs;
+	TIMING* diffScore = new TIMING[KEYS];
 	
 	for (int key = 0; key < KEYS; key++)
 	{

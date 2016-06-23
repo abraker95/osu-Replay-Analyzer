@@ -145,7 +145,7 @@ void OsuManiaRenderer::RenderTimings(Window& _win)
 
 void OsuManiaRenderer::RenderHitTimings(Window& _win)
 {
-	const int KEYS = 4; /// \TODO: autodetect
+	const int KEYS = play->beatmap->getDiff().cs;
 
 	for (ScoreEngine::TIMING timing : play->scoreEngine->accTimings)
 	{
