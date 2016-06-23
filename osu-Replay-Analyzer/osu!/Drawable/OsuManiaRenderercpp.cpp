@@ -114,31 +114,15 @@ void OsuManiaRenderer::RenderReplay(Window& _win)
 	Replay* replay = play->replay;
 	std::tuple<irr::core::vector2df, int> data = replay->getDataAt(*viewTime);
 	int hitYpos = this->height;
-	const int KEYS = 4; /// \TODO: autodetect
+	const int KEYS = play->beatmap->getDiff().cs;
 
-	//for(int i=0; i<keys; i++) /// \TODO
-	if ((int)std::get<0>(data).X & (1 << 0))
+	for (int key = 0; key < KEYS; key++)
 	{
-		int hitXpos = 0 * (this->width / KEYS) + (this->width / (4.0 * KEYS));
-		_win.driver->draw2DRectangle(SColor(255, 100, 100, 100), rect<s32>(absXpos + hitXpos, absYpos + hitYpos, absXpos + hitXpos + 50, absYpos + hitYpos + 15));
-	}
-
-	if ((int)std::get<0>(data).X & (1 << 1))
-	{
-		int hitXpos = 1 * (this->width / KEYS) + (this->width / (4.0 * KEYS));
-		_win.driver->draw2DRectangle(SColor(255, 100, 100, 100), rect<s32>(absXpos + hitXpos, absYpos + hitYpos, absXpos + hitXpos + 50, absYpos + hitYpos + 15));
-	}
-
-	if ((int)std::get<0>(data).X & (1 << 2))
-	{
-		int hitXpos = 2 * (this->width/KEYS) + (this->width / (4.0 * KEYS));
-		_win.driver->draw2DRectangle(SColor(255, 100, 100, 100), rect<s32>(absXpos + hitXpos, absYpos + hitYpos, absXpos + hitXpos + 50, absYpos + hitYpos + 15));
-	}
-
-	if ((int)std::get<0>(data).X & (1 << 3))
-	{
-		int hitXpos = 3 * (this->width / KEYS) + (this->width / (4.0 * KEYS));
-		_win.driver->draw2DRectangle(SColor(255, 100, 100, 100), rect<s32>(absXpos + hitXpos, absYpos + hitYpos, absXpos + hitXpos + 50, absYpos + hitYpos + 15));
+		if ((int)std::get<0>(data).X & (1 << key))
+		{
+			int hitXpos = key * (this->width / KEYS) + (this->width / (4.0 * KEYS));
+			_win.driver->draw2DRectangle(SColor(255, 100, 100, 100), rect<s32>(absXpos + hitXpos, absYpos + hitYpos, absXpos + hitXpos + 50, absYpos + hitYpos + 15));
+		}
 	}
 }
 
