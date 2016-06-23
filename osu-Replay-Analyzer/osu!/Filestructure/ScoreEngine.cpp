@@ -11,33 +11,29 @@ ScoreEngine::ScoreEngine(Play* _play)
 
 double ScoreEngine::getTotalAccScore()
 {
+	return 0; /// \TODO
+}
+
+std::pair<double, double> ScoreEngine::getTotalScore()
+{
 	double score = 0.0;
 	double maxScore = 0.0;
 	double missesPunisher = 1.0;
 
 	// max score calc
-	for (int i = 0; i < accTimings.size(); i++)
+	for (int i = 1; i < play->beatmap->hitObjects.size(); i++)
 	{
-		if (diffScores[i].timingDiff != -1) // if not missed
-		{
-			maxScore += (diffScores[i].timingDiff * log(accTimings.size()))/missesPunisher;
-
-			if (missesPunisher > 1.0)
-				missesPunisher /= 2.0;
-			else
-				missesPunisher = 1.0;
-		}
-		else missesPunisher *= 2.0;
+		maxScore += diffMaxScores[i].timingDiff * log(accTimings.size());
 	}
-	
+
 	// score calc
 	for (int i = 0; i < accTimings.size(); i++)
 	{
-		if (diffScores[i].timingDiff != -1) // if not missed
+		if (diffPlyScores[i].timingDiff != -1) // if not missed
 		{
-			score += (Time2AccScore(abs(accTimings[i].timingDiff)) * diffScores[i].timingDiff * log(accTimings.size()))/missesPunisher;
-			
-			if(missesPunisher > 1.0)
+			score += (Time2AccScore(abs(accTimings[i].timingDiff)) * diffPlyScores[i].timingDiff * log(accTimings.size())) / missesPunisher;
+
+			if (missesPunisher > 1.0)
 				missesPunisher /= 2.0;
 			else
 				missesPunisher = 1.0;
@@ -49,16 +45,15 @@ double ScoreEngine::getTotalAccScore()
 		totalScore.first = (score / maxScore) * 1000000.0;
 		totalScore.second = score / 100.0;
 
-double ScoreEngine::getTotalScore()
-{
-	// (diffScore[i] * accScore[i] * log10(i)) / missesPunisher 
-	return 0; /// \TODO
+	return totalScore;
 }
 
 void ScoreEngine::genScores()
 {
 	genAccTimings();
-	genDifficulties();
+
+	genMaxTappingDiffs();
+	genPlyTappingDiffs();
 }
 
 void ScoreEngine::genAccTimings()
@@ -221,6 +216,9 @@ void ScoreEngine::genAccTimings()
 		frame = getNextEvent(&iFrame); // get next press/release whatever column it is
 		stop = !(iFrame < play->replay->getNumFrames()); // stop when we reached end of replay
 	} while (!stop);
+
+	delete iNote;
+	delete nextNote;
 }
 
 void ScoreEngine::genMaxTappingDiffs()
