@@ -319,9 +319,9 @@ void ScoreEngine::genPlyTappingDiffs()
 					double kps = 1000.0 / (hitPeriodCurr - hitPeriodPrev); // keys per second
 
 					if(accTimings[i].press == true) // if pressed
-						diffScore[key].timingDiff = /*(kps / 10.0)*diffScore[key].timingDiff +*/ PressStrain(kps);
+						diffScore[key].timingDiff = PressStrain(kps);
 					else // released
-						diffScore[key].timingDiff = /*(kps / 10.0)*diffScore[key].timingDiff +*/ PressStrain(kps) * 0.5;
+						diffScore[key].timingDiff = PressStrain(kps) * 0.1;
 
 					diffScore[key].time = hitPeriodCurr;
 				}
