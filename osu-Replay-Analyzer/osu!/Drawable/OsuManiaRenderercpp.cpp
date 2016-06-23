@@ -182,7 +182,7 @@ void OsuManiaRenderer::RenderTappingDiffs(Window& _win)
 {
 	const int KEYS = play->beatmap->getDiff().cs;
 
-	for (ScoreEngine::TIMING timing : play->scoreEngine->diffMaxScores)
+	for (ScoreEngine::TIMING timing : play->scoreEngine->tappingStrains)
 	{
 		if (BTWN(getStartTime(), timing.time, getEndTime())) // hits
 		{
