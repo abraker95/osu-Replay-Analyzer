@@ -223,8 +223,74 @@ void ScoreEngine::genAccTimings()
 	} while (!stop);
 }
 
+void ScoreEngine::genMaxTappingDiffs()
+{
+	int KEYS = play->beatmap->getDiff().cs;
+	std::vector<TIMING> diffScore;
+		diffScore.resize(KEYS);
+	std::vector<int> hitPeriodPrev, hitPeriodCurr;
+		hitPeriodPrev.resize(KEYS);
+		hitPeriodCurr.resize(KEYS);
 
-void ScoreEngine::genDifficulties()
+
+	for (int key = 0; key < KEYS; key++)
+	{
+		diffScore[key].key = key;
+		diffScore[key].timingDiff = 0;
+	}
+
+	// first note is nothing
+	diffPlyScores.push_back(TIMING{ play->beatmap->hitObjects[0]->getTime(), -1, -1, false });
+	if (play->beatmap->hitObjects[0]->getHitobjectType() & (~HITOBJECTYPE::CIRCLE))
+		diffPlyScores.push_back(TIMING{ play->beatmap->hitObjects[0]->getTime(), -1, -1, false });
+
+	for (int i = 1; i < play->beatmap->hitObjects.size(); i++)
+	{
+		bool isHoldObject = play->beatmap->hitObjects[i]->getHitobjectType() & (~HITOBJECTYPE::CIRCLE);
+		int noteXpos = play->beatmap->hitObjects[i]->getPos().X;
+		int column = (noteXpos - 64) / 128;
+
+		// never a miss
+		if (true)
+		{
+			hitPeriodPrev[column] = hitPeriodCurr[column];
+			hitPeriodCurr[column] = play->beatmap->hitObjects[i]->getTime();
+			double kps = 1000.0 / (hitPeriodCurr[column] - hitPeriodPrev[column]); // keys per second
+
+			diffScore[column].timingDiff = PressStrain(kps);
+			diffScore[column].time = hitPeriodCurr[column];
+
+			// average out the overall diff of pressing this
+			double frameDiff = 0.0;
+			for (int key = 0; key < KEYS; key++)
+				frameDiff += diffScore[key].timingDiff;
+			frameDiff /= KEYS;
+
+			diffMaxScores.push_back((TIMING{ play->beatmap->hitObjects[i]->getTime(), frameDiff, column, false }));
+
+			// if it's a slider, then another frame for release
+			if (isHoldObject)
+			{
+				hitPeriodPrev[column] = hitPeriodCurr[column];
+				hitPeriodCurr[column] = play->beatmap->hitObjects[i]->getEndTime();
+				double kps = 1000.0 / (hitPeriodCurr[column] - hitPeriodPrev[column]); // keys per second
+
+				diffScore[column].timingDiff = PressStrain(kps) * 0.1;
+
+				// average out the overall diff of pressing this
+				double frameDiff = 0.0;
+				for (int key = 0; key < KEYS; key++)
+					frameDiff += diffScore[key].timingDiff;
+				frameDiff /= KEYS;
+
+				diffMaxScores.push_back((TIMING{ play->beatmap->hitObjects[i]->getEndTime(), frameDiff, column, false }));
+			}
+		}
+	}
+}
+
+
+void ScoreEngine::genPlyTappingDiffs()
 {
 	int KEYS = play->beatmap->getDiff().cs;
 	TIMING* diffScore = new TIMING[KEYS];
@@ -236,7 +302,7 @@ void ScoreEngine::genDifficulties()
 	}
 
 	// first note is nothing
-	diffScores.push_back(TIMING{ accTimings[0].time, -1, -1, false });
+	diffPlyScores.push_back(TIMING{ accTimings[0].time, -1, -1, false });
 
 	for (int i = 1; i < accTimings.size(); i++)
 	{
@@ -267,14 +333,16 @@ void ScoreEngine::genDifficulties()
 				frameDiff += diffScore[key].timingDiff;
 			frameDiff /= KEYS;
 
-			diffScores.push_back((TIMING{ accTimings[i].time, frameDiff, -1, false }));
+			diffPlyScores.push_back((TIMING{ accTimings[i].time, frameDiff, -1, false }));
 		}
 		else // miss
 		{
 			// place holder so diffScores and accTimings match up
-			diffScores.push_back(TIMING{ accTimings[i].time, -1, -1, false });
+			diffPlyScores.push_back(TIMING{ accTimings[i].time, -1, -1, false });
 		}
 	}
+
+	delete diffScore;
 }
 
 // modeled here: https://www.desmos.com/calculator/ok1qgmfe9f

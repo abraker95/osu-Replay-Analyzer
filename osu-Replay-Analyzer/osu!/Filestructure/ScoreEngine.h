@@ -22,13 +22,15 @@ class ScoreEngine
 		};
 
 		std::vector<TIMING> accTimings;
-		std::vector<TIMING> diffScores;
+		std::vector<TIMING> diffPlyScores, diffMaxScores;
 
 	private:
 		void genScores();
 		void genAccTimings();
-		void genDifficulties();
 
+		// Difficulty calc
+		void genPlyTappingDiffs();
+		void genMaxTappingDiffs();
 		
 		std::vector<double> TotalScore;
 
