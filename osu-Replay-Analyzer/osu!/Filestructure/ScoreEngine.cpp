@@ -45,9 +45,9 @@ double ScoreEngine::getTotalAccScore()
 		else missesPunisher *= 2.0;
 	}
 
-	score = (score / maxScore) * 1000000.0;
-	return score;
-}
+	std::pair<double, double> totalScore;
+		totalScore.first = (score / maxScore) * 1000000.0;
+		totalScore.second = score / 100.0;
 
 double ScoreEngine::getDiffScoreFor(int _time)
 {
