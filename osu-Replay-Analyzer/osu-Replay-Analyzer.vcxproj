@@ -171,6 +171,11 @@
     <ClInclude Include="osu!\Skills\osu!std\reaction.h" />
     <ClInclude Include="osu!\Skills\osu!std\reading.h" />
     <ClInclude Include="osu!\Skills\osu!std\tenacity.h" />
+    <ClInclude Include="osu!\osu_catch.h" />
+    <ClInclude Include="osu!\osu_dodge.h" />
+    <ClInclude Include="osu!\osu_mania.h" />
+    <ClInclude Include="osu!\osu_standard.h" />
+    <ClInclude Include="osu!\osu_taiko.h" />
     <ClInclude Include="ui\Button.h" />
     <ClInclude Include="ui\Dialog.h" />
     <ClInclude Include="ui\drawUtils.h" />

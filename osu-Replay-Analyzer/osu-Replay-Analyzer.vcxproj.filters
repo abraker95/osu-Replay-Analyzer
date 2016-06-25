@@ -16,9 +16,6 @@
     <Filter Include="Header Files\osu!">
       <UniqueIdentifier>{0e8bfce2-d818-4cc5-8120-c389905d5d02}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\osu!\Skills">
-      <UniqueIdentifier>{23911ad5-30ef-4440-acc4-07f8f3d9548b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\osu!">
       <UniqueIdentifier>{440f2137-0c85-46de-ac56-7c7d7f0fd364}</UniqueIdentifier>
     </Filter>
@@ -90,6 +87,9 @@
     </Filter>
     <Filter Include="Source Files\osu!\Skills\osu!dodge">
       <UniqueIdentifier>{456af879-6431-449f-9907-fb810c9c8dfa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\osu!\Skills">
+      <UniqueIdentifier>{23911ad5-30ef-4440-acc4-07f8f3d9548b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -439,6 +439,24 @@
     </ClInclude>
     <ClInclude Include="osu!\Filestructure\TimingPoint.h">
       <Filter>Header Files\osu!\File structure</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\Drawable\HitTimingGraph.h">
+      <Filter>Header Files\osu!\Drawable</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\osu_mania.h">
+      <Filter>Header Files\osu!</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\osu_standard.h">
+      <Filter>Header Files\osu!</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\osu_taiko.h">
+      <Filter>Header Files\osu!</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\osu_catch.h">
+      <Filter>Header Files\osu!</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\osu_dodge.h">
+      <Filter>Header Files\osu!</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

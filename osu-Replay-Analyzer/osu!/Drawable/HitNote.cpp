@@ -1,6 +1,7 @@
 #include "HitNote.h"
 #include "GamemodeRenderer.h"
 
+#include "../osu_mania.h"
 #include "../../utils/mathUtils.h"
 #include "../../ui/drawUtils.h"
 #include "../osuCalc.h"
@@ -101,12 +102,9 @@ void HitNote::UpdateInternal(Window &_win)
 
 void HitNote::UpdateAbsPos(Window& _win)
 {
-	const int KEYS = beatmap->getDiff().cs;
-
-	float localWDivisor = 512.0f / KEYS;
-	int key = std::min((int)std::floor(hitobject->getPos().X / localWDivisor), KEYS - 1);
-
-	xpos = key * (parent->getDim().Width / KEYS) + (parent->getDim().Width / (4.0 * KEYS));
+	int numKeys = beatmap->getDiff().cs;
+	int key = OSUMANIA::getKey(hitobject->getPos().X, numKeys);
+	int xpos = key * (parent->getDim().Width / numKeys) + (parent->getDim().Width / (4.0 * numKeys));
 
 	int hitPos = (*viewTime - hitobject->getTime());
 	int correction = std::max(0.0, (double)(((OsuManiaRenderer*)parent)->getStartTime() - hitobject->getTime()) * (*zoom));
