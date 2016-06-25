@@ -91,6 +91,42 @@
     <Filter Include="Header Files\osu!\Skills\osu!dodge">
       <UniqueIdentifier>{81514976-d826-46e1-811d-83a2ebc9e942}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\osu!\Score">
+      <UniqueIdentifier>{207b5401-3a97-4051-87bc-d5ccc0b525f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\osu!\Score\osu!taiko">
+      <UniqueIdentifier>{951dfb2c-f182-4f73-bba6-91801ed46b89}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\osu!\Score\osu!std">
+      <UniqueIdentifier>{9c42329c-d501-47a6-b1a8-1cf48b267703}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\osu!\Score\osu!mania">
+      <UniqueIdentifier>{500da1be-af19-421f-a500-ac07c28625a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\osu!\Score\osu!dodge">
+      <UniqueIdentifier>{74981b60-7863-420f-862d-48f864c9ee6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\osu!\Score\osu!catch">
+      <UniqueIdentifier>{5fc86751-37cf-4e4d-9f18-c9a4f1ccea29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\osu!\Score">
+      <UniqueIdentifier>{9abca153-0745-49f2-bfb1-f8515e898294}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\osu!\Score\osu!taiko">
+      <UniqueIdentifier>{d47e56d0-925b-43bb-9f39-71abc827f712}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\osu!\Score\osu!standard">
+      <UniqueIdentifier>{c1e1aa1e-0c7f-4ef3-8add-4c68888b815e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\osu!\Score\osu!mania">
+      <UniqueIdentifier>{ed83aa1b-f459-4ab7-8847-012540b2daf9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\osu!\Score\osu!dodge">
+      <UniqueIdentifier>{0e5c34c9-ab58-487b-9714-0eb566eb9547}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\osu!\Score\osu!catch">
+      <UniqueIdentifier>{3ef36201-6381-4d8e-934f-0e9776dd24a2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -169,9 +205,6 @@
       <Filter>Source Files\osu!\File Structure</Filter>
     </ClCompile>
     <ClCompile Include="osu!\Filestructure\Replay.cpp">
-      <Filter>Source Files\osu!\File Structure</Filter>
-    </ClCompile>
-    <ClCompile Include="osu!\Filestructure\ScoreEngine.cpp">
       <Filter>Source Files\osu!\File Structure</Filter>
     </ClCompile>
     <ClCompile Include="osu!\Filestructure\SliderHitobject.cpp">
@@ -306,6 +339,24 @@
     <ClCompile Include="osu!\Skills\osu-catch\tappingControl.cpp">
       <Filter>Source Files\osu!\Skills\osu!catch</Filter>
     </ClCompile>
+    <ClCompile Include="osu!\Score\osu-catch\score.cpp">
+      <Filter>Source Files\osu!\Score\osu!catch</Filter>
+    </ClCompile>
+    <ClCompile Include="osu!\Score\osu-dodge\score.cpp">
+      <Filter>Source Files\osu!\Score\osu!dodge</Filter>
+    </ClCompile>
+    <ClCompile Include="osu!\Score\osu-mania\score.cpp">
+      <Filter>Source Files\osu!\Score\osu!mania</Filter>
+    </ClCompile>
+    <ClCompile Include="osu!\Score\osu-std\score.cpp">
+      <Filter>Source Files\osu!\Score\osu!std</Filter>
+    </ClCompile>
+    <ClCompile Include="osu!\Score\osu-taiko\score.cpp">
+      <Filter>Source Files\osu!\Score\osu!taiko</Filter>
+    </ClCompile>
+    <ClCompile Include="osu!\Score\ScoreEngine.cpp">
+      <Filter>Source Files\osu!\Score</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="osu!\Filestructure\LZMA.h">
@@ -387,9 +438,6 @@
       <Filter>Header Files\osu!\File structure</Filter>
     </ClInclude>
     <ClInclude Include="osu!\Filestructure\Replay.h">
-      <Filter>Header Files\osu!\File structure</Filter>
-    </ClInclude>
-    <ClInclude Include="osu!\Filestructure\ScoreEngine.h">
       <Filter>Header Files\osu!\File structure</Filter>
     </ClInclude>
     <ClInclude Include="osu!\Drawable\GamemodeRenderer.h">
@@ -559,6 +607,24 @@
     </ClInclude>
     <ClInclude Include="osu!\Skills\osu-catch\tappingControl.h">
       <Filter>Header Files\osu!\Skills\osu!catch</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\Score\osu-catch\score.h">
+      <Filter>Header Files\osu!\Score\osu!catch</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\Score\osu-dodge\score.h">
+      <Filter>Header Files\osu!\Score\osu!dodge</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\Score\osu-mania\score.h">
+      <Filter>Header Files\osu!\Score\osu!mania</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\Score\osu-std\score.h">
+      <Filter>Header Files\osu!\Score\osu!standard</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\Score\osu-taiko\score.h">
+      <Filter>Header Files\osu!\Score\osu!taiko</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\Score\ScoreEngine.h">
+      <Filter>Header Files\osu!\Score</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

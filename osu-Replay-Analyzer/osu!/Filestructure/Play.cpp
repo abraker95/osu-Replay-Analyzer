@@ -1,5 +1,5 @@
 #include "Play.h"
-#include "ScoreEngine.h"
+#include "../Score/ScoreEngine.h"
 
 #include "../../utils/mathUtils.h"
 #include "../osuCalc.h"

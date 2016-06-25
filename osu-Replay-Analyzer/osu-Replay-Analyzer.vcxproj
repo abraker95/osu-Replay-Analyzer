@@ -102,10 +102,15 @@
     <ClCompile Include="osu!\Filestructure\LZMA\easylzma\pavlov\LzmaLib.c" />
     <ClCompile Include="osu!\Filestructure\Play.cpp" />
     <ClCompile Include="osu!\Filestructure\Replay.cpp" />
-    <ClCompile Include="osu!\Filestructure\ScoreEngine.cpp" />
     <ClCompile Include="osu!\Filestructure\SliderHitobject.cpp" />
     <ClCompile Include="osu!\Filestructure\TimingPoint.cpp" />
     <ClCompile Include="osu!\osuCalc.cpp" />
+    <ClCompile Include="osu!\Score\osu-catch\score.cpp" />
+    <ClCompile Include="osu!\Score\osu-dodge\score.cpp" />
+    <ClCompile Include="osu!\Score\osu-mania\score.cpp" />
+    <ClCompile Include="osu!\Score\osu-std\score.cpp" />
+    <ClCompile Include="osu!\Score\osu-taiko\score.cpp" />
+    <ClCompile Include="osu!\Score\ScoreEngine.cpp" />
     <ClCompile Include="osu!\Skills\osu-catch\precision.cpp" />
     <ClCompile Include="osu!\Skills\osu-catch\reading.cpp" />
     <ClCompile Include="osu!\Skills\osu-catch\speedControl.cpp" />
@@ -176,7 +181,6 @@
     <ClInclude Include="osu!\Filestructure\LZMA\easylzma\pavlov\Types.h" />
     <ClInclude Include="osu!\Filestructure\Play.h" />
     <ClInclude Include="osu!\Filestructure\Replay.h" />
-    <ClInclude Include="osu!\Filestructure\ScoreEngine.h" />
     <ClInclude Include="osu!\Filestructure\TimingPoint.h" />
     <ClInclude Include="osu!\osuCalc.h" />
     <ClInclude Include="osu!\osuEnums.h" />
@@ -185,6 +189,12 @@
     <ClInclude Include="osu!\osu_mania.h" />
     <ClInclude Include="osu!\osu_standard.h" />
     <ClInclude Include="osu!\osu_taiko.h" />
+    <ClInclude Include="osu!\Score\osu-catch\score.h" />
+    <ClInclude Include="osu!\Score\osu-dodge\score.h" />
+    <ClInclude Include="osu!\Score\osu-mania\score.h" />
+    <ClInclude Include="osu!\Score\osu-std\score.h" />
+    <ClInclude Include="osu!\Score\osu-taiko\score.h" />
+    <ClInclude Include="osu!\Score\ScoreEngine.h" />
     <ClInclude Include="osu!\Skills\osu-catch\precision.h" />
     <ClInclude Include="osu!\Skills\osu-catch\reading.h" />
     <ClInclude Include="osu!\Skills\osu-catch\speedControl.h" />

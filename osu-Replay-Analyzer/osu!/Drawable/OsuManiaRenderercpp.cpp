@@ -1,9 +1,11 @@
 #include "OsuManiaRenderer.h"
 #include "GamemodeRenderer.h"
 
-#include "../Filestructure/ScoreEngine.h"
+#include "../Score/ScoreEngine.h"
 #include "../Filestructure/Play.h"
 #include "../../ui/drawUtils.h"
+
+#include "../Score/osu-mania/score.h"
 
 OsuManiaRenderer::OsuManiaRenderer(Play* _play, int* _viewTime, GuiObj* _parent) : GuiObj(0, 0, _parent->getDim().Width, _parent->getDim().Height, _parent)
 {
@@ -128,7 +130,7 @@ void OsuManiaRenderer::RenderHitTimings(Window& _win)
 {
 	const int KEYS = play->beatmap->getDiff().cs;
 
-	for (ScoreEngine::TIMING timing : play->scoreEngine->accTimings)
+	for (OSUMANIA::TIMING timing : OSUMANIA::accTimings)
 	{
 		if (BTWN(getStartTime(), timing.time + timing.data, getEndTime())) // hits
 		{

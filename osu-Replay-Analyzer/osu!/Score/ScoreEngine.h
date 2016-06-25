@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "Play.h"
+#include "../Filestructure/Play.h"
 #include "../osu_mania.h"
 
 class ScoreEngine
@@ -22,13 +22,11 @@ class ScoreEngine
 			bool press;
 		};
 
-		std::vector<TIMING> accTimings;
 		std::vector<TIMING> diffPlyScores, diffMaxScores;
 		std::vector<TIMING> tappingDiffs, tappingStrains;
 
 	private:
 		void genScores();
-		void genAccTimings();
 
 		// Difficulty calc
 		void genPlyTappingDiffs();
@@ -40,10 +38,6 @@ class ScoreEngine
 		double Time2AccScore(int _ms);
 		double PressStrain(int _ms);
 
-		std::pair<double, double> getODms(Hitobject* _prevNote, Hitobject* _currNote, Hitobject* _nextNote, bool _press);
-		std::tuple<long, int, int> getNextEvent(int* _iFrame);
-
-		Hitobject* getNextNoteOnColumn(int _column, int* _iNote);
 		Play* play;
 };
 
