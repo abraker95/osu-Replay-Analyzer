@@ -55,23 +55,8 @@
     <Filter Include="Source Files\osu!\File Structure\LZMA\7-ZIP">
       <UniqueIdentifier>{f0f6cb39-e493-4cfe-8408-2b3dbe2c4f47}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\osu!\Skills\osu!std">
-      <UniqueIdentifier>{42910582-9999-47a8-b450-29061f302288}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\osu!\Skills\osu!catch">
-      <UniqueIdentifier>{09b1affd-e4f3-4478-b8f5-88a4cca6b60e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\osu!\Skills\osu!taiko">
-      <UniqueIdentifier>{0985dca4-cd17-4995-877c-5a4951b3d1bc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\osu!\Skills\osu!mania">
-      <UniqueIdentifier>{16d7e77f-c7bb-486f-a5fa-304d633c66de}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\ui">
       <UniqueIdentifier>{13d556fa-178f-42cb-9901-d7eb666e182c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\osu!\Skills\osu!dodge">
-      <UniqueIdentifier>{81514976-d826-46e1-811d-83a2ebc9e942}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\osu!\Skills\osu!std">
       <UniqueIdentifier>{6892c392-9386-4286-9948-03a959637dbb}</UniqueIdentifier>
@@ -90,6 +75,21 @@
     </Filter>
     <Filter Include="Header Files\osu!\Skills">
       <UniqueIdentifier>{23911ad5-30ef-4440-acc4-07f8f3d9548b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\osu!\Skills\osu!std">
+      <UniqueIdentifier>{42910582-9999-47a8-b450-29061f302288}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\osu!\Skills\osu!catch">
+      <UniqueIdentifier>{09b1affd-e4f3-4478-b8f5-88a4cca6b60e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\osu!\Skills\osu!taiko">
+      <UniqueIdentifier>{0985dca4-cd17-4995-877c-5a4951b3d1bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\osu!\Skills\osu!mania">
+      <UniqueIdentifier>{16d7e77f-c7bb-486f-a5fa-304d633c66de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\osu!\Skills\osu!dodge">
+      <UniqueIdentifier>{81514976-d826-46e1-811d-83a2ebc9e942}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -195,24 +195,6 @@
     <ClCompile Include="osu!\Drawable\TimingObject.cpp">
       <Filter>Source Files\osu!\Drawable</Filter>
     </ClCompile>
-    <ClCompile Include="osu!\Skills\osu!std\agility.cpp">
-      <Filter>Source Files\osu!\Skills\osu!std</Filter>
-    </ClCompile>
-    <ClCompile Include="osu!\Skills\osu!std\control.cpp">
-      <Filter>Source Files\osu!\Skills\osu!std</Filter>
-    </ClCompile>
-    <ClCompile Include="osu!\Skills\osu!std\precision.cpp">
-      <Filter>Source Files\osu!\Skills\osu!std</Filter>
-    </ClCompile>
-    <ClCompile Include="osu!\Skills\osu!std\reaction.cpp">
-      <Filter>Source Files\osu!\Skills\osu!std</Filter>
-    </ClCompile>
-    <ClCompile Include="osu!\Skills\osu!std\reading.cpp">
-      <Filter>Source Files\osu!\Skills\osu!std</Filter>
-    </ClCompile>
-    <ClCompile Include="osu!\Skills\osu!std\tenacity.cpp">
-      <Filter>Source Files\osu!\Skills\osu!std</Filter>
-    </ClCompile>
     <ClCompile Include="ui\Button.cpp">
       <Filter>Source Files\ui</Filter>
     </ClCompile>
@@ -249,9 +231,6 @@
     <ClCompile Include="utils\Lambert.cpp">
       <Filter>Source Files\math</Filter>
     </ClCompile>
-    <ClCompile Include="osu!\Skills\osu!std\analysis.cpp">
-      <Filter>Source Files\osu!\Skills\osu!std</Filter>
-    </ClCompile>
     <ClCompile Include="osu!\Filestructure\Hitobject.cpp">
       <Filter>Source Files\osu!\File Structure</Filter>
     </ClCompile>
@@ -260,6 +239,72 @@
     </ClCompile>
     <ClCompile Include="osu!\Drawable\GamemodeRenderer.cpp">
       <Filter>Source Files\osu!\Drawable</Filter>
+    </ClCompile>
+    <ClCompile Include="osu!\Drawable\HitTimingGraph.cpp">
+      <Filter>Source Files\osu!\Drawable</Filter>
+    </ClCompile>
+    <ClCompile Include="osu!\Skills\SkillEngine.cpp">
+      <Filter>Source Files\osu!\Skills</Filter>
+    </ClCompile>
+    <ClCompile Include="osu!\Skills\osu-taiko\reading.cpp">
+      <Filter>Source Files\osu!\Skills\osu!taiko</Filter>
+    </ClCompile>
+    <ClCompile Include="osu!\Skills\osu-taiko\speedControl.cpp">
+      <Filter>Source Files\osu!\Skills\osu!taiko</Filter>
+    </ClCompile>
+    <ClCompile Include="osu!\Skills\osu-taiko\tappingControl.cpp">
+      <Filter>Source Files\osu!\Skills\osu!taiko</Filter>
+    </ClCompile>
+    <ClCompile Include="osu!\Skills\osu-mania\accuracy.cpp">
+      <Filter>Source Files\osu!\Skills\osu!mania</Filter>
+    </ClCompile>
+    <ClCompile Include="osu!\Skills\osu-mania\fingerBalance.cpp">
+      <Filter>Source Files\osu!\Skills\osu!mania</Filter>
+    </ClCompile>
+    <ClCompile Include="osu!\Skills\osu-mania\handBalance.cpp">
+      <Filter>Source Files\osu!\Skills\osu!mania</Filter>
+    </ClCompile>
+    <ClCompile Include="osu!\Skills\osu-mania\reading.cpp">
+      <Filter>Source Files\osu!\Skills\osu!mania</Filter>
+    </ClCompile>
+    <ClCompile Include="osu!\Skills\osu-mania\rhythm.cpp">
+      <Filter>Source Files\osu!\Skills\osu!mania</Filter>
+    </ClCompile>
+    <ClCompile Include="osu!\Skills\osu-mania\speedControl.cpp">
+      <Filter>Source Files\osu!\Skills\osu!mania</Filter>
+    </ClCompile>
+    <ClCompile Include="osu!\Skills\osu-mania\tappingControl.cpp">
+      <Filter>Source Files\osu!\Skills\osu!mania</Filter>
+    </ClCompile>
+    <ClCompile Include="osu!\Skills\osu-std\aimControl.cpp">
+      <Filter>Source Files\osu!\Skills\osu!std</Filter>
+    </ClCompile>
+    <ClCompile Include="osu!\Skills\osu-std\movementControl.cpp">
+      <Filter>Source Files\osu!\Skills\osu!std</Filter>
+    </ClCompile>
+    <ClCompile Include="osu!\Skills\osu-std\precisionControl.cpp">
+      <Filter>Source Files\osu!\Skills\osu!std</Filter>
+    </ClCompile>
+    <ClCompile Include="osu!\Skills\osu-std\reading.cpp">
+      <Filter>Source Files\osu!\Skills\osu!std</Filter>
+    </ClCompile>
+    <ClCompile Include="osu!\Skills\osu-std\speedControl.cpp">
+      <Filter>Source Files\osu!\Skills\osu!std</Filter>
+    </ClCompile>
+    <ClCompile Include="osu!\Skills\osu-std\tappingControl.cpp">
+      <Filter>Source Files\osu!\Skills\osu!std</Filter>
+    </ClCompile>
+    <ClCompile Include="osu!\Skills\osu-catch\precision.cpp">
+      <Filter>Source Files\osu!\Skills\osu!catch</Filter>
+    </ClCompile>
+    <ClCompile Include="osu!\Skills\osu-catch\reading.cpp">
+      <Filter>Source Files\osu!\Skills\osu!catch</Filter>
+    </ClCompile>
+    <ClCompile Include="osu!\Skills\osu-catch\speedControl.cpp">
+      <Filter>Source Files\osu!\Skills\osu!catch</Filter>
+    </ClCompile>
+    <ClCompile Include="osu!\Skills\osu-catch\tappingControl.cpp">
+      <Filter>Source Files\osu!\Skills\osu!catch</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -368,24 +413,6 @@
     <ClInclude Include="osu!\Drawable\TimingObject.h">
       <Filter>Header Files\osu!\Drawable</Filter>
     </ClInclude>
-    <ClInclude Include="osu!\Skills\osu!std\agility.h">
-      <Filter>Header Files\osu!\Skills\osu!std</Filter>
-    </ClInclude>
-    <ClInclude Include="osu!\Skills\osu!std\control.h">
-      <Filter>Header Files\osu!\Skills\osu!std</Filter>
-    </ClInclude>
-    <ClInclude Include="osu!\Skills\osu!std\precision.h">
-      <Filter>Header Files\osu!\Skills\osu!std</Filter>
-    </ClInclude>
-    <ClInclude Include="osu!\Skills\osu!std\reaction.h">
-      <Filter>Header Files\osu!\Skills\osu!std</Filter>
-    </ClInclude>
-    <ClInclude Include="osu!\Skills\osu!std\reading.h">
-      <Filter>Header Files\osu!\Skills\osu!std</Filter>
-    </ClInclude>
-    <ClInclude Include="osu!\Skills\osu!std\tenacity.h">
-      <Filter>Header Files\osu!\Skills\osu!std</Filter>
-    </ClInclude>
     <ClInclude Include="ui\pane.h">
       <Filter>Header Files\ui</Filter>
     </ClInclude>
@@ -431,9 +458,6 @@
     <ClInclude Include="utils\mathUtils.h">
       <Filter>Header Files\math</Filter>
     </ClInclude>
-    <ClInclude Include="osu!\Skills\osu!std\analysis.h">
-      <Filter>Header Files\osu!\Skills\osu!std</Filter>
-    </ClInclude>
     <ClInclude Include="osu!\Filestructure\Hitobject.h">
       <Filter>Header Files\osu!\File structure</Filter>
     </ClInclude>
@@ -443,8 +467,26 @@
     <ClInclude Include="osu!\Drawable\HitTimingGraph.h">
       <Filter>Header Files\osu!\Drawable</Filter>
     </ClInclude>
+    <ClInclude Include="osu!\Skills\SkillEngine.h">
+      <Filter>Header Files\osu!\Skills</Filter>
+    </ClInclude>
     <ClInclude Include="osu!\osu_mania.h">
       <Filter>Header Files\osu!</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\Skills\osuMania_skills.h">
+      <Filter>Header Files\osu!\Skills</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\Skills\osuCatch_skills.h">
+      <Filter>Header Files\osu!\Skills</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\Skills\osuDodge_skills.h">
+      <Filter>Header Files\osu!\Skills</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\Skills\osuStandard_skills.h">
+      <Filter>Header Files\osu!\Skills</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\Skills\osuTaiko_skills.h">
+      <Filter>Header Files\osu!\Skills</Filter>
     </ClInclude>
     <ClInclude Include="osu!\osu_standard.h">
       <Filter>Header Files\osu!</Filter>
@@ -457,6 +499,66 @@
     </ClInclude>
     <ClInclude Include="osu!\osu_dodge.h">
       <Filter>Header Files\osu!</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\Skills\osu-taiko\reading.h">
+      <Filter>Header Files\osu!\Skills\osu!taiko</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\Skills\osu-taiko\speedControl.h">
+      <Filter>Header Files\osu!\Skills\osu!taiko</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\Skills\osu-taiko\tappingControl.h">
+      <Filter>Header Files\osu!\Skills\osu!taiko</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\Skills\osu-mania\accuracy.h">
+      <Filter>Header Files\osu!\Skills\osu!mania</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\Skills\osu-mania\fingerBalance.h">
+      <Filter>Header Files\osu!\Skills\osu!mania</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\Skills\osu-mania\handBalance.h">
+      <Filter>Header Files\osu!\Skills\osu!mania</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\Skills\osu-mania\reading.h">
+      <Filter>Header Files\osu!\Skills\osu!mania</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\Skills\osu-mania\rhythm.h">
+      <Filter>Header Files\osu!\Skills\osu!mania</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\Skills\osu-mania\speedControl.h">
+      <Filter>Header Files\osu!\Skills\osu!mania</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\Skills\osu-mania\tappingControl.h">
+      <Filter>Header Files\osu!\Skills\osu!mania</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\Skills\osu-std\tappingControl.h">
+      <Filter>Header Files\osu!\Skills\osu!std</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\Skills\osu-std\speedControl.h">
+      <Filter>Header Files\osu!\Skills\osu!std</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\Skills\osu-std\reading.h">
+      <Filter>Header Files\osu!\Skills\osu!std</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\Skills\osu-std\precisionControl.h">
+      <Filter>Header Files\osu!\Skills\osu!std</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\Skills\osu-std\movementControl.h">
+      <Filter>Header Files\osu!\Skills\osu!std</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\Skills\osu-std\aimControl.h">
+      <Filter>Header Files\osu!\Skills\osu!std</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\Skills\osu-catch\precision.h">
+      <Filter>Header Files\osu!\Skills\osu!catch</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\Skills\osu-catch\reading.h">
+      <Filter>Header Files\osu!\Skills\osu!catch</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\Skills\osu-catch\speedControl.h">
+      <Filter>Header Files\osu!\Skills\osu!catch</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\Skills\osu-catch\tappingControl.h">
+      <Filter>Header Files\osu!\Skills\osu!catch</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
