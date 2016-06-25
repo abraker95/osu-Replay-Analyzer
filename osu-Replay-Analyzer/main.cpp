@@ -25,6 +25,7 @@
 #include "osu!/Drawable/GamemodeRenderer.h"
 #include "osu!/Drawable/Hitcircle.h"
 #include "osu!/Drawable/TimingGraph.h"
+#include "osu!/Drawable/HitTimingGraph.h"
 
 #include "osu!/Skills/osu!std/analysis.h"
 #include "osu!/Skills/osu!std/reaction.h"
@@ -197,6 +198,9 @@ int main()
 		timingGraph.ClipPosTo(GuiObj::BTMLEFT);
 		timingGraph.addClipDimTo(GuiObj::RIGHT);
 		timingGraph.DisableLayer(TimingGraph::LAYER::HITOBJECT_VISIBILTITY);
+
+	HitTimingGraph hitTimingGraph(-225, +168, &play);
+		hitTimingGraph.ClipPosTo(GuiObj::MIDRIGHT);
 
 	GamemodeRenderer renderer(10, 10, win.getDimentions().Width, win.getDimentions().Height, &play, &viewTime);
 		renderer.ClipPosTo(GuiObj::TOPLEFT);

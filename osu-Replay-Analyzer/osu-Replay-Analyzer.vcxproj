@@ -69,6 +69,7 @@
     <ClCompile Include="osu!\Drawable\GamemodeRenderer.cpp" />
     <ClCompile Include="osu!\Drawable\Hitcircle.cpp" />
     <ClCompile Include="osu!\Drawable\HitNote.cpp" />
+    <ClCompile Include="osu!\Drawable\HitTimingGraph.cpp" />
     <ClCompile Include="osu!\Drawable\OsuManiaRenderercpp.cpp" />
     <ClCompile Include="osu!\Drawable\OsuStdRenderer.cpp" />
     <ClCompile Include="osu!\Drawable\TimingGraph.cpp" />
@@ -126,6 +127,7 @@
     <ClInclude Include="osu!\Drawable\GamemodeRenderer.h" />
     <ClInclude Include="osu!\Drawable\Hitcircle.h" />
     <ClInclude Include="osu!\Drawable\HitNote.h" />
+    <ClInclude Include="osu!\Drawable\HitTimingGraph.h" />
     <ClInclude Include="osu!\Drawable\OsuManiaRenderer.h" />
     <ClInclude Include="osu!\Drawable\OsuStdRenderer.h" />
     <ClInclude Include="osu!\Drawable\TimingGraph.h" />
