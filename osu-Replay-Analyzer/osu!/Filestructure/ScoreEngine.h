@@ -10,7 +10,7 @@ class ScoreEngine
 	public:
 		ScoreEngine(Play* _play);
 
-		std::pair<double, double> getTotalScore();
+		std::tuple<double, double, double> getTotalScore();
 		double getTotalAccScore();
 
 		struct TIMING

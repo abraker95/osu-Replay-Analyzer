@@ -191,8 +191,9 @@ int main()
 	std::pair<std::string, std::string> toAnalyze = getAnalyzerTXT();
 	Play play(toAnalyze.first, toAnalyze.second);
 
-	std::pair<double, double> totalScore = play.scoreEngine->getTotalScore();
-	cout << "Score: " << totalScore.first << "   Performance: " << totalScore.second << endl;
+
+	std::tuple<double, double, double> totalScore = play.scoreEngine->getTotalScore();
+	cout << "Score: " << std::get<0>(totalScore) << "   Performance: " << std::get<1>(totalScore) << "   Max Performance: " << std::get<2>(totalScore) << endl;
 
 	TimingGraph timingGraph(win, play.beatmap);
 		timingGraph.ClipPosTo(GuiObj::BTMLEFT);

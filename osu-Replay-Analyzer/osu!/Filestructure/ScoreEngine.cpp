@@ -14,7 +14,7 @@ double ScoreEngine::getTotalAccScore()
 	return 0; /// \TODO
 }
 
-std::pair<double, double> ScoreEngine::getTotalScore()
+std::tuple<double, double, double> ScoreEngine::getTotalScore()
 {
 	double score = 0.0;
 	double maxScore = 0.0;
@@ -41,10 +41,11 @@ std::pair<double, double> ScoreEngine::getTotalScore()
 		else missesPunisher *= 2.0;
 	}
 
-	std::pair<double, double> totalScore;
-		totalScore.first = (score / maxScore) * 1000000.0;
-		totalScore.second = score / 100.0;
-
+	std::tuple<double, double, double> totalScore;
+		std::get<0>(totalScore) = (score / maxScore) * 1000000.0;				// score
+		std::get<1>(totalScore) = score / accTimings.size() * 20.0;				// performance
+		std::get<2>(totalScore) = maxScore / tappingStrains.size() * 20.0;		// max performance
+		
 	return totalScore;
 }
 
