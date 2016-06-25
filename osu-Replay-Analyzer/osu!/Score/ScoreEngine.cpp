@@ -115,9 +115,7 @@ void ScoreEngine::genMaxTappingDiffs()
 		{
 			bool isHoldObject = !(play->beatmap->hitObjects[i]->getHitobjectType() & HITOBJECTYPE::CIRCLE);
 			int noteXpos = play->beatmap->hitObjects[i]->getPos().X;
-			
-			float localWDivisor = 512.0f / KEYS;
-			int column = std::min((int)std::floor(noteXpos / localWDivisor), KEYS - 1);
+			int column = OSUMANIA::getKey(noteXpos, KEYS);
 
 			//shift: prev <- curr, curr <- next
 			hitPeriodPrev[column] = hitPeriodCurr[column];
