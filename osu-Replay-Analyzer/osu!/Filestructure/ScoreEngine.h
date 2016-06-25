@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "Play.h"
+#include "../osu_mania.h"
 
 class ScoreEngine
 {
@@ -16,7 +17,7 @@ class ScoreEngine
 		struct TIMING
 		{
 			long time;
-			double timingDiff;
+			double data;
 			int key;
 			bool press;
 		};

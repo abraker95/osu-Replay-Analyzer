@@ -84,6 +84,7 @@ void OsuManiaRenderer::RenderVisible(Window& _win)
 	Beatmap* beatmap = play->beatmap;
 	std::vector<Hitobject*>& hitobjects = beatmap->hitObjects;
 
+	/// \TODO: Faster object search
 	for (int i = 0; i < hitobjects.size(); i++)
 	{
 		bool HoldStart = BTWN(hitobjects[i]->getTime(), getStartTime(), hitobjects[i]->getEndTime());
@@ -97,7 +98,7 @@ void OsuManiaRenderer::RenderVisible(Window& _win)
 
 void OsuManiaRenderer::RenderDensities(Window& _win)
 {
-	// \TODO
+	/// \TODO
 }
 
 void OsuManiaRenderer::RenderReplay(Window& _win)
@@ -129,18 +130,18 @@ void OsuManiaRenderer::RenderHitTimings(Window& _win)
 
 	for (ScoreEngine::TIMING timing : play->scoreEngine->accTimings)
 	{
-		if (BTWN(getStartTime(), timing.time + timing.timingDiff, getEndTime())) // hits
+		if (BTWN(getStartTime(), timing.time + timing.data, getEndTime())) // hits
 		{
 			int hitXpos = timing.key * (this->width / KEYS) + (this->width / (4.0 * KEYS));
 
-			int hitPos = (*viewTime) - timing.time - timing.timingDiff;
+			int hitPos = (*viewTime) - timing.time - timing.data;
 			int hitYpos = hitPos*zoom + height;
 
 			_win.driver->draw2DRectangle(SColor(255, 255, 0, 255), rect<s32>(absXpos + hitXpos, absYpos + hitYpos, absXpos + hitXpos + 50, absYpos + hitYpos + 2));
 		}
 		else if (BTWN(getStartTime(), timing.time, getEndTime())) // misses
 		{
-			if (timing.timingDiff == INT_MAX)
+			if (timing.data == INT_MAX)
 			{
 				int hitXpos = timing.key * (this->width / KEYS) + (this->width / (4.0 * KEYS));
 
@@ -166,7 +167,7 @@ void OsuManiaRenderer::RenderTappingDiffs(Window& _win)
 			int hitPos = (*viewTime) - timing.time;
 			int hitYpos = hitPos*zoom + height;
 
-			_win.font->draw(core::stringw(timing.timingDiff), core::rect<s32>(absXpos + hitXpos, absYpos + hitYpos, 100, 10), video::SColor(255, 255, 255, 255));
+			_win.font->draw(core::stringw(timing.data), core::rect<s32>(absXpos + hitXpos, absYpos + hitYpos, 100, 10), video::SColor(255, 255, 255, 255));
 		}
 	}
 }

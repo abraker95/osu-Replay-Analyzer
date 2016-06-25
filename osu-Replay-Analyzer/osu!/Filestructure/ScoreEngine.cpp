@@ -23,15 +23,15 @@ std::tuple<double, double, double> ScoreEngine::getTotalScore()
 	// max score calc
 	for (int i = 1; i < tappingStrains.size(); i++)
 	{
-		maxScore += tappingStrains[i].timingDiff * log(i);
+		maxScore += tappingStrains[i].data * log(i);
 	}
 
 	// score calc
 	for (int i = 0; i < accTimings.size(); i++)
 	{
-		if (diffPlyScores[i].timingDiff != -1) // if not missed
+		if (diffPlyScores[i].data != -1) // if not missed
 		{
-			score += (Time2AccScore(abs(accTimings[i].timingDiff)) * tappingStrains[i].timingDiff * log(i)) / missesPunisher;
+			score += (Time2AccScore(accTimings[i].data) * tappingStrains[i].data * log(i)) / missesPunisher;
 
 			if (missesPunisher > 1.0)
 				missesPunisher /= 2.0;
@@ -237,7 +237,7 @@ void ScoreEngine::genMaxTappingDiffs()
 	for (int key = 0; key < KEYS; key++)
 	{
 		diffScore[key].key = key;
-		diffScore[key].timingDiff = 0;
+		diffScore[key].data = 0;
 	}
 
 	for (int i = 0; i < play->beatmap->hitObjects.size(); i++)
@@ -268,7 +268,7 @@ void ScoreEngine::genMaxTappingDiffs()
 			if (hitPeriodPrev[column] == 0)
 				kps = 0.0;
 
-			diffScore[column].timingDiff = PressStrain(kps);
+			diffScore[column].data		 = PressStrain(kps);
 			diffScore[column].time		 = hitPeriodCurr[column];
 			diffScore[column].key		 = column;
 			diffScore[column].press		 = true;
@@ -284,7 +284,7 @@ void ScoreEngine::genMaxTappingDiffs()
 				double period = (hitPeriodCurr[column] - hitPeriodPrev[column]);
 				double kps = 1000.0 / period; // keys per second
 
-				diffScore[column].timingDiff = PressStrain(kps) * 0.1;
+				diffScore[column].data		 = PressStrain(kps) * 0.1;
 				diffScore[column].time	     = hitPeriodCurr[column];
 				diffScore[column].key		 = column;
 				diffScore[column].press		 = false;
@@ -304,14 +304,14 @@ void ScoreEngine::genMaxTappingStains()
 	for (int key = 0; key < KEYS; key++)
 	{
 		tappingStrain[key].key = key;
-		tappingStrain[key].timingDiff = 0;
+		tappingStrain[key].data = 0;
 	}
 
 	for (TIMING &tappingDiff : tappingDiffs)
 	{
 		int key = tappingDiff.key;
 
-		tappingStrain[key].timingDiff = 0.5*tappingStrain[key].timingDiff + 0.5*tappingDiff.timingDiff;
+		tappingStrain[key].data = 0.5*tappingStrain[key].data + 0.5*tappingDiff.data;
 		tappingStrain[key].time = tappingDiff.time;
 		tappingStrain[key].key = key;
 		tappingStrain[key].press = tappingDiff.press;
@@ -328,7 +328,7 @@ void ScoreEngine::genPlyTappingDiffs()
 	for (int key = 0; key < KEYS; key++)
 	{
 		diffScore[key].key = key;
-		diffScore[key].timingDiff = 0;
+		diffScore[key].data = 0;
 	}
 
 	// first note is nothing
@@ -337,7 +337,7 @@ void ScoreEngine::genPlyTappingDiffs()
 	for (int i = 1; i < accTimings.size(); i++)
 	{
 		// if it's not a miss
-		if (accTimings[i].timingDiff != INT_MAX)
+		if (accTimings[i].data != INT_MAX)
 		{
 			for (int key = 0; key < KEYS; key++)
 			{
@@ -345,13 +345,13 @@ void ScoreEngine::genPlyTappingDiffs()
 				if ((accTimings[i].key == key))
 				{
 					double hitPeriodPrev = diffScore[key].time;
-					double hitPeriodCurr = accTimings[i].time + accTimings[i].timingDiff;
+					double hitPeriodCurr = accTimings[i].time + accTimings[i].data;
 					double kps = 1000.0 / (hitPeriodCurr - hitPeriodPrev); // keys per second
 
 					if(accTimings[i].press == true) // if pressed
-						diffScore[key].timingDiff = PressStrain(kps);
+						diffScore[key].data = PressStrain(kps);
 					else // released
-						diffScore[key].timingDiff = PressStrain(kps) * 0.1;
+						diffScore[key].data = PressStrain(kps) * 0.1;
 
 					diffScore[key].time = hitPeriodCurr;
 				}
@@ -360,7 +360,7 @@ void ScoreEngine::genPlyTappingDiffs()
 			// average out the overall diff of pressing this
 			double frameDiff = 0.0;
 			for (int key = 0; key < KEYS; key++)
-				frameDiff += diffScore[key].timingDiff;
+				frameDiff += diffScore[key].data;
 			frameDiff /= KEYS;
 
 			diffPlyScores.push_back((TIMING{ accTimings[i].time, frameDiff, -1, false }));
