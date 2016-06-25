@@ -27,13 +27,7 @@
 #include "osu!/Drawable/TimingGraph.h"
 #include "osu!/Drawable/HitTimingGraph.h"
 
-#include "osu!/Skills/osu!std/analysis.h"
-#include "osu!/Skills/osu!std/reaction.h"
-#include "osu!/Skills/osu!std/reading.h"
-#include "osu!/Skills/osu!std/precision.h"
-#include "osu!/Skills/osu!std/agility.h"
-#include "osu!/Skills/osu!std/tenacity.h"
-#include "osu!/Skills/osu!std/control.h"
+#include "osu!/Skills/SkillEngine.h"
 
 using namespace std;
 
