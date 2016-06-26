@@ -3,14 +3,29 @@
 #include "../SkillEngine.h"
 #include "../../osu_taiko.h"
 
-std::vector<OSUTAIKO::TIMING> speedControlDiffs, speedControlStrains;
+std::vector<OSUTAIKO::TIMING> OSUTAIKO::SPEED_CONTROL::scores,
+							  OSUTAIKO::SPEED_CONTROL::skills,
+							  OSUTAIKO::SPEED_CONTROL::diffs;
 
-double OSUTAIKO::SPEED_CONTROL::genSkill(Play* _play)
+
+void OSUTAIKO::SPEED_CONTROL::genScore(Play* _play)
 {
-	return -1; /// \TODO
+	/// \TODO
 }
 
-double OSUTAIKO::SPEED_CONTROL::genDiff(Play* _play)
+void OSUTAIKO::SPEED_CONTROL::genSkill(Play* _play)
+{
+	/// \TODO
+}
+
+void OSUTAIKO::SPEED_CONTROL::genDiff(Play* _play)
+{
+	/// \TODO
+}
+
+
+
+double OSUTAIKO::SPEED_CONTROL::getScore()
 {
 	return -1; /// \TODO
 }
@@ -25,12 +40,26 @@ double OSUTAIKO::SPEED_CONTROL::getDiff()
 	return -1; /// \TODO
 }
 
+
+
+double OSUTAIKO::SPEED_CONTROL::getScoreAt(int _time)
+{
+	return -1; /// \TODO
+}
+
 double OSUTAIKO::SPEED_CONTROL::getSkillAt(int _time)
 {
 	return -1; /// \TODO
 }
 
 double OSUTAIKO::SPEED_CONTROL::getDiffAt(int _time)
+{
+	return -1; /// \TODO
+}
+
+
+
+double OSUTAIKO::SPEED_CONTROL::getTotalScoreAt(int _time)
 {
 	return -1; /// \TODO
 }

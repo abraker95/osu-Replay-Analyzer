@@ -2,14 +2,28 @@
 #include "../SkillEngine.h"
 #include "../../osu_mania.h"
 
-std::vector<OSUMANIA::TIMING> accuracyDiffs, accuracyStrains;
+std::vector<OSUMANIA::TIMING> OSUMANIA::ACCURACY::scores, 
+							  OSUMANIA::ACCURACY::skills,
+							  OSUMANIA::ACCURACY::diffs;
 
-double OSUMANIA::ACCURACY::genSkill(Play* _play)
+void OSUMANIA::ACCURACY::genScore(Play* _play)
 {
-	return -1; /// \TODO
+	/// \TODO
 }
 
-double OSUMANIA::ACCURACY::genDiff(Play* _play)
+void OSUMANIA::ACCURACY::genSkill(Play* _play)
+{
+	/// \TODO
+}
+
+void OSUMANIA::ACCURACY::genDiff(Play* _play)
+{
+	/// \TODO
+}
+
+
+
+double OSUMANIA::ACCURACY::getScore()
 {
 	return -1; /// \TODO
 }
@@ -24,12 +38,26 @@ double OSUMANIA::ACCURACY::getDiff()
 	return -1; /// \TODO
 }
 
+
+
+double OSUMANIA::ACCURACY::getScoreAt(int _time)
+{
+	return -1; /// \TODO
+}
+
 double OSUMANIA::ACCURACY::getSkillAt(int _time)
 {
 	return -1; /// \TODO
 }
 
 double OSUMANIA::ACCURACY::getDiffAt(int _time)
+{
+	return -1; /// \TODO
+}
+
+
+
+double OSUMANIA::ACCURACY::getTotalScoreAt(int _time)
 {
 	return -1; /// \TODO
 }

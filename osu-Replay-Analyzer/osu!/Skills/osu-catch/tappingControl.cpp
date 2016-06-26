@@ -3,14 +3,28 @@
 #include "../SkillEngine.h"
 #include "../../osu_mania.h"
 
-std::vector<OSUCATCH::TIMING> tappingControlDiffs, tappingControlStrains;
+std::vector<OSUCATCH::TIMING> OSUCATCH::TAPPING_CONTROL::scores,
+							  OSUCATCH::TAPPING_CONTROL::skills,
+							  OSUCATCH::TAPPING_CONTROL::diffs;
 
-double OSUCATCH::TAPPING_CONTROL::genSkill(Play* _play)
+void OSUCATCH::TAPPING_CONTROL::genScore(Play* _play)
 {
-	return -1; /// \TODO
+	/// \TODO
 }
 
-double OSUCATCH::TAPPING_CONTROL::genDiff(Play* _play)
+void OSUCATCH::TAPPING_CONTROL::genSkill(Play* _play)
+{
+	/// \TODO
+}
+
+void OSUCATCH::TAPPING_CONTROL::genDiff(Play* _play)
+{
+	/// \TODO
+}
+
+
+
+double OSUCATCH::TAPPING_CONTROL::getScore()
 {
 	return -1; /// \TODO
 }
@@ -25,12 +39,26 @@ double OSUCATCH::TAPPING_CONTROL::getDiff()
 	return -1; /// \TODO
 }
 
+
+
+double OSUCATCH::TAPPING_CONTROL::getScoreAt(int _time)
+{
+	return -1; /// \TODO
+}
+
 double OSUCATCH::TAPPING_CONTROL::getSkillAt(int _time)
 {
 	return -1; /// \TODO
 }
 
 double OSUCATCH::TAPPING_CONTROL::getDiffAt(int _time)
+{
+	return -1; /// \TODO
+}
+
+
+
+double OSUCATCH::TAPPING_CONTROL::getTotalScoreAt(int _time)
 {
 	return -1; /// \TODO
 }

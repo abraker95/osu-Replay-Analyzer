@@ -3,14 +3,29 @@
 #include "../SkillEngine.h"
 #include "../../osu_mania.h"
 
-std::vector<OSUMANIA::TIMING> rhythmDiffs, rhythmStrains;
+std::vector<OSUMANIA::TIMING> OSUMANIA::RHYTHM::scores,
+							  OSUMANIA::RHYTHM::skills,
+							  OSUMANIA::RHYTHM::diffs;
 
-double OSUMANIA::RHYTHM::genSkill(Play* _play)
+
+void OSUMANIA::RHYTHM::genScore(Play* _play)
 {
-	return -1; /// \TODO
+	/// \TODO
 }
 
-double OSUMANIA::RHYTHM::genDiff(Play* _play)
+void OSUMANIA::RHYTHM::genSkill(Play* _play)
+{
+	/// \TODO
+}
+
+void OSUMANIA::RHYTHM::genDiff(Play* _play)
+{
+	/// \TODO
+}
+
+
+
+double OSUMANIA::RHYTHM::getScore()
 {
 	return -1; /// \TODO
 }
@@ -25,12 +40,26 @@ double OSUMANIA::RHYTHM::getDiff()
 	return -1; /// \TODO
 }
 
+
+
+double OSUMANIA::RHYTHM::getScoreAt(int _time)
+{
+	return -1; /// \TODO
+}
+
 double OSUMANIA::RHYTHM::getSkillAt(int _time)
 {
 	return -1; /// \TODO
 }
 
 double OSUMANIA::RHYTHM::getDiffAt(int _time)
+{
+	return -1; /// \TODO
+}
+
+
+
+double OSUMANIA::RHYTHM::getTotalScoreAt(int _time)
 {
 	return -1; /// \TODO
 }

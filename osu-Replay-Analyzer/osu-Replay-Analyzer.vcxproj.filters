@@ -357,6 +357,21 @@
     <ClCompile Include="osu!\Score\ScoreEngine.cpp">
       <Filter>Source Files\osu!\Score</Filter>
     </ClCompile>
+    <ClCompile Include="osu!\Skills\osuMania_skils.cpp">
+      <Filter>Source Files\osu!\Skills</Filter>
+    </ClCompile>
+    <ClCompile Include="osu!\Skills\osuCatch_skills.cpp">
+      <Filter>Source Files\osu!\Skills</Filter>
+    </ClCompile>
+    <ClCompile Include="osu!\Skills\osuDodge_skills.cpp">
+      <Filter>Source Files\osu!\Skills</Filter>
+    </ClCompile>
+    <ClCompile Include="osu!\Skills\osuStandard_skills.cpp">
+      <Filter>Source Files\osu!\Skills</Filter>
+    </ClCompile>
+    <ClCompile Include="osu!\Skills\osuTaiko_skills.cpp">
+      <Filter>Source Files\osu!\Skills</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="osu!\Filestructure\LZMA.h">

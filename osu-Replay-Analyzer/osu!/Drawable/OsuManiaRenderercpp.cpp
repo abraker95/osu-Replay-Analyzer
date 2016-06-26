@@ -6,6 +6,7 @@
 #include "../../ui/drawUtils.h"
 
 #include "../Score/osu-mania/score.h"
+#include "../Skills/osuMania_skills.h"
 
 OsuManiaRenderer::OsuManiaRenderer(Play* _play, int* _viewTime, GuiObj* _parent) : GuiObj(0, 0, _parent->getDim().Width, _parent->getDim().Height, _parent)
 {
@@ -160,7 +161,7 @@ void OsuManiaRenderer::RenderTappingDiffs(Window& _win)
 {
 	const int KEYS = play->beatmap->getDiff().cs;
 
-	for (ScoreEngine::TIMING timing : play->scoreEngine->tappingStrains)
+	for (OSUMANIA::TIMING timing : OSUMANIA::SPEED_CONTROL::diffs)
 	{
 		if (BTWN(getStartTime(), timing.time, getEndTime())) // hits
 		{

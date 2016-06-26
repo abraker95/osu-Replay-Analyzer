@@ -3,14 +3,29 @@
 #include "../SkillEngine.h"
 #include "../../osu_mania.h"
 
-std::vector<OSUMANIA::TIMING> fingerBalanceDiffs, fingerBalanceStrains;
+std::vector<OSUMANIA::TIMING> OSUMANIA::FINGER_BALANCE::scores,
+							  OSUMANIA::FINGER_BALANCE::skills,
+							  OSUMANIA::FINGER_BALANCE::diffs;
 
-double OSUMANIA::FINGER_BALANCE::genSkill(Play* _play)
+
+void OSUMANIA::FINGER_BALANCE::genScore(Play* _play)
 {
-	return -1; /// \TODO
+	/// \TODO
 }
 
-double OSUMANIA::FINGER_BALANCE::genDiff(Play* _play)
+void OSUMANIA::FINGER_BALANCE::genSkill(Play* _play)
+{
+	/// \TODO
+}
+
+void OSUMANIA::FINGER_BALANCE::genDiff(Play* _play)
+{
+	/// \TODO
+}
+
+
+
+double OSUMANIA::FINGER_BALANCE::getScore()
 {
 	return -1; /// \TODO
 }
@@ -25,12 +40,26 @@ double OSUMANIA::FINGER_BALANCE::getDiff()
 	return -1; /// \TODO
 }
 
+
+
+double OSUMANIA::FINGER_BALANCE::getScoreAt(int _time)
+{
+	return -1; /// \TODO
+}
+
 double OSUMANIA::FINGER_BALANCE::getSkillAt(int _time)
 {
 	return -1; /// \TODO
 }
 
 double OSUMANIA::FINGER_BALANCE::getDiffAt(int _time)
+{
+	return -1; /// \TODO
+}
+
+
+
+double OSUMANIA::FINGER_BALANCE::getTotalScoreAt(int _time)
 {
 	return -1; /// \TODO
 }

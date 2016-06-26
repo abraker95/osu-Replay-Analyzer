@@ -10,17 +10,15 @@
 
 ScoreEngine::ScoreEngine(Play* _play)
 {
-	play = _play;
-
-	if((play->beatmap != nullptr) && (play->replay != nullptr))
-		genScores();
+	if((_play->beatmap != nullptr) && (_play->replay != nullptr))
+		genAccTimings(_play);
 }
 
-double ScoreEngine::getTotalAccScore()
+/*double ScoreEngine::getTotalAccScore()
 {
 	return 0; /// \TODO
-}
-
+}*/
+/*
 std::tuple<double, double, double> ScoreEngine::getTotalScore()
 {
 	double score = 0.0;
@@ -50,48 +48,45 @@ std::tuple<double, double, double> ScoreEngine::getTotalScore()
 
 	std::tuple<double, double, double> totalScore;
 		std::get<0>(totalScore) = (score / maxScore) * 1000000.0;				// score
-		std::get<1>(totalScore) = score / OSUMANIA::accTimings.size() * 20.0;				// performance
+		std::get<1>(totalScore) = score / OSUMANIA::accTimings.size() * 20.0;	// performance
 		std::get<2>(totalScore) = maxScore / tappingStrains.size() * 20.0;		// max performance
 		
 	return totalScore;
-}
+}*/
 
-void ScoreEngine::genScores()
+void ScoreEngine::genAccTimings(Play* _play)
 {
-	GAMEMODE gamemode = play->beatmap->getGamemode();
+	GAMEMODE gamemode = _play->beatmap->getGamemode();
 
 	switch (gamemode)
 	{
 		case OSU_STANDARD:
-			OSUSTANDARD::genAccTimings(play);
+			OSUSTANDARD::genAccTimings(_play);
+			/// OSUSTANDARD::genPrcTimings(_play);   \TODO
 			break;
 	
 		case OSU_TAIKO:
-			OSUTAIKO::genAccTimings(play);
+			OSUTAIKO::genAccTimings(_play);
 			break;
 		
 		case OSU_CATCH:
-			OSUCATCH::genAccTimings(play);
+			OSUCATCH::genAccTimings(_play);
 			break;
 	
 		case OSU_MANIA:
-			OSUMANIA::genAccTimings(play);
+			OSUMANIA::genAccTimings(_play);
 			break;
 	
 		case OSU_DODGE:
-			OSUDODGE::genAccTimings(play);
+			OSUDODGE::genAccTimings(_play);
 			break;
 	
 		default:
 			break;
 	}
-
-	genMaxTappingDiffs();
-	genMaxTappingStains();
-
-	genPlyTappingDiffs();
 }
 
+/*
 void ScoreEngine::genMaxTappingDiffs()
 {
 	int KEYS = play->beatmap->getDiff().cs;
@@ -159,8 +154,9 @@ void ScoreEngine::genMaxTappingDiffs()
 			}
 		}
 	}
-}
+}*/
 
+/*
 void ScoreEngine::genMaxTappingStains()
 {
 	int KEYS = play->beatmap->getDiff().cs;
@@ -184,8 +180,9 @@ void ScoreEngine::genMaxTappingStains()
 
 		tappingStrains.push_back(tappingStrain[key]);
 	}
-}
+}*/
 
+/*
 void ScoreEngine::genPlyTappingDiffs()
 {
 	int KEYS = play->beatmap->getDiff().cs;
@@ -239,8 +236,9 @@ void ScoreEngine::genPlyTappingDiffs()
 	}
 
 	delete diffScore;
-}
+}*/
 
+/*
 // modeled here: https://www.desmos.com/calculator/ok1qgmfe9f
 double ScoreEngine::Time2AccScore(int _ms)
 {
@@ -248,9 +246,10 @@ double ScoreEngine::Time2AccScore(int _ms)
 	double o = sqrt(-pow((50.0 / 3.0), 2.0) / (2.0 * log(scale)));  
 
 	return exp(-pow(_ms, 2.0) / (2.0 * pow(o, 2.0)));
-}
+}*/
 
+/*
 double ScoreEngine::PressStrain(int _ms)
 {
 	return exp((2.0*_ms) / 7.0) - 1.0;
-}
+}*/

@@ -3,14 +3,28 @@
 #include "../SkillEngine.h"
 #include "../../osu_mania.h"
 
-std::vector<OSUCATCH::TIMING> readingDiffs, readingStrains;
+std::vector<OSUCATCH::TIMING> OSUCATCH::READING::scores,
+							  OSUCATCH::READING::skills,
+							  OSUCATCH::READING::diffs;
 
-double OSUCATCH::READING::genSkill(Play* _play)
+void OSUCATCH::READING::genScore(Play* _play)
 {
-	return -1; /// \TODO
+	/// \TODO
 }
 
-double OSUCATCH::READING::genDiff(Play* _play)
+void OSUCATCH::READING::genSkill(Play* _play)
+{
+	/// \TODO
+}
+
+void OSUCATCH::READING::genDiff(Play* _play)
+{
+	/// \TODO
+}
+
+
+
+double OSUCATCH::READING::getScore()
 {
 	return -1; /// \TODO
 }
@@ -25,12 +39,26 @@ double OSUCATCH::READING::getDiff()
 	return -1; /// \TODO
 }
 
+
+
+double OSUCATCH::READING::getScoreAt(int _time)
+{
+	return -1; /// \TODO
+}
+
 double OSUCATCH::READING::getSkillAt(int _time)
 {
 	return -1; /// \TODO
 }
 
 double OSUCATCH::READING::getDiffAt(int _time)
+{
+	return -1; /// \TODO
+}
+
+
+
+double OSUCATCH::READING::getTotalScoreAt(int _time)
 {
 	return -1; /// \TODO
 }

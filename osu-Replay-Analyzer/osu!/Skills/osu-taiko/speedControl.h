@@ -8,20 +8,23 @@
 
 namespace OSUTAIKO
 {
-	extern std::vector<OSUTAIKO::TIMING> speedControlDiffs, speedControlStrains;
-
 	namespace SPEED_CONTROL
 	{
-		double genSkill(Play* _play);
-		double genDiff(Play* _play);
+		extern std::vector<OSUTAIKO::TIMING> scores, skills, diffs;
 
+		void genScore(Play* _play);
+		void genSkill(Play* _play);
+		void genDiff(Play* _play);
+
+		double getScore();
 		double getSkill();
 		double getDiff();
 
+		double getScoreAt(int _time);
 		double getSkillAt(int _time);
-
 		double getDiffAt(int _time);
 
+		double getTotalScoreAt(int _time);
 		double getTotalSkillAt(int _time);
 		double getTotalDiffAt(int _time);
 	};

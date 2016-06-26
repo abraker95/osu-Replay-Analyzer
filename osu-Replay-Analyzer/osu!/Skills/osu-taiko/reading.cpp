@@ -3,14 +3,29 @@
 #include "../SkillEngine.h"
 #include "../../osu_taiko.h"
 
-std::vector<OSUTAIKO::TIMING> readingDiffs, readingStrains;
+std::vector<OSUTAIKO::TIMING> OSUTAIKO::READING::scores,
+							  OSUTAIKO::READING::skills,
+							  OSUTAIKO::READING::diffs;
 
-double OSUTAIKO::READING::genSkill(Play* _play)
+
+void OSUTAIKO::READING::genScore(Play* _play)
 {
-	return -1; /// \TODO
+	/// \TODO
 }
 
-double OSUTAIKO::READING::genDiff(Play* _play)
+void OSUTAIKO::READING::genSkill(Play* _play)
+{
+	/// \TODO
+}
+
+void OSUTAIKO::READING::genDiff(Play* _play)
+{
+	/// \TODO
+}
+
+
+
+double OSUTAIKO::READING::getScore()
 {
 	return -1; /// \TODO
 }
@@ -25,12 +40,26 @@ double OSUTAIKO::READING::getDiff()
 	return -1; /// \TODO
 }
 
+
+
+double OSUTAIKO::READING::getScoreAt(int _time)
+{
+	return -1; /// \TODO
+}
+
 double OSUTAIKO::READING::getSkillAt(int _time)
 {
 	return -1; /// \TODO
 }
 
 double OSUTAIKO::READING::getDiffAt(int _time)
+{
+	return -1; /// \TODO
+}
+
+
+
+double OSUTAIKO::READING::getTotalScoreAt(int _time)
 {
 	return -1; /// \TODO
 }

@@ -131,6 +131,11 @@
     <ClCompile Include="osu!\Skills\osu-taiko\reading.cpp" />
     <ClCompile Include="osu!\Skills\osu-taiko\speedControl.cpp" />
     <ClCompile Include="osu!\Skills\osu-taiko\tappingControl.cpp" />
+    <ClCompile Include="osu!\Skills\osuCatch_skills.cpp" />
+    <ClCompile Include="osu!\Skills\osuDodge_skills.cpp" />
+    <ClCompile Include="osu!\Skills\osuMania_skils.cpp" />
+    <ClCompile Include="osu!\Skills\osuStandard_skills.cpp" />
+    <ClCompile Include="osu!\Skills\osuTaiko_skills.cpp" />
     <ClCompile Include="osu!\Skills\SkillEngine.cpp" />
     <ClCompile Include="ui\Button.cpp" />
     <ClCompile Include="ui\Dialog.cpp" />

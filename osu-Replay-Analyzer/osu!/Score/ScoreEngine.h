@@ -11,34 +11,34 @@ class ScoreEngine
 	public:
 		ScoreEngine(Play* _play);
 
-		std::tuple<double, double, double> getTotalScore();
-		double getTotalAccScore();
+		//std::tuple<double, double, double> getTotalScore();
+		//double getTotalAccScore();
 
-		struct TIMING
+		/*struct TIMING
 		{
 			long time;
 			double data;
 			int key;
 			bool press;
-		};
+		};*/
 
-		std::vector<TIMING> diffPlyScores, diffMaxScores;
-		std::vector<TIMING> tappingDiffs, tappingStrains;
+		//std::vector<TIMING> diffPlyScores, diffMaxScores;
+		//std::vector<TIMING> tappingDiffs, tappingStrains;
 
 	private:
-		void genScores();
+		void genAccTimings(Play* _play);
 
 		// Difficulty calc
-		void genPlyTappingDiffs();
-		void genMaxTappingDiffs();
-		void genMaxTappingStains();
+		//void genPlyTappingDiffs();
+		//void genMaxTappingDiffs();
+		//void genMaxTappingStains();
 		
-		std::vector<double> TotalScore;
+		//std::vector<double> TotalScore;
 
-		double Time2AccScore(int _ms);
-		double PressStrain(int _ms);
+		//double Time2AccScore(int _ms);
+		//double PressStrain(int _ms);
 
-		Play* play;
+		//Play* play;
 };
 
 #endif

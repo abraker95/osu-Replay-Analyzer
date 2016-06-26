@@ -3,14 +3,28 @@
 #include "../SkillEngine.h"
 #include "../../osu_mania.h"
 
-std::vector<OSUCATCH::TIMING> speedControlDiffs, speedControlStrains;
+std::vector<OSUCATCH::TIMING> OSUCATCH::SPEED_CONTROL::scores,
+							  OSUCATCH::SPEED_CONTROL::skills,
+							  OSUCATCH::SPEED_CONTROL::diffs;
 
-double OSUCATCH::SPEED_CONTROL::genSkill(Play* _play)
+void OSUCATCH::SPEED_CONTROL::genScore(Play* _play)
 {
-	return -1; /// \TODO
+	/// \TODO
 }
 
-double OSUCATCH::SPEED_CONTROL::genDiff(Play* _play)
+void OSUCATCH::SPEED_CONTROL::genSkill(Play* _play)
+{
+	/// \TODO
+}
+
+void OSUCATCH::SPEED_CONTROL::genDiff(Play* _play)
+{
+	/// \TODO
+}
+
+
+
+double OSUCATCH::SPEED_CONTROL::getScore()
 {
 	return -1; /// \TODO
 }
@@ -25,12 +39,25 @@ double OSUCATCH::SPEED_CONTROL::getDiff()
 	return -1; /// \TODO
 }
 
+
+
+double OSUCATCH::SPEED_CONTROL::getScoreAt(int _time)
+{
+	return -1; /// \TODO
+}
+
 double OSUCATCH::SPEED_CONTROL::getSkillAt(int _time)
 {
 	return -1; /// \TODO
 }
 
 double OSUCATCH::SPEED_CONTROL::getDiffAt(int _time)
+{
+	return -1; /// \TODO
+}
+
+
+double OSUCATCH::SPEED_CONTROL::getTotalScoreAt(int _time)
 {
 	return -1; /// \TODO
 }

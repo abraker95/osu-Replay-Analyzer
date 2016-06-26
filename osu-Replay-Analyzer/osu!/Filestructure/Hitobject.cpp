@@ -80,9 +80,9 @@ void Hitobject::setTime(Beatmap* _beatmap, int _time)
 			_beatmap->hitObjects[i + 1] = _beatmap->hitObjects[i];
 		_beatmap->hitObjects[newIndex] = this;
 	}
-
-	this->index = newIndex;
-	this->time = _time;*/
+	
+	this->index = newIndex;*/
+	this->time = _time;
 }
 
 double Hitobject::GetCircleOverlapPercentage(int CS, Hitobject &c1)
