@@ -173,6 +173,19 @@ void OsuManiaRenderer::RenderTappingDiffs(Window& _win)
 			_win.font->draw(core::stringw(timing.data), core::rect<s32>(absXpos + hitXpos, absYpos + hitYpos, 100, 10), video::SColor(255, 255, 255, 255));
 		}
 	}
+
+	for (OSUMANIA::TIMING timing : OSUMANIA::SPEED_CONTROL::scores)
+	{
+		if (BTWN(getStartTime(), timing.time, getEndTime())) // hits
+		{
+			int hitXpos = timing.key * (this->width / KEYS) + (this->width / (4.0 * KEYS));
+
+			int hitPos = (*viewTime) - timing.time;
+			int hitYpos = hitPos*zoom + height;
+
+			_win.font->draw(core::stringw(timing.data), core::rect<s32>(absXpos + hitXpos, absYpos + hitYpos - 10, 100, 10), video::SColor(255, 255, 255, 255));
+		}
+	}
 }
 
 void OsuManiaRenderer::UpdateAbsDim(Window& _win)
