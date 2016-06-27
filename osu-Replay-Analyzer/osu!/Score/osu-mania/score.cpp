@@ -51,6 +51,7 @@ void OSUMANIA::genAccTimings(Play* _play)
 			nextNotes[key] = getNextNoteOnColumn(key, &iNote[key]);
 
 			nextNote[key] = false;
+			pressStates[key] = true;
 		}
 	}
 
@@ -64,10 +65,10 @@ void OSUMANIA::genAccTimings(Play* _play)
 
 		for (int key = 0; key < KEYS; key++)
 		{
-			// process key presess
-			if (keyPresses & (1 << key))
+			if (pressStates[key] == true) // if we are expecting a press
 			{
-				if (currNotes[key] != nullptr) // make sure we have a valid note
+				// process key presess
+				if (keyPresses & (1 << key))
 				{
 					std::pair<double, double> ODinterval = getODms(prevNotes[key], currNotes[key], nextNotes[key], true);
 					bool isHoldObject = currNotes[key]->getHitobjectType() & (~HITOBJECTYPE::CIRCLE);
@@ -103,11 +104,10 @@ void OSUMANIA::genAccTimings(Play* _play)
 					}
 				}
 			}
-
-			// process key release
-			if (keyReleases & (1 << key))
+			else // if we are expecting a release
 			{
-				if (currNotes[key] != nullptr) // make sure we have a valid note
+				// process key release
+				if (keyReleases & (1 << key))
 				{
 					std::pair<double, double> ODinterval = getODms(prevNotes[key], currNotes[key], nextNotes[key], false);
 					bool isHoldObject = !(currNotes[key]->getHitobjectType() & HITOBJECTYPE::CIRCLE);
