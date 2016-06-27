@@ -1,6 +1,7 @@
 #include "score.h"
 
 #include <tuple>
+#include <iostream>
 
 std::vector<OSUMANIA::TIMING> OSUMANIA::accTimings;
 static Play* play;
@@ -70,37 +71,50 @@ void OSUMANIA::genAccTimings(Play* _play)
 				// process key presess
 				if (keyPresses & (1 << key))
 				{
-					std::pair<double, double> ODinterval = getODms(prevNotes[key], currNotes[key], nextNotes[key], true);
-					bool isHoldObject = currNotes[key]->getHitobjectType() & (~HITOBJECTYPE::CIRCLE);
-					int hitTiming = std::get<0>(frame) - currNotes[key]->getTime();
-
-					if (BTWN(-100, hitTiming, 100)) // record if it is within accepted hit/release period
+					if (currNotes[key] != nullptr) // make sure we have a valid note
 					{
-						bool different = true;
-						if (accTimings.size() != 0)
+						//std::pair<double, double> ODinterval = getODms(prevNotes[key], currNotes[key], nextNotes[key], true);  // not used for now
+						bool isHoldObject = !(currNotes[key]->getHitobjectType() & HITOBJECTYPE::CIRCLE);
+						int hitTiming = std::get<0>(frame) - currNotes[key]->getTime();
+
+						if (BTWN(-100, hitTiming, 100)) // record if it is within accepted hit/release period
 						{
-							// if time and key is different
-							different = (currNotes[key]->getTime() != accTimings[accTimings.size() - 1].time) || (key != accTimings[accTimings.size() - 1].key);
+							bool different = true;
+							if (accTimings.size() != 0)
+							{
+								// if time and key is different
+								different = (currNotes[key]->getTime() != accTimings[accTimings.size() - 1].time) || (key != accTimings[accTimings.size() - 1].key);
+							}
+
+							if (different) // record only if it's not the same thing as the last
+								accTimings.push_back((TIMING{ currNotes[key]->getTime(), (double)hitTiming, key, true }));
+
+							if (!isHoldObject) // go to next note only if it's not a hold. We are expecting a release otherwise
+								nextNote[key] = true;  // set to fetch next note if we actually hit/released the note and not a blank spot
+							else
+								pressStates[key] = false;
 						}
+						else if (BTWN(-300, hitTiming, -100) || BTWN(+100, hitTiming, +300)) // else record a miss as infinite timing period
+						{
+							bool different = true;
+							if (accTimings.size() != 0)
+							{
+								// if time and key is different
+								different = (currNotes[key]->getTime() != accTimings[accTimings.size() - 1].time) || (key != accTimings[accTimings.size() - 1].key);
+							}
 
-						if (different) // record only if it's not the same thing as the last
-							accTimings.push_back((TIMING{ currNotes[key]->getTime(), (double)hitTiming, key, true }));
+							if (different) // record only if it's not the same thing as the last
+								accTimings.push_back((TIMING{ currNotes[key]->getTime(), (double)INT_MAX, key, true }));
 
-						if (currNotes[key]->getHitobjectType() & HITOBJECTYPE::CIRCLE) // go to next note only if it's not a hold. We are expecting a release otherwise
+							if (isHoldObject)
+								accTimings.push_back((TIMING{ currNotes[key]->getEndTime(), (double)INT_MAX, key, false }));
+
 							nextNote[key] = true;  // set to fetch next note if we actually hit/released the note and not a blank spot
-					}
-					else if (hitTiming > 100) // else record a miss as infinite timing period
-					{
-						bool different = true;
-						if (accTimings.size() != 0)
-						{
-							// if time and key is different
-							different = (currNotes[key]->getTime() != accTimings[accTimings.size() - 1].time) || (key != accTimings[accTimings.size() - 1].key);
 						}
-
-						if (different) // record only if it's not the same thing as the last
-							accTimings.push_back((TIMING{ currNotes[key]->getTime(), (double)INT_MAX, key, true }));
-						nextNote[key] = true;  // set to fetch next note if we actually hit/released the note and not a blank spot
+						else
+						{
+							// else it's just tapping not meant for a note
+						}
 					}
 				}
 			}
@@ -109,22 +123,27 @@ void OSUMANIA::genAccTimings(Play* _play)
 				// process key release
 				if (keyReleases & (1 << key))
 				{
-					std::pair<double, double> ODinterval = getODms(prevNotes[key], currNotes[key], nextNotes[key], false);
-					bool isHoldObject = !(currNotes[key]->getHitobjectType() & HITOBJECTYPE::CIRCLE);
-					int hitTiming = std::get<0>(frame) - currNotes[key]->getEndTime();
-
-					// count releases only for holds
-					if (isHoldObject)
+					if (currNotes[key] != nullptr) // make sure we have a valid note
 					{
-						if (BTWN(-100, hitTiming, 100)) // record if it is within accepted hit/release period
+						std::pair<double, double> ODinterval = getODms(prevNotes[key], currNotes[key], nextNotes[key], false);
+						bool isHoldObject = !(currNotes[key]->getHitobjectType() & HITOBJECTYPE::CIRCLE);
+						int hitTiming = std::get<0>(frame) - currNotes[key]->getEndTime();
+
+						// count releases only for holds
+						if (isHoldObject)
 						{
-							accTimings.push_back((TIMING{ currNotes[key]->getEndTime(), (double)hitTiming, key, false }));
-							nextNote[key] = true;  // set to fetch next note if we actually hit/released the note and not a blank spot
-						}
-						else if (hitTiming > 100) // else record a miss as infinite timing period
-						{
-							accTimings.push_back((TIMING{ currNotes[key]->getEndTime(), (double)INT_MAX, key, false }));
-							nextNote[key] = true;  // set to fetch next note if we missed the note
+							if (BTWN(-100, hitTiming, 100)) // record if it is within accepted hit/release period
+							{
+								accTimings.push_back((TIMING{ currNotes[key]->getEndTime(), (double)hitTiming, key, false }));
+								nextNote[key] = true;  // set to fetch next note if we actually hit/released the note and not a blank spot
+								pressStates[key] = true;
+							}
+							else // else record a miss as infinite timing period
+							{
+								accTimings.push_back((TIMING{ currNotes[key]->getEndTime(), (double)INT_MAX, key, false }));
+								nextNote[key] = true;  // set to fetch next note if we missed the note
+								pressStates[key] = true;
+							}
 						}
 					}
 				}
@@ -187,7 +206,7 @@ void OSUMANIA::genAccTimings(Play* _play)
 }
 
 
-// note's valid hitRange
+// note's valid hitRange (unused for now)
 std::pair<double, double> OSUMANIA::getODms(Hitobject* _prevNote, Hitobject* _currNote, Hitobject* _nextNote, bool _press)
 {
 	double earliestTime = 0.0;
