@@ -24,9 +24,13 @@ void OSUMANIA::genAccTimings(Play* _play)
 	bool stop = false;
 
 	// process each column individualy
-	int KEYS = play->beatmap->getDiff().cs;		/// \TODO: Detect number of keys
-	int* iNote = new int[KEYS];
-	bool* nextNote = new bool[KEYS];
+	int KEYS = play->beatmap->getDiff().cs;	
+	std::vector<int> iNote;					// keep track where we are on the map
+	std::vector<bool> nextNote;				// whether to fetch next note on column or not
+	std::vector<bool> pressStates;			// which state we are expecting
+		iNote.resize(KEYS);
+		nextNote.resize(KEYS);
+		pressStates.resize(KEYS);
 
 	// init vars for each column
 	{
@@ -175,8 +179,6 @@ void OSUMANIA::genAccTimings(Play* _play)
 		stop = !(iFrame < play->replay->getNumFrames()); // stop when we reached end of replay
 	} while (!stop);
 
-	delete iNote;
-	delete nextNote;
 }
 
 
