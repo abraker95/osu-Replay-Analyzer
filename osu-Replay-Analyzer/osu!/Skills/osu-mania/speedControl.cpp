@@ -121,18 +121,18 @@ void OSUMANIA::SPEED_CONTROL::genDiff(Play* _play)
 		timing[key].data = 0;
 	}
 
-	for (int i = 0; i < _play->beatmap->hitObjects.size(); i++)
+	for (Hitobject *hitobject : _play->beatmap->hitObjects)
 	{
 		// never a miss
 		if (true)
 		{
-			bool isHoldObject = !(_play->beatmap->hitObjects[i]->getHitobjectType() & HITOBJECTYPE::CIRCLE);
-			int noteXpos = _play->beatmap->hitObjects[i]->getPos().X;
+			bool isHoldObject = !(hitobject->getHitobjectType() & HITOBJECTYPE::CIRCLE);
+			int noteXpos = hitobject->getPos().X;
 			int column = OSUMANIA::getKey(noteXpos, KEYS);
 
 			//shift: prev <- curr, curr <- next
 			hitPeriodPrev[column] = hitPeriodCurr[column];
-			hitPeriodCurr[column] = _play->beatmap->hitObjects[i]->getTime();
+			hitPeriodCurr[column] = hitobject->getTime();
 
 			double period = (hitPeriodCurr[column] - hitPeriodPrev[column]);
 
@@ -163,9 +163,9 @@ void OSUMANIA::SPEED_CONTROL::genDiff(Play* _play)
 				double kps = 1000.0 / period; // keys per second
 
 				timing[column].data = PressStrain(kps) * 0.1;
-				timing[column].time = hitPeriodCurr[column];
 				timing[column].key = column;
 				timing[column].press = false;
+				timing[column].time  = hitobject->getEndTime();
 
 				diffs.push_back(timing[column]);
 			}
