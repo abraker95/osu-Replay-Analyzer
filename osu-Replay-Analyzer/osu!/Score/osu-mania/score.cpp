@@ -11,6 +11,10 @@ const double MIN_PRESS_TIME   = -100;
 const double MAX_RELEASE_TIME = +100;
 const double MIN_RELEASE_TIME = -100;
 
+bool sortAccTimings(OSUMANIA::TIMING i, OSUMANIA::TIMING j)
+{
+	return i.time < j.time;
+}
 
 void OSUMANIA::genAccTimings(Play* _play)
 {
@@ -179,6 +183,7 @@ void OSUMANIA::genAccTimings(Play* _play)
 		stop = !(iFrame < play->replay->getNumFrames()); // stop when we reached end of replay
 	} while (!stop);
 
+	std::sort(accTimings.begin(), accTimings.end(), sortAccTimings);
 }
 
 
