@@ -177,7 +177,14 @@ void OSUMANIA::SPEED_CONTROL::genDiff(Play* _play)
 
 double OSUMANIA::SPEED_CONTROL::getScore()
 {
-	return -1; /// \TODO
+	double score = 0.0;
+
+	for (OSUMANIA::TIMING &timing : SPEED_CONTROL::scores)
+	{
+		score += timing.data;
+	}
+
+	return score;
 }
 
 double OSUMANIA::SPEED_CONTROL::getSkill()
