@@ -132,7 +132,7 @@ void OSUMANIA::genAccTimings(Play* _play)
 						// count releases only for holds
 						if (isHoldObject)
 						{
-							if (BTWN(-100, hitTiming, 100)) // record if it is within accepted hit/release period
+							if (BTWN(-150, hitTiming, 150)) // record if it is within accepted hit/release period
 							{
 								accTimings.push_back((TIMING{ currNotes[key]->getEndTime(), (double)hitTiming, key, false }));
 								nextNote[key] = true;  // set to fetch next note if we actually hit/released the note and not a blank spot
