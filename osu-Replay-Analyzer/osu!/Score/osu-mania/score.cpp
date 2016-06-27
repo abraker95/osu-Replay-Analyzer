@@ -94,7 +94,7 @@ void OSUMANIA::genAccTimings(Play* _play)
 							else
 								pressStates[key] = false;
 						}
-						else if (BTWN(-300, hitTiming, -100) || BTWN(+100, hitTiming, +300)) // else record a miss as infinite timing period
+						else if (BTWN(-150, hitTiming, -100) || BTWN(+100, hitTiming, +150)) // else record a miss as infinite timing period
 						{
 							bool different = true;
 							if (accTimings.size() != 0)
