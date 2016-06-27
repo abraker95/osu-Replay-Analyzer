@@ -182,7 +182,12 @@ double OSUMANIA::SPEED_CONTROL::getScore()
 
 double OSUMANIA::SPEED_CONTROL::getSkill()
 {
-	return -1; /// \TODO
+	double skill = 0.0;
+
+	for (OSUMANIA::TIMING &timing : SPEED_CONTROL::skills)
+		skill += timing.data;
+
+	return skill;
 }
 
 double OSUMANIA::SPEED_CONTROL::getDiff()
