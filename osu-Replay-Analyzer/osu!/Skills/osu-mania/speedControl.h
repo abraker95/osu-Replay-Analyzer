@@ -30,7 +30,7 @@ namespace OSUMANIA
 
 		namespace
 		{
-			double PressStrain(int _ms)
+			double PressStrain(double _ms)
 			{
 				return exp((2.0*_ms) / 7.0) - 1.0;
 			}
