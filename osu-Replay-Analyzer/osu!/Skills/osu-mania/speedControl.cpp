@@ -125,16 +125,18 @@ void OSUMANIA::SPEED_CONTROL::genSkill(Play* _play)
 void OSUMANIA::SPEED_CONTROL::genDiff(Play* _play)
 {
 	int KEYS = _play->beatmap->getDiff().cs;
-	std::vector<OSUMANIA::TIMING> timing;
+	std::vector<OSUMANIA::TIMING> timing, releases;
 		timing.resize(KEYS);
-	std::vector<int> hitPeriodPrev, hitPeriodCurr;
+		releases.resize(KEYS);
+	std::vector<double> hitPeriodPrev, hitPeriodCurr;
 		hitPeriodPrev.resize(KEYS);
 		hitPeriodCurr.resize(KEYS);
 
 	for (int key = 0; key < KEYS; key++)
 	{
-		timing[key].key = key;
-		timing[key].data = 0;
+		timing[key].key = key;  // this doesn't need to be set again
+		timing[key].data = 0.0;
+		releases[key].press = true; // no note releases yet
 	}
 
 	for (Hitobject *hitobject : _play->beatmap->hitObjects)
@@ -150,6 +152,19 @@ void OSUMANIA::SPEED_CONTROL::genDiff(Play* _play)
 			hitPeriodPrev[column] = hitPeriodCurr[column];
 			hitPeriodCurr[column] = hitobject->getTime();
 
+			// check if we have a note release first
+			for (OSUMANIA::TIMING &release : releases)
+			{
+				if (release.press == false)			// if there is something waiting
+				{
+					if (hitPeriodCurr[column] >= release.time)
+					{
+						diffs.push_back(release);
+						release.press = true;			// set it to inactive
+					}
+				}
+			}
+
 			double period = (hitPeriodCurr[column] - hitPeriodPrev[column]);
 
 			// if previous was a slider, halve the press effect
@@ -163,30 +178,35 @@ void OSUMANIA::SPEED_CONTROL::genDiff(Play* _play)
 			if (hitPeriodPrev[column] == 0)
 				kps = 0.0;
 
-			timing[column].data = PressStrain(kps);
-			timing[column].time = hitPeriodCurr[column];
-			timing[column].press = true;
+			timing[column].data  = PressStrain(kps);
+			timing[column].time  = hitPeriodCurr[column];
+			timing[column].press = true;						// this is a press
 
 			diffs.push_back(timing[column]);
-
+			
 			// if it's a slider, then another frame for release
 			if (isHoldObject)
 			{
-				hitPeriodPrev[column] = hitPeriodCurr[column];
-				hitPeriodCurr[column] = _play->beatmap->hitObjects[i]->getEndTime();
-
-				double period = (hitPeriodCurr[column] - hitPeriodPrev[column]);
-				double kps = 1000.0 / period; // keys per second
-
-				timing[column].data = PressStrain(kps) * 0.1;
-				timing[column].key = column;
-				timing[column].press = false;
+				//shift: prev <- curr, curr <- next
+				timing[column].data  = 0.0;						// release has no strain on tapping
 				timing[column].time  = hitobject->getEndTime();
+				timing[column].press = false;					// this is a release
 
-				diffs.push_back(timing[column]);
+				releases[column] = timing[column];				// wait until we have reached the time
 			}
 		}
 	}
+
+	// push any remaining releases
+	for (OSUMANIA::TIMING &release : releases)
+	{
+		if (release.press == false)			// if there is something waiting
+		{
+			diffs.push_back(release);
+			release.press = true;			// set it to inactive
+		}
+	}
+
 }
 
 
