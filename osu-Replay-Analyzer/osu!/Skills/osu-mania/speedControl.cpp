@@ -6,6 +6,7 @@
 #include "../osuMania_skills.h"
 #include "../../Score/osu-mania/score.h"
 
+#include <iostream>
 
 std::vector<OSUMANIA::TIMING> OSUMANIA::SPEED_CONTROL::scores, 
 							  OSUMANIA::SPEED_CONTROL::skills,
@@ -14,20 +15,31 @@ std::vector<OSUMANIA::TIMING> OSUMANIA::SPEED_CONTROL::scores,
 
 void OSUMANIA::SPEED_CONTROL::genScore(Play* _play)
 {
-	double score = 0.0;
-	//double maxScore = 0.0;
+	double skillScore = 0.0, maxScore = 0.0; 
 	double missesPunisher = 1.0;
 	OSUMANIA::TIMING timing;
 
-
-	/*// max score calc
-	for (int i = 1; i < speedDiffs.size(); i++)
-	{
-		maxScore += speedDiffs[i].data * log(i);
-	}*/
-
-	// score calc
+	// max score calc
 	for (int i = 0; i < OSUMANIA::accTimings.size(); i++)
+		maxScore += diffs[i].data;		
+
+	// skill score calc
+	for (int i = 0; i < OSUMANIA::accTimings.size(); i++)
+	{
+		double skillScore = SKILLS::Time2AccScore(OSUMANIA::accTimings[i].data)*skills[i].data;
+
+		// divide-by-zero protection
+		if (maxScore == 0.0) timing.data = 0.0;
+		else				 timing.data = (skillScore / maxScore) * 1000000.0;
+
+		timing.key	 = accTimings[i].key;
+		timing.press = accTimings[i].press;
+		timing.time  = accTimings[i].time;
+
+		scores.push_back(timing);
+	}
+
+	/*for (int i = 0; i < OSUMANIA::accTimings.size(); i++)
 	{
 		if (skills[i].data != -1) // if not missed
 		{
@@ -44,12 +56,7 @@ void OSUMANIA::SPEED_CONTROL::genScore(Play* _play)
 				missesPunisher = 1.0;
 		}
 		else missesPunisher *= 2.0;
-	}
-
-//	std::tuple<double, double, double> totalScore;
-//	std::get<0>(totalScore) = (score / maxScore) * 1000000.0;				// score
-//	std::get<1>(totalScore) = score / OSUMANIA::accTimings.size() * 20.0;	// performance
-//	std::get<2>(totalScore) = maxScore / speedDiffs.size() * 20.0;		// max performance
+	}*/
 }
 
 void OSUMANIA::SPEED_CONTROL::genSkill(Play* _play)
@@ -169,7 +176,7 @@ void OSUMANIA::SPEED_CONTROL::genDiff(Play* _play)
 
 			// if previous was a slider, halve the press effect
 			if (timing[column].press == false)
-				period *= 2.0;
+				period *= 4.0;
 
 			// keys per second
 			double kps = 1000.0 / period;
@@ -207,6 +214,9 @@ void OSUMANIA::SPEED_CONTROL::genDiff(Play* _play)
 		}
 	}
 
+	// The longer it lasts, the more effective it is
+	for (int i = 1; i < diffs.size(); i++)
+		diffs[i].data = 0.5*diffs[i].data + 0.5*diffs[i - 1].data;
 }
 
 
