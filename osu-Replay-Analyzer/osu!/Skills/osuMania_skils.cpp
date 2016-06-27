@@ -311,7 +311,8 @@ double OSUMANIA::SKILLS::getTotalDiffAt(SkillEngine::SKILL _skill, int _time)
 
 double OSUMANIA::SKILLS::Time2AccScore(int _ms)
 {
-	double scale = 0.5; // 0.5 @ 60 FPS
+	// scale is basically OD and is modeled here https://www.desmos.com/calculator/lcxkub6pkz
+	double scale = 0.5; // 0.5 @ 60 FPS	 aka set a MAX in mania = 50%. This makes 1M scores in mania equivelant to 500k here assuming all hit timings are no less than 16ms
 	double o = sqrt(-pow((50.0 / 3.0), 2.0) / (2.0 * log(scale)));
 
 	return exp(-pow(_ms, 2.0) / (2.0 * pow(o, 2.0)));
