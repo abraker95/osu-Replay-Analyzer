@@ -69,8 +69,12 @@ void processHit(std::vector<OSUMANIA::TIMING>* _accTimings, Hitobject* _currNote
 	if (_accTimings->size() != 0)
 	{
 		// if time and key is different
-		different = (_currNote->getTime() != (*_accTimings)[_accTimings->size() - 1].time) || 
-					(_info.key != (*_accTimings)[_accTimings->size() - 1].key);
+		if ((*_info.pressState)[key] == true) // if we are pressing
+			different = (_currNote->getTime() != (*_accTimings)[_accTimings->size() - 1].time) || 
+						(_info.key != (*_accTimings)[_accTimings->size() - 1].key);
+		else                                   // if we are releasing
+			different = (_currNote->getEndTime() != (*_accTimings)[_accTimings->size() - 1].time) || 
+						(_info.key != (*_accTimings)[_accTimings->size() - 1].key);
 	}
 
 	// record only if it's not the same thing as the last
