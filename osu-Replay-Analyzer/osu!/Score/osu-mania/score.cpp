@@ -12,10 +12,97 @@ const double MIN_PRESS_TIME   = -100;
 const double MAX_RELEASE_TIME = +100;
 const double MIN_RELEASE_TIME = -100;
 
+
+struct KeyInfo
+{
+	double hitTiming;
+	int key;
+	std::vector<bool>* pressState;
+	std::vector<bool>* nextNote;
+};
+
 bool sortAccTimings(OSUMANIA::TIMING i, OSUMANIA::TIMING j)
 {
 	return i.time < j.time;
 }
+
+int getJudgment(int _frameTime, int _noteTime, bool _pressState)
+{
+	bool hit = false;
+	bool miss = true;  // assume miss to start with
+	int hitTiming = _frameTime - _noteTime;
+
+	// check if the note is long gone or not
+	if (_frameTime > _noteTime + 150)
+		return 1;
+
+	// judge
+	{
+		// if hit
+		if (_pressState == true)
+		{
+			hit  = BTWN(-100, hitTiming, 100);
+			miss = BTWN(-150, hitTiming, -100) || BTWN(+100, hitTiming, +150);
+		}
+
+		// if release
+		if (_pressState == false)
+		{
+			hit  = BTWN(-150, hitTiming, 150);
+			miss = BTWN(-200, hitTiming, -150) || BTWN(+150, hitTiming, +200);
+		}
+	}
+
+		 if (hit == true)	return 0;
+	else if (miss == true)	return 1;
+	else					return 2;	
+}
+
+
+void processHit(std::vector<OSUMANIA::TIMING>* _accTimings, Hitobject* _currNote, KeyInfo _info)
+{
+	bool isHoldObject = !(_currNote->getHitobjectType() & HITOBJECTYPE::CIRCLE);
+	bool different = true;
+	int key = _info.key;
+
+	// make sure it's not first object to see if this is a different hit/release
+	if (_accTimings->size() != 0)
+	{
+		// if time and key is different
+		different = (_currNote->getTime() != (*_accTimings)[_accTimings->size() - 1].time) || 
+					(_info.key != (*_accTimings)[_accTimings->size() - 1].key);
+	}
+
+	// record only if it's not the same thing as the last
+	if (different)
+	{
+		if((*_info.pressState)[key] == true) // if we are pressing
+			_accTimings->push_back((OSUMANIA::TIMING{ _currNote->getTime(), _info.hitTiming, _info.key, (*_info.pressState)[key] }));
+		else						  // if we are releasing
+			_accTimings->push_back((OSUMANIA::TIMING{ _currNote->getEndTime(), _info.hitTiming, _info.key, (*_info.pressState)[key] }));
+	}
+
+	// go to next note only if it's not a hold. We are expecting a release otherwise
+	if (!isHoldObject)	(*_info.nextNote)[key] = true;    // set to fetch next note if we actually hit/released the note and not a blank spot
+	if (isHoldObject)	(*_info.pressState)[key] = false; // we are expecting a release next
+}
+
+
+void processMiss(std::vector<OSUMANIA::TIMING>* _accTimings, Hitobject* _currNote, KeyInfo _info)
+{
+	bool isHoldObject = !(_currNote->getHitobjectType() & HITOBJECTYPE::CIRCLE);
+	int key = _info.key;
+
+	if (!isHoldObject)			
+		_accTimings->push_back((OSUMANIA::TIMING{ _currNote->getTime(), (double)INT_MAX, _info.key, (*_info.pressState)[key] }));
+	else
+		_accTimings->push_back((OSUMANIA::TIMING{ _currNote->getEndTime(), (double)INT_MAX, _info.key, (*_info.pressState)[key] }));
+
+	(*_info.nextNote)[key] = true;		// set to fetch next note
+	(*_info.pressState)[key] = true;	// we are expecting a press next
+}
+
+
 
 void OSUMANIA::genAccTimings(Play* _play)
 {
@@ -66,134 +153,47 @@ void OSUMANIA::genAccTimings(Play* _play)
 
 		for (int key = 0; key < KEYS; key++)
 		{
-			if (pressStates[key] == true) // if we are expecting a press
+			bool valid = (((keyPresses & (1 << key)) > 0) && (pressStates[key] == true)) ||
+						 (((keyReleases & (1 << key)) > 0) && (pressStates[key] == false));
+
+			// if there is a key event on a column
+			if (valid)
 			{
-				// process key presess
-				if (keyPresses & (1 << key))
+				int hitTiming = std::get<0>(frame) - currNotes[key]->getTime();
+				int hitState  = getJudgment(std::get<0>(frame), currNotes[key]->getTime(), pressStates[key]);
+
+				KeyInfo info = {};
+					info.hitTiming	= hitTiming;
+					info.key		= key;
+					info.nextNote	= &nextNote;
+					info.pressState = &pressStates;
+
+				switch (hitState)
 				{
-					if (currNotes[key] != nullptr) // make sure we have a valid note
-					{
-						//std::pair<double, double> ODinterval = getODms(prevNotes[key], currNotes[key], nextNotes[key], true);  // not used for now
-						bool isHoldObject = !(currNotes[key]->getHitobjectType() & HITOBJECTYPE::CIRCLE);
-						int hitTiming = std::get<0>(frame) - currNotes[key]->getTime();
+					case 0:		// hit
+						processHit(&accTimings, currNotes[key], info);
+						break;
 
-						if (BTWN(-100, hitTiming, 100)) // record if it is within accepted hit/release period
-						{
-							bool different = true;
-							if (accTimings.size() != 0)
-							{
-								// if time and key is different
-								different = (currNotes[key]->getTime() != accTimings[accTimings.size() - 1].time) || (key != accTimings[accTimings.size() - 1].key);
-							}
+					case 1:		// miss
+						processMiss(&accTimings, currNotes[key], info);
+						break;
 
-							if (different) // record only if it's not the same thing as the last
-								accTimings.push_back((TIMING{ currNotes[key]->getTime(), (double)hitTiming, key, true }));
+					case 2:		// no hit, no miss
+						break;
 
-							if (!isHoldObject) // go to next note only if it's not a hold. We are expecting a release otherwise
-								nextNote[key] = true;  // set to fetch next note if we actually hit/released the note and not a blank spot
-							else
-								pressStates[key] = false;
-						}
-						else if (BTWN(-150, hitTiming, -100) || BTWN(+100, hitTiming, +150)) // else record a miss as infinite timing period
-						{
-							bool different = true;
-							if (accTimings.size() != 0)
-							{
-								// if time and key is different
-								different = (currNotes[key]->getTime() != accTimings[accTimings.size() - 1].time) || (key != accTimings[accTimings.size() - 1].key);
-							}
+					default:
+						break;
+				};
 
-							if (different) // record only if it's not the same thing as the last
-								accTimings.push_back((TIMING{ currNotes[key]->getTime(), (double)INT_MAX, key, true }));
 
-							if (isHoldObject)
-								accTimings.push_back((TIMING{ currNotes[key]->getEndTime(), (double)INT_MAX, key, false }));
-
-							nextNote[key] = true;  // set to fetch next note if we actually hit/released the note and not a blank spot
-						}
-						else
-						{
-							// else it's just tapping not meant for a note
-						}
-					}
-				}
-			}
-			else // if we are expecting a release
-			{
-				// process key release
-				if (keyReleases & (1 << key))
+				// get next note
+				if (nextNote[key] == true)
 				{
-					if (currNotes[key] != nullptr) // make sure we have a valid note
-					{
-						std::pair<double, double> ODinterval = getODms(prevNotes[key], currNotes[key], nextNotes[key], false);
-						bool isHoldObject = !(currNotes[key]->getHitobjectType() & HITOBJECTYPE::CIRCLE);
-						int hitTiming = std::get<0>(frame) - currNotes[key]->getEndTime();
+					prevNotes[key] = currNotes[key];
+					currNotes[key] = nextNotes[key];
+					nextNotes[key] = getNextNoteOnColumn(key, &iNote[key]);
 
-						// count releases only for holds
-						if (isHoldObject)
-						{
-							if (BTWN(-150, hitTiming, 150)) // record if it is within accepted hit/release period
-							{
-								accTimings.push_back((TIMING{ currNotes[key]->getEndTime(), (double)hitTiming, key, false }));
-								nextNote[key] = true;  // set to fetch next note if we actually hit/released the note and not a blank spot
-								pressStates[key] = true;
-							}
-							else // else record a miss as infinite timing period
-							{
-								accTimings.push_back((TIMING{ currNotes[key]->getEndTime(), (double)INT_MAX, key, false }));
-								nextNote[key] = true;  // set to fetch next note if we missed the note
-								pressStates[key] = true;
-							}
-						}
-					}
-				}
-			}
-
-			// fetch next note
-			if (nextNote[key] == true)
-			{
-				prevNotes[key] = currNotes[key];
-				currNotes[key] = nextNotes[key];
-				nextNotes[key] = getNextNoteOnColumn(key, &iNote[key]);
-
-				nextNote[key] = false;
-
-				// see if the next the recently fetched note was actually hit
-				if (currNotes[key] != nullptr)
-				{
-					int missFrame = iFrame;
-					std::tuple<long, int, int> seekMiss;
-					bool stopSeek = !(missFrame < play->replay->getNumFrames()); // stop when we reached end of replay
-					bool miss = true;
-
-					while (std::get<0>(seekMiss) < currNotes[key]->getTime() + 100)
-					{
-						if (stopSeek) // if we reached end of replay, we never hit the note
-						{
-							break;
-						}
-
-						if (std::get<1>(seekMiss) & (1 << key))
-						{
-							miss = false;
-							break;
-						}
-
-						seekMiss = getNextEvent(&missFrame);
-					}
-
-					// record and get next note
-					if (miss)
-					{
-						accTimings.push_back((TIMING{ currNotes[key]->getTime(), INT_MAX, key }));
-
-						// fetch next note
-						prevNotes[key] = currNotes[key];
-						currNotes[key] = nextNotes[key];
-						nextNotes[key] = getNextNoteOnColumn(key, &iNote[key]);
-
-						nextNote[key] = false;
-					}
+					nextNote[key] = false;
 				}
 			}
 		}
