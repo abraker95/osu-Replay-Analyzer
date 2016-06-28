@@ -34,7 +34,7 @@ int getJudgment(int _frameTime, int _noteTime, bool _pressState)
 
 	// check if the note is long gone or not
 	if (_frameTime > _noteTime + 150)
-		return 1;
+		return 2;
 
 	// judge
 	{
@@ -55,7 +55,7 @@ int getJudgment(int _frameTime, int _noteTime, bool _pressState)
 
 		 if (hit == true)	return 0;
 	else if (miss == true)	return 1;
-	else					return 2;	
+	else					return 3;	
 }
 
 
@@ -83,8 +83,17 @@ void processHit(std::vector<OSUMANIA::TIMING>* _accTimings, Hitobject* _currNote
 	}
 
 	// go to next note only if it's not a hold. We are expecting a release otherwise
-	if (!isHoldObject)	(*_info.nextNote)[key] = true;    // set to fetch next note if we actually hit/released the note and not a blank spot
-	if (isHoldObject)	(*_info.pressState)[key] = false; // we are expecting a release next
+	if (!isHoldObject)
+	{
+		(*_info.nextNote)[key] = true;    // set to fetch next note if we actually hit/released the note and not a blank spot
+	}
+	else
+	{
+		if ((*_info.pressState)[key] == false) // if we were expecting release
+			(*_info.nextNote)[key] = true;    // set to fetch next note since we are done with this one
+
+		(*_info.pressState)[key] = !(*_info.pressState)[key]; // we are expecting a release then now we expect a press. The same vice-versas
+	}
 }
 
 
@@ -102,6 +111,18 @@ void processMiss(std::vector<OSUMANIA::TIMING>* _accTimings, Hitobject* _currNot
 	(*_info.pressState)[key] = true;	// we are expecting a press next
 }
 
+void HandleEarlyMiss(std::vector<OSUMANIA::TIMING>* _accTimings, Hitobject* _currNote, KeyInfo _info)
+{
+	int key = _info.key;
+
+	if ((*_info.pressState)[key] == true) // if we are pressing
+		_accTimings->push_back((OSUMANIA::TIMING{ _currNote->getTime(), (double)INT_MAX, _info.key, (*_info.pressState)[key] }));
+	else						  // if we are releasing
+		_accTimings->push_back((OSUMANIA::TIMING{ _currNote->getEndTime(), (double)INT_MAX, _info.key, (*_info.pressState)[key] }));
+
+	(*_info.nextNote)[key] = true;		// set to fetch next note
+	(*_info.pressState)[key] = true;	// we are expecting a press next
+}
 
 
 void OSUMANIA::genAccTimings(Play* _play)
@@ -174,27 +195,76 @@ void OSUMANIA::genAccTimings(Play* _play)
 						processHit(&accTimings, currNotes[key], info);
 						break;
 
-					case 1:		// miss
-						processMiss(&accTimings, currNotes[key], info);
-						break;
+			// if there is a key event on a column er are expecting
+			if (valid)
+			{
+				int hitTiming = INT_MAX;
+				int hitState = 1;
 
-					case 2:		// no hit, no miss
-						break;
-
-					default:
-						break;
-				};
-
-
-				// get next note
-				if (nextNote[key] == true)
+				if (currNotes[key] != nullptr)
 				{
-					prevNotes[key] = currNotes[key];
-					currNotes[key] = nextNotes[key];
-					nextNotes[key] = getNextNoteOnColumn(key, &iNote[key]);
+					if (pressStates[key] == true)	// if we are pressing the key
+					{
+						hitState = getJudgment(std::get<0>(frame), currNotes[key]->getTime(), pressStates[key]);
+						hitTiming = std::get<0>(frame) - currNotes[key]->getTime();
+					}
+					else							// if we are releasing the key
+					{
+						hitState = getJudgment(std::get<0>(frame), currNotes[key]->getEndTime(), pressStates[key]);
+						hitTiming = std::get<0>(frame) - currNotes[key]->getEndTime();
+					}
 
-					nextNote[key] = false;
+					KeyInfo info = {};
+						info.hitTiming = hitTiming;
+						info.key = key;
+						info.nextNote = &nextNote;
+						info.pressState = &pressStates;
+
+					switch (hitState)
+					{
+						case 0:		// hit
+							processHit(&accTimings, currNotes[key], info);
+						break;
+
+						case 1:		// hit and miss
+							processMiss(&accTimings, currNotes[key], info);
+							break;
+
+						case 2:     // never hit the note
+							processMiss(&accTimings, currNotes[key], info);
+
+							// get next note
+							if (nextNote[key] == true)
+							{
+								prevNotes[key] = currNotes[key];
+								currNotes[key] = nextNotes[key];
+								nextNotes[key] = getNextNoteOnColumn(key, &iNote[key]);
+
+								nextNote[key] = false;
+							}
+
+							// redo this frame
+							key--;
+							continue;
+							break;
+
+						case 3:		// no hit, no miss
+							break;
+
+						default:
+							break;
+					};
 				}
+			}
+
+			// get next note
+			if (nextNote[key] == true)
+			{
+				prevNotes[key] = currNotes[key];
+				currNotes[key] = nextNotes[key];
+				nextNotes[key] = getNextNoteOnColumn(key, &iNote[key]);
+
+				nextNote[key] = false;
 			}
 		}
 
