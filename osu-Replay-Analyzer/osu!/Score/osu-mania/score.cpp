@@ -181,24 +181,6 @@ void OSUMANIA::genAccTimings(Play* _play)
 			bool valid = (((keyPresses & (1 << key)) > 0) && (pressStates[key] == true)) ||
 						 (((keyReleases & (1 << key)) > 0) && (pressStates[key] == false));
 
-			// if there is a key event on a column
-			if (valid)
-			{
-				int hitTiming = std::get<0>(frame) - currNotes[key]->getTime();
-				int hitState  = getJudgment(std::get<0>(frame), currNotes[key]->getTime(), pressStates[key]);
-
-				KeyInfo info = {};
-					info.hitTiming	= hitTiming;
-					info.key		= key;
-					info.nextNote	= &nextNote;
-					info.pressState = &pressStates;
-
-				switch (hitState)
-				{
-					case 0:		// hit
-						processHit(&accTimings, currNotes[key], info);
-						break;
-
 			// if there is a key event on a column er are expecting
 			if (valid)
 			{
