@@ -104,7 +104,7 @@ void HitNote::UpdateAbsPos(Window& _win)
 {
 	int numKeys = beatmap->getDiff().cs;
 	int key = OSUMANIA::getKey(hitobject->getPos().X, numKeys);
-	int xpos = key * (parent->getDim().Width / numKeys) + (parent->getDim().Width / (4.0 * numKeys));
+	int xpos = key * (parent->getDim().Width / numKeys) + (parent->getPos().X - parent->getDim().Width/2);
 
 	int hitPos = (*viewTime - hitobject->getTime());
 	int correction = std::max(0.0, (double)(((OsuManiaRenderer*)parent)->getStartTime() - hitobject->getTime()) * (*zoom));
@@ -117,10 +117,11 @@ void HitNote::UpdateAbsPos(Window& _win)
 
 void HitNote::UpdateAbsDim(Window& _win)
 {
+	int numKeys = beatmap->getDiff().cs;
+	width = ((parent->getDim().Width) / numKeys) - (2*numKeys);
+
 	if (hitobject->getHitobjectType() & HITOBJECTYPE::MANIALONG)
 	{
-		width = 50 * _widthRatio_;
-
 		int startTime = std::max(hitobject->getTime(), ((OsuManiaRenderer*)parent)->getStartTime());
 		int endTime = std::min(hitobject->slider->getEndTime(), ((OsuManiaRenderer*)parent)->getEndTime());
 
@@ -128,7 +129,6 @@ void HitNote::UpdateAbsDim(Window& _win)
 	}
 	else
 	{
-		width = 50 * _widthRatio_;
 		height = 15;
 	}
 }

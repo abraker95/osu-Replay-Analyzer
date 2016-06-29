@@ -115,8 +115,9 @@ void OsuManiaRenderer::RenderReplay(Window& _win)
 	{
 		if ((int)std::get<0>(data).X & (1 << key))
 		{
-			int hitXpos = key * (this->width / KEYS) + (this->width / (4.0 * KEYS));
-			_win.driver->draw2DRectangle(SColor(255, 100, 100, 100), rect<s32>(absXpos + hitXpos, absYpos + hitYpos, absXpos + hitXpos + 50, absYpos + hitYpos + 15));
+			int hitXpos = key * (this->width / KEYS) + (this->absXpos - this->width / 2);
+			int width = ((this->width) / KEYS) - (2 * KEYS);
+			_win.driver->draw2DRectangle(SColor(255, 100, 100, 100), rect<s32>(absXpos + hitXpos, absYpos + hitYpos, absXpos + hitXpos + width, absYpos + hitYpos + 15));
 		}
 	}
 }
@@ -135,12 +136,13 @@ void OsuManiaRenderer::RenderHitTimings(Window& _win)
 	{
 		if (BTWN(getStartTime(), timing.time + timing.data, getEndTime())) // hits
 		{
-			int hitXpos = timing.key * (this->width / KEYS) + (this->width / (4.0 * KEYS));
+			int hitXpos = timing.key * (this->width / KEYS) + (this->absXpos - this->width / 2);
+			int width = ((this->width) / KEYS) - (2 * KEYS);
 
 			int hitPos = (*viewTime) - timing.time - timing.data;
 			int hitYpos = hitPos*zoom + height;
 
-			_win.driver->draw2DRectangle(SColor(255, 255, 0, 255), rect<s32>(absXpos + hitXpos, absYpos + hitYpos, absXpos + hitXpos + 50, absYpos + hitYpos + 2));
+			_win.driver->draw2DRectangle(SColor(255, 255, 0, 255), rect<s32>(absXpos + hitXpos, absYpos + hitYpos, absXpos + hitXpos + width, absYpos + hitYpos + 2));
 		}
 		else if (BTWN(getStartTime(), timing.time, getEndTime())) // misses
 		{
@@ -165,7 +167,7 @@ void OsuManiaRenderer::RenderTappingDiffs(Window& _win)
 	{
 		if (BTWN(getStartTime(), timing.time, getEndTime())) // hits
 		{
-			int hitXpos = timing.key * (this->width / KEYS) + (this->width / (4.0 * KEYS));
+			int hitXpos = timing.key * (this->width / KEYS) + (this->absXpos - this->width / 2);
 
 			int hitPos = (*viewTime) - timing.time;
 			int hitYpos = hitPos*zoom + height;
@@ -178,7 +180,7 @@ void OsuManiaRenderer::RenderTappingDiffs(Window& _win)
 	{
 		if (BTWN(getStartTime(), timing.time, getEndTime())) // hits
 		{
-			int hitXpos = timing.key * (this->width / KEYS) + (this->width / (4.0 * KEYS));
+			int hitXpos = timing.key * (this->width / KEYS) + (this->absXpos - this->width / 2);
 
 			int hitPos = (*viewTime) - timing.time;
 			int hitYpos = hitPos*zoom + height;
