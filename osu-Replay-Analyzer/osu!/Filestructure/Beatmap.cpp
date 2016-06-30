@@ -589,7 +589,7 @@ int Beatmap::ReadHitobjects(std::string line)
 	std::vector<std::string> objectData, sliderData;
 	FileReader::tokenize(line, objectData, ",");
 
-	if(atoi(objectData[HITOBJECTNORMAL::TYPE].data()) == HITOBJECTYPE::SLIDER)
+	if(atoi(objectData[HITOBJECTNORMAL::TYPE].data()) & HITOBJECTYPE::SLIDER)
 		FileReader::tokenize(objectData[5], sliderData, "|");
 
 	Hitobject* hitObject = new Hitobject(objectData, sliderData);
