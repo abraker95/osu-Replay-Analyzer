@@ -260,18 +260,16 @@ void Hitobject::ProcessSliderData(std::vector<std::string> &_objectData, std::ve
 	if (this->getHitobjectType() & HITOBJECTYPE::SLIDER)
 	{
 		this->slider = std::make_unique<Hitobject::Slider>(this);
-
-		std::vector<std::string> sliderTokens;
-		FileReader::tokenize(_sliderData[5], sliderTokens, "|");
+		//FileReader::tokenize(_objectData[5], _sliderData, "|");
 
 		// curve parsing
 		{
-			slider->curveType = (CurveType)sliderTokens[0].c_str()[0];
+			slider->curveType = (CurveType)_sliderData[0].c_str()[0];
 
-			for (int i = 1; i < sliderTokens.size(); i++)
+			for (int i = 1; i < _sliderData.size(); i++)
 			{
 				std::vector<std::string> curveTokens;
-				FileReader::tokenize(sliderTokens[i], curveTokens, ":");
+				FileReader::tokenize(_sliderData[i], curveTokens, ":");
 
 				// curve points parsing
 				{
