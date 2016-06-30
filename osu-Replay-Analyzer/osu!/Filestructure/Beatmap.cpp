@@ -87,27 +87,24 @@ int Beatmap::getNumHitobjectsVisibleAt(int _index, double _opacity)
 
 std::pair<int, int> Beatmap::getIndicesVisibleAt(int _time, double _opacity)
 {
-	int index = this->FindHitobjectAt(_time);
+	int index = this->FindHitobjectAt(_time) - 1;
 	std::pair<int, int> range;
 
-	if (index >= 0)
+	// Find first note visible
+	for (index = max(index, 0); index < hitObjects.size(); index++)
 	{
-		// Find first note visible
-		for (; index < hitObjects.size(); index++)
-		{
-			if (hitObjects[index]->isVisibleAt(_time, modifiedDiff.ar, modifiedMod.hidden))
-				break;
-		}
-		range.first = index;
-
-		// Find last note visible
-		for (; index < hitObjects.size(); index++)
-		{
-			if (!(hitObjects[index]->isVisibleAt(_time, modifiedDiff.ar, modifiedMod.hidden)))
-				break;
-		}
-		range.second = index;
+		if (hitObjects[index]->isVisibleAt(_time, modifiedDiff.ar, modifiedMod.hidden))
+			break;
 	}
+	range.first = index;
+
+	// Find last note visible
+	for (; index < hitObjects.size(); index++)
+	{
+		if (!(hitObjects[index]->isVisibleAt(_time, modifiedDiff.ar, modifiedMod.hidden)))
+			break;
+	}
+	range.second = index;
 
 	return range;
 }
