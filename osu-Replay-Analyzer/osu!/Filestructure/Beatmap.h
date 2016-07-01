@@ -75,6 +75,7 @@ class Beatmap
 			SECTION_DIFFICULTY,
 			SECTION_EVENTS,
 			SECTION_TIMINGPOINTS,
+			SECTION_COLOURS,
 			SECTION_HITOBJECTS
 		};
 
@@ -104,6 +105,7 @@ class Beatmap
 		bool ParseDifficultysection(std::ifstream &_filepath, std::string &_line);
 		bool ParseEventsSection(std::ifstream &_filepath, std::string &_line);
 		bool ParseTimingPointsSection(std::ifstream &_filepath, std::string &_line);
+		bool ParseColourSection(std::ifstream &_filepath, std::string &_line);
 		bool ParseHitobjectsSection(std::ifstream &_filepath, std::string &_line);
 	
 		void PrepareTimingPoints();

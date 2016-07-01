@@ -179,6 +179,7 @@ bool Beatmap::ParseBeatmapData(std::ifstream &_filepath)
 			else if (line == "[Difficulty]")	section = SECTION_DIFFICULTY;
 			else if (line == "[Events]")		section = SECTION_EVENTS;
 			else if (line == "[TimingPoints]")	section = SECTION_TIMINGPOINTS;
+			else if (line == "[Colours]")		section = SECTION_COLOURS;
 			else if (line == "[HitObjects]")	section = SECTION_HITOBJECTS;
 			else ParseSection(_filepath, section, line);
 		}
@@ -218,6 +219,10 @@ void Beatmap::ParseSection(std::ifstream &_filepath, SECTION _section, std::stri
 
 		case SECTION_TIMINGPOINTS:
 			ParseTimingPointsSection(_filepath, _line);
+			break;
+
+		case SECTION_COLOURS:
+			ParseColourSection(_filepath, _line);
 			break;
 
 		case SECTION_HITOBJECTS:
@@ -530,6 +535,20 @@ bool Beatmap::ParseTimingPointsSection(std::ifstream &_filepath, std::string &_l
 			return 1;
 		}
 	} while (getline(_filepath, _line));
+}
+
+bool Beatmap::ParseColourSection(std::ifstream &_filepath, std::string &_line)
+{
+	do
+	{
+		if (_line == "")
+			break;
+
+		/* ignore */
+
+	} while (getline(_filepath, _line));
+
+	return 1;
 }
 
 bool Beatmap::ParseHitobjectsSection(std::ifstream &_filepath, std::string &_line)
