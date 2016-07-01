@@ -20,7 +20,6 @@ Hitcircle::Hitcircle(Beatmap* _beatmap, Hitobject* _hitobject, int* _viewTime)
 void Hitcircle::Draw(Window &_win)
 {
 	// \TODO: Known problem: pixel perfect overlaps causes circles to "blink"
-	// \TODO: Fix ratio not being perfectly applied to sliders
 
 	double opacity = hitobject->getOpacityAt(*(this->viewTime), beatmap->getDiff().ar, beatmap->getModifiers().hidden);
 	SColor fade = SColor(255, edgeCol.getRed() * opacity, edgeCol.getGreen() * opacity, edgeCol.getBlue() * opacity);
@@ -31,10 +30,6 @@ void Hitcircle::Draw(Window &_win)
 	// draw slider
 	if (hitobject->IsHitObjectType(SLIDER))
 	{
-		// draw the hitcircle
-	//	vector2di sliderPoint = hitobject->slider->GetSliderPos(hitobject->getTime());
-		//DrawArc(_win, sliderPoint.X*getWidthRatio(), sliderPoint.Y*getHeightRatio(), radius, fade);
-
 		// draw slider
 		double velocity = hitobject->slider->getVelocity();
 		if (velocity != 0.0)
@@ -51,11 +46,6 @@ void Hitcircle::Draw(Window &_win)
 			}
 		}
 	}
-	/*else
-	{
-		// draw the hitcircle
-		DrawArc(_win, this->absXpos, this->absYpos, radius, fade);
-	}*/
 }
 
 /*position2di Hitcircle::getEndPoint()
