@@ -138,12 +138,13 @@ void OsuManiaRenderer::RenderHitTimings(Window& _win)
 		{
 			if (timing.data == INT_MAX)
 			{
-				int hitXpos = timing.key * (this->width / KEYS) + (this->width / (4.0 * KEYS));
+				int hitXpos = timing.key * (this->width / KEYS) + (this->absXpos - this->width / 2);
+				int width = ((this->width) / KEYS) - (2 * KEYS);
 
 				int hitPos = (*viewTime) - timing.time;
 				int hitYpos = hitPos*zoom + height;
 
-				_win.driver->draw2DRectangle(SColor(255, 255, 0, 0), rect<s32>(absXpos + hitXpos, absYpos + hitYpos, absXpos + hitXpos + 50, absYpos + hitYpos + 2));
+				_win.driver->draw2DRectangle(SColor(255, 200, 0, 0), rect<s32>(absXpos + hitXpos, absYpos + hitYpos, absXpos + hitXpos + width, absYpos + hitYpos + 3));
 			}	
 		}
 	}
