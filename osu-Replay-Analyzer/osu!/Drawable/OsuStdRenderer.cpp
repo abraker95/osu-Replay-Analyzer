@@ -94,17 +94,17 @@ void OsuStdRenderer::RenderPaths(Window& _win)
 	vector2di prevPos, currPos, nextPos;
 
 	if (BTWN(0, i, hitCircles.size() - 1))
-		currPos = vector2di(hitCircles[i + 0]->getMid().X, hitCircles[i + 0]->getMid().Y);
+		currPos = hitCircles[i + 0]->getPos();
 	else
 		currPos = vector2di(-1, -1);
 
 	if (i - 1 > 0)
-		prevPos = vector2di(hitCircles[i - 1]->getMid().X, hitCircles[i - 1]->getMid().Y);
+		prevPos = hitCircles[i - 1]->getPos();
 	else
 		prevPos = currPos;
 
 	if (i + 1 < hitCircles.size())
-		nextPos = vector2di(hitCircles[i + 1]->getMid().X, hitCircles[i + 1]->getMid().Y);
+		nextPos = hitCircles[i + 1]->getPos();
 	else
 		nextPos = currPos;
 
@@ -122,8 +122,8 @@ void OsuStdRenderer::RenderReplay(Window& _win)
 	Replay* replay = play->replay;
 	std::tuple<irr::core::vector2df, int> data = replay->getDataAt(*viewTime);
 
-	double widthRatio = getDim().Width / 640.0;
-	double heightRatio = getDim().Height / 480.0;
+	double widthRatio = getDim().Width / 512.0;
+	double heightRatio = getDim().Height / 386.0;
 
 	int cursorXpos = (double)std::get<0>(data).X*widthRatio + this->absXpos;
 	int cursorYpos = (double)std::get<0>(data).Y*heightRatio + this->absYpos;
@@ -136,8 +136,8 @@ void OsuStdRenderer::RenderReplayPath(Window& _win)
 	Replay* replay = play->replay;
 	std::tuple<irr::core::vector2df, int> data = replay->getDataAt(*viewTime - 1000);
 
-	double widthRatio = getDim().Width / 640.0;
-	double heightRatio = getDim().Height / 480.0;
+	double widthRatio = getDim().Width / 512.0;
+	double heightRatio = getDim().Height / 386.0;
 
 	int prevCursorXpos = (double)std::get<0>(data).X*widthRatio + this->absXpos;
 	int prevCursorYpos = (double)std::get<0>(data).Y*heightRatio + this->absYpos;

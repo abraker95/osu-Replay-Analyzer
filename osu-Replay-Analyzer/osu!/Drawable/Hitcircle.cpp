@@ -24,29 +24,38 @@ void Hitcircle::Draw(Window &_win)
 
 	double opacity = hitobject->getOpacityAt(*(this->viewTime), beatmap->getDiff().ar, beatmap->getModifiers().hidden);
 	SColor fade = SColor(255, edgeCol.getRed() * opacity, edgeCol.getGreen() * opacity, edgeCol.getBlue() * opacity);
-	
-	// draw the hitcircle
 	int radius = std::min(this->width / 2.0, this->height / 2.0);
-	DrawArc(_win, this->absXpos + radius, this->absYpos + radius, radius, fade);
 	
+	DrawArc(_win, this->absXpos, this->absYpos, radius, fade);
+
 	// draw slider
 	if (hitobject->IsHitObjectType(SLIDER))
 	{
+		// draw the hitcircle
+	//	vector2di sliderPoint = hitobject->slider->GetSliderPos(hitobject->getTime());
+		//DrawArc(_win, sliderPoint.X*getWidthRatio(), sliderPoint.Y*getHeightRatio(), radius, fade);
+
+		// draw slider
 		double velocity = hitobject->slider->getVelocity();
 		if (velocity != 0.0)
 		{
 			for (double t = hitobject->getTime(); t < hitobject->slider->getEndTime(); t += (1.0 / velocity))
 			{
 				vector2di sliderPoint = hitobject->slider->GetSliderPos(t);
-				_win.driver->drawPixel(sliderPoint.X*getWidthRatio() + radius, sliderPoint.Y*getHeightRatio() + radius, fade);
+				_win.driver->drawPixel(sliderPoint.X*getWidthRatio() + radius/2, sliderPoint.Y*getHeightRatio() + radius/2, fade);
 
 				if (BTWN(t - (1.0 / velocity), *(this->viewTime), t + (1.0 / velocity)))
 				{
-					DrawArc(_win, sliderPoint.X*getWidthRatio() + radius, sliderPoint.Y*getHeightRatio() + radius, 5, fade);  // draw slider point
+					DrawArc(_win, sliderPoint.X*getWidthRatio() + radius/2, sliderPoint.Y*getHeightRatio() + radius/2, 5, fade);  // draw slider point
 				}
 			}
 		}
 	}
+	/*else
+	{
+		// draw the hitcircle
+		DrawArc(_win, this->absXpos, this->absYpos, radius, fade);
+	}*/
 }
 
 /*position2di Hitcircle::getEndPoint()
@@ -170,10 +179,10 @@ void Hitcircle::UpdateDimentions()
 
 double Hitcircle::getWidthRatio()
 {
-	return parent->getDim().Width / 640.0;
+	return parent->getDim().Width / 512.0;
 }
 
 double Hitcircle::getHeightRatio()
 {
-	return parent->getDim().Height / 480.0;
+	return parent->getDim().Height / 386.0;
 }
