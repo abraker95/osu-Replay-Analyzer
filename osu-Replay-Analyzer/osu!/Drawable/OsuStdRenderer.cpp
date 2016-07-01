@@ -139,24 +139,36 @@ void OsuStdRenderer::RenderReplayPath(Window& _win)
 	double widthRatio = getDim().Width / 512.0;
 	double heightRatio = getDim().Height / 386.0;
 
-	int prevCursorXpos = (double)std::get<0>(data).X*widthRatio + this->absXpos;
-	int prevCursorYpos = (double)std::get<0>(data).Y*heightRatio + this->absYpos;
-	SColor color;
-
-	for (int i = *viewTime - 1000; i < *viewTime; i += 20)
+	struct CursorData
 	{
-		std::tuple<irr::core::vector2df, int> data = replay->getDataAt(i);
+		SColor color;
+		vector2di pos;
+	};
 
-		int cursorXpos = (double)std::get<0>(data).X*widthRatio + this->absXpos;
-		int cursorYpos = (double)std::get<0>(data).Y*heightRatio + this->absYpos;
+	const int samplePeriod = 1;
 
-		     if ((std::get<1>(data) == 1) || (std::get<1>(data) == 5))	 color = SColor(100, 255, 150, 150);  // left
-		else if ((std::get<1>(data) == 2) || (std::get<1>(data) == 10))  color = SColor(100, 150, 150, 255);  // right
-		else															 color = SColor(100, 0, 0, 0);		  // non
+	for (int i = *viewTime - 1000; i < *viewTime; i += samplePeriod)
+	{
+		// get sample
+		std::tuple<irr::core::vector2df, int> prevData = replay->getDataAt(i - samplePeriod);
+		std::tuple<irr::core::vector2df, int> currData = replay->getDataAt(i);
 
-		_win.driver->draw2DLine(vector2di(prevCursorXpos, prevCursorYpos), vector2di(cursorXpos, cursorYpos), color);
+		// cursor pos
+		CursorData prev, curr;
+			curr.pos = vector2di((double)std::get<0>(currData).X*widthRatio + this->absXpos,
+								 (double)std::get<0>(currData).Y*heightRatio + this->absYpos);
+			prev.pos = vector2di((double)std::get<0>(prevData).X*widthRatio + this->absXpos,
+								 (double)std::get<0>(prevData).Y*heightRatio + this->absYpos);
 
-		prevCursorXpos = cursorXpos;
-		prevCursorYpos = cursorYpos;
+		// mouse buttons
+		bool left = (std::get<1>(currData) == 1) || (std::get<1>(currData) == 5);
+		bool right = (std::get<1>(currData) == 2) || (std::get<1>(currData) == 10);
+
+			 if (left && right) curr.color = SColor(100, 255, 150, 255);
+		else if (left)	  	    curr.color = SColor(100, 255, 150, 150);
+		else if (right) 		curr.color = SColor(100, 150, 150, 255); 
+		else				    curr.color = SColor(100, 0, 0, 0);		   // non
+
+		_win.driver->draw2DLine(prev.pos, curr.pos, curr.color);
 	}
 }
