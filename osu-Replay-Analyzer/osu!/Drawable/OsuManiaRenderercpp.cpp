@@ -56,11 +56,6 @@ void OsuManiaRenderer::Draw(Window& _win)
 		this->RenderVisible(_win);
 	}
 
-	if (layerState & DENSITY)
-	{
-		this->RenderDensities(_win);
-	}
-
 	if (layerState & REPLAY)
 	{
 		this->RenderReplay(_win);
@@ -97,11 +92,6 @@ void OsuManiaRenderer::RenderVisible(Window& _win)
 		if (HoldStart || HoldEnd || circle)
 			hitNotes[i]->Update(_win);
 	}
-}
-
-void OsuManiaRenderer::RenderDensities(Window& _win)
-{
-	/// \TODO
 }
 
 void OsuManiaRenderer::RenderReplay(Window& _win)

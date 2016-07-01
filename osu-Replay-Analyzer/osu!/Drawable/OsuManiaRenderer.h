@@ -15,7 +15,7 @@ class OsuManiaRenderer : public GuiObj
 		{
 			VISIBLE      = 1 << 0,
 			// non
-			DENSITY      = 1 << 2,
+			// not density
 			REPLAY	     = 1 << 3,
 			TIMINGS      = 1 << 4,
 			HITIMINGS    = 1 << 5,
@@ -39,7 +39,6 @@ class OsuManiaRenderer : public GuiObj
 		virtual void Draw(Window& _win);
 
 		void RenderVisible(Window& _win);
-		void RenderDensities(Window& _win);
 		void RenderReplay(Window& _win);
 		void RenderTimings(Window& _win);
 		void RenderHitTimings(Window& _win);
