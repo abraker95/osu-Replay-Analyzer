@@ -13,10 +13,11 @@ class OsuStdRenderer: public GuiObj
 
 		enum Layer
 		{
-			VISIBLE = 1 << 0,
-			PATHS	= 1 << 1,
-			DENSITY = 1 << 2,
-			REPLAY  = 1 << 3
+			VISIBLE    = 1 << 0,
+			PATHS	   = 1 << 1,
+			DENSITY	   = 1 << 2,
+			REPLAY	   = 1 << 3,
+			REPLAYPATH = 1 << 4
 		};
 
 		void SetLayers(int _layer);
@@ -31,6 +32,7 @@ class OsuStdRenderer: public GuiObj
 		void RenderPaths(Window& _win);
 		void RenderDensities(Window& _win);
 		void RenderReplay(Window& _win);
+		void RenderReplayPath(Window& _win);
 
 		std::vector<Hitcircle*> hitCircles;
 

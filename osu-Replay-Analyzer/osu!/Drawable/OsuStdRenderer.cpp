@@ -63,6 +63,11 @@ void OsuStdRenderer::Draw(Window& _win)
 	{
 		this->RenderReplay(_win);
 	}
+
+	if (layerState & REPLAYPATH)
+	{
+		this->RenderReplayPath(_win);
+	}
 }
 
 void OsuStdRenderer::RenderVisible(Window& _win)
@@ -123,11 +128,35 @@ void OsuStdRenderer::RenderReplay(Window& _win)
 	int cursorXpos = (double)std::get<0>(data).X*widthRatio + this->absXpos;
 	int cursorYpos = (double)std::get<0>(data).Y*heightRatio + this->absYpos;
 
-	DrawArc(_win, cursorXpos, cursorYpos, 5, SColor(255, 100, 100, 255));
+	DrawArc(_win, cursorXpos, cursorYpos, 5, SColor(255, 100, 100, 255));	
+}
 
-	if((std::get<1>(data) == 1) || (std::get<1>(data) == 5))
-		_win.driver->draw2DRectangle(SColor(255, 100, 100, 100), rect<s32>(600, 300, 610, 310));
+void OsuStdRenderer::RenderReplayPath(Window& _win)
+{
+	Replay* replay = play->replay;
+	std::tuple<irr::core::vector2df, int> data = replay->getDataAt(*viewTime - 1000);
 
-	if((std::get<1>(data) == 2) || (std::get<1>(data) == 10))
-		_win.driver->draw2DRectangle(SColor(255, 100, 100, 100), rect<s32>(620, 300, 630, 310));
+	double widthRatio = getDim().Width / 640.0;
+	double heightRatio = getDim().Height / 480.0;
+
+	int prevCursorXpos = (double)std::get<0>(data).X*widthRatio + this->absXpos;
+	int prevCursorYpos = (double)std::get<0>(data).Y*heightRatio + this->absYpos;
+	SColor color;
+
+	for (int i = *viewTime - 1000; i < *viewTime; i += 20)
+	{
+		std::tuple<irr::core::vector2df, int> data = replay->getDataAt(i);
+
+		int cursorXpos = (double)std::get<0>(data).X*widthRatio + this->absXpos;
+		int cursorYpos = (double)std::get<0>(data).Y*heightRatio + this->absYpos;
+
+		     if ((std::get<1>(data) == 1) || (std::get<1>(data) == 5))	 color = SColor(100, 255, 150, 150);  // left
+		else if ((std::get<1>(data) == 2) || (std::get<1>(data) == 10))  color = SColor(100, 150, 150, 255);  // right
+		else															 color = SColor(100, 0, 0, 0);		  // non
+
+		_win.driver->draw2DLine(vector2di(prevCursorXpos, prevCursorYpos), vector2di(cursorXpos, cursorYpos), color);
+
+		prevCursorXpos = cursorXpos;
+		prevCursorYpos = cursorYpos;
+	}
 }
