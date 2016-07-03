@@ -12,25 +12,29 @@ std::vector<OSUMANIA::TIMING> OSUMANIA::SPEED_CONTROL::scores,
 							  OSUMANIA::SPEED_CONTROL::skills,
 							  OSUMANIA::SPEED_CONTROL::diffs;
 
-
 void OSUMANIA::SPEED_CONTROL::genScore(Play* _play)
 {
-	double skillScore = 0.0, maxScore = 0.0; 
+	scores.clear();
+
+	double skillScore = 1.0, maxScore = 1.0; 
 	double missesPunisher = 1.0;
 	OSUMANIA::TIMING timing;
 
 	// max score calc
 	for (int i = 0; i < OSUMANIA::accTimings.size(); i++)
-		maxScore += diffs[i].data;		
+		if(diffs[i].press == true)
+			maxScore += diffs[i].data/(0.95 * std::max(1.0, maxScore));
 
 	// skill score calc
 	for (int i = 0; i < OSUMANIA::accTimings.size(); i++)
 	{
-		double skillScore = SKILLS::Time2AccScore(OSUMANIA::accTimings[i].data)*skills[i].data;
+		double skillScorePrev = skillScore;
+		if (skills[i].press == true)
+			skillScore += (skills[i].data/(0.95 * std::max(1.0, skillScore)));
 
 		// divide-by-zero protection
 		if (maxScore == 0.0) timing.data = 0.0;
-		else				 timing.data = (skillScore / maxScore) * 1000000.0;
+		else				 timing.data = SKILLS::Time2AccScore(OSUMANIA::accTimings[i].data) * ((skillScore - skillScorePrev) / maxScore) * 1000000.0;
 
 		timing.key	 = accTimings[i].key;
 		timing.press = accTimings[i].press;
@@ -61,6 +65,8 @@ void OSUMANIA::SPEED_CONTROL::genScore(Play* _play)
 
 void OSUMANIA::SPEED_CONTROL::genSkill(Play* _play)
 {
+	skills.clear();
+
 	int KEYS = _play->beatmap->getDiff().cs;
 	std::vector<OSUMANIA::TIMING> timing;
 		timing.resize(KEYS);
@@ -81,15 +87,20 @@ void OSUMANIA::SPEED_CONTROL::genSkill(Play* _play)
 		{
 			bool isHoldObject = !accTiming.press;
 			int column = accTiming.key;
-
-			//shift: prev <- curr, curr <- next
-			hitPeriodPrev[column] = timing[column].time;
-			hitPeriodCurr[column] = accTiming.time + accTiming.data;
+			double hitPeriodPrevPrev = hitPeriodPrev[column];
 
 			// if pressing down
 			if (!isHoldObject)
 			{
-				double period = (hitPeriodCurr[column] - hitPeriodPrev[column]);
+				//shift: prev <- curr, curr <- next
+				hitPeriodPrev[column] = timing[column].time;
+				hitPeriodCurr[column] = accTiming.time + accTiming.data;
+
+				double period = 0.0;
+				if (timing[column].press == false)
+					period = (hitPeriodCurr[column] - hitPeriodPrevPrev);
+				else
+					period = (hitPeriodCurr[column] - hitPeriodPrev[column]);
 
 				// if previous was a slider, halve the press effect. Same applies if previous was miss.
 				if (timing[column].press == false)
@@ -110,8 +121,12 @@ void OSUMANIA::SPEED_CONTROL::genSkill(Play* _play)
 			}
 			else
 			{
-				timing[column].data  = 0.0;						// release has no strain on tapping
-				timing[column].time  = hitPeriodCurr[column];
+				double period = ((accTiming.time + accTiming.data) - hitPeriodPrevPrev)*2;
+
+				// keys per second
+				double kps = 1000.0 / period;
+
+				timing[column].data = PressStrain(kps);
 				timing[column].press = false;					// this is a release
 
 				skills.push_back(timing[column]);
@@ -131,6 +146,8 @@ void OSUMANIA::SPEED_CONTROL::genSkill(Play* _play)
 
 void OSUMANIA::SPEED_CONTROL::genDiff(Play* _play)
 {
+	diffs.clear();
+
 	int KEYS = _play->beatmap->getDiff().cs;
 	std::vector<OSUMANIA::TIMING> timing, releases;
 		timing.resize(KEYS);
@@ -156,6 +173,7 @@ void OSUMANIA::SPEED_CONTROL::genDiff(Play* _play)
 			int column = OSUMANIA::getKey(noteXpos, KEYS);
 
 			//shift: prev <- curr, curr <- next
+			double hitPeriodPrevPrev = hitPeriodPrev[column];
 			hitPeriodPrev[column] = hitPeriodCurr[column];
 			hitPeriodCurr[column] = hitobject->getTime();
 
@@ -172,11 +190,11 @@ void OSUMANIA::SPEED_CONTROL::genDiff(Play* _play)
 				}
 			}
 
-			double period = (hitPeriodCurr[column] - hitPeriodPrev[column]);
-
-			// if previous was a slider, halve the press effect
-			if (timing[column].press == false)
-				period *= 4.0;
+			double period = 0.0;
+			if(timing[column].press == false)
+				period = (hitPeriodCurr[column] - hitPeriodPrevPrev);
+			else
+				period = (hitPeriodCurr[column] - hitPeriodPrev[column]);
 
 			// keys per second
 			double kps = 1000.0 / period;
@@ -194,8 +212,17 @@ void OSUMANIA::SPEED_CONTROL::genDiff(Play* _play)
 			// if it's a slider, then another frame for release
 			if (isHoldObject)
 			{
+				period = (hitobject->getEndTime() - hitPeriodPrevPrev)*2;
+
+				// keys per second
+				kps = 1000.0 / period;
+
+				// first note is nothing
+				if (hitPeriodPrev[column] == 0)
+					kps = 0.0;
+
 				//shift: prev <- curr, curr <- next
-				timing[column].data  = 0.0;						// release has no strain on tapping
+				timing[column].data = PressStrain(kps);
 				timing[column].time  = hitobject->getEndTime();
 				timing[column].press = false;					// this is a release
 
@@ -216,7 +243,7 @@ void OSUMANIA::SPEED_CONTROL::genDiff(Play* _play)
 
 	// The longer it lasts, the more effective it is
 	for (int i = 1; i < diffs.size(); i++)
-		diffs[i].data = 0.5*diffs[i].data + 0.5*diffs[i - 1].data;
+		diffs[i].data = 0.5*diffs[i].data + 0.5*diffs[i - 1].data;	
 }
 
 
@@ -226,9 +253,7 @@ double OSUMANIA::SPEED_CONTROL::getScore()
 	double score = 0.0;
 
 	for (OSUMANIA::TIMING &timing : SPEED_CONTROL::scores)
-	{
 		score += timing.data;
-	}
 
 	return score;
 }
@@ -237,10 +262,11 @@ double OSUMANIA::SPEED_CONTROL::getSkill()
 {
 	double skill = 0.0;
 
-	for (OSUMANIA::TIMING &timing : SPEED_CONTROL::skills)
-		skill += timing.data;
+	for (int i = 0; i < skills.size(); i++)
+		if (skills[i].press == true)
+			skill += SKILLS::Time2AccScore(OSUMANIA::accTimings[i].data) * skills[i].data;
 
-	return skill;
+	return skill/12.0;
 }
 
 double OSUMANIA::SPEED_CONTROL::getDiff()
@@ -248,12 +274,11 @@ double OSUMANIA::SPEED_CONTROL::getDiff()
 	double diff = 0.0;
 
 	for (OSUMANIA::TIMING &timing : SPEED_CONTROL::diffs)
-		diff += timing.data;
+		if (timing.press == true)
+			diff += timing.data;
 
-	return diff;
+	return diff/12.0;
 }
-
-
 
 double OSUMANIA::SPEED_CONTROL::getScoreAt(int _time)
 {
