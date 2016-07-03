@@ -73,7 +73,7 @@ int Replay::FindFrameAt(long _time)
 	{
 		mid = (start + end) / 2;
 		if (BTWN(std::get<DATA::TIME>(replayStream[mid]), _time, std::get<DATA::TIME>(replayStream[mid - 1])))
-			return mid;
+			return max(0, mid - 1);
 		else if (_time < std::get<DATA::TIME>(replayStream[mid]))
 			end = mid - 1;
 		else start = mid + 1;
