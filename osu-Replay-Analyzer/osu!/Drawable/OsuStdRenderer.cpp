@@ -44,30 +44,11 @@ void OsuStdRenderer::UpdateInternal(Window& _win)
 
 void OsuStdRenderer::Draw(Window& _win)
 {
-	if (layerState & VISIBLE)
-	{
-		this->RenderVisible(_win);
-	}
-
-	if (layerState & PATHS)
-	{
-		this->RenderPaths(_win);
-	}
-
-	if (layerState & DENSITY)
-	{
-		this->RenderDensities(_win);
-	}	
-
-	if (layerState & REPLAY)
-	{
-		this->RenderReplay(_win);
-	}
-
-	if (layerState & REPLAYPATH)
-	{
-		this->RenderReplayPath(_win);
-	}
+	if (layerState & VISIBLE)    this->RenderVisible(_win);
+	if (layerState & PATHS)      this->RenderPaths(_win);
+	if (layerState & DENSITY)    this->RenderDensities(_win);
+	if (layerState & REPLAY)     this->RenderReplay(_win);
+	if (layerState & REPLAYPATH) this->RenderReplayPath(_win);
 }
 
 void OsuStdRenderer::RenderVisible(Window& _win)
