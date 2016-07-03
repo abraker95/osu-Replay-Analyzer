@@ -192,13 +192,11 @@ int main()
 	if (play.replay->getNumFrames() == 0)
 		cout << "No Replay loaded!" << endl;
 
-	//std::tuple<double, double, double> totalScore = play.scoreEngine->getTotalScore();
 	double speedScore = skillEngine.getScore(SkillEngine::ANY_SPEEDCONTROL);
 	double speedSkill = skillEngine.getSkill(SkillEngine::ANY_SPEEDCONTROL);
 	double speedDiff = skillEngine.getDiff(SkillEngine::ANY_SPEEDCONTROL);
 
-	cout << "Score: " << speedScore << "   Skill: " << speedSkill << "   Max diff: " << speedDiff << endl;
-	//cout << "Score: " << std::get<0>(totalScore) << "   Performance: " << std::get<1>(totalScore) << "   Max Performance: " << std::get<2>(totalScore) << endl;
+	cout << "Tapping | Score: " << speedScore << "   Skill: " << speedSkill << "   Max diff: " << speedDiff << endl;
 
 	TimingGraph timingGraph(win, play.beatmap);
 		timingGraph.ClipPosTo(GuiObj::BTMLEFT);
