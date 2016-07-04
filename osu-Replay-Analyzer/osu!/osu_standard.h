@@ -9,8 +9,8 @@ namespace OSUSTANDARD
 	{
 		long time;
 		double data;
+		int key;
 		bool press;
-		// ???
 	};
 }
 
