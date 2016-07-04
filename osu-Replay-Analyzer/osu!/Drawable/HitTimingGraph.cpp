@@ -10,7 +10,7 @@
 HitTimingGraph::HitTimingGraph(int _xpos, int _ypos, Play* _play) : GuiObj(_xpos, _ypos, 0, 0, nullptr)
 {
 	bins.resize(6);
-		bins[0] = bins[1] = bins[2] = bins[3] = bins[4] = bins[5] = 1;
+		bins[0] = bins[1] = bins[2] = bins[3] = bins[4] = bins[5] = 0;
 
 	auto& accTimings = OSUMANIA::accTimings;
 
