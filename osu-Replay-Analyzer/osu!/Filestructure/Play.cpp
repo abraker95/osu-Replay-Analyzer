@@ -153,4 +153,9 @@ void Play::ApplyVisual()
 	{
 		beatmap->origMod.fadeIn = true;
 	}
+
+	if (replay->HasMod(MODS::HR))
+	{
+		// \TODO: HR mod flips notes
+	}
 }

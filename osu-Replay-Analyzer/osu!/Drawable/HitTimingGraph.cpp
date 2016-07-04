@@ -42,8 +42,8 @@ HitTimingGraph::HitTimingGraph(int _xpos, int _ypos, Play* _play) : GuiObj(_xpos
 
 void HitTimingGraph::Draw(Window& _win)
 {
+	// get highest bin for normalization
 	int max = 1;
-
 	for (int i = 0; i < bins.size(); i++)
 		if (bins[i] > max)
 			max = bins[i];
@@ -56,7 +56,6 @@ void HitTimingGraph::Draw(Window& _win)
 
 	SColor color;
 	core::stringw text;
-
 	for (int i = 0; i < bins.size(); i++)
 	{
 		text = textBins[i];

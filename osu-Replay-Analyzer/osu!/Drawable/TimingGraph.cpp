@@ -398,7 +398,5 @@ void TimingGraph::HighlightedLogic(Window &_win)
 	if (!this->isMouseOnObj(_win, true))
 		state = IDLE;
 	else
-	{
 		edgeCol = HIGHLIGHTED_COLOR;
-	}
 }
