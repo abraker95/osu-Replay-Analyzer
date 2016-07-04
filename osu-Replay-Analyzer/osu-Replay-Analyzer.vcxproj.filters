@@ -372,6 +372,9 @@
     <ClCompile Include="osu!\Skills\osuTaiko_skills.cpp">
       <Filter>Source Files\osu!\Skills</Filter>
     </ClCompile>
+    <ClCompile Include="osu!\Drawable\HitTimingMarker.cpp">
+      <Filter>Source Files\osu!\Drawable</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="osu!\Filestructure\LZMA.h">
@@ -640,6 +643,9 @@
     </ClInclude>
     <ClInclude Include="osu!\Score\ScoreEngine.h">
       <Filter>Header Files\osu!\Score</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\Drawable\HitTimingMarker.h">
+      <Filter>Header Files\osu!\Drawable</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
