@@ -73,7 +73,7 @@ void HitTimingMarker::DrawStdTimings(Window& _win)
 {
 	for (auto& timing : OSUSTANDARD::accTimings)
 	{
-		if (BTWN(*viewTime - timeZoom, timing.time, *viewTime + timeZoom))
+		if (BTWN(*viewTime - timeZoom, timing.time, *viewTime))
 		{
 			double markXpos = width/2.0 * (double)timing.data / viewZoom + width/2.0;
 			_win.driver->draw2DLine(vector2di(absXpos + markXpos, absYpos), vector2di(absXpos + markXpos, absYpos + height), SColor(255, 255, 255, 255));
@@ -95,7 +95,7 @@ void HitTimingMarker::DrawManiaTimings(Window& _win)
 {
 	for (auto& timing : OSUSTANDARD::accTimings)
 	{
-		if (BTWN(*viewTime - timeZoom, timing.time, *viewTime + timeZoom))
+		if (BTWN(*viewTime - timeZoom, timing.time, *viewTime))
 		{
 			double markXpos = width / 2.0 * (double)timing.data / viewZoom + width / 2.0;
 			_win.driver->draw2DLine(vector2di(absXpos + markXpos, absYpos), vector2di(absXpos + markXpos, absYpos + height), SColor(255, 255, 255, 255));
