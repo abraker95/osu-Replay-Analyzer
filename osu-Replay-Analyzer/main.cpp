@@ -206,6 +206,10 @@ int main()
 	HitTimingGraph hitTimingGraph(-225, +168, &play);
 		hitTimingGraph.ClipPosTo(GuiObj::MIDRIGHT);
 
+	HitTimingMarker hitTimingMarker(0, 0, &play, &viewTime);
+		hitTimingMarker.ClipPosTo(GuiObj::BTMLEFT);
+		hitTimingMarker.setMargin(0, 10);
+
 	GamemodeRenderer renderer(10, 10, win.getDimentions().Width, win.getDimentions().Height, &play, &viewTime);
 		renderer.ClipPosTo(GuiObj::TOPLEFT);
 		renderer.addClipDimTo(GuiObj::BTM);
