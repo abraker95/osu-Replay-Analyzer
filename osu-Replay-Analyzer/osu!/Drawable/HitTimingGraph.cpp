@@ -9,32 +9,36 @@
 
 HitTimingGraph::HitTimingGraph(int _xpos, int _ypos, Play* _play) : GuiObj(_xpos, _ypos, 0, 0, nullptr)
 {
-	bins.resize(6);
-		bins[0] = bins[1] = bins[2] = bins[3] = bins[4] = bins[5] = 0;
-
-	auto& accTimings = OSUMANIA::accTimings;
-
-	for (auto& timing : accTimings)
+	switch (_play->beatmap->getGamemode())
 	{
-		if (BTWN(-3.125, timing.data, 0) || BTWN(0, timing.data, +3.125))
-			bins[0]++;
+		case GAMEMODE::OSU_STANDARD:
+			this->genStdBins();
+			break;
 
-		else if (BTWN(-6.25, timing.data, -3.125) || BTWN(+3.125, timing.data, +6.25))
-			bins[1]++;
+		case GAMEMODE::OSU_CATCH:
+			this->genCtbBins();
+			break;
 
-		else if (BTWN(-12.5, timing.data, -6.25) || BTWN(+6.25, timing.data, +12.5))
-			bins[2]++;
+		case GAMEMODE::OSU_TAIKO:
+			this->genTaikoBins();
+			break;
 
-		else if (BTWN(-25.0, timing.data, -12.5) || BTWN(+12.5, timing.data, +25.0))
-			bins[3]++;
+		case GAMEMODE::OSU_MANIA:
+			this->genManiaBins();
+			break;
 
-		else if (BTWN(-50.0, timing.data, -25.0) || BTWN(+25.0, timing.data, +50.0))
-			bins[4]++;
+		case GAMEMODE::OSU_DODGE:
+			this->genDodgeBins();
+			break;
 
-		else if (BTWN(-100.0, timing.data, -50.0) || BTWN(+50.0, timing.data, +100.0))
-			bins[5]++;
+		default:
+			break;
 	}
 }
+
+
+// ----------- PRIVATE ----------------
+
 
 void HitTimingGraph::Draw(Window& _win)
 {
@@ -55,37 +59,14 @@ void HitTimingGraph::Draw(Window& _win)
 
 	for (int i = 0; i < bins.size(); i++)
 	{
-		if (i == 0)
-		{
-			color = SColor(255, 255, 255, 255);
-			text = core::stringw("0 - 3");
-		}
-		else if (i == 1)
-		{
-			color = SColor(255, 128, 128, 255);
-			text = core::stringw("3 - 6");
-		}
-		else if (i == 2)
-		{
-			color = SColor(255, 128, 255, 128);
-			text = core::stringw("6 - 12");
-		}
-		else if (i == 3)
-		{
-			color = SColor(255, 255, 255, 128);
-			text = core::stringw("12 - 25");
-		}
-		else if (i == 4)
-		{
-			color = SColor(255, 255, 128, 128);
-			text = core::stringw("25 - 50");
-		}
-		else if (i == 5)
-		{
-			color = SColor(255, 128, 128, 128);
-			text = core::stringw("50 - 100");
-		}
-			
+		text = textBins[i];
+
+			 if (i == 0) color = SColor(255, 255, 255, 255);
+		else if (i == 1) color = SColor(255, 128, 128, 255);
+		else if (i == 2) color = SColor(255, 128, 255, 128);
+		else if (i == 3) color = SColor(255, 255, 255, 128);
+		else if (i == 4) color = SColor(255, 255, 128, 128);
+		else if (i == 5) color = SColor(255, 128, 128, 128);
 
 		_win.driver->draw2DRectangle(color, rect<s32>(absXpos + xScale*i, absYpos - yScale*bins[i], absXpos + xScale*i + seperation, absYpos));
 		_win.font->draw(text, core::rect<s32>(absXpos + xScale*i, absYpos, 100, 10), video::SColor(255, 255, 255, 255));
@@ -94,6 +75,110 @@ void HitTimingGraph::Draw(Window& _win)
 }
 
 void HitTimingGraph::UpdateInternal(Window& _win)
+{
+
+}
+
+
+// Bin Generation
+
+void HitTimingGraph::genStdBins()
+{
+	const int NUM_BINS = 5;
+	bins.resize(NUM_BINS + 1);
+	for (int& bin : bins)
+		bin = 0;
+
+	const double BIN_TABLE[] =
+	{
+		  0.000,
+		 20.000,
+		 40.000,
+		 80.500,
+		160.000,
+		320.000
+	};
+
+	for (auto& timing : OSUSTANDARD::accTimings)
+	{
+		for (int i = 0; i < NUM_BINS; i++)
+		{
+			// miss
+			if (timing.data > BIN_TABLE[NUM_BINS])
+			{
+				bins[NUM_BINS]++;
+				break;
+			}
+
+			// hit
+			if (BTWN(-BIN_TABLE[i + 1], timing.data, -BIN_TABLE[i]) || BTWN(BIN_TABLE[i], timing.data, BIN_TABLE[i + 1]))
+			{
+				bins[i]++;
+				break;
+			}
+		}
+	}
+
+	textBins.resize(NUM_BINS + 1);
+	for (int i = 0; i < NUM_BINS; i++)
+		textBins[i] = (std::to_string((int)BIN_TABLE[i]) + " - " + std::to_string((int)BIN_TABLE[i + 1])).data();
+	textBins[NUM_BINS] = "MISSES";
+}
+
+void HitTimingGraph::genCtbBins()
+{
+
+}
+
+void HitTimingGraph::genTaikoBins()
+{
+
+}
+
+void HitTimingGraph::genManiaBins()
+{
+	const int NUM_BINS = 5;
+	bins.resize(NUM_BINS + 1);
+	for (int& bin : bins)
+		bin = 0;
+
+	const double BIN_TABLE[] =
+	{
+		 0.000,
+		 3.125,
+		 6.350,
+		12.500,
+		25.000,
+		50.000
+	};
+
+	for (auto& timing : OSUMANIA::accTimings)
+	{
+		for (int i = 0; i < NUM_BINS; i++)
+		{
+			// miss
+			if (timing.data > BIN_TABLE[NUM_BINS])
+			{
+				bins[NUM_BINS]++;
+				break;
+			}
+
+			// hit
+			if (BTWN(-BIN_TABLE[i + 1], timing.data, -BIN_TABLE[i]) || BTWN(BIN_TABLE[i], timing.data, BIN_TABLE[i + 1]))
+			{
+				bins[i]++;
+				break;
+			}
+		}
+	}
+
+	textBins.resize(NUM_BINS + 1);
+	for (int i = 0; i < NUM_BINS; i++)
+		textBins[i] = (std::to_string((int)BIN_TABLE[i]) + " - " + std::to_string((int)BIN_TABLE[i + 1])).data();
+	textBins[NUM_BINS] = "MISSES";
+}
+
+void HitTimingGraph::genDodgeBins()
 {
 
 }

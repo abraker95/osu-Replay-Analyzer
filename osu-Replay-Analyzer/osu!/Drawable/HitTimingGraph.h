@@ -16,7 +16,14 @@ class HitTimingGraph : public GuiObj
 		virtual void Draw(Window& _win);
 		virtual void UpdateInternal(Window& _win);
 
+		void genStdBins();
+		void genCtbBins();
+		void genTaikoBins();
+		void genManiaBins();
+		void genDodgeBins();
+
 		std::vector<int> bins;
+		std::vector<core::stringw> textBins;
 };
 
 #endif // !HIT_TIMING_GRAPH
