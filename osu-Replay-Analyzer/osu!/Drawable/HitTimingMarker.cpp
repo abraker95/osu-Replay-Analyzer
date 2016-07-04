@@ -93,7 +93,7 @@ void HitTimingMarker::DrawTaikoTimings(Window& _win)
 
 void HitTimingMarker::DrawManiaTimings(Window& _win)
 {
-	for (auto& timing : OSUSTANDARD::accTimings)
+	for (auto& timing : OSUMANIA::accTimings)
 	{
 		if (BTWN(*viewTime - timeZoom, timing.time, *viewTime))
 		{
