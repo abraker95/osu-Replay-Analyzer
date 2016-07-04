@@ -159,7 +159,6 @@ void OSUMANIA::genAccTimings(Play* _play)
 		{
 			iNote[key] = -1;
 
-			prevNotes[key] = currNotes[key];
 			currNotes[key] = getNextNoteOnColumn(key, &iNote[key]);
 			nextNotes[key] = getNextNoteOnColumn(key, &iNote[key]);
 
