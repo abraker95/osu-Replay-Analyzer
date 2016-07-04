@@ -26,7 +26,7 @@ bool sortAccTimings(OSUMANIA::TIMING i, OSUMANIA::TIMING j)
 	return i.time < j.time;
 }
 
-int getJudgment(int _frameTime, int _noteTime, bool _pressState)
+int OSUMANIA::getJudgment(int _frameTime, int _noteTime, bool _pressState)
 {
 	bool hit = false;
 	bool miss = true;  // assume miss to start with
