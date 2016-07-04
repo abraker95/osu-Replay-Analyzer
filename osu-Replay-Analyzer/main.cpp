@@ -26,6 +26,7 @@
 #include "osu!/Drawable/Hitcircle.h"
 #include "osu!/Drawable/TimingGraph.h"
 #include "osu!/Drawable/HitTimingGraph.h"
+#include "osu!/Drawable/HitTimingMarker.h"
 
 #include "osu!/Skills/SkillEngine.h"
 
@@ -203,8 +204,8 @@ int main()
 		timingGraph.addClipDimTo(GuiObj::RIGHT);
 		timingGraph.DisableLayer(TimingGraph::LAYER::HITOBJECT_VISIBILTITY);
 
-	HitTimingGraph hitTimingGraph(-225, +168, &play);
-		hitTimingGraph.ClipPosTo(GuiObj::MIDRIGHT);
+	HitTimingGraph hitTimingGraph(-235, -100, &play);
+		hitTimingGraph.ClipPosTo(GuiObj::BTMRIGHT);
 
 	HitTimingMarker hitTimingMarker(0, 0, &play, &viewTime);
 		hitTimingMarker.ClipPosTo(GuiObj::BTMLEFT);
