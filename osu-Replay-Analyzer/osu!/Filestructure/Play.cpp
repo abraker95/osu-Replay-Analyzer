@@ -54,7 +54,8 @@ void Play::ProcessBeatmap()
 
 void Play::ApplyAR()
 {
-	double &ar = this->beatmap->origDiff.ar;
+	this->beatmap->modifiedDiff.ar = this->beatmap->origDiff.ar;
+	double &ar = this->beatmap->modifiedDiff.ar;
 
 	if (replay->HasMod(MODS::EZ))
 	{
@@ -74,7 +75,8 @@ void Play::ApplyAR()
 
 void Play::ApplyCS()
 {
-	double &cs = this->beatmap->origDiff.cs;
+	this->beatmap->modifiedDiff.cs = this->beatmap->origDiff.cs;
+	double &cs = this->beatmap->modifiedDiff.cs;
 
 	if (replay->HasMod(MODS::EZ)) cs *= 0.5;
 	if (replay->HasMod(MODS::HR)) cs *= 1.3;
@@ -82,7 +84,8 @@ void Play::ApplyCS()
 
 void Play::ApplyOD()
 {
-	double &od = this->beatmap->origDiff.od;
+	this->beatmap->modifiedDiff.od = this->beatmap->origDiff.od;
+	double &od = this->beatmap->modifiedDiff.od;
 
 	if (replay->HasMod(MODS::EZ))
 	{
