@@ -23,9 +23,10 @@ void Hitcircle::Draw(Window &_win)
 
 	double opacity = hitobject->getOpacityAt(*(this->viewTime), beatmap->getDiff().ar, beatmap->getModifiers().hidden);
 	SColor fade = SColor(255, edgeCol.getRed() * opacity, edgeCol.getGreen() * opacity, edgeCol.getBlue() * opacity);
-	int radius = std::min(this->width / 2.0, this->height / 2.0);
 	
-	DrawArc(_win, this->absXpos, this->absYpos, radius, fade);
+	vector2df radius(this->width / 2.0, this->height / 2.0);
+
+	DrawArc(_win, this->absXpos, this->absYpos, std::min(radius.X, radius.Y), fade);
 
 	// draw slider
 	if (hitobject->IsHitObjectType(SLIDER))
@@ -37,11 +38,11 @@ void Hitcircle::Draw(Window &_win)
 			for (double t = hitobject->getTime(); t < hitobject->slider->getEndTime(); t += (1.0 / velocity))
 			{
 				vector2di sliderPoint = hitobject->slider->GetSliderPos(t);
-				_win.driver->drawPixel(sliderPoint.X*getWidthRatio() + radius/2, sliderPoint.Y*getHeightRatio() + radius/2, fade);
+				_win.driver->drawPixel(sliderPoint.X*getWidthRatio() + parent->getPos().X, sliderPoint.Y*getHeightRatio() + parent->getPos().Y, fade);
 
 				if (BTWN(t - (1.0 / velocity), *(this->viewTime), t + (1.0 / velocity)))
 				{
-					DrawArc(_win, sliderPoint.X*getWidthRatio() + radius/2, sliderPoint.Y*getHeightRatio() + radius/2, 5, fade);  // draw slider point
+					DrawArc(_win, sliderPoint.X*getWidthRatio() + parent->getPos().X, sliderPoint.Y*getHeightRatio() + parent->getPos().Y, 5, fade);  // draw slider point
 				}
 			}
 		}
