@@ -3,6 +3,7 @@
 
 #include <math.h>
 #include "../irrlicht/include/irrlicht.h"
+#include "../osu!/osuCalc.h"
 
 double getSlope(position2d<double> _p1, position2d<double> _p2)
 {
@@ -157,4 +158,63 @@ double getCircleOverlapArea(double _radius, double _dist)
 		return 0.0;
 	else
 		return 2*_radius*_radius*acos(_dist / (2.0*_radius)) - (_dist / 4.0)*sqrt(4.0*_radius*_radius - _dist*_dist);
+}
+
+double GetHitobjectOverlapArea(Beatmap *_beatmap, int _indexA, int _indexB)
+{
+	std::vector<Hitobject*>& hitobjects = _beatmap->hitObjects;
+
+	// out of bounds check
+	if (!(BTWN(0, _indexA, hitobjects.size() - 1) && BTWN(0, _indexB, hitobjects.size() - 1)))
+		return 0;
+
+	// Load up the needed vars
+	double diameter = CS2px(_beatmap->getDiff().cs);
+
+	double startTimeA = hitobjects[_indexA]->getTime();
+	double startTimeB = hitobjects[_indexB]->getTime();
+
+	double endTimeA = hitobjects[_indexA]->getEndTime();
+	double endTimeB = hitobjects[_indexB]->getEndTime();
+
+	Hitobject::Slider* sliderA = hitobjects[_indexA]->slider.get();
+	Hitobject::Slider* sliderB = hitobjects[_indexB]->slider.get();
+
+	// if it's a non sliders, then just iterate by 1 ms
+	double velocityA, velocityB;
+	if (sliderA == nullptr)	velocityA = 1.0;
+	else					velocityA = sliderA->getVelocity();
+	
+	if (sliderB == nullptr)	velocityB = 1.0;
+	else					velocityB = sliderB->getVelocity();
+
+	// divide by 0 protection
+	if (velocityA == 0.0) velocityA = 1.0;
+	if (velocityB == 0.0) velocityB = 1.0;
+
+	double area = 0.0;
+	for (double timeA = startTimeA; timeA <= endTimeA; timeA += (diameter / 2.0*velocityA))
+	{
+		for (double timeB = startTimeB; timeB <= endTimeB; timeB += (diameter / 2.0*velocityB))
+		{
+			vector2d<double> pointA, pointB;
+			if (sliderA == nullptr)	pointA = hitobjects[_indexA]->getPos();
+			else					pointA = sliderA->GetSliderPos(timeA);
+			
+			if (sliderB == nullptr)	pointB = hitobjects[_indexB]->getPos();
+			else					pointB = sliderB->GetSliderPos(timeB);
+
+			double overlapArea = getCircleOverlapArea(diameter / 2.0, getDist(pointA, pointB));
+			
+			// if there is an overlap, apporoximate it to a square area and jump ahead for both objects
+			if (overlapArea > 0.0)
+			{
+				area += diameter*diameter;
+				timeA += diameter / velocityA;
+				timeB += diameter / velocityA;
+			}
+		}
+	}
+
+	return area;
 }
