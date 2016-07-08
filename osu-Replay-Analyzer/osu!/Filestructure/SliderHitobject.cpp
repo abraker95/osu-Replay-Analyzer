@@ -82,7 +82,7 @@ Hitobject::Slider::~Slider()
 	*this = slider;
 }*/
 
-irr::core::vector2di Hitobject::Slider::GetSliderPos(int time)
+irr::core::vector2d<double> Hitobject::Slider::GetSliderPos(int time)
 {
 	// convert time to percent
 	double percent;
@@ -107,20 +107,20 @@ irr::core::vector2di Hitobject::Slider::GetSliderPos(int time)
 	if (index >= this->ncurve)
 	{
 		irr::core::vector2di poi = this->genCurve[ncurve];
-		return irr::core::vector2di(poi.X, poi.Y);
+		return irr::core::vector2d<double>(poi.X, poi.Y);
 	}
 	else
 	{
 		irr::core::vector2di poi = this->genCurve[index];
 		irr::core::vector2di poi2 = this->genCurve[index + 1];
 		double t2 = indexF - index;
-		return irr::core::vector2di(lerp(poi.X, poi2.X, t2), lerp(poi.Y, poi2.Y, t2));
+		return irr::core::vector2d<double>(lerp(poi.X, poi2.X, t2), lerp(poi.Y, poi2.Y, t2));
 	}
 }
 
 int Hitobject::Slider::getTimeDistFrom(int _time, int _dist, bool _dir)
 {
-	irr::core::vector2di sliderPos = GetSliderPos(_time);
+	irr::core::vector2d<double> sliderPos = GetSliderPos(_time);
 	int start = 0, end = 0, mid = 0;
 
 	if (_dir == 0)
