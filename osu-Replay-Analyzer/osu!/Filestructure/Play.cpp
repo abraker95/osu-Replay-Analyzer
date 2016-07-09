@@ -71,6 +71,13 @@ void Play::ApplyAR()
 
 	if (replay->HasMod(MODS::HT))  ar = ms2AR(AR2ms(ar) / 0.75);
 	if (replay->HasMod(MODS::DT))  ar = std::min(ms2AR(AR2ms(ar) / 1.5), 11.0);
+
+	// for old maps which had AR as part as OD
+	if (this->beatmap->origDiff.ar == -1)
+	{
+		this->beatmap->origDiff.ar = this->beatmap->origDiff.od;
+		this->beatmap->modifiedDiff.ar = this->beatmap->modifiedDiff.od;
+	}
 }
 
 void Play::ApplyCS()
