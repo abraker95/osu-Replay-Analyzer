@@ -145,16 +145,19 @@ void Play::ApplyVisual()
 	if (replay->HasMod(MODS::HD))
 	{
 		beatmap->origMod.hidden = true;
+		beatmap->modifiedMod.hidden = true;
 	}
 
 	if (replay->HasMod(MODS::FL))
 	{
 		beatmap->origMod.flashlight = true;
+		beatmap->modifiedMod.hidden = true;
 	}
 
 	if (replay->HasMod(MODS::FI))
 	{
 		beatmap->origMod.fadeIn = true;
+		beatmap->modifiedMod.hidden = true;
 	}
 
 	if (replay->HasMod(MODS::HR))
