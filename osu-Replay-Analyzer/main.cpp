@@ -146,9 +146,6 @@ int main()
 	win.device->setWindowCaption(L"osu! Replay Analyzer");
 	win.device->setResizable(true);
 
-	//Window winGraph(RESX, RESY);
-	//win.device->setWindowCaption(L"Reaction Skill Graph");
-
 	double CS = 4;
 	double AR = 9;
 	int viewTime = 0;
@@ -179,9 +176,6 @@ int main()
 	//	pane.addObj(&scrollbar);	*/
 
 	//Dialog dialogBox(20, 20, 500, 300);
-
-	//std::string beatmapFile = "C:\\My Games\\Games\\osu!\\Songs\\3 Ni-Ni - 1,2,3,4, 007 [Wipeout Series]\\Ni-Ni - 1,2,3,4, 007 [Wipeout Series] (MCXD) [-Sweatin-].osu";
-	//std::string replayFile = "C:\\Users\\abraker\\Documents\\C++\\Repos\\osuskills-analysis-tool\\abraker - Ni-Ni - 1,2,3,4, 007 [Wipeout Series] [-Sweatin-] (2016-05-15) Osu.osr";
 
 	std::pair<std::string, std::string> toAnalyze = getAnalyzerTXT();
 	Play play(toAnalyze.first, toAnalyze.second);
