@@ -7,7 +7,8 @@ enum GAMEMODE
 	OSU_TAIKO = 1,
 	OSU_CATCH = 2,
 	OSU_MANIA = 3,
-	OSU_DODGE = 4
+	OSU_DODGE = 4,
+	GAMEMODE_ERROR
 };
 
 enum MODS

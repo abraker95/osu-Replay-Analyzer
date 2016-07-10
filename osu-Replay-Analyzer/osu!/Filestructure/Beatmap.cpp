@@ -19,6 +19,7 @@ Beatmap::Beatmap(std::string file)
 	}
 	else
 	{
+		gamemode = GAMEMODE_ERROR;
 		/// \TODO: Handle this 
 	}
 

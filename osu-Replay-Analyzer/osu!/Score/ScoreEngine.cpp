@@ -17,6 +17,8 @@ ScoreEngine::ScoreEngine(Play* _play)
 void ScoreEngine::genAccTimings(Play* _play)
 {
 	GAMEMODE gamemode = _play->beatmap->getGamemode();
+	if (gamemode == GAMEMODE::GAMEMODE_ERROR)
+		return;
 
 	switch (gamemode)
 	{
