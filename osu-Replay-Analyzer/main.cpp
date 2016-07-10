@@ -184,9 +184,6 @@ int main()
 	Play play(toAnalyze.first, toAnalyze.second);
 	SkillEngine skillEngine(&play);
 
-	if (play.beatmap->hitObjects.size() == 0)
-		cout << "No Map loaded!" << endl;
-
 	if (play.replay->getNumFrames() == 0)
 		cout << "No Replay loaded!" << endl;
 
@@ -240,7 +237,6 @@ int main()
 			//cout << getNumIntersections(circles, time2index, AR2ms(AR)) <<endl;
 			//getNumIntersections(circles, time2index, AR2ms(AR));
 			win.font->draw(core::stringw(win.reciever.GetMouseState().positionCurr.X) + ", " + core::stringw(win.reciever.GetMouseState().positionCurr.Y), core::rect<s32>(RESX - 100, 40, 100, 10), video::SColor(255, 255, 255, 255));
-			//win.font->draw(core::stringw("Reaction: ") + core::stringw(reaction), core::rect<s32>(RESX - 150, 300, 100, 10), video::SColor(255, 255, 255, 255));
 
 			//getParamVelVec(circles, time_ms, CS);
 
@@ -249,7 +245,6 @@ int main()
 			//dialogBox.Update(win);
 			//scrollbar.Draw(win);
 
-			//DrawDebug(win, circles, time_ms, AR, CS, hidden);
 			if (btnBeatmap.isTriggered())
 			{
 				play.LoadBeatmap(getAnalyzerTXT().first);
