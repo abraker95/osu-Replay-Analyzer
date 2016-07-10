@@ -245,8 +245,8 @@ void OSUSTANDARD::genAccTimings(Play* _play)
 Hitobject* OSUSTANDARD::getNextNote(int* _iNote)
 {
 	(*_iNote) += 1;
-	if (BTWN(0, *_iNote, play->beatmap->hitObjects.size() - 1))
-		return play->beatmap->hitObjects[*_iNote];
+	if (BTWN(0, *_iNote, play->beatmap->getHitobjects().size() - 1))
+		return play->beatmap->getHitobjects()[*_iNote];
 
 	return nullptr;
 }

@@ -77,10 +77,10 @@ void TimingGraph::GenerateVisibilityTimings()
 {
 	int layer = 1;
 
-	timingObjects.resize(beatmap->hitObjects.size());
+	timingObjects.resize(beatmap->getHitobjects().size());
 	for (int i = 0; i < timingObjects.size(); i++)
 	{
-		std::pair<int, int> visibilityTimes = beatmap->hitObjects[i]->getVisiblityTimes(beatmap->getDiff().ar, beatmap->getModifiers().hidden, 0.1, 0.1);
+		std::pair<int, int> visibilityTimes = beatmap->getHitobjects()[i]->getVisiblityTimes(beatmap->getDiff().ar, beatmap->getModifiers().hidden, 0.1, 0.1);
 
 		if (layer <= 1)
 		{
@@ -95,7 +95,7 @@ void TimingGraph::GenerateVisibilityTimings()
 		const int layerHeight = 4;
 
 		//timingObjects[i] = new TimingObject(startPos, layerPos, endPos-startPos, layerHeight, beatmap->hitObjects[i], this, this);
-		timingObjects[i] = new TimingObject(0, layerPos, 0, layerHeight, beatmap->hitObjects[i], &beatmap->getModifiers(), &beatmap->getDiff(), this);
+		timingObjects[i] = new TimingObject(0, layerPos, 0, layerHeight, beatmap->getHitobjects()[i], &beatmap->getModifiers(), &beatmap->getDiff(), this);
 		layer--;
 	}
 }
@@ -128,22 +128,22 @@ void TimingGraph::drawRefreshRateTimings(Window &_win, double _FPS)
 void TimingGraph::drawHitobjectHitTimings(Window &_win)
 {
 	std::pair<int, int> viewTimes = this->getViewTimes();
-	int startIndex = 0, endIndex = beatmap->hitObjects.size() - 1;
+	int startIndex = 0, endIndex = beatmap->getHitobjects().size() - 1;
 
-	if (viewTimes.first > beatmap->hitObjects[0]->getTime())
+	if (viewTimes.first > beatmap->getHitobjects()[0]->getTime())
 		startIndex = beatmap->FindHitobjectAt(viewTimes.first);
 
-	if (viewTimes.second < beatmap->hitObjects[0]->getTime())
+	if (viewTimes.second < beatmap->getHitobjects()[0]->getTime())
 		endIndex = beatmap->FindHitobjectAt(viewTimes.second);
 
 	for (int i = startIndex; i < endIndex; i++)
 	{
-		int hitobjectBegTime = beatmap->hitObjects[i]->getTime();
+		int hitobjectBegTime = beatmap->getHitobjects()[i]->getTime();
 		int hitobjectEndTime = hitobjectBegTime;
 		
 		// get the actual end time if it is a slider
-		if (beatmap->hitObjects[i]->IsHitObjectType(SLIDER))
-			hitobjectEndTime = beatmap->hitObjects[i]->slider->getEndTime();
+		if (beatmap->getHitobjects()[i]->IsHitObjectType(SLIDER))
+			hitobjectEndTime = beatmap->getHitobjects()[i]->slider->getEndTime();
 		
 		int posBeg = (hitobjectBegTime - viewTimes.first)*zoom;
 		int posEnd = (hitobjectEndTime - viewTimes.first)*zoom;
@@ -159,15 +159,15 @@ void TimingGraph::drawHitobjectHitTimings(Window &_win)
 void TimingGraph::drawHitobjectVisibilityTimings(Window &_win)
 {
 	std::pair<int, int> viewTimes = this->getViewTimes();
-	int startIndex = 0, endIndex = beatmap->hitObjects.size() - 1;
+	int startIndex = 0, endIndex = beatmap->getHitobjects().size() - 1;
 
-	if (viewTimes.first > beatmap->hitObjects[0]->getTime())
+	if (viewTimes.first > beatmap->getHitobjects()[0]->getTime())
 		startIndex = beatmap->FindHitobjectAt(viewTimes.first);
 
-	if (viewTimes.second < beatmap->hitObjects[beatmap->hitObjects.size() - 1]->getTime())
+	if (viewTimes.second < beatmap->getHitobjects()[beatmap->getHitobjects().size() - 1]->getTime())
 		endIndex = beatmap->FindHitobjectAt(viewTimes.second + AR2ms(beatmap->getDiff().ar));
 
-	if (endIndex <= startIndex) endIndex = beatmap->hitObjects.size() - 1;
+	if (endIndex <= startIndex) endIndex = beatmap->getHitobjects().size() - 1;
 	for (int i = startIndex; i <= endIndex; i++)
 	{
 		timingObjects[i]->Update(_win);
@@ -298,14 +298,14 @@ void TimingGraph::Draw(Window& _win)
 	if (layerMask & HITOBJECT_VISIBILTITY)
 	{
 		if(beatmap != nullptr)
-			if(beatmap->hitObjects.size() != 0)
+			if(beatmap->getHitobjects().size() != 0)
 				this->drawHitobjectVisibilityTimings(_win);
 	}
 
 	if (layerMask & HITOBJECT_HIT_TIMINGS)
 	{
 		if (beatmap != nullptr)
-			if (beatmap->hitObjects.size() != 0)
+			if (beatmap->getHitobjects().size() != 0)
 				this->drawHitobjectHitTimings(_win);
 	}
 

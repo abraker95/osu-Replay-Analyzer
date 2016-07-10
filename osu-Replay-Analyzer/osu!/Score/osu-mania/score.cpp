@@ -413,16 +413,16 @@ std::pair<double, double> OSUMANIA::getODms(Hitobject* _prevNote, Hitobject* _cu
 Hitobject* OSUMANIA::getNextNoteOnColumn(int _column, int* _iNote)
 {
 	(*_iNote) += 1;
-	for (; (*_iNote) < play->beatmap->hitObjects.size(); (*_iNote)++)
+	for (; (*_iNote) < play->beatmap->getHitobjects().size(); (*_iNote)++)
 	{
 		int KEYS = play->beatmap->getDiff().cs;
-		int noteXpos = play->beatmap->hitObjects[*_iNote]->getPos().X;
+		int noteXpos = play->beatmap->getHitobjects()[*_iNote]->getPos().X;
 
 		float localWDivisor = 512.0f / KEYS;
 		int column = std::min((int)std::floor(noteXpos / localWDivisor), KEYS - 1);
 
 		if (column == _column)
-			return play->beatmap->hitObjects[*_iNote];
+			return play->beatmap->getHitobjects()[*_iNote];
 	}
 
 	return nullptr;

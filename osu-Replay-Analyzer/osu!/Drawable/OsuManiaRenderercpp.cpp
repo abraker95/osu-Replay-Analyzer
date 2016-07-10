@@ -33,11 +33,11 @@ void OsuManiaRenderer::SetLayers(int _layer)
 void OsuManiaRenderer::GenerateHitNotes()
 {
 	Beatmap* beatmap = play->beatmap;
-	hitNotes.resize(beatmap->hitObjects.size());
+	hitNotes.resize(beatmap->getHitobjects().size());
 
 	for (int i = 0; i < hitNotes.size(); i++)
 	{
-		hitNotes[i] = new HitNote(beatmap, beatmap->hitObjects[i], viewTime, &zoom);
+		hitNotes[i] = new HitNote(beatmap, beatmap->getHitobjects()[i], viewTime, &zoom);
 			hitNotes[i]->setParent(this);
 	}
 }
@@ -80,7 +80,7 @@ void OsuManiaRenderer::Draw(Window& _win)
 void OsuManiaRenderer::RenderVisible(Window& _win)
 {
 	Beatmap* beatmap = play->beatmap;
-	std::vector<Hitobject*>& hitobjects = beatmap->hitObjects;
+	std::vector<Hitobject*>& hitobjects = beatmap->getHitobjects();
 
 	/// \TODO: Faster object search
 	for (int i = 0; i < hitobjects.size(); i++)

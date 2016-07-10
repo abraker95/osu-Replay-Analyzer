@@ -16,10 +16,16 @@ class Play
 		Replay  *replay;
 		ScoreEngine *scoreEngine;
 
-		void ProcessBeatmap();
+		void LoadBeatmap(std::string _beatmapFile);
+		void LoadReplay(std::string _replayFile);
+
+		void ResetMods();
 
 	private:
 		void ValidateMods();
+		void ProcessBeatmap();
+
+		void setMods();
 
 		void ApplyAR();
 		void ApplyCS();

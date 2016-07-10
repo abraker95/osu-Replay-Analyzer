@@ -151,7 +151,7 @@ void OSUMANIA::SPEED_CONTROL::genDiff(Play* _play)
 		releases[key].press = true; // no note releases yet
 	}
 
-	for (Hitobject *hitobject : _play->beatmap->hitObjects)
+	for (Hitobject *hitobject : _play->beatmap->getHitobjects())
 	{
 		// never a miss
 		if (true)

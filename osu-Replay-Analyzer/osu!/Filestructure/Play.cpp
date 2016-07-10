@@ -12,7 +12,8 @@ Play::Play(std::string _beatmapFile, std::string _replayFile)
 	beatmap = new Beatmap(_beatmapFile);
 	replay = new Replay(_replayFile);
 
-	ProcessBeatmap();
+	if(beatmap ->getGamemode() != GAMEMODE::GAMEMODE_ERROR)
+		ProcessBeatmap();
 
 	scoreEngine = new ScoreEngine(this);
 
@@ -36,25 +37,60 @@ Play::~Play()
 
 void Play::ProcessBeatmap()
 {
-	if (beatmap->metadata.format != -1)
+	if (beatmap->getGamemode() != GAMEMODE::GAMEMODE_ERROR)
 	{
-		if (replay != nullptr)
-		{
+		this->ResetMods();
 			this->ApplyAR();
 			this->ApplyCS();
 			this->ApplyOD();
 			this->ApplyVisual();
 			this->ApplyTimings();
-			this->beatmap->Process();
-		}
+		this->beatmap->Process();
 	}
+}
+
+void Play::LoadBeatmap(std::string _beatmapFile)
+{
+	if (beatmap != nullptr)
+		delete beatmap;
+	beatmap = new Beatmap(_beatmapFile);
+
+	ProcessBeatmap();
+}
+
+void Play::LoadReplay(std::string _replayFile)
+{
+	if (replay != nullptr)
+		delete replay;
+
+	if (scoreEngine != nullptr)
+		delete scoreEngine;
+
+	ProcessBeatmap();
+	scoreEngine = new ScoreEngine(this);
+}
+
+void Play::ResetMods()
+{
+	this->beatmap->modTimingPoints = this->beatmap->origTimingPoints;
+	this->beatmap->modHitobjects = this->beatmap->origHitObjects;
+	this->beatmap->modifiedDiff = this->beatmap->origDiff;
 }
 
 // ------------- [PRIVATE] ----------------
 
+
+void Play::setMods()
+{
+
+}
+
 void Play::ApplyAR()
 {
 	this->beatmap->modifiedDiff.ar = this->beatmap->origDiff.ar;
+	if (replay == nullptr)
+		return;
+
 	double &ar = this->beatmap->modifiedDiff.ar;
 
 	if (replay->HasMod(MODS::EZ))
@@ -83,6 +119,9 @@ void Play::ApplyAR()
 void Play::ApplyCS()
 {
 	this->beatmap->modifiedDiff.cs = this->beatmap->origDiff.cs;
+	if (replay == nullptr)
+		return;
+
 	double &cs = this->beatmap->modifiedDiff.cs;
 
 	if (replay->HasMod(MODS::EZ)) cs *= 0.5;
@@ -92,6 +131,9 @@ void Play::ApplyCS()
 void Play::ApplyOD()
 {
 	this->beatmap->modifiedDiff.od = this->beatmap->origDiff.od;
+	if (replay == nullptr)
+		return;
+
 	double &od = this->beatmap->modifiedDiff.od;
 
 	if (replay->HasMod(MODS::EZ))
@@ -119,20 +161,24 @@ void Play::ApplyOD()
 
 void Play::ApplyTimings()
 {
-	std::vector<TimingPoint> &timingpoints = beatmap->timingPoints;
 	double divisor = 1;
 
-	if (replay->HasMod(MODS::HT)) divisor = 0.75;
-	if (replay->HasMod(MODS::DT)) divisor = 1.5;
-
-	for (auto &tp : timingpoints)
+	if (replay != nullptr)
+	{
+		if (replay->HasMod(MODS::HT)) divisor = 0.75;
+		if (replay->HasMod(MODS::DT)) divisor = 1.5;
+	}
+	
+	// Mod timing points
+	for (auto &tp : this->beatmap->modTimingPoints)
 	{
 		if (tp.beatInterval > 0)
 			tp.beatInterval /= divisor;
 		tp.offset = ceil((double)tp.offset / divisor);
 	}
 
-	for (auto &hitobject : beatmap->hitObjects)
+	// Mod hitobject timings
+	for (auto &hitobject : this->beatmap->modHitobjects)
 	{
 		hitobject->time /= divisor;
 		int type = hitobject->getHitobjectType();
@@ -141,6 +187,7 @@ void Play::ApplyTimings()
 			hitobject->slider->endTime /= divisor;
 	}
 
+	// Mod replay stream timings
 	for (auto &frame : replay->replayStream)
 	{
 		std::get<0>(frame) /= divisor;
@@ -149,6 +196,9 @@ void Play::ApplyTimings()
 
 void Play::ApplyVisual()
 {
+	if (replay == nullptr)
+		return;
+
 	if (replay->HasMod(MODS::HD))
 	{
 		beatmap->origMod.hidden = true;
@@ -169,6 +219,9 @@ void Play::ApplyVisual()
 
 	if (replay->HasMod(MODS::HR))
 	{
-		// \TODO: HR mod flips notes
+		for (auto &hitobject : this->beatmap->modHitobjects)
+		{
+
+		}
 	}
 }

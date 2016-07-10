@@ -80,9 +80,14 @@ void Beatmap::resetModifiers()
 	modifiedMod = origMod;
 }
 
+std::vector<Hitobject*>& Beatmap::getHitobjects()
+{
+	return modHitobjects;
+}
+
 int Beatmap::getNumHitobjectsVisibleAt(int _index, double _opacity)
 {
-	std::pair<int, int> indices = getIndicesVisibleAt(hitObjects[_index]->getTime(), _opacity);
+	std::pair<int, int> indices = getIndicesVisibleAt(modHitobjects[_index]->getTime(), _opacity);
 	return indices.second - indices.first;
 }
 
@@ -92,17 +97,17 @@ std::pair<int, int> Beatmap::getIndicesVisibleAt(int _time, double _opacity)
 	std::pair<int, int> range;
 
 	// Find first note visible
-	for (index = max(index, 0); index < hitObjects.size(); index++)
+	for (index = max(index, 0); index < modHitobjects.size(); index++)
 	{
-		if (hitObjects[index]->isVisibleAt(_time, modifiedDiff.ar, modifiedMod.hidden))
+		if (modHitobjects[index]->isVisibleAt(_time, modifiedDiff.ar, modifiedMod.hidden))
 			break;
 	}
 	range.first = index;
 
 	// Find last note visible
-	for (; index < hitObjects.size(); index++)
+	for (; index < modHitobjects.size(); index++)
 	{
-		if (!(hitObjects[index]->isVisibleAt(_time, modifiedDiff.ar, modifiedMod.hidden)))
+		if (!(modHitobjects[index]->isVisibleAt(_time, modifiedDiff.ar, modifiedMod.hidden)))
 			break;
 	}
 	range.second = index;
@@ -118,27 +123,27 @@ std::string Beatmap::getName()
 TimingPoint* Beatmap::getTimingPointAt(int _time)
 {
 	int start = 0;
-	int end = this->timingPoints.size() - 2;
+	int end = this->modTimingPoints.size() - 2;
 	int mid;
 
 	while (start <= end)
 	{
 		mid = (start + end) / 2;
-		if (BTWN(this->timingPoints[mid].offset, _time, this->timingPoints[mid + 1].offset - 1))
-			return &(this->timingPoints[mid]);
-		else if (_time < this->timingPoints[mid].offset)
+		if (BTWN(this->modTimingPoints[mid].offset, _time, this->modTimingPoints[mid + 1].offset - 1))
+			return &(this->modTimingPoints[mid]);
+		else if (_time < this->modTimingPoints[mid].offset)
 			end = mid - 1;
 		else start = mid + 1;
 	}
 
 	/// \TODO: Test the fuck out of this. I think it's bugged 
-	return &this->timingPoints[timingPoints.size() - 1];
+	return &this->modTimingPoints[modTimingPoints.size() - 1];
 }
 
 Hitobject* Beatmap::getHitobjectAt(int _time)
 {
 	int index = this->FindHitobjectAt(_time);
-	return this->hitObjects[index];
+	return this->modHitobjects[index];
 }
 
 //---------------- [PRIVATE] ----------------------
@@ -597,7 +602,7 @@ int Beatmap::ReadTimingpoints(std::string line)
 		return -1;
 	}
 
-	this->timingPoints.push_back(tPoint);
+	this->origTimingPoints.push_back(tPoint);
 	return 1;
 }
 
@@ -614,7 +619,7 @@ int Beatmap::ReadHitobjects(std::string line)
 	/// \TODO: color hacks types
 	if (hitObject->getHitobjectType() & HITOBJECTYPE::CIRCLE)
 	{
-		this->hitObjects.push_back(hitObject);
+		this->origHitObjects.push_back(hitObject);
 		this->hitObjectsTimeStart.push_back(std::pair<Hitobject*, int>(hitObject, hitObject->getTime()));
 		this->hitObjectsTimeEnd.push_back(std::pair<Hitobject*, int>(hitObject, hitObject->getTime()));
 		return 1;
@@ -622,7 +627,7 @@ int Beatmap::ReadHitobjects(std::string line)
 
 	if (hitObject->getHitobjectType() & HITOBJECTYPE::SLIDER)
 	{
-		this->hitObjects.push_back(hitObject);
+		this->origHitObjects.push_back(hitObject);
 		this->hitObjectsTimeStart.push_back(std::pair<Hitobject*, int>(hitObject, hitObject->getTime()));
 		this->hitObjectsTimeEnd.push_back(std::pair<Hitobject*, int>(hitObject, hitObject->slider->getEndTime()));
 		return 1;
@@ -636,7 +641,7 @@ int Beatmap::ReadHitobjects(std::string line)
 
 	if (hitObject->getHitobjectType() & HITOBJECTYPE::MANIALONG)
 	{
-		this->hitObjects.push_back(hitObject);
+		this->origHitObjects.push_back(hitObject);
 		this->hitObjectsTimeStart.push_back(std::pair<Hitobject*, int>(hitObject, hitObject->getTime()));
 		this->hitObjectsTimeEnd.push_back(std::pair<Hitobject*, int>(hitObject, hitObject->slider->getEndTime()));
 		return 0;
@@ -658,7 +663,7 @@ void Beatmap::PrepareTimingPoints()
 	double oldbeat = -100;
 	int base = 0;
 
-	for (auto& TP : this->timingPoints)
+	for (auto& TP : this->modTimingPoints)
 	{
 		if (TP.inherited)
 		{
@@ -690,7 +695,7 @@ void Beatmap::PrepareTimingPoints()
 
 void Beatmap::PrepareSliderData()
 {
-	for (auto& hitObject : this->hitObjects)
+	for (auto& hitObject : this->modHitobjects)
 	{
 		if (hitObject->IsHitObjectType(HITOBJECTYPE::SLIDER))
 		{
@@ -733,7 +738,7 @@ void Beatmap::PrepareSliderData()
 
 void Beatmap::GenerateSliderPoints()
 {
-	for (auto& hitObject : this->hitObjects)
+	for (auto& hitObject : this->modHitobjects)
 	{
 		if (hitObject->IsHitObjectType(HITOBJECTYPE::SLIDER))
 		{
@@ -757,7 +762,7 @@ void Beatmap::GenerateSliderPoints()
 int Beatmap::FindHitobjectAt(int _time)
 {
 	int start = 0;
-	int end = this->hitObjects.size() - 2;
+	int end = this->origHitObjects.size() - 2;
 	int mid;
 
 	while (start <= end)
@@ -765,21 +770,21 @@ int Beatmap::FindHitobjectAt(int _time)
 		mid = (start + end) / 2;
 
 		// if time is exactly at the object, return that object
-		if (this->hitObjects[mid]->getTime() == _time)
+		if (this->origHitObjects[mid]->getTime() == _time)
 		{
 			// make sure there is are no following objects at the same time
-			for (int i = mid; i < this->hitObjects.size(); i++)
-				if (this->hitObjects[mid]->getTime() == _time)
+			for (int i = mid; i < this->origHitObjects.size(); i++)
+				if (this->origHitObjects[mid]->getTime() == _time)
 					mid = i;
 
 			return mid;
 		}
 		// if the time is between 2 objects, return the next object
-		if(BTWN(this->hitObjects[mid]->getTime(), _time, this->hitObjects[mid + 1]->getTime()))
+		if(BTWN(this->origHitObjects[mid]->getTime(), _time, this->origHitObjects[mid + 1]->getTime()))
 		{
 			// make sure there is are no following objects at the same time
-			for (int i = mid + 1; i < this->hitObjects.size(); i++)
-				if (BTWN(this->hitObjects[mid]->getTime(), _time, this->hitObjects[mid + 1]->getTime()))
+			for (int i = mid + 1; i < this->origHitObjects.size(); i++)
+				if (BTWN(this->origHitObjects[mid]->getTime(), _time, this->origHitObjects[mid + 1]->getTime()))
 					mid = i;
 
 			return mid;
@@ -795,8 +800,8 @@ int Beatmap::FindHitobjectAt(int _time)
 			}
 		}*/
 		
-		int gettime = this->hitObjects[mid]->getTime();
-		if (_time < this->hitObjects[mid]->getTime())
+		int gettime = this->origHitObjects[mid]->getTime();
+		if (_time < this->origHitObjects[mid]->getTime())
 			end = mid - 1;
 		else start = mid + 1;
 	}
