@@ -152,18 +152,21 @@ int main()
 
 	bool hidden = false;
 
-	Slider csSlider(-75, 25, 120, 10);
+	Slider csSlider(-75, 100, 120, 10);
 		csSlider.setRange(0, 10);
 		csSlider.ClipPosTo(GuiObj::TOPRIGHT);
 
-	Slider arSlider(-75, 100, 120, 10);
+	Slider arSlider(-75, 150, 120, 10);
 		arSlider.setRange(0, 11);
 		arSlider.setVal(10 + 1.0 / 3.0);
 		arSlider.ClipPosTo(GuiObj::TOPRIGHT);
 
-	Slider hdSlider(-75, 175, 120, 10);
+	Slider hdSlider(-75, 200, 120, 10);
 		hdSlider.setRange(0, 1);
 		hdSlider.ClipPosTo(GuiObj::TOPRIGHT);
+
+	Button btnBeatmap(-130, 10, 100, 10);
+		btnBeatmap.ClipPosTo(GuiObj::TOPRIGHT);
 
 	/// \TODO: Figure out how to exit this thread safely when closing window
 //	std::function<double(double)> reactFoo = [&circles, &CS, &AR, &hidden](int _x) { return getReactionSkill(circles, _x, CS, AR, hidden); };
@@ -247,6 +250,13 @@ int main()
 			//scrollbar.Draw(win);
 
 			//DrawDebug(win, circles, time_ms, AR, CS, hidden);
+			if (btnBeatmap.isTriggered())
+			{
+				play.LoadBeatmap(getAnalyzerTXT().first);
+				renderer.InitRenderer(&play, &viewTime);
+			}
+				
+
 		win.driver->endScene();
 		win.device->yield();
 	}
