@@ -231,12 +231,6 @@ int main()
 
 		viewTime = timingGraph.getViewTime();
 
-		// skill calculation
-		//double reaction = getReactionSkill(circles, time_ms, CS, AR, hidden);
-		//double reading = getReadingSkill(circles, time_ms, CS, AR, hidden);
-		//double precision = getPrecisionSkill(circles, time_ms, CS, AR, hidden);
-
-
 		// render stuff
 		win.driver->beginScene(true, true, SColor(255, 0, 0, 0));
 
