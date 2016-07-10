@@ -93,6 +93,13 @@ void GamemodeRenderer::Draw(Window& _win)
 	_win.driver->draw2DRectangleOutline(core::rect<s32>(absXpos, absYpos, absXpos + width, absYpos + height),
 				video::SColor(255, 255, 255, 255));
 
+	if (gamemode == GAMEMODE::GAMEMODE_ERROR)
+	{
+		dimension2d<u32> dim = _win.font->getDimension(core::stringw("BEATMAP NOT LOADED!!!").c_str());
+		_win.font->draw(core::stringw("BEATMAP NOT LOADED!!!"), core::rect<s32>(absXpos + width / 2 - dim.Width/2, absYpos + height / 2 - dim.Height / 2, 100, 10), video::SColor(255, 255, 255, 255));
+		return;
+	}
+		
 	switch (gamemode)
 	{
 		case OSU_STANDARD:
