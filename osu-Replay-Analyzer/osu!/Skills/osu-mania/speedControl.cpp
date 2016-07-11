@@ -11,7 +11,7 @@
 std::vector<OSUMANIA::TIMING> OSUMANIA::SPEED_CONTROL::scores, 
 							  OSUMANIA::SPEED_CONTROL::skills,
 							  OSUMANIA::SPEED_CONTROL::diffs;
-
+double OSUMANIA::SPEED_CONTROL::diff;
 
 void OSUMANIA::SPEED_CONTROL::genScore(Play* _play)
 {
@@ -134,6 +134,7 @@ void OSUMANIA::SPEED_CONTROL::genSkill(Play* _play)
 
 void OSUMANIA::SPEED_CONTROL::genDiff(Play* _play)
 {
+	diff = -1;
 	diffs.clear();
 
 	int KEYS = _play->beatmap->getDiff().cs;
@@ -248,7 +249,10 @@ double OSUMANIA::SPEED_CONTROL::getSkill()
 
 double OSUMANIA::SPEED_CONTROL::getDiff()
 {
-	double diff = 0.0;
+	if (diff != -1)
+		return diff;
+
+	diff = 0.0;
 
 	for (OSUMANIA::TIMING &timing : SPEED_CONTROL::diffs)
 		diff += timing.data;

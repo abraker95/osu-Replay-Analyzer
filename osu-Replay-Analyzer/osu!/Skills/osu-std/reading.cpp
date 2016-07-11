@@ -6,6 +6,7 @@
 std::vector<OSUSTANDARD::TIMING> OSUSTANDARD::READING::scores,
 								 OSUSTANDARD::READING::skills,
 								 OSUSTANDARD::READING::diffs;
+double OSUSTANDARD::READING::diff;
 
 void OSUSTANDARD::READING::genScore(Play* _play)
 {
@@ -20,6 +21,7 @@ void OSUSTANDARD::READING::genSkill(Play* _play)
 void OSUSTANDARD::READING::genDiff(Play* _play)
 {
 	/// \TODO
+	diff = -1;
 	diffs.clear();
 }
 
