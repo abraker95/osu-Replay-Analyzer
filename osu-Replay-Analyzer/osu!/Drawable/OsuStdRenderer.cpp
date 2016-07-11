@@ -14,6 +14,10 @@ OsuStdRenderer::OsuStdRenderer(Play* _play, int* _viewTime, GuiObj* _parent) : G
 
 OsuStdRenderer::~OsuStdRenderer()
 {
+	for (Hitcircle* circle : hitCircles)
+		if (circle != nullptr)
+			delete circle;
+
 	hitCircles.clear();
 	std::vector<Hitcircle*>().swap(hitCircles);
 }
@@ -28,6 +32,10 @@ void OsuStdRenderer::SetLayers(int _layer)
 
 void OsuStdRenderer::GenerateHitcircles()
 {
+	for (Hitcircle* circle : hitCircles)
+		if (circle != nullptr)
+			delete circle;
+
 	hitCircles.clear();
 	std::vector<Hitcircle*>().swap(hitCircles);
 
