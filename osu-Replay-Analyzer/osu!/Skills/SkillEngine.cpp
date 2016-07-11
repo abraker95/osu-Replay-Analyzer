@@ -8,12 +8,18 @@
 
 SkillEngine::SkillEngine(Play* _play)
 {
-	gamemode = _play->beatmap->getGamemode();
+	Generate(_play);
+}
 
-	// dont mess up this order:  diffs -> skills -> scores
+void SkillEngine::Generate(Play* _play)
+{
+	gamemode = _play->beatmap->getGamemode();
+		// dont mess up this order:  diffs -> skills -> scores
+		genDiffs(_play);
+		genSkills(_play);
+		genScores(_play);
+
 	genDiffs(_play);
-	genSkills(_play);
-	genScores(_play);	
 }
 
 double SkillEngine::getScore(SKILL _skill)

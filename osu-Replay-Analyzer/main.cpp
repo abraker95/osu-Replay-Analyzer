@@ -180,7 +180,7 @@ int main()
 
 	//Dialog dialogBox(20, 20, 500, 300);
 
-	std::pair<std::string, std::string> toAnalyze = getAnalyzerTXT();
+		std::pair<std::string, std::string> toAnalyze;// = getAnalyzerTXT();
 	Play play(toAnalyze.first, toAnalyze.second);
 	SkillEngine skillEngine(&play);
 
@@ -238,6 +238,10 @@ int main()
 			//getNumIntersections(circles, time2index, AR2ms(AR));
 			win.font->draw(core::stringw(win.reciever.GetMouseState().positionCurr.X) + ", " + core::stringw(win.reciever.GetMouseState().positionCurr.Y), core::rect<s32>(RESX - 100, 40, 100, 10), video::SColor(255, 255, 255, 255));
 
+
+			double readDiff  = skillEngine.getDiff(SkillEngine::ANY_READING);
+			win.font->draw(core::stringw("Reading diff: ") + core::stringw(readDiff), core::rect<s32>(RESX - 225, 20, 100, 10), video::SColor(255, 255, 255, 255));
+
 			//getParamVelVec(circles, time_ms, CS);
 
 			UpdateGuiObjs(win);
@@ -248,6 +252,7 @@ int main()
 			if (btnBeatmap.isTriggered())
 			{
 				play.LoadBeatmap(getAnalyzerTXT().first);
+				skillEngine.Generate(&play);
 				renderer.InitRenderer(&play, &viewTime);
 			}
 				

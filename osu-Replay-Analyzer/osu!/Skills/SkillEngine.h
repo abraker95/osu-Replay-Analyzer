@@ -37,6 +37,7 @@ class SkillEngine
 
 
 		SkillEngine(Play* _play);
+		void Generate(Play* _play);
 
 		double getScore(SKILL _skill);
 		double getSkill(SKILL _skill);
