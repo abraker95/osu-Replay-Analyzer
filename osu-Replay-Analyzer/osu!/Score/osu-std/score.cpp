@@ -121,6 +121,9 @@ void HandleEarlyMiss(std::vector<OSUSTANDARD::TIMING>* _accTimings, Hitobject* _
 
 void OSUSTANDARD::genAccTimings(Play* _play)
 {
+	accTimings.clear();
+	std::vector<OSUSTANDARD::TIMING>().swap(accTimings);
+
 	play = _play;
 	const int KEYS = 2;
 	std::tuple<long, int, int> frame;
