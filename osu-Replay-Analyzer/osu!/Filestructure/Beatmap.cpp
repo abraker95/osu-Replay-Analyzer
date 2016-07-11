@@ -13,6 +13,8 @@ Beatmap::Beatmap(std::string file)
 	std::ifstream beatmapFile(file);
 	if (beatmapFile.is_open())
 	{
+		ClearObjects();
+
 		bool success = this->ParseBeatmap(beatmapFile);
 		assert(success == true);
 		beatmapFile.close();
@@ -29,11 +31,7 @@ Beatmap::Beatmap(std::string file)
 
 Beatmap::~Beatmap()
 {
-	/*for (auto hitobject : this->hitObjects)
-	{
-		if (hitobject != nullptr)
-			delete hitobject;
-	}*/
+	ClearObjects();
 }
 
 void Beatmap::Process()
@@ -619,17 +617,17 @@ int Beatmap::ReadHitobjects(std::string line)
 	/// \TODO: color hacks types
 	if (hitObject->getHitobjectType() & HITOBJECTYPE::CIRCLE)
 	{
-		this->hitObjectsTimeStart.push_back(std::pair<Hitobject*, int>(hitObject, hitObject->getTime()));
-		this->hitObjectsTimeEnd.push_back(std::pair<Hitobject*, int>(hitObject, hitObject->getTime()));
 		this->origHitobjects.push_back(hitObject);
+		//this->hitObjectsTimeStart.push_back(std::pair<Hitobject*, int>(hitObject, hitObject->getTime()));
+		//this->hitObjectsTimeEnd.push_back(std::pair<Hitobject*, int>(hitObject, hitObject->getTime()));
 		return 1;
 	}
 
 	if (hitObject->getHitobjectType() & HITOBJECTYPE::SLIDER)
 	{
-		this->hitObjectsTimeStart.push_back(std::pair<Hitobject*, int>(hitObject, hitObject->getTime()));
-		this->hitObjectsTimeEnd.push_back(std::pair<Hitobject*, int>(hitObject, hitObject->slider->getEndTime()));
 		this->origHitobjects.push_back(hitObject);
+		//this->hitObjectsTimeStart.push_back(std::pair<Hitobject*, int>(hitObject, hitObject->getTime()));
+		//this->hitObjectsTimeEnd.push_back(std::pair<Hitobject*, int>(hitObject, hitObject->slider->getEndTime()));
 		return 1;
 	}
 
@@ -641,9 +639,9 @@ int Beatmap::ReadHitobjects(std::string line)
 
 	if (hitObject->getHitobjectType() & HITOBJECTYPE::MANIALONG)
 	{
-		this->hitObjectsTimeStart.push_back(std::pair<Hitobject*, int>(hitObject, hitObject->getTime()));
-		this->hitObjectsTimeEnd.push_back(std::pair<Hitobject*, int>(hitObject, hitObject->slider->getEndTime()));
 		this->origHitobjects.push_back(hitObject);
+		//this->hitObjectsTimeStart.push_back(std::pair<Hitobject*, int>(hitObject, hitObject->getTime()));
+		//this->hitObjectsTimeEnd.push_back(std::pair<Hitobject*, int>(hitObject, hitObject->slider->getEndTime()));
 		return 0;
 	}
 
@@ -885,3 +883,29 @@ void Beatmap::SortEndTimes(int _left, int _right)
 	if (_left < j) SortEndTimes(i, _right);
 }*/
 
+
+void Beatmap::ClearObjects()
+{
+	for (auto* hitobject : origHitobjects)
+	{
+		hitobject->~Hitobject();
+		delete hitobject;
+	}
+	
+	origHitobjects.clear();
+	std::vector<Hitobject*>().swap(origHitobjects);
+
+	for (auto& hitobject : modHitobjects)
+	{
+		hitobject.~Hitobject();
+	}
+
+	modHitobjects.clear();
+	std::vector<Hitobject>().swap(modHitobjects);
+
+	origTimingPoints.clear();
+	std::vector<TimingPoint>().swap(origTimingPoints);
+
+	modTimingPoints.clear();
+	std::vector<TimingPoint>().swap(modTimingPoints);
+}

@@ -15,6 +15,7 @@ OsuStdRenderer::OsuStdRenderer(Play* _play, int* _viewTime, GuiObj* _parent) : G
 OsuStdRenderer::~OsuStdRenderer()
 {
 	hitCircles.clear();
+	std::vector<Hitcircle*>().swap(hitCircles);
 }
 
 void OsuStdRenderer::SetLayers(int _layer)
@@ -27,6 +28,9 @@ void OsuStdRenderer::SetLayers(int _layer)
 
 void OsuStdRenderer::GenerateHitcircles()
 {
+	hitCircles.clear();
+	std::vector<Hitcircle*>().swap(hitCircles);
+
 	Beatmap* beatmap = play->beatmap;
 	hitCircles.resize(beatmap->getHitobjects().size());
 

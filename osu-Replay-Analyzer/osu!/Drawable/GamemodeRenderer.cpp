@@ -11,26 +11,7 @@ GamemodeRenderer::GamemodeRenderer(int _xpos, int _ypos, int _width, int _height
 
 GamemodeRenderer::~GamemodeRenderer()
 {
-	if(stdRenderer != nullptr)
-		delete stdRenderer;
-
-	/*
-	if(taikoRenderer != nullptr)
-		delete taikoRenderer;
-	*/
-
-	/*
-	if(catchRenderer != nullptr)
-		delete chatchRenderer;
-	*/
-
-	if (maniaRenderer != nullptr)
-		delete maniaRenderer;
-
-	/*
-	if(dodgeRenderer != nullptr)
-		delete dodgeRenderer;
-	*/
+	DestroyRenderers();
 }
 
 void GamemodeRenderer::UpdateRatios()
@@ -49,6 +30,8 @@ void GamemodeRenderer::setGamemode(GAMEMODE _gamemode)
 
 void GamemodeRenderer::InitRenderer(Play* _play, int* _viewTime)
 {
+	DestroyRenderers();
+
 	switch (gamemode)
 	{
 		case OSU_STANDARD:
@@ -160,5 +143,45 @@ void GamemodeRenderer::RenderOsuDodge(Window& _win)
 	/*
 	if (dodgeRenderer != nullptr)
 		dodgeRenderer->Update(_win);
+	*/
+}
+
+
+void GamemodeRenderer::DestroyRenderers()
+{
+	if (stdRenderer != nullptr)
+	{
+		delete stdRenderer;
+		stdRenderer = nullptr;
+	}		
+
+	/*
+	if(taikoRenderer != nullptr)
+	{
+		delete taikoRenderer;
+		taikoRenderer = nullptr;
+	}
+	*/
+
+	/*
+	if(catchRenderer != nullptr)
+	{
+		delete chatchRenderer;
+		chatchRenderer = nullptr;
+	}
+	*/
+
+	if (maniaRenderer != nullptr)
+	{
+		delete maniaRenderer;
+		maniaRenderer = nullptr;
+	}	
+
+	/*
+	if(dodgeRenderer != nullptr)
+	{
+		delete dodgeRenderer;
+		dodgeRenderer = nullptr;
+	}
 	*/
 }

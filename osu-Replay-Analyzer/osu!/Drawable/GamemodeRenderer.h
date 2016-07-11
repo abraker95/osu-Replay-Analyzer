@@ -36,6 +36,8 @@ class GamemodeRenderer : public GuiObj
 		void RenderOsuMania(Window& _win);
 		void RenderOsuDodge(Window& _win);
 
+		void DestroyRenderers();
+
 		GAMEMODE gamemode;
 		OsuStdRenderer* stdRenderer;
 		OsuManiaRenderer* maniaRenderer;

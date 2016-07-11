@@ -76,6 +76,20 @@ Hitobject::Slider::~Slider()
 { 
 	//if(circle != nullptr)
 		circle.~CircumscribedCircle();
+
+	//circle.release();
+
+	sliderX.clear();
+	sliderY.clear();
+	ticks.clear();
+	genCurve.clear();
+	curve.clear();
+
+	std::vector<double>().swap(sliderX);
+	std::vector<double>().swap(sliderY);
+	std::vector<int>().swap(ticks);
+	std::vector<irr::core::vector2di>().swap(genCurve);
+	std::vector<irr::core::vector2di>().swap(curve);
 }
 
 /*void Hitobject::Slider::operator=(Slider slider)
