@@ -177,7 +177,7 @@ double GetHitobjectOverlapArea(Beatmap *_beatmap, int _indexA, int _indexB)
 	double endTimeA = hitobjects[_indexA].getEndTime();
 	double endTimeB = hitobjects[_indexB].getEndTime();
 
-	Hitobject::Slider* sliderA, *sliderB;
+	Hitobject::Slider* sliderA = nullptr, *sliderB = nullptr;
 	
 	if (hitobjects[_indexA].isHitobjectLong())	sliderA = &hitobjects[_indexA].slider;
 	if (hitobjects[_indexB].isHitobjectLong())	sliderB = &hitobjects[_indexB].slider;
