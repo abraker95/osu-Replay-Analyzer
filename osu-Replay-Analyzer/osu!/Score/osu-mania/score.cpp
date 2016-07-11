@@ -131,6 +131,9 @@ void HandleEarlyMiss(std::vector<OSUMANIA::TIMING>* _accTimings, Hitobject* _cur
 
 void OSUMANIA::genAccTimings(Play* _play)
 {
+	accTimings.clear();
+	std::vector<OSUMANIA::TIMING>().swap(accTimings);
+
 	play = _play;
 
 	std::tuple<long, int, int> frame;

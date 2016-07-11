@@ -16,6 +16,7 @@ double OSUMANIA::SPEED_CONTROL::diff;
 void OSUMANIA::SPEED_CONTROL::genScore(Play* _play)
 {
 	scores.clear();
+	std::vector<OSUMANIA::TIMING>().swap(scores);
 
 	double missesPunisher = 1.0;
 	OSUMANIA::TIMING timing;
@@ -63,6 +64,7 @@ void OSUMANIA::SPEED_CONTROL::genScore(Play* _play)
 void OSUMANIA::SPEED_CONTROL::genSkill(Play* _play)
 {
 	skills.clear();
+	std::vector<OSUMANIA::TIMING>().swap(skills);
 
 	int KEYS = _play->beatmap->getDiff().cs;
 	std::vector<OSUMANIA::TIMING> timing;
@@ -136,6 +138,7 @@ void OSUMANIA::SPEED_CONTROL::genDiff(Play* _play)
 {
 	diff = -1;
 	diffs.clear();
+	std::vector<OSUMANIA::TIMING>().swap(diffs);
 
 	int KEYS = _play->beatmap->getDiff().cs;
 	std::vector<OSUMANIA::TIMING> timing, releases;
