@@ -6,6 +6,10 @@ double _widthRatio_, _heightRatio_;
 GamemodeRenderer::GamemodeRenderer(int _xpos, int _ypos, int _width, int _height, Play* _play, int* _viewTime) : GuiObj(_xpos, _ypos, _width, _height)
 {
 	gamemode = _play->beatmap->getGamemode();
+
+	stdRenderer = nullptr;
+	maniaRenderer = nullptr;
+
 	InitRenderer(_play, _viewTime);
 }
 

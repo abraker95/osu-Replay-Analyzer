@@ -36,7 +36,7 @@ void OsuStdRenderer::GenerateHitcircles()
 
 	for (int i = 0; i < hitCircles.size(); i++)
 	{
-		hitCircles[i] = new Hitcircle(beatmap, beatmap->getHitobjects()[i], viewTime);
+		hitCircles[i] = new Hitcircle(beatmap, &beatmap->getHitobjects()[i], viewTime);
 		hitCircles[i]->setParent(this);
 	}
 }
@@ -58,7 +58,6 @@ void OsuStdRenderer::Draw(Window& _win)
 void OsuStdRenderer::RenderVisible(Window& _win)
 {
 	Beatmap* beatmap = play->beatmap;
-	std::vector<Hitobject*>& hitobjects = beatmap->getHitobjects();
 	std::pair<int, int> visibilityTimes = beatmap->getIndicesVisibleAt(*viewTime, 0.3);
 
 	for (int i = visibilityTimes.first; i < visibilityTimes.second; i++)
@@ -70,7 +69,6 @@ void OsuStdRenderer::RenderVisible(Window& _win)
 void OsuStdRenderer::RenderPaths(Window& _win)
 {
 	Beatmap* beatmap = play->beatmap;
-	std::vector<Hitobject*>& hitobjects = beatmap->getHitobjects();
 	std::pair<int, int> visibilityTimes = beatmap->getIndicesVisibleAt(*viewTime, 0.3);
 
 	// \TODO: Restore the getPattern function

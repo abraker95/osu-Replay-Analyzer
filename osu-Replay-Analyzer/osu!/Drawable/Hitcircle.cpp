@@ -32,12 +32,12 @@ void Hitcircle::Draw(Window &_win)
 	if (hitobject->IsHitObjectType(SLIDER))
 	{
 		// draw slider
-		double velocity = hitobject->slider->getVelocity();
+		double velocity = hitobject->slider.getVelocity();
 		if (velocity != 0.0)
 		{
-			for (double t = hitobject->getTime(); t < hitobject->slider->getEndTime(); t += (1.0 / velocity))
+			for (double t = hitobject->getTime(); t < hitobject->slider.getEndTime(); t += (1.0 / velocity))
 			{
-				vector2d<double> sliderPoint = hitobject->slider->GetSliderPos(t);
+				vector2d<double> sliderPoint = hitobject->slider.GetSliderPos(t);
 				_win.driver->drawPixel(sliderPoint.X*getWidthRatio() + parent->getPos().X, sliderPoint.Y*getHeightRatio() + parent->getPos().Y, fade);
 
 				if (BTWN(t - (1.0 / velocity), *(this->viewTime), t + (1.0 / velocity)))

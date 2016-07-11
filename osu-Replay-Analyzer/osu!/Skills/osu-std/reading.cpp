@@ -20,6 +20,7 @@ void OSUSTANDARD::READING::genSkill(Play* _play)
 void OSUSTANDARD::READING::genDiff(Play* _play)
 {
 	/// \TODO
+	diffs.clear();
 }
 
 
