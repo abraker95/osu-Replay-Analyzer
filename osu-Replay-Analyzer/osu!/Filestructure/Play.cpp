@@ -73,8 +73,18 @@ void Play::LoadReplay(std::string _replayFile)
 void Play::ResetMods()
 {
 	this->beatmap->modTimingPoints = this->beatmap->origTimingPoints;
-	this->beatmap->modHitobjects = this->beatmap->origHitObjects;
 	this->beatmap->modifiedDiff = this->beatmap->origDiff;
+
+
+	for (Hitobject* hitobject : this->beatmap->origHitobjects)
+		beatmap->modHitobjects.push_back(*hitobject);
+
+	/*this->beatmap->modHitobjects.resize(3);
+	for (int i=0; i<this->beatmap->modHitobjects.size(); i++)
+	{
+		memcpy(&beatmap->modHitobjects[i], &beatmap->origHitobjects[i], sizeof(Hitobject));	
+	}*/
+	
 }
 
 // ------------- [PRIVATE] ----------------

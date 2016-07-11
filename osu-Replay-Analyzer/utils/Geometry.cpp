@@ -162,7 +162,7 @@ double getCircleOverlapArea(double _radius, double _dist)
 
 double GetHitobjectOverlapArea(Beatmap *_beatmap, int _indexA, int _indexB)
 {
-	std::vector<Hitobject*>& hitobjects = _beatmap->getHitobjects();
+	std::vector<Hitobject>& hitobjects = _beatmap->getHitobjects();
 
 	// out of bounds check
 	if (!(BTWN(0, _indexA, hitobjects.size() - 1) && BTWN(0, _indexB, hitobjects.size() - 1)))
