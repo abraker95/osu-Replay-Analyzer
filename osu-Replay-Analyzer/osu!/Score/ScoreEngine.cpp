@@ -10,8 +10,7 @@
 
 ScoreEngine::ScoreEngine(Play* _play)
 {
-	if((_play->beatmap != nullptr) && (_play->replay != nullptr))
-		genAccTimings(_play);
+	genAccTimings(_play);
 }
 
 void ScoreEngine::genAccTimings(Play* _play)

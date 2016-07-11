@@ -10,8 +10,6 @@ class ScoreEngine
 {
 	public:
 		ScoreEngine(Play* _play);
-
-	private:
 		void genAccTimings(Play* _play);
 };
 
