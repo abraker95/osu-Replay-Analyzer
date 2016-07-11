@@ -32,6 +32,7 @@ class Hitobject
 		virtual ~Hitobject();
 
 		bool IsHitObjectType(int type);
+		bool isHitobjectLong();
 		int getHitobjectType();
 
 		irr::core::vector2d<double> getPos() const;

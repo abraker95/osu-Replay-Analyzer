@@ -245,6 +245,11 @@ double Hitobject::getOpacityAt(int _time, double _AR, bool _hidden)
 }
 
 
+bool Hitobject::isHitobjectLong()
+{
+	return slider.curve.size() != 0;
+}
+
 //  ------------ [PRIVATE] ---------------
 
 void Hitobject::ProcessHitobjectData(std::vector<std::string> &_objectData)
