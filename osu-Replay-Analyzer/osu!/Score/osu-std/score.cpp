@@ -246,7 +246,7 @@ Hitobject* OSUSTANDARD::getNextNote(int* _iNote)
 {
 	(*_iNote) += 1;
 	if (BTWN(0, *_iNote, play->beatmap->getHitobjects().size() - 1))
-		return play->beatmap->getHitobjects()[*_iNote];
+		return &play->beatmap->getHitobjects()[*_iNote];
 
 	return nullptr;
 }

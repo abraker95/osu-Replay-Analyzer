@@ -2,6 +2,7 @@
 
 Hitobject::Slider::Slider(Hitobject* object) : hitobject(object), circle(nullptr) 
 {
+	//circle = nullptr;
 	this->toRepeatTime = -1;
 }
 
@@ -65,7 +66,7 @@ void Hitobject::Slider::newSlider(Hitobject* object, bool isline, bool iscircle)
 
 		if (iscircle)
 		{
-			this->circle = std::make_unique<CircumscribedCircle>(this);
+		//	this->circle = std::make_unique<CircumscribedCircle>(this);
 		}
 			
 	}
@@ -73,8 +74,8 @@ void Hitobject::Slider::newSlider(Hitobject* object, bool isline, bool iscircle)
 
 Hitobject::Slider::~Slider()
 { 
-	//if (circle != nullptr)
-	//	delete circle; 
+	//if(circle != nullptr)
+		circle.~CircumscribedCircle();
 }
 
 /*void Hitobject::Slider::operator=(Slider slider)

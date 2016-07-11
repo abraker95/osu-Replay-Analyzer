@@ -180,11 +180,11 @@ void Play::ApplyTimings()
 	// Mod hitobject timings
 	for (auto &hitobject : this->beatmap->modHitobjects)
 	{
-		hitobject->time /= divisor;
-		int type = hitobject->getHitobjectType();
+		hitobject.time /= divisor;
+		int type = hitobject.getHitobjectType();
 
 		if (type == HITOBJECTYPE::MANIALONG || type == HITOBJECTYPE::SLIDER || type == HITOBJECTYPE::SPINNER)
-			hitobject->slider->endTime /= divisor;
+			hitobject.slider.endTime /= divisor;
 	}
 
 	// Mod replay stream timings

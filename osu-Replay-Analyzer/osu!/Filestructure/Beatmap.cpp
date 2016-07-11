@@ -80,14 +80,14 @@ void Beatmap::resetModifiers()
 	modifiedMod = origMod;
 }
 
-std::vector<Hitobject*>& Beatmap::getHitobjects()
+std::vector<Hitobject>& Beatmap::getHitobjects()
 {
 	return modHitobjects;
 }
 
 int Beatmap::getNumHitobjectsVisibleAt(int _index, double _opacity)
 {
-	std::pair<int, int> indices = getIndicesVisibleAt(modHitobjects[_index]->getTime(), _opacity);
+	std::pair<int, int> indices = getIndicesVisibleAt(modHitobjects[_index].getTime(), _opacity);
 	return indices.second - indices.first;
 }
 
@@ -99,7 +99,7 @@ std::pair<int, int> Beatmap::getIndicesVisibleAt(int _time, double _opacity)
 	// Find first note visible
 	for (index = max(index, 0); index < modHitobjects.size(); index++)
 	{
-		if (modHitobjects[index]->isVisibleAt(_time, modifiedDiff.ar, modifiedMod.hidden))
+		if (modHitobjects[index].isVisibleAt(_time, modifiedDiff.ar, modifiedMod.hidden))
 			break;
 	}
 	range.first = index;
@@ -107,7 +107,7 @@ std::pair<int, int> Beatmap::getIndicesVisibleAt(int _time, double _opacity)
 	// Find last note visible
 	for (; index < modHitobjects.size(); index++)
 	{
-		if (!(modHitobjects[index]->isVisibleAt(_time, modifiedDiff.ar, modifiedMod.hidden)))
+		if (!(modHitobjects[index].isVisibleAt(_time, modifiedDiff.ar, modifiedMod.hidden)))
 			break;
 	}
 	range.second = index;
@@ -143,7 +143,7 @@ TimingPoint* Beatmap::getTimingPointAt(int _time)
 Hitobject* Beatmap::getHitobjectAt(int _time)
 {
 	int index = this->FindHitobjectAt(_time);
-	return this->modHitobjects[index];
+	return &this->modHitobjects[index];
 }
 
 //---------------- [PRIVATE] ----------------------
@@ -697,28 +697,28 @@ void Beatmap::PrepareSliderData()
 {
 	for (auto& hitObject : this->modHitobjects)
 	{
-		if (hitObject->IsHitObjectType(HITOBJECTYPE::SLIDER))
+		if (hitObject.IsHitObjectType(HITOBJECTYPE::SLIDER))
 		{
-			switch (hitObject->slider->curveType)
+			switch (hitObject.slider.curveType)
 			{
 				case 'B':
 				{
-					assert(hitObject->slider != nullptr);
-					hitObject->slider->newSlider(hitObject, false, false);
+					//assert(hitObject.slider != nullptr);
+					hitObject.slider.newSlider(&hitObject, false, false);
 					break;
 				}
 
 				case 'P':
 				{
-					if (hitObject->slider->curve.size() == 2)
+					if (hitObject.slider.curve.size() == 2)
 					{
-						assert(hitObject->slider != nullptr);
-						hitObject->slider->newSlider(hitObject, false, true);
+						//assert(hitObject.slider != nullptr);
+						hitObject.slider.newSlider(&hitObject, false, true);
 					}
 					else
 					{
-						assert(hitObject->slider != nullptr);
-						hitObject->slider->newSlider(hitObject, false, false);
+						//assert(hitObject.slider != nullptr);
+						hitObject.slider.newSlider(&hitObject, false, false);
 					}
 
 					break;
@@ -726,12 +726,12 @@ void Beatmap::PrepareSliderData()
 
 				case 'L': case 'C':
 				{
-					assert(hitObject->slider != nullptr);
-					hitObject->slider->newSlider(hitObject, true, false);
+					//assert(hitObject.slider != nullptr);
+					hitObject.slider.newSlider(&hitObject, true, false);
 					break;
 				}
 			}
-			hitObject->slider->endPoint = (hitObject->slider->repeat % 2) ? hitObject->slider->curve.back() : hitObject->slider->curve.front();
+			hitObject.slider.endPoint = (hitObject.slider.repeat % 2) ? hitObject.slider.curve.back() : hitObject.slider.curve.front();
 		}
 	}
 }
@@ -780,11 +780,11 @@ int Beatmap::FindHitobjectAt(int _time)
 			return mid;
 		}
 		// if the time is between 2 objects, return the next object
-		if(BTWN(this->origHitObjects[mid]->getTime(), _time, this->origHitObjects[mid + 1]->getTime()))
+		if(BTWN(this->origHitobjects[mid]->getTime(), _time, this->origHitobjects[mid + 1]->getTime()))
 		{
 			// make sure there is are no following objects at the same time
 			for (int i = mid + 1; i < this->origHitObjects.size(); i++)
-				if (BTWN(this->origHitObjects[mid]->getTime(), _time, this->origHitObjects[mid + 1]->getTime()))
+				if (BTWN(this->origHitobjects[mid]->getTime(), _time, this->origHitobjects[mid + 1]->getTime()))
 					mid = i;
 
 			return mid;
@@ -884,3 +884,4 @@ void Beatmap::SortEndTimes(int _left, int _right)
 	if (_left < j) SortEndTimes(_left, j);
 	if (_left < j) SortEndTimes(i, _right);
 }*/
+

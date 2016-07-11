@@ -126,7 +126,7 @@ class Hitobject
 						double startAng, endAng, midAng;
 				};
 			
-				std::unique_ptr <CircumscribedCircle> circle;
+				CircumscribedCircle circle;
 
 			protected:
 				Hitobject* hitobject;
@@ -161,7 +161,7 @@ class Hitobject
 				void init(std::vector<Bezier> curvesList);
 		};
 		
-		std::unique_ptr<Slider> slider;
+		Slider slider;
 
 
 	private:

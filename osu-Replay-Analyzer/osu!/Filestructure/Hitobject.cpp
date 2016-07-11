@@ -5,16 +5,19 @@
 
 Hitobject::Hitobject() : slider(nullptr){}
 
-Hitobject::Hitobject(std::vector<std::string> &_objectData, std::vector<std::string> &_sliderData)
+Hitobject::Hitobject(std::vector<std::string> &_objectData, std::vector<std::string> &_sliderData) : slider(this)
 {
+	//slider = nullptr;
+
 	ProcessHitobjectData(_objectData);
 	ProcessSliderData(_objectData, _sliderData);
 }
 
 Hitobject::~Hitobject()
 {
-	//if (slider != nullptr)
-	//	delete slider; 
+	//if(slider != nullptr) 
+		slider.~Slider();
+	//slider.reset();
 }
 
 bool Hitobject::IsHitObjectType(int _type)
@@ -53,17 +56,17 @@ int Hitobject::getEndTime() const
 
 	if (hitObjectType & (HITOBJECTYPE::SLIDER))
 	{
-		return this->time + this->slider->toRepeatTime * this->slider->repeat;
+		return this->time + this->slider.toRepeatTime * this->slider.repeat;
 	}
 
 	if (hitObjectType & (HITOBJECTYPE::SPINNER))
 	{
-		return this->slider->endTime;
+		return this->slider.endTime;
 	}
 
 	if (hitObjectType & (HITOBJECTYPE::MANIALONG))
 	{
-		return this->slider->endTime;
+		return this->slider.endTime;
 	}
 }
 
@@ -111,7 +114,7 @@ std::pair<int, int> Hitobject::getVisiblityTimes(double _AR, bool _hidden, doubl
 		// 70% to the time it the slider ends
 		if (this->IsHitObjectType(SLIDER))
 		{
-			double fadeoutDuration = (this->slider->endTime - fadeinTimeEnd); // how long the fadeout period is
+			double fadeoutDuration = (this->slider.endTime - fadeinTimeEnd); // how long the fadeout period is
 			double fadeoutTimeEnd = fadeinTimeEnd + fadeoutDuration;		   // When it is fully faded out
 			times.second = getValue(fadeinTimeEnd, fadeoutTimeEnd, 1.0 - _opacityEnd);
 
@@ -139,7 +142,7 @@ std::pair<int, int> Hitobject::getVisiblityTimes(double _AR, bool _hidden, doubl
 		// Otherwise, it's not visible anymore.
 		if (this->IsHitObjectType(SLIDER))
 		{
-			times.second = this->slider->endTime;
+			times.second = this->slider.endTime;
 			return times;
 		}
 		else
@@ -186,7 +189,7 @@ double Hitobject::getOpacityAt(int _time, double _AR, bool _hidden)
 			// 70% to the time it the slider ends
 			if (this->IsHitObjectType(SLIDER))
 			{
-				double fadeoutDuration = (slider->GetLastTickTime() - fadeinTimeEnd); // how long the fadeout period is
+				double fadeoutDuration = (slider.GetLastTickTime() - fadeinTimeEnd); // how long the fadeout period is
 				double fadeoutTimeEnd = fadeinTimeEnd + fadeoutDuration;		   // When it is fully faded out
 				return (1.0 - getPercent(fadeinTimeEnd, _time, fadeoutTimeEnd));
 			}
@@ -218,7 +221,7 @@ double Hitobject::getOpacityAt(int _time, double _AR, bool _hidden)
 			// Otherwise, it's not visible anymore.
 			if (this->IsHitObjectType(SLIDER))
 			{
-				if (_time > slider->getEndTime())
+				if (_time > slider.getEndTime())
 				{
 					// \TODO: Opacity when pressed and when missed
 					return 0.0;
@@ -264,12 +267,12 @@ void Hitobject::ProcessSliderData(std::vector<std::string> &_objectData, std::ve
 	
 	if (this->getHitobjectType() & HITOBJECTYPE::SLIDER)
 	{
-		this->slider = std::make_unique<Hitobject::Slider>(this);
+		//this->slider = std::make_unique<Hitobject::Slider>(this);
 		//FileReader::tokenize(_objectData[5], _sliderData, "|");
 
 		// curve parsing
 		{
-			slider->curveType = (CurveType)_sliderData[0].c_str()[0];
+			slider.curveType = (CurveType)_sliderData[0].c_str()[0];
 
 			for (int i = 1; i < _sliderData.size(); i++)
 			{
@@ -282,26 +285,26 @@ void Hitobject::ProcessSliderData(std::vector<std::string> &_objectData, std::ve
 					curve.X = atoi(curveTokens[0].c_str());
 					curve.Y = atoi(curveTokens[1].c_str());
 
-					slider->curve.push_back(curve);
+					slider.curve.push_back(curve);
 				}
 			}
 		}
 
-		slider->repeat = atoi(_objectData[6].c_str());
-		slider->pixelLength = atof(_objectData[7].c_str());
+		slider.repeat = atoi(_objectData[6].c_str());
+		slider.pixelLength = atof(_objectData[7].c_str());
 	}
 
 	if (this->getHitobjectType() & HITOBJECTYPE::SPINNER)
 	{
-		this->slider = std::make_unique<Hitobject::Slider>(this);
-		slider->endTime = atoi(_objectData[5].c_str());
+		//this->slider = std::make_unique<Hitobject::Slider>(this);
+		slider.endTime = atoi(_objectData[5].c_str());
 	}
 
 	if (this->getHitobjectType() & HITOBJECTYPE::MANIALONG)
 	{
 		FileReader::tokenize(_objectData[5], _sliderData, ":");
 
-		this->slider = std::make_unique<Hitobject::Slider>(this);
-		slider->endTime = atoi(_sliderData[0].c_str());
+		//this->slider = std::make_unique<Hitobject::Slider>(this);
+		slider.endTime = atoi(_sliderData[0].c_str());
 	}
 }

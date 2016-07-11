@@ -171,14 +171,16 @@ double GetHitobjectOverlapArea(Beatmap *_beatmap, int _indexA, int _indexB)
 	// Load up the needed vars
 	double diameter = CS2px(_beatmap->getDiff().cs);
 
-	double startTimeA = hitobjects[_indexA]->getTime();
-	double startTimeB = hitobjects[_indexB]->getTime();
+	double startTimeA = hitobjects[_indexA].getTime();
+	double startTimeB = hitobjects[_indexB].getTime();
 
-	double endTimeA = hitobjects[_indexA]->getEndTime();
-	double endTimeB = hitobjects[_indexB]->getEndTime();
+	double endTimeA = hitobjects[_indexA].getEndTime();
+	double endTimeB = hitobjects[_indexB].getEndTime();
 
-	Hitobject::Slider* sliderA = hitobjects[_indexA]->slider.get();
-	Hitobject::Slider* sliderB = hitobjects[_indexB]->slider.get();
+	Hitobject::Slider* sliderA, *sliderB;
+	
+	if (hitobjects[_indexA].isHitobjectLong())	sliderA = &hitobjects[_indexA].slider;
+	if (hitobjects[_indexB].isHitobjectLong())	sliderB = &hitobjects[_indexB].slider;
 
 	// if it's a non sliders, then just iterate by 1 ms
 	double velocityA, velocityB;
@@ -198,10 +200,10 @@ double GetHitobjectOverlapArea(Beatmap *_beatmap, int _indexA, int _indexB)
 		for (double timeB = startTimeB; timeB <= endTimeB; timeB += (diameter / 2.0*velocityB))
 		{
 			vector2d<double> pointA, pointB;
-			if (sliderA == nullptr)	pointA = hitobjects[_indexA]->getPos();
+			if (sliderA == nullptr)	pointA = hitobjects[_indexA].getPos();
 			else					pointA = sliderA->GetSliderPos(timeA);
 			
-			if (sliderB == nullptr)	pointB = hitobjects[_indexB]->getPos();
+			if (sliderB == nullptr)	pointB = hitobjects[_indexB].getPos();
 			else					pointB = sliderB->GetSliderPos(timeB);
 
 			double overlapArea = getCircleOverlapArea(diameter / 2.0, getDist(pointA, pointB));
