@@ -56,6 +56,9 @@ void OsuStdRenderer::UpdateInternal(Window& _win)
 
 void OsuStdRenderer::Draw(Window& _win)
 {
+	if (play->beatmap->getGamemode() == GAMEMODE::GAMEMODE_ERROR)
+		return;
+
 	if (layerState & VISIBLE)    this->RenderVisible(_win);
 	if (layerState & PATHS)      this->RenderPaths(_win);
 	if (layerState & DENSITY)    this->RenderDensities(_win);
