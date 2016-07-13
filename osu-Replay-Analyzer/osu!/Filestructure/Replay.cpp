@@ -10,6 +10,11 @@
 
 Replay::Replay(std::string _filepath)
 {
+	ProcessReplay(_filepath);
+}
+
+void Replay::ProcessReplay(std::string _filepath)
+{
 	std::ifstream replayFile(_filepath, std::ios::binary);
 	if (replayFile.is_open())
 	{
@@ -18,7 +23,7 @@ Replay::Replay(std::string _filepath)
 		replayFile.close();
 	}
 
-	// \TODO: Make sure the stream data is ordered time-wise
+	/// \TODO: Make sure the stream data is ordered time-wise
 	this->ValidateMods();
 }
 

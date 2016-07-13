@@ -168,6 +168,9 @@ int main()
 	Button btnBeatmap(-130, 10, 100, 10);
 		btnBeatmap.ClipPosTo(GuiObj::TOPRIGHT);
 
+	Button btnReplay(-25, 10, 100, 10);
+		btnReplay.ClipPosTo(GuiObj::TOPRIGHT);
+
 	/// \TODO: Figure out how to exit this thread safely when closing window
 //	std::function<double(double)> reactFoo = [&circles, &CS, &AR, &hidden](int _x) { return getReactionSkill(circles, _x, CS, AR, hidden); };
 //	std::thread first(DrawGraph, winGraph, reactFoo, &time_ms, 10.0, 1, 0.5);
@@ -254,6 +257,12 @@ int main()
 				play.LoadBeatmap(getAnalyzerTXT().first);
 				skillEngine.Generate(&play);
 				renderer.InitRenderer(&play, &viewTime);
+			}
+
+			if (btnReplay.isTriggered())
+			{
+				play.LoadReplay(getAnalyzerTXT().second);
+				play.scoreEngine->genAccTimings(&play);
 			}
 				
 

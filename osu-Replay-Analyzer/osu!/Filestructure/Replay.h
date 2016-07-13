@@ -18,12 +18,13 @@ class Replay
 	public:
 		Replay(std::string _filepath);
 
-		bool HasMod(MODS _mod);
+		void ProcessReplay(std::string _filepath);
 		
 		std::tuple<irr::core::vector2df, int> getDataAt(long _time);
 		std::tuple<long, irr::core::vector2df, int> getFrame(int _frame) const;
 		int getNumFrames();
 
+		bool HasMod(MODS _mod);
 		bool isBeatmap(std::string* _MD5);
 		bool isGamemode(GAMEMODE _gamemode);
 
