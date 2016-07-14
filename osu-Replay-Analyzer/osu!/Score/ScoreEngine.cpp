@@ -8,14 +8,13 @@
 
 #include <math.h>
 
-ScoreEngine::ScoreEngine(Play* _play)
-{
-	genAccTimings(_play);
-}
+ScoreEngine::ScoreEngine(){}
 
 void ScoreEngine::genAccTimings(Play* _play)
 {
+	// need beatmap and replay for score generation
 	if (!_play->beatmap->isValid())	return;
+	if (!_play->replay->isValid())	return;
 
 	GAMEMODE gamemode = _play->beatmap->getGamemode();
 	switch (gamemode)

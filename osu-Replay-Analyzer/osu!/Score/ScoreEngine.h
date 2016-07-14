@@ -9,7 +9,7 @@
 class ScoreEngine
 {
 	public:
-		ScoreEngine(Play* _play);
+		ScoreEngine();
 		void genAccTimings(Play* _play);
 };
 
