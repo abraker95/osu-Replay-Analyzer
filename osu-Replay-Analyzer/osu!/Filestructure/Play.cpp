@@ -37,16 +37,10 @@ Play::~Play()
 
 void Play::ProcessBeatmap()
 {
-	if (beatmap->getGamemode() != GAMEMODE::GAMEMODE_ERROR)
-	{
-		this->ResetMods();
-			this->ApplyAR();
-			this->ApplyCS();
-			this->ApplyOD();
-			this->ApplyVisual();
-			this->ApplyTimings();
-		this->beatmap->Process();
-	}
+	if (!beatmap->isValid())	
+		return;
+
+	this->beatmap->Process();
 }
 
 void Play::LoadBeatmap(std::string _beatmapFile)
@@ -56,6 +50,8 @@ void Play::LoadBeatmap(std::string _beatmapFile)
 	beatmap = new Beatmap(_beatmapFile);
 
 	ProcessBeatmap();
+	ResetTimings();
+	setMods(BEATMAP);
 }
 
 void Play::LoadReplay(std::string _replayFile)
@@ -66,119 +62,71 @@ void Play::LoadReplay(std::string _replayFile)
 	if (scoreEngine != nullptr)
 		delete scoreEngine;
 
-	ProcessBeatmap();
-	scoreEngine = new ScoreEngine(this);
+	replay->ProcessReplay(_replayFile, beatmap);
+	setMods(REPLAY);
+	scoreEngine->genAccTimings(this);
 }
 
-void Play::ResetMods()
+void Play::setMods(ModSource _source)
 {
-	this->beatmap->modTimingPoints = this->beatmap->origTimingPoints;
-	this->beatmap->modifiedDiff = this->beatmap->origDiff;
+	currModSource = _source;
+	prevMods = activeMods;
 
-
-	for (Hitobject* hitobject : this->beatmap->origHitobjects)
-		beatmap->modHitobjects.push_back(*hitobject);
-
-	/*this->beatmap->modHitobjects.resize(3);
-	for (int i=0; i<this->beatmap->modHitobjects.size(); i++)
+	/// \TODO: Prevent chnanging certain mod on specific gamemodes (like mania and CS)
+	switch (_source)
 	{
-		memcpy(&beatmap->modHitobjects[i], &beatmap->origHitobjects[i], sizeof(Hitobject));	
-	}*/
-	
+		case BEATMAP:
+			activeMods = beatmap->getMods();
+			break;
+
+		case REPLAY:
+			activeMods = replay->getMods();
+			break;
+
+		case CUSTOM:
+			activeMods = this->custom;
+			break;
+
+		default:
+			break;
+	}
+
+	ApplyMods();
+}
+
+Mods* Play::getMod()
+{
+	return &activeMods;
 }
 
 // ------------- [PRIVATE] ----------------
 
-
-void Play::setMods()
+void Play::ApplyMods()
 {
+	this->ApplyVisual();
 
-}
-
-void Play::ApplyAR()
-{
-	this->beatmap->modifiedDiff.ar = this->beatmap->origDiff.ar;
-	if (replay == nullptr)
-		return;
-
-	double &ar = this->beatmap->modifiedDiff.ar;
-
-	if (replay->HasMod(MODS::EZ))
+	if (prevMods.getTM() != activeMods.getTM())
 	{
-		ar *= 0.5;
-	}
-
-	if (replay->HasMod(MODS::HR))
-	{
-		// make sure ar doesnt go over 10
-		if (ar*1.4 < 10) ar *= 1.4;
-		else			 ar = 10;
-	}
-
-	if (replay->HasMod(MODS::HT))  ar = ms2AR(AR2ms(ar) / 0.75);
-	if (replay->HasMod(MODS::DT))  ar = std::min(ms2AR(AR2ms(ar) / 1.5), 11.0);
-
-	// for old maps which had AR as part as OD
-	if (this->beatmap->origDiff.ar == -1)
-	{
-		this->beatmap->origDiff.ar = this->beatmap->origDiff.od;
-		this->beatmap->modifiedDiff.ar = this->beatmap->modifiedDiff.od;
+		this->ResetTimings();
+		this->ApplyTimings();
 	}
 }
 
-void Play::ApplyCS()
+void Play::ResetTimings()
 {
-	this->beatmap->modifiedDiff.cs = this->beatmap->origDiff.cs;
-	if (replay == nullptr)
-		return;
+	// reset diffs, timingpoints, and modified hitobjects
+	this->beatmap->ResetModified();
+	this->beatmap->modTimingPoints = this->beatmap->origTimingPoints;
 
-	double &cs = this->beatmap->modifiedDiff.cs;
-
-	if (replay->HasMod(MODS::EZ)) cs *= 0.5;
-	if (replay->HasMod(MODS::HR)) cs *= 1.3;
+	for (Hitobject* hitobject : this->beatmap->origHitobjects)
+		beatmap->modHitobjects.push_back(*hitobject);
 }
 
-void Play::ApplyOD()
-{
-	this->beatmap->modifiedDiff.od = this->beatmap->origDiff.od;
-	if (replay == nullptr)
-		return;
-
-	double &od = this->beatmap->modifiedDiff.od;
-
-	if (replay->HasMod(MODS::EZ))
-	{
-		od *= 0.5;
-	}
-
-	if (replay->HasMod(MODS::HR))
-	{
-		// make sure od doesnt go over 10
-		if (od*1.4 < 10) od *= 1.4;
-		else			 od = 10;
-	}
-
-	if (replay->HasMod(MODS::HT))
-	{
-		//od *= 0.75;
-	}
-
-	if (replay->HasMod(MODS::DT))
-	{
-		//od *= 1.5;
-	}
-}
 
 void Play::ApplyTimings()
 {
-	double divisor = 1;
+	double divisor = activeMods.getTM();
 
-	if (replay != nullptr)
-	{
-		if (replay->HasMod(MODS::HT)) divisor = 0.75;
-		if (replay->HasMod(MODS::DT)) divisor = 1.5;
-	}
-	
 	// Mod timing points
 	for (auto &tp : this->beatmap->modTimingPoints)
 	{
@@ -196,42 +144,40 @@ void Play::ApplyTimings()
 		if (type == HITOBJECTYPE::MANIALONG || type == HITOBJECTYPE::SLIDER || type == HITOBJECTYPE::SPINNER)
 			hitobject.slider.endTime /= divisor;
 	}
-
-	// Mod replay stream timings
-	for (auto &frame : replay->replayStream)
-	{
-		std::get<0>(frame) /= divisor;
-	}
 }
 
 void Play::ApplyVisual()
 {
-	if (replay == nullptr)
-		return;
+	/// \TODO: Hitcircles, etc are to have the following modifiable attributes:
+	///				 FI	 FIR			 FO	  FOR    					 H
+	///	  ------------O---|---------------O---|--------------------------X
+	///
+	/// H - hit time
+	/// FO - fade out time offset relative to hit time
+	/// FOR - fade out rate (1.0 max; %/ms)
+	/// FI - fade in time offset relative to fade out time
+	/// FIR - fade in rate (1.0 max; %/ms)
+	/// 
 
-	if (replay->HasMod(MODS::HD))
+	if (activeMods.getModifier().HD)
 	{
-		beatmap->origMod.hidden = true;
-		beatmap->modifiedMod.hidden = true;
+		/// \TODO
 	}
 
-	if (replay->HasMod(MODS::FL))
+	if (activeMods.getModifier().FL)
 	{
-		beatmap->origMod.flashlight = true;
-		beatmap->modifiedMod.hidden = true;
+		/// \TODO
 	}
 
-	if (replay->HasMod(MODS::FI))
+	if (activeMods.getModifier().FI)
 	{
-		beatmap->origMod.fadeIn = true;
-		beatmap->modifiedMod.hidden = true;
+		/// \TODO
 	}
 
-	if (replay->HasMod(MODS::HR))
+	if (activeMods.getModifier().HR)
 	{
+		// flip on the diagonal x-y axis
 		for (auto &hitobject : this->beatmap->modHitobjects)
-		{
-
-		}
+			hitobject.setPos(irr::core::vector2d<double>(hitobject.getPos().Y, hitobject.getPos().X));
 	}
 }

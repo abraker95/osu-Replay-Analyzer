@@ -37,7 +37,7 @@ void OsuManiaRenderer::GenerateHitNotes()
 
 	for (int i = 0; i < hitNotes.size(); i++)
 	{
-		hitNotes[i] = new HitNote(beatmap, &beatmap->getHitobjects()[i], viewTime, &zoom);
+		hitNotes[i] = new HitNote(play->getMod(), &beatmap->getHitobjects()[i], viewTime, &zoom);
 			hitNotes[i]->setParent(this);
 	}
 }
@@ -99,7 +99,7 @@ void OsuManiaRenderer::RenderReplay(Window& _win)
 	Replay* replay = play->replay;
 	std::tuple<irr::core::vector2df, int> data = replay->getDataAt(*viewTime);
 	int hitYpos = this->height;
-	const int KEYS = play->beatmap->getDiff().cs;
+	const int KEYS = play->beatmap->getMods().getCS();
 
 	for (int key = 0; key < KEYS; key++)
 	{
@@ -120,7 +120,7 @@ void OsuManiaRenderer::RenderTimings(Window& _win)
 
 void OsuManiaRenderer::RenderHitTimings(Window& _win)
 {
-	const int KEYS = play->beatmap->getDiff().cs;
+	const int KEYS = play->beatmap->getMods().getCS();
 
 	for (OSUMANIA::TIMING timing : OSUMANIA::accTimings)
 	{
@@ -152,7 +152,7 @@ void OsuManiaRenderer::RenderHitTimings(Window& _win)
 
 void OsuManiaRenderer::RenderTappingDiffs(Window& _win)
 {
-	const int KEYS = play->beatmap->getDiff().cs;
+	const int KEYS = play->beatmap->getMods().getCS();
 
 	for (OSUMANIA::TIMING timing : OSUMANIA::SPEED_CONTROL::diffs)
 	{

@@ -1,14 +1,13 @@
 #include "TimingObject.h"
 #include "TimingGraph.h"
 
-TimingObject::TimingObject(int _xpos, int _ypos, int _width, int _height, Hitobject* _hitobject, Beatmap::Modifier* _modifier, Beatmap::Diff* _diff, TimingGraph* _timingGraph) : GuiObj(_xpos, _ypos, _width, _height, _timingGraph)
+TimingObject::TimingObject(int _xpos, int _ypos, int _width, int _height, Hitobject* _hitobject, Mods* _mods, TimingGraph* _timingGraph) : GuiObj(_xpos, _ypos, _width, _height, _timingGraph)
 {
 	state = IDLE;
 
 	timingGraph = _timingGraph;
 	hitobject = _hitobject;
-	modifier = _modifier;
-	diff = _diff;
+	mods = _mods;
 
 	origXpos = _xpos;
 	origWidth = _width;
@@ -96,7 +95,7 @@ void TimingObject::UpdateHitObjectTiming()
 void TimingObject::UpdatePosDim()
 {
 	std::pair<int, int> viewTimes = timingGraph->getViewTimes();
-	std::pair<int, int> visibilityTimes = hitobject->getVisiblityTimes(diff->ar, modifier->hidden, 0.1, 0.1);
+	std::pair<int, int> visibilityTimes = hitobject->getVisiblityTimes(mods->getAR(), mods->getModifier().HD, 0.1, 0.1);
 
 	int startPos = (visibilityTimes.first - viewTimes.first)*timingGraph->getZoom();
 	int endPos = (visibilityTimes.second - viewTimes.first)*timingGraph->getZoom();

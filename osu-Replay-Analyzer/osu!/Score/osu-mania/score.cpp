@@ -144,7 +144,7 @@ void OSUMANIA::genAccTimings(Play* _play)
 	bool stop = false;
 
 	// process each column individualy
-	int KEYS = play->beatmap->getDiff().cs;	
+	int KEYS = play->beatmap->getMods().getCS();	
 	std::vector<int> iNote;					// keep track where we are on the map
 	std::vector<bool> nextNote;				// whether to fetch next note on column or not
 	std::vector<bool> pressStates;			// which state we are expecting
@@ -418,7 +418,7 @@ Hitobject* OSUMANIA::getNextNoteOnColumn(int _column, int* _iNote)
 	(*_iNote) += 1;
 	for (; (*_iNote) < play->beatmap->getHitobjects().size(); (*_iNote)++)
 	{
-		int KEYS = play->beatmap->getDiff().cs;
+		int KEYS = play->beatmap->getMods().getCS();
 		int noteXpos = play->beatmap->getHitobjects()[*_iNote].getPos().X;
 
 		float localWDivisor = 512.0f / KEYS;

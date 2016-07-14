@@ -24,6 +24,7 @@ void Replay::ProcessReplay(std::string _filepath)
 	}
 
 	/// \TODO: Make sure the stream data is ordered time-wise
+	mod = _beatmap->getMods();
 	this->ValidateMods();
 }
 
@@ -50,9 +51,9 @@ int Replay::getNumFrames()
 	return replayStream.size();
 }
 
-bool Replay::HasMod(MODS _mod)
+Mods Replay::getMods()
 {
-	return (mods & _mod);
+	return mod;
 }
 
 
@@ -232,7 +233,27 @@ void Replay::ParseReplayData(unsigned char* _data, size_t _length, char _gamemod
 
 void Replay::ValidateMods()
 {
+	// If one of these asserts triggers, then someone has been hacking the replay
 	assert(((this->mods & EZ) != true) && ((this->mods & HR) != true));
 	assert(((this->mods & DT) != true) && ((this->mods & HT) != true));
 	assert(((this->mods & HD) != true) && ((this->mods & FL) != true));
+
+	mod.setTM(1.0);
+
+	// Set mod flags
+	if (mods & EZ) mod.setModifier(Mods::MODS::EZ);
+	if (mods & HR) mod.setModifier(Mods::MODS::HR);
+	if (mods & HT) mod.setModifier(Mods::MODS::HT);
+	if (mods & DT) mod.setModifier(Mods::MODS::DT);
+	if (mods & FL) mod.setModifier(Mods::MODS::FL);
+	if (mods & HD) mod.setModifier(Mods::MODS::HD);
+	if (mods & FI) mod.setModifier(Mods::MODS::FI);
+
+	// adjust frame timings due to DT or HT mod
+	double divisor = mod.getTM();
+	if (divisor == 1.0) return;
+
+	// Mod replay stream timings
+	for (auto &frame : replayStream)
+		std::get<0>(frame) /= divisor;
 }

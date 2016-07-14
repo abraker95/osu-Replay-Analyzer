@@ -44,7 +44,7 @@ void OsuStdRenderer::GenerateHitcircles()
 
 	for (int i = 0; i < hitCircles.size(); i++)
 	{
-		hitCircles[i] = new Hitcircle(beatmap, &beatmap->getHitobjects()[i], viewTime);
+		hitCircles[i] = new Hitcircle(play->getMod(), &beatmap->getHitobjects()[i], viewTime);
 		hitCircles[i]->setParent(this);
 	}
 }

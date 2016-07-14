@@ -10,28 +10,38 @@ class Play
 {
 	public:
 		Play(std::string _beatmapFile, std::string _replayFile = "");
+		enum ModSource
+		{
+			BEATMAP,
+			REPLAY,
+			CUSTOM
+		};
+
 		virtual ~Play();
 
 		Beatmap *beatmap;
 		Replay  *replay;
 		ScoreEngine *scoreEngine;
+		Mods custom;
 
 		void LoadBeatmap(std::string _beatmapFile);
 		void LoadReplay(std::string _replayFile);
-
-		void ResetMods();
+		
+		void setMods(ModSource _source);
+		Mods* getMod();
 
 	private:
+		
 		void ValidateMods();
 		void ProcessBeatmap();
 
-		void setMods();
-
-		void ApplyAR();
-		void ApplyCS();
-		void ApplyOD();
+		void ResetTimings();
+		void ApplyMods();
 		void ApplyVisual();
 		void ApplyTimings();
+
+		Mods activeMods, prevMods;
+		ModSource currModSource;
 };
 
 #endif

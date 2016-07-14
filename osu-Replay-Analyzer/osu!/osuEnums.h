@@ -11,6 +11,7 @@ enum GAMEMODE
 	GAMEMODE_ERROR
 };
 
+/// \TODO: The Mods class takes care of this, so get rid of this
 enum MODS
 {
 	// non

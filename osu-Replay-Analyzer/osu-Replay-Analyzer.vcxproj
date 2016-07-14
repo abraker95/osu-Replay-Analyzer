@@ -101,6 +101,7 @@
     <ClCompile Include="osu!\Filestructure\LZMA\easylzma\pavlov\LzmaDec.c" />
     <ClCompile Include="osu!\Filestructure\LZMA\easylzma\pavlov\LzmaEnc.c" />
     <ClCompile Include="osu!\Filestructure\LZMA\easylzma\pavlov\LzmaLib.c" />
+    <ClCompile Include="osu!\Filestructure\Mods.cpp" />
     <ClCompile Include="osu!\Filestructure\Play.cpp" />
     <ClCompile Include="osu!\Filestructure\Replay.cpp" />
     <ClCompile Include="osu!\Filestructure\SliderHitobject.cpp" />
@@ -186,6 +187,7 @@
     <ClInclude Include="osu!\Filestructure\LZMA\easylzma\pavlov\LzmaEnc.h" />
     <ClInclude Include="osu!\Filestructure\LZMA\easylzma\pavlov\LzmaLib.h" />
     <ClInclude Include="osu!\Filestructure\LZMA\easylzma\pavlov\Types.h" />
+    <ClInclude Include="osu!\Filestructure\Mods.h" />
     <ClInclude Include="osu!\Filestructure\Play.h" />
     <ClInclude Include="osu!\Filestructure\Replay.h" />
     <ClInclude Include="osu!\Filestructure\TimingPoint.h" />

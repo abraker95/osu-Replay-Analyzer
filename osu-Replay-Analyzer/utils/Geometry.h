@@ -3,7 +3,7 @@
 
 #include <tuple>
 #include "../irrlicht/include/irrlicht.h"
-#include "../osu!/Filestructure/Beatmap.h"
+#include "../osu!/Filestructure/Play.h"
 
 using namespace irr;
 using namespace core;
@@ -47,7 +47,7 @@ double deg2rad(double _deg);
 
 double getCircleArea(double _radius);
 double getCircleOverlapArea(double _radius, double _dist);
-double GetHitobjectOverlapArea(Beatmap *_beatmap, int _indexA, int _indexB);
+double GetHitobjectOverlapArea(Play *_play, int _indexA, int _indexB);
 
 #endif
 

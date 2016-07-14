@@ -12,10 +12,10 @@
 using namespace irr;
 using namespace core;
 
-TimingGraph::TimingGraph(Window& _win, Beatmap* _beatmap) : GuiObj(0, 0, _win.getDimentions().Width, 0)
+TimingGraph::TimingGraph(Window& _win, Play* _play) : GuiObj(0, 0, _win.getDimentions().Width, 0)
 {
 	guiType = "Timing_Graph";
-	beatmap = _beatmap;
+	play = _play;
 	zoom = 1;
 	autoPlay = false;
 
@@ -76,11 +76,12 @@ bool TimingGraph::ViewTimeChanged()
 void TimingGraph::GenerateVisibilityTimings()
 {
 	int layer = 1;
+	Beatmap* beatmap = play->beatmap;
 
 	timingObjects.resize(beatmap->getHitobjects().size());
 	for (int i = 0; i < timingObjects.size(); i++)
 	{
-		std::pair<int, int> visibilityTimes = beatmap->getHitobjects()[i].getVisiblityTimes(beatmap->getDiff().ar, beatmap->getModifiers().hidden, 0.1, 0.1);
+		std::pair<int, int> visibilityTimes = beatmap->getHitobjects()[i].getVisiblityTimes(play->getMod()->getAR(), play->getMod()->getModifier().HD, 0.1, 0.1);
 
 		if (layer <= 1)
 		{
@@ -95,10 +96,10 @@ void TimingGraph::GenerateVisibilityTimings()
 		const int layerHeight = 4;
 
 		//timingObjects[i] = new TimingObject(startPos, layerPos, endPos-startPos, layerHeight, beatmap->hitObjects[i], this, this);
-		timingObjects[i] = new TimingObject(0, layerPos, 0, layerHeight, &beatmap->getHitobjects()[i], &beatmap->getModifiers(), &beatmap->getDiff(), this);
+		timingObjects[i] = new TimingObject(0, layerPos, 0, layerHeight, &beatmap->getHitobjects()[i], play->getMod(), this);
 		layer--;
 	}
-}
+ }
 
 void TimingGraph::drawRefreshRateTimings(Window &_win, double _FPS)
 {
@@ -127,6 +128,7 @@ void TimingGraph::drawRefreshRateTimings(Window &_win, double _FPS)
 
 void TimingGraph::drawHitobjectHitTimings(Window &_win)
 {
+	Beatmap* beatmap = play->beatmap;
 	std::pair<int, int> viewTimes = this->getViewTimes();
 	int startIndex = 0, endIndex = beatmap->getHitobjects().size() - 1;
 
@@ -158,6 +160,7 @@ void TimingGraph::drawHitobjectHitTimings(Window &_win)
 
 void TimingGraph::drawHitobjectVisibilityTimings(Window &_win)
 {
+	Beatmap* beatmap = play->beatmap;
 	std::pair<int, int> viewTimes = this->getViewTimes();
 	int startIndex = 0, endIndex = beatmap->getHitobjects().size() - 1;
 
@@ -165,7 +168,7 @@ void TimingGraph::drawHitobjectVisibilityTimings(Window &_win)
 		startIndex = beatmap->FindHitobjectAt(viewTimes.first);
 
 	if (viewTimes.second < beatmap->getHitobjects()[beatmap->getHitobjects().size() - 1].getTime())
-		endIndex = beatmap->FindHitobjectAt(viewTimes.second + AR2ms(beatmap->getDiff().ar));
+		endIndex = beatmap->FindHitobjectAt(viewTimes.second + AR2ms(play->getMod()->getAR()));
 
 	if (endIndex <= startIndex) endIndex = beatmap->getHitobjects().size() - 1;
 	for (int i = startIndex; i <= endIndex; i++)
@@ -297,15 +300,15 @@ void TimingGraph::Draw(Window& _win)
 
 	if (layerMask & HITOBJECT_VISIBILTITY)
 	{
-		if(beatmap != nullptr)
-			if(beatmap->getHitobjects().size() != 0)
+		if(play->beatmap != nullptr)
+			if(play->beatmap->getHitobjects().size() != 0)
 				this->drawHitobjectVisibilityTimings(_win);
 	}
 
 	if (layerMask & HITOBJECT_HIT_TIMINGS)
 	{
-		if (beatmap != nullptr)
-			if (beatmap->getHitobjects().size() != 0)
+		if (play->beatmap != nullptr)
+			if (play->beatmap->getHitobjects().size() != 0)
 				this->drawHitobjectHitTimings(_win);
 	}
 

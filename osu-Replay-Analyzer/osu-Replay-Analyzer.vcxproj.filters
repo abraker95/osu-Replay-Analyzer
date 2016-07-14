@@ -375,6 +375,9 @@
     <ClCompile Include="osu!\Drawable\HitTimingMarker.cpp">
       <Filter>Source Files\osu!\Drawable</Filter>
     </ClCompile>
+    <ClCompile Include="osu!\Filestructure\Mods.cpp">
+      <Filter>Source Files\osu!\File Structure</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="osu!\Filestructure\LZMA.h">
@@ -646,6 +649,9 @@
     </ClInclude>
     <ClInclude Include="osu!\Drawable\HitTimingMarker.h">
       <Filter>Header Files\osu!\Drawable</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\Filestructure\Mods.h">
+      <Filter>Header Files\osu!\File structure</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

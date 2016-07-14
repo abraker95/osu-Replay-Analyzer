@@ -9,10 +9,10 @@
 #include <iostream>
 #include <tuple>
 
-HitNote::HitNote(Beatmap* _beatmap, Hitobject* _hitobject, int* _viewTime, double* _zoom)
+HitNote::HitNote(Mods* _mods, Hitobject* _hitobject, int* _viewTime, double* _zoom)
 	: GuiObj(log2(_hitobject->getPos().X) * 300, 0, 50, 15)
 {
-	beatmap = _beatmap;
+	mods = _mods;
 	hitobject = _hitobject;
 	viewTime = _viewTime;
 	zoom = _zoom;
@@ -102,7 +102,7 @@ void HitNote::UpdateInternal(Window &_win)
 
 void HitNote::UpdateAbsPos(Window& _win)
 {
-	int numKeys = beatmap->getDiff().cs;
+	int numKeys = mods->getCS();
 	int key = OSUMANIA::getKey(hitobject->getPos().X, numKeys);
 	int xpos = key * (parent->getDim().Width / numKeys) + (parent->getPos().X - parent->getDim().Width/2);
 
@@ -117,7 +117,7 @@ void HitNote::UpdateAbsPos(Window& _win)
 
 void HitNote::UpdateAbsDim(Window& _win)
 {
-	int numKeys = beatmap->getDiff().cs;
+	int numKeys = mods->getCS();
 	width = ((parent->getDim().Width) / numKeys) - (2*numKeys);
 
 	if (hitobject->getHitobjectType() & HITOBJECTYPE::MANIALONG)

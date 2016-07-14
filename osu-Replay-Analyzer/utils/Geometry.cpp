@@ -160,16 +160,16 @@ double getCircleOverlapArea(double _radius, double _dist)
 		return 2*_radius*_radius*acos(_dist / (2.0*_radius)) - (_dist / 4.0)*sqrt(4.0*_radius*_radius - _dist*_dist);
 }
 
-double GetHitobjectOverlapArea(Beatmap *_beatmap, int _indexA, int _indexB)
+double GetHitobjectOverlapArea(Play *_play, int _indexA, int _indexB)
 {
-	std::vector<Hitobject>& hitobjects = _beatmap->getHitobjects();
+	std::vector<Hitobject>& hitobjects = _play->beatmap->getHitobjects();
 
 	// out of bounds check
 	if (!(BTWN(0, _indexA, hitobjects.size() - 1) && BTWN(0, _indexB, hitobjects.size() - 1)))
 		return 0;
 
 	// Load up the needed vars
-	double diameter = CS2px(_beatmap->getDiff().cs);
+	double diameter = CS2px(_play->getMod()->getCS())*1.5;
 
 	double startTimeA = hitobjects[_indexA].getTime();
 	double startTimeB = hitobjects[_indexB].getTime();

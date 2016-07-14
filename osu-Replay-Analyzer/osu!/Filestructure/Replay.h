@@ -24,7 +24,8 @@ class Replay
 		std::tuple<long, irr::core::vector2df, int> getFrame(int _frame) const;
 		int getNumFrames();
 
-		bool HasMod(MODS _mod);
+		Mods getMods();
+
 		bool isBeatmap(std::string* _MD5);
 		bool isGamemode(GAMEMODE _gamemode);
 
@@ -57,6 +58,8 @@ class Replay
 		int mods;
 		std::string graph;
 		long long timestamp;
+		
+		Mods mod;
 
 		// *.osr file reading
 		bool ParseFile(std::ifstream &_replayFile);

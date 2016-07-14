@@ -66,7 +66,7 @@ void OSUMANIA::SPEED_CONTROL::genSkill(Play* _play)
 	skills.clear();
 	std::vector<OSUMANIA::TIMING>().swap(skills);
 
-	int KEYS = _play->beatmap->getDiff().cs;
+	int KEYS = _play->beatmap->getMods().getCS();
 	std::vector<OSUMANIA::TIMING> timing;
 		timing.resize(KEYS);
 	std::vector<double> hitPeriodPrev, hitPeriodCurr;
@@ -140,7 +140,7 @@ void OSUMANIA::SPEED_CONTROL::genDiff(Play* _play)
 	diffs.clear();
 	std::vector<OSUMANIA::TIMING>().swap(diffs);
 
-	int KEYS = _play->beatmap->getDiff().cs;
+	int KEYS = _play->beatmap->getMods().getCS();
 	std::vector<OSUMANIA::TIMING> timing, releases;
 		timing.resize(KEYS);
 		releases.resize(KEYS);

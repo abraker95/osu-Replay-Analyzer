@@ -97,7 +97,7 @@ std::pair<int, int> Beatmap::getIndicesVisibleAt(int _time, double _opacity)
 	// Find first note visible
 	for (index = max(index, 0); index < modHitobjects.size(); index++)
 	{
-		if (modHitobjects[index].isVisibleAt(_time, modifiedDiff.ar, modifiedMod.hidden))
+		if (modHitobjects[index].isVisibleAt(_time, mods.getAR(), mods.getModifier().HD))
 			break;
 	}
 	range.first = index;
@@ -105,7 +105,7 @@ std::pair<int, int> Beatmap::getIndicesVisibleAt(int _time, double _opacity)
 	// Find last note visible
 	for (; index < modHitobjects.size(); index++)
 	{
-		if (!(modHitobjects[index].isVisibleAt(_time, modifiedDiff.ar, modifiedMod.hidden)))
+		if (!(modHitobjects[index].isVisibleAt(_time, mods.getAR(), mods.getModifier().HD)))
 			break;
 	}
 	range.second = index;
@@ -465,42 +465,42 @@ bool Beatmap::ParseDifficultysection(std::ifstream &_filepath, std::string &_lin
 		data = getStrAfter(_line, "HPDrainRate:");
 		if (data != "")
 		{
-			origDiff.hp = atof(data.data());
+			diff.hp = atof(data.data());
 			continue;
 		}
 
 		data = getStrAfter(_line, "CircleSize:");
 		if (data != "")
 		{
-			origDiff.cs = atof(data.data());
+			mods.setCS(atof(data.data()));
 			continue;
 		}
 
 		data = getStrAfter(_line, "OverallDifficulty:");
 		if (data != "")
 		{
-			origDiff.od = atof(data.data());
+			mods.setOD(atof(data.data()));
 			continue;
 		}
 
 		data = getStrAfter(_line, "ApproachRate:");
 		if (data != "")
 		{
-			origDiff.ar = atof(data.data());
+			mods.setAR(atof(data.data()));
 			continue;
 		}
 
 		data = getStrAfter(_line, "SliderMultiplier:");
 		if (data != "")
 		{
-			origDiff.sm = atof(data.data());
+			diff.sm = atof(data.data());
 			continue;
 		}
 
 		data = getStrAfter(_line, "SliderTickRate:");
 		if (data != "")
 		{
-			origDiff.st = atof(data.data());
+			diff.st = atof(data.data());
 			continue;
 		}
 	} while (getline(_filepath, _line));

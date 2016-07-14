@@ -6,10 +6,10 @@
 #include <iostream>
 #include <tuple>
 
-Hitcircle::Hitcircle(Beatmap* _beatmap, Hitobject* _hitobject, int* _viewTime)
-	: GuiObj(_hitobject->getPos().X, _hitobject->getPos().Y, CS2px(_beatmap->getDiff().cs), CS2px(_beatmap->getDiff().cs))
+Hitcircle::Hitcircle(Mods* _mods, Hitobject* _hitobject, int* _viewTime)
+	: GuiObj(_hitobject->getPos().X, _hitobject->getPos().Y, CS2px(_mods->getCS()), CS2px(_mods->getCS()))
 {
-	beatmap = _beatmap;
+	mods = _mods;
 	hitobject = _hitobject;
 	viewTime = _viewTime;
 
@@ -17,11 +17,16 @@ Hitcircle::Hitcircle(Beatmap* _beatmap, Hitobject* _hitobject, int* _viewTime)
 	edgeCol = IDLE_COLOR;
 }
 
+Hitcircle::~Hitcircle()
+{
+
+}
+
 void Hitcircle::Draw(Window &_win)
 {
 	// \TODO: Known problem: pixel perfect overlaps causes circles to "blink"
 
-	double opacity = hitobject->getOpacityAt(*(this->viewTime), beatmap->getDiff().ar, beatmap->getModifiers().hidden);
+	double opacity = hitobject->getOpacityAt(*(this->viewTime), mods->getAR(), mods->getModifier().HD);
 	SColor fade = SColor(255, edgeCol.getRed() * opacity, edgeCol.getGreen() * opacity, edgeCol.getBlue() * opacity);
 	
 	vector2df radius(this->width / 2.0, this->height / 2.0);
@@ -161,8 +166,8 @@ void Hitcircle::UpdateDimentions()
 	xpos = hitobject->getPos().X*getWidthRatio();
 	ypos = hitobject->getPos().Y*getHeightRatio();
 
-	int diameter = std::min(CS2px(beatmap->getDiff().cs)*getWidthRatio(),
-							CS2px(beatmap->getDiff().cs)*getHeightRatio());
+	int diameter = std::min(CS2px(mods->getCS())*getWidthRatio(),
+							CS2px(mods->getCS())*getHeightRatio());
 
 	width = diameter;
 	height = diameter;

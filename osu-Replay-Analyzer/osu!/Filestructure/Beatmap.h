@@ -7,6 +7,7 @@
 #include "../osuEnums.h"
 #include "TimingPoint.h"
 #include "Hitobject.h"
+#include "Mods.h"
 
 class Beatmap
 {
@@ -50,6 +51,7 @@ class Beatmap
 		GAMEMODE getGamemode();
 		std::vector<Hitobject>& getHitobjects();
 
+		Mods getMods();
 		Diff& getDiff();
 		void setDiff(Diff _diff);
 		void resetDiff();
@@ -81,6 +83,7 @@ class Beatmap
 
 		Diff modifiedDiff, origDiff;
 		Modifier modifiedMod, origMod;
+		Mods mods;
 		Metadata metadata;
 		GAMEMODE gamemode;
 
