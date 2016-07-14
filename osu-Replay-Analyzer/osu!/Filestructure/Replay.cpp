@@ -225,12 +225,6 @@ void Replay::ParseReplayData(unsigned char* _data, size_t _length, char _gamemod
 			std::get<DATA::MOUSE>(dataPointStruct).Y = atoi(data[2].data());
 			std::get<DATA::KEYBRD>(dataPointStruct) = atoi(data[3].data());
 
-			if (gameMode == GAMEMODE::OSU_STANDARD)
-			{
-				//std::get<DATA::MOUSE>(dataPointStruct).X = (double)std::get<DATA::MOUSE>(dataPointStruct).X;
-				//std::get<DATA::MOUSE>(dataPointStruct).Y = (double)std::get<DATA::MOUSE>(dataPointStruct).Y;
-			}
-
 			if (std::get<DATA::TIME>(dataPointStruct) != -12345) // Record if it's not this...
 				replayStream.push_back(dataPointStruct);
 		}
