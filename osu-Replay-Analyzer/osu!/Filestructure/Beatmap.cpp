@@ -8,37 +8,39 @@
 
 #include "filereader.h"
 
-Beatmap::Beatmap(std::string file)
+Beatmap::Beatmap() { gamemode = GAMEMODE_ERROR; }
+void Beatmap::Read(std::string _beatmapfile)
 {
-	std::ifstream beatmapFile(file);
+	std::ifstream beatmapFile(_beatmapfile);
 	if (beatmapFile.is_open())
 	{
 		ClearObjects();
 
 		bool success = this->ParseBeatmap(beatmapFile);
-		assert(success == true);
+		if (!success)
+			gamemode = GAMEMODE_ERROR;
+
 		beatmapFile.close();
 	}
 	else
 	{
 		gamemode = GAMEMODE_ERROR;
-		/// \TODO: Handle this 
 	}
 
-	//SortEndTimes(0, hitObjectsTimeEnd.size());
-	modifiedDiff = origDiff;
-}
+	// for old maps which had AR as part as OD
+	if (this->mods.getAR() == -1)
+		this->mods.setAR(mods.getOD());
+	this->mods.setTM(1.0);
 
-Beatmap::~Beatmap()
-{
-	ClearObjects();
+	//SortEndTimes(0, hitObjectsTimeEnd.size());
+	//modifiedDiff = origDiff;
 }
 
 void Beatmap::Process()
 {
 	PrepareTimingPoints();
 
-	/// \TODO: Refractor these and take account other gamemodes
+	/// \TODO: Is there a way to put these into the hitobject class?
 	PrepareSliderData();
 	GenerateSliderPoints();
 }
@@ -908,4 +910,5 @@ void Beatmap::ClearObjects()
 
 	modTimingPoints.clear();
 	std::vector<TimingPoint>().swap(modTimingPoints);
+	ResetModified();
 }
