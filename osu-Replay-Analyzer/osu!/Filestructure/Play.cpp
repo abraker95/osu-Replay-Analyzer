@@ -7,15 +7,15 @@
 #include <algorithm>
 #include <assert.h>
 
-Play::Play(std::string _beatmapFile, std::string _replayFile)
+Play::Play()
 {
-	beatmap = new Beatmap(_beatmapFile);
-	replay = new Replay(_replayFile);
+	beatmap = new Beatmap();
+	replay = new Replay();
+	scoreEngine = new ScoreEngine();
 
-	if(beatmap ->getGamemode() != GAMEMODE::GAMEMODE_ERROR)
-		ProcessBeatmap();
+	activeMods = custom;
 
-	scoreEngine = new ScoreEngine(this);
+	//ProcessBeatmap();
 
 	/*  \TODO: Implement ability to compare beatmap MD5 hash to validate replay
 		if(beatmap->getMD5() != replay->getBeatmapMD5())
@@ -45,10 +45,8 @@ void Play::ProcessBeatmap()
 
 void Play::LoadBeatmap(std::string _beatmapFile)
 {
-	if (beatmap != nullptr)
-		delete beatmap;
-	beatmap = new Beatmap(_beatmapFile);
-
+	beatmap->ClearObjects();
+	beatmap->Read(_beatmapFile);
 	ProcessBeatmap();
 	ResetTimings();
 	setMods(BEATMAP);
@@ -56,12 +54,6 @@ void Play::LoadBeatmap(std::string _beatmapFile)
 
 void Play::LoadReplay(std::string _replayFile)
 {
-	if (replay != nullptr)
-		delete replay;
-
-	if (scoreEngine != nullptr)
-		delete scoreEngine;
-
 	replay->ProcessReplay(_replayFile, beatmap);
 	setMods(REPLAY);
 	scoreEngine->genAccTimings(this);

@@ -9,7 +9,6 @@ class ScoreEngine;
 class Play
 {
 	public:
-		Play(std::string _beatmapFile, std::string _replayFile = "");
 		enum ModSource
 		{
 			BEATMAP,
@@ -17,6 +16,7 @@ class Play
 			CUSTOM
 		};
 
+		Play();
 		virtual ~Play();
 
 		Beatmap *beatmap;
