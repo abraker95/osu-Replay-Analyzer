@@ -709,37 +709,24 @@ void Beatmap::PrepareSliderData()
 	{
 		if (hitObject.IsHitObjectType(HITOBJECTYPE::SLIDER))
 		{
+			// Generate the slider types
 			switch (hitObject.slider.curveType)
 			{
 				case 'B':
-				{
-					//assert(hitObject.slider != nullptr);
 					hitObject.slider.newSlider(&hitObject, false, false);
 					break;
-				}
 
 				case 'P':
-				{
 					if (hitObject.slider.curve.size() == 2)
-					{
-						//assert(hitObject.slider != nullptr);
 						hitObject.slider.newSlider(&hitObject, false, true);
-					}
 					else
-					{
-						//assert(hitObject.slider != nullptr);
 						hitObject.slider.newSlider(&hitObject, false, false);
-					}
 
 					break;
-				}
 
 				case 'L': case 'C':
-				{
-					//assert(hitObject.slider != nullptr);
 					hitObject.slider.newSlider(&hitObject, true, false);
 					break;
-				}
 			}
 			hitObject.slider.endPoint = (hitObject.slider.repeat % 2) ? hitObject.slider.curve.back() : hitObject.slider.curve.front();
 		}

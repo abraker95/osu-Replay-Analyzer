@@ -108,8 +108,6 @@ class Beatmap
 		int ReadTimingpoints(std::string line);
 		int ReadHitobjects(std::string line);
 
-		//int getRepeatTimes(Hitobject* _hitObject);
-
 		void PrepareSliderData();
 		void GenerateSliderPoints();
 
