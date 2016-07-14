@@ -183,8 +183,8 @@ int main()
 
 	//Dialog dialogBox(20, 20, 500, 300);
 
-		std::pair<std::string, std::string> toAnalyze;// = getAnalyzerTXT();
-	Play play(toAnalyze.first, toAnalyze.second);
+	std::pair<std::string, std::string> toAnalyze;
+	Play play;
 	SkillEngine skillEngine(&play);
 
 	if (play.replay->getNumFrames() == 0)
@@ -196,7 +196,7 @@ int main()
 
 	cout << "Tapping | Score: " << speedScore << "   Skill: " << speedSkill << "   Max diff: " << speedDiff << endl;
 
-	TimingGraph timingGraph(win, play.beatmap);
+	TimingGraph timingGraph(win, &play);
 		timingGraph.ClipPosTo(GuiObj::BTMLEFT);
 		timingGraph.addClipDimTo(GuiObj::RIGHT);
 		timingGraph.DisableLayer(TimingGraph::LAYER::HITOBJECT_VISIBILTITY);
@@ -262,7 +262,8 @@ int main()
 			if (btnReplay.isTriggered())
 			{
 				play.LoadReplay(getAnalyzerTXT().second);
-				play.scoreEngine->genAccTimings(&play);
+				skillEngine.Generate(&play);
+				renderer.InitRenderer(&play, &viewTime);
 			}
 				
 
