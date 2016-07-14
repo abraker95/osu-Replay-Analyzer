@@ -47,9 +47,9 @@ void Play::LoadBeatmap(std::string _beatmapFile)
 {
 	beatmap->ClearObjects();
 	beatmap->Read(_beatmapFile);
-	ProcessBeatmap();
-	ResetTimings();
 	setMods(BEATMAP);
+	ResetTimings();
+	ProcessBeatmap();
 }
 
 void Play::LoadReplay(std::string _replayFile)
