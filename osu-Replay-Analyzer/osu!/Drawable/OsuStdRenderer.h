@@ -23,6 +23,7 @@ class OsuStdRenderer: public GuiObj
 		void SetLayers(int _layer);
 
 	private:
+		void ClearHitcircles();
 		void GenerateHitcircles();
 		
 		virtual void UpdateInternal(Window& _win);
