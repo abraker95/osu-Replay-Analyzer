@@ -16,9 +16,9 @@ class Replay
 	friend class Play;
 
 	public:
-		Replay(std::string _filepath);
+		Replay();
 
-		void ProcessReplay(std::string _filepath);
+		void ProcessReplay(std::string _filepath, Beatmap* _beatmap);
 		
 		std::tuple<irr::core::vector2df, int> getDataAt(long _time);
 		std::tuple<long, irr::core::vector2df, int> getFrame(int _frame) const;
@@ -26,6 +26,7 @@ class Replay
 
 		Mods getMods();
 
+		bool isValid();
 		bool isBeatmap(std::string* _MD5);
 		bool isGamemode(GAMEMODE _gamemode);
 

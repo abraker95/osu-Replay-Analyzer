@@ -8,13 +8,14 @@
 #include <fstream>
 #include <assert.h>
 
-Replay::Replay(std::string _filepath)
-{
-	ProcessReplay(_filepath);
-}
+Replay::Replay(){}
 
-void Replay::ProcessReplay(std::string _filepath)
+void Replay::ProcessReplay(std::string _filepath, Beatmap* _beatmap)
 {
+	// Can't have a replay without a beatmap
+	if (!_beatmap->isValid())
+		return;
+
 	std::ifstream replayFile(_filepath, std::ios::binary);
 	if (replayFile.is_open())
 	{
@@ -23,9 +24,10 @@ void Replay::ProcessReplay(std::string _filepath)
 		replayFile.close();
 	}
 
-	/// \TODO: Make sure the stream data is ordered time-wise
 	mod = _beatmap->getMods();
 	this->ValidateMods();
+
+	/// \TODO: Make sure the stream data is ordered time-wise
 }
 
 std::tuple<irr::core::vector2df, int> Replay::getDataAt(long _time)
@@ -56,6 +58,10 @@ Mods Replay::getMods()
 	return mod;
 }
 
+bool Replay::isValid()
+{
+	return (replayStream.size() != 0);
+}
 
 bool Replay::isBeatmap(std::string* _MD5)
 {
