@@ -267,26 +267,21 @@ void Hitobject::ProcessSliderData(std::vector<std::string> &_objectData, std::ve
 	
 	if (this->getHitobjectType() & HITOBJECTYPE::SLIDER)
 	{
-		//this->slider = std::make_unique<Hitobject::Slider>(this);
-		//FileReader::tokenize(_objectData[5], _sliderData, "|");
-
 		// curve parsing
+		slider.curveType = (CurveType)_sliderData[0].c_str()[0];
+
+		for (int i = 1; i < _sliderData.size(); i++)
 		{
-			slider.curveType = (CurveType)_sliderData[0].c_str()[0];
+			std::vector<std::string> curveTokens;
+			FileReader::tokenize(_sliderData[i], curveTokens, ":");
 
-			for (int i = 1; i < _sliderData.size(); i++)
+			// curve points parsing
 			{
-				std::vector<std::string> curveTokens;
-				FileReader::tokenize(_sliderData[i], curveTokens, ":");
-
-				// curve points parsing
-				{
-					irr::core::vector2di curve;
+				irr::core::vector2di curve;
 					curve.X = atoi(curveTokens[0].c_str());
 					curve.Y = atoi(curveTokens[1].c_str());
 
-					slider.curve.push_back(curve);
-				}
+				slider.curve.push_back(curve);
 			}
 		}
 
@@ -296,15 +291,12 @@ void Hitobject::ProcessSliderData(std::vector<std::string> &_objectData, std::ve
 
 	if (this->getHitobjectType() & HITOBJECTYPE::SPINNER)
 	{
-		//this->slider = std::make_unique<Hitobject::Slider>(this);
 		slider.endTime = atoi(_objectData[5].c_str());
 	}
 
 	if (this->getHitobjectType() & HITOBJECTYPE::MANIALONG)
 	{
 		FileReader::tokenize(_objectData[5], _sliderData, ":");
-
-		//this->slider = std::make_unique<Hitobject::Slider>(this);
 		slider.endTime = atoi(_sliderData[0].c_str());
 	}
 }
