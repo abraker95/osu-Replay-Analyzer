@@ -41,7 +41,7 @@ class Beatmap
 			std::string name;	 // Artist - Title (Creator) [Difficulty]
 		};
 
-		Beatmap(std::string file);
+		Beatmap();
 		virtual ~Beatmap();
 
 		void Process();

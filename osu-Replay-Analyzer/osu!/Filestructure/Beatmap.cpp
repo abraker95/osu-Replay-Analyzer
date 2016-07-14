@@ -51,6 +51,11 @@ void Beatmap::Process()
 	GenerateSliderPoints();
 }
 
+bool Beatmap::isValid()
+{
+	return (getGamemode() != GAMEMODE::GAMEMODE_ERROR);
+}
+
 GAMEMODE Beatmap::getGamemode()
 {
 	return gamemode;

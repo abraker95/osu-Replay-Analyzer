@@ -15,10 +15,9 @@ ScoreEngine::ScoreEngine(Play* _play)
 
 void ScoreEngine::genAccTimings(Play* _play)
 {
-	GAMEMODE gamemode = _play->beatmap->getGamemode();
-	if (gamemode == GAMEMODE::GAMEMODE_ERROR)
-		return;
+	if (!_play->beatmap->isValid())	return;
 
+	GAMEMODE gamemode = _play->beatmap->getGamemode();
 	switch (gamemode)
 	{
 		case OSU_STANDARD:
