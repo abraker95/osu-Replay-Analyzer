@@ -10,6 +10,11 @@
 
 Replay::Replay(){}
 
+Replay::~Replay()
+{
+	ClearReplay();
+}
+
 void Replay::ProcessReplay(std::string _filepath, Beatmap* _beatmap)
 {
 	// Can't have a replay without a beatmap
@@ -22,6 +27,13 @@ void Replay::ProcessReplay(std::string _filepath, Beatmap* _beatmap)
 		bool success = this->ParseFile(replayFile);
 		assert(success == true);
 		replayFile.close();
+	}
+
+	// make sure the replay is of the same gamemode as the map
+	if (!isGamemode(_beatmap->getGamemode()))
+	{
+		ClearReplay();
+		return;
 	}
 
 	mod = _beatmap->getMods();
@@ -74,6 +86,12 @@ bool Replay::isGamemode(GAMEMODE _gamemode)
 }
 
 // ------- [PRIVATE] --------
+
+void Replay::ClearReplay()
+{
+	replayStream.clear();
+	std::vector<std::tuple<long, irr::core::vector2df, int>>().swap(replayStream);
+}
 
 int Replay::FindFrameAt(long _time)
 {

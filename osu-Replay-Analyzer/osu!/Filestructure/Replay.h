@@ -17,6 +17,7 @@ class Replay
 
 	public:
 		Replay();
+		virtual ~Replay();
 
 		void ProcessReplay(std::string _filepath, Beatmap* _beatmap);
 		
@@ -71,6 +72,9 @@ class Replay
 		void ValidateMods();
 
 		int FindFrameAt(long _time);
+
+	private:
+		void ClearReplay();
 };
 
 #endif
