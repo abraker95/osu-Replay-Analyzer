@@ -16,19 +16,9 @@ class Beatmap
 	public:
 		struct Diff
 		{
-			double ar = -1;
-			double cs = -1;
-			double od = -1;
 			double hp = -1;
 			double sm = -1;     // slider multiplier
 			double st = -1;     // slider tick rate
-		};
-
-		struct Modifier
-		{
-			bool hidden = false;
-			bool fadeIn = false;
-			bool flashlight = false;
 		};
 
 		struct Metadata
@@ -44,8 +34,9 @@ class Beatmap
 		Beatmap();
 		virtual ~Beatmap();
 
+		void Read(std::string _beatmapfile);
 		void Process();
-
+		bool isValid();
 		
 		std::string getName();
 		GAMEMODE getGamemode();
@@ -54,12 +45,10 @@ class Beatmap
 		Mods getMods();
 		Diff& getDiff();
 		void setDiff(Diff _diff);
-		void resetDiff();
 
-		Modifier& getModifiers();
-		void setModifiers(Modifier _modifier);
-		void resetModifiers();
+		void ResetModified();
 
+		/// \TODO: Move these out of here
 		int getNumHitobjectsVisibleAt(int _index, double _opacity);
 		std::pair<int, int> getIndicesVisibleAt(int _time, double _opacity);
 
@@ -81,8 +70,7 @@ class Beatmap
 			SECTION_HITOBJECTS
 		};
 
-		Diff modifiedDiff, origDiff;
-		Modifier modifiedMod, origMod;
+		Diff diff;
 		Mods mods;
 		Metadata metadata;
 		GAMEMODE gamemode;

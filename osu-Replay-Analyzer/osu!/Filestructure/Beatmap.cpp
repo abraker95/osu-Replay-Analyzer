@@ -63,32 +63,31 @@ GAMEMODE Beatmap::getGamemode()
 
 Beatmap::Diff& Beatmap::getDiff()
 {
-	return modifiedDiff;
+	return diff;
 }
 
 void Beatmap::setDiff(Diff _diff)
 {
-	modifiedDiff = _diff;
+	diff = _diff;
 }
 
-void Beatmap::resetDiff()
+Mods Beatmap::getMods()
 {
-	modifiedDiff = origDiff;
+	return mods;
 }
 
-Beatmap::Modifier& Beatmap::getModifiers() 
+void Beatmap::ResetModified()
 {
-	return modifiedMod;
-}
+	for (auto& hitobject : modHitobjects)
+	{
+		hitobject.~Hitobject();
+	}
 
-void Beatmap::setModifiers(Modifier _modifier)
-{
-	modifiedMod = _modifier;
-}
+	modHitobjects.clear();
+	std::vector<Hitobject>().swap(modHitobjects);
 
-void Beatmap::resetModifiers()
-{
-	modifiedMod = origMod;
+	modTimingPoints.clear();
+	std::vector<TimingPoint>().swap(modTimingPoints);
 }
 
 std::vector<Hitobject>& Beatmap::getHitobjects()
@@ -751,16 +750,17 @@ void Beatmap::GenerateSliderPoints()
 {
 	for (auto& hitObject : this->modHitobjects)
 	{
+		// Generate timepoing dependent slider info
 		if (hitObject.IsHitObjectType(HITOBJECTYPE::SLIDER))
 		{
 			TimingPoint* tp = getTimingPointAt(hitObject.getTime());
 			double BPM = tp->getBPM();
 
-			hitObject.slider.toRepeatTime = round((double)(((-600.0 / BPM) * hitObject.slider.pixelLength * tp->sm) / (100.0 * modifiedDiff.sm)));
+			hitObject.slider.toRepeatTime = round((double)(((-600.0 / BPM) * hitObject.slider.pixelLength * tp->sm) / (100.0 * diff.sm)));
 			hitObject.slider.endTime = hitObject.slider.getEndTime();
 			hitObject.slider.RecordRepeatTimes();
 
-			double tickInterval = tp->beatLength / modifiedDiff.st;
+			double tickInterval = tp->beatLength / diff.st;
 			hitObject.slider.RecordTickIntervals(tickInterval);
 		}
 	}
@@ -908,18 +908,8 @@ void Beatmap::ClearObjects()
 	origHitobjects.clear();
 	std::vector<Hitobject*>().swap(origHitobjects);
 
-	for (auto& hitobject : modHitobjects)
-	{
-		hitobject.~Hitobject();
-	}
-
-	modHitobjects.clear();
-	std::vector<Hitobject>().swap(modHitobjects);
-
 	origTimingPoints.clear();
 	std::vector<TimingPoint>().swap(origTimingPoints);
 
-	modTimingPoints.clear();
-	std::vector<TimingPoint>().swap(modTimingPoints);
 	ResetModified();
 }
