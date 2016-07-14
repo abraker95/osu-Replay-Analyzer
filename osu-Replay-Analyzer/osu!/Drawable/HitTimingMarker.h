@@ -40,8 +40,8 @@ class HitTimingMarker : public GuiObj
 		const SColor HIGHLIGHTED_COLOR = SColor(255, 255, 255, 0);
 
 		SColor edgeCol;
-		double timeZoom = 1000;
-		double viewZoom = 250.0;
+		double timeZoom = 1050;
+		double viewZoom = 1500;
 
 		int* viewTime;
 		Play* play;
