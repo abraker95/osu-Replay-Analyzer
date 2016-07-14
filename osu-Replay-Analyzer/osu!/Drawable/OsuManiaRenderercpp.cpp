@@ -19,7 +19,7 @@ OsuManiaRenderer::OsuManiaRenderer(Play* _play, int* _viewTime, GuiObj* _parent)
 
 OsuManiaRenderer::~OsuManiaRenderer()
 {
-	hitNotes.clear();
+	ClearHitnotes();
 }
 
 void OsuManiaRenderer::SetLayers(int _layer)
@@ -30,11 +30,22 @@ void OsuManiaRenderer::SetLayers(int _layer)
 
 // ---------- [PRIVATE] ----------
 
+void OsuManiaRenderer::ClearHitnotes()
+{
+	for (HitNote* note : hitNotes)
+		if (note != nullptr)
+			delete note;
+
+	hitNotes.clear();
+	std::vector<HitNote*>().swap(hitNotes);
+}
+
 void OsuManiaRenderer::GenerateHitNotes()
 {
+	ClearHitnotes();
 	Beatmap* beatmap = play->beatmap;
-	hitNotes.resize(beatmap->getHitobjects().size());
 
+	hitNotes.resize(beatmap->getHitobjects().size());
 	for (int i = 0; i < hitNotes.size(); i++)
 	{
 		hitNotes[i] = new HitNote(play->getMod(), &beatmap->getHitobjects()[i], viewTime, &zoom);

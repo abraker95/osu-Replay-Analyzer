@@ -28,6 +28,7 @@ class OsuManiaRenderer : public GuiObj
 		int getEndTime();
 
 	private:
+		void ClearHitnotes();
 		void GenerateHitNotes();
 
 		virtual void UpdateAbsDim(Window& _win);
