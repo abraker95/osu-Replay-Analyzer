@@ -47,14 +47,23 @@ void Play::LoadBeatmap(std::string _beatmapFile)
 {
 	beatmap->ClearObjects();
 	beatmap->Read(_beatmapFile);
-	setMods(BEATMAP);
+
+	if (!beatmap->isValid())
+		return;
+
 	ResetTimings();
+	setMods(BEATMAP);
 	ProcessBeatmap();
 }
 
 void Play::LoadReplay(std::string _replayFile)
 {
 	replay->ProcessReplay(_replayFile, beatmap);
+
+	if (!replay->isValid())
+		return;
+
+	ResetTimings();
 	setMods(REPLAY);
 	scoreEngine->genAccTimings(this);
 }
