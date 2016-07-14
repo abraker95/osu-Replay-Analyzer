@@ -9,6 +9,12 @@
 #include "filereader.h"
 
 Beatmap::Beatmap() { gamemode = GAMEMODE_ERROR; }
+
+Beatmap::~Beatmap()
+{
+	ClearObjects();
+}
+
 void Beatmap::Read(std::string _beatmapfile)
 {
 	std::ifstream beatmapFile(_beatmapfile);
