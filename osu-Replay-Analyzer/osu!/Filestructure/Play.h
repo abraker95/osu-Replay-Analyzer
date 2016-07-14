@@ -3,6 +3,7 @@
 
 #include "Beatmap.h"
 #include "Replay.h"
+#include "Mods.h"
 
 class ScoreEngine;
 
