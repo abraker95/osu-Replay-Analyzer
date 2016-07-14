@@ -14,12 +14,7 @@ OsuStdRenderer::OsuStdRenderer(Play* _play, int* _viewTime, GuiObj* _parent) : G
 
 OsuStdRenderer::~OsuStdRenderer()
 {
-	for (Hitcircle* circle : hitCircles)
-		if (circle != nullptr)
-			delete circle;
-
-	hitCircles.clear();
-	std::vector<Hitcircle*>().swap(hitCircles);
+	ClearHitcircles();
 }
 
 void OsuStdRenderer::SetLayers(int _layer)
@@ -30,7 +25,7 @@ void OsuStdRenderer::SetLayers(int _layer)
 
 // ---------- [PRIVATE] ----------
 
-void OsuStdRenderer::GenerateHitcircles()
+void OsuStdRenderer::ClearHitcircles()
 {
 	for (Hitcircle* circle : hitCircles)
 		if (circle != nullptr)
@@ -38,6 +33,11 @@ void OsuStdRenderer::GenerateHitcircles()
 
 	hitCircles.clear();
 	std::vector<Hitcircle*>().swap(hitCircles);
+}
+
+void OsuStdRenderer::GenerateHitcircles()
+{
+	ClearHitcircles();
 
 	Beatmap* beatmap = play->beatmap;
 	hitCircles.resize(beatmap->getHitobjects().size());
