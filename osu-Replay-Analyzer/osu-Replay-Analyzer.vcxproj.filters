@@ -378,6 +378,9 @@
     <ClCompile Include="osu!\Filestructure\Mods.cpp">
       <Filter>Source Files\osu!\File Structure</Filter>
     </ClCompile>
+    <ClCompile Include="osu!\osu_standard.cpp">
+      <Filter>Source Files\osu!</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="osu!\Filestructure\LZMA.h">

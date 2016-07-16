@@ -2,6 +2,8 @@
 #define OSU_STANDARD_H
 
 #include <math.h>
+#include <vector>
+#include "Filestructure\Hitobject.h"
 
 namespace OSUSTANDARD
 {
@@ -12,6 +14,8 @@ namespace OSUSTANDARD
 		int key;
 		bool press;
 	};
+
+	int FindHitobjectAt(std::vector<Hitobject>* _hitobjects, double _time);
 }
 
 #endif
