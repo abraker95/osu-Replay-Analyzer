@@ -744,7 +744,7 @@ void Beatmap::GenerateSliderPoints()
 			double BPM = tp->getBPM();
 
 			hitObject.slider.toRepeatTime = round((double)(((-600.0 / BPM) * hitObject.slider.pixelLength * tp->sm) / (100.0 * diff.sm)));
-			hitObject.slider.endTime = hitObject.slider.getEndTime();
+			hitObject.slider.endTime = hitObject.getTime() + hitObject.slider.toRepeatTime * hitObject.slider.repeat;
 			hitObject.slider.RecordRepeatTimes();
 
 			double tickInterval = tp->beatLength / diff.st;

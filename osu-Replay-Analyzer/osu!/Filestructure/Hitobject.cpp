@@ -56,7 +56,7 @@ int Hitobject::getEndTime() const
 
 	if (hitObjectType & (HITOBJECTYPE::SLIDER))
 	{
-		return this->time + this->slider.toRepeatTime * this->slider.repeat;
+		return this->slider.endTime;
 	}
 
 	if (hitObjectType & (HITOBJECTYPE::SPINNER))

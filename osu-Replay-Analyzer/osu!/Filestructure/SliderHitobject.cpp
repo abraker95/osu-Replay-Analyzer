@@ -100,28 +100,15 @@ Hitobject::Slider::~Slider()
 irr::core::vector2d<double> Hitobject::Slider::GetSliderPos(int time)
 {
 	// convert time to percent
-	double percent;
-	if (time <= hitobject->time)
-		percent = 0;
-	else if (time > this->endTime)
-		percent = 1;
-	else
-	{
-		int timeLength = (time - hitobject->time);
-		int repeatsDone = (int)(timeLength / this->toRepeatTime);
-		percent = (timeLength - this->toRepeatTime * repeatsDone) / (double)this->toRepeatTime;
-		if (repeatsDone % 2)
-			percent = 1 - percent; // it's going back
-	}
+	double percent = getPercent(hitobject->time, time, this->endTime);
 		
 	// get the points
-	int ncurve = this->ncurve;
 	double indexF = percent * ncurve;
 	int index = (int)indexF;
 	
 	if (index >= this->ncurve)
 	{
-		irr::core::vector2di poi = this->genCurve[ncurve];
+		irr::core::vector2di poi = this->genCurve[this->ncurve];
 		return irr::core::vector2d<double>(poi.X, poi.Y);
 	}
 	else
