@@ -49,7 +49,7 @@ std::vector<std::pair<irr::core::vector2d<double>, double>> OSUSTANDARD::getPatt
 
 			// go record from slider end
 			std::vector<std::pair<irr::core::vector2d<double>, double>> newPoints;
-			newPoints = getPosPoints(_hitobjects, _num - 1, _interval, (*_hitobjects)[i].getEndTime() - _interval, _skipSliders);
+			newPoints = getPattern(_hitobjects, _num - 1, _interval, (*_hitobjects)[i].getEndTime() - _interval, _skipSliders);
 
 			return Merge(points, newPoints);
 		}
@@ -79,7 +79,7 @@ std::vector<std::pair<irr::core::vector2d<double>, double>> OSUSTANDARD::getPatt
 			points.push_back(point);
 
 			std::vector<std::pair<irr::core::vector2d<double>, double>> newPoints;
-			newPoints = getPosPoints(_hitobjects, _num - 1, _interval, time, _skipSliders);
+			newPoints = getPattern(_hitobjects, _num - 1, _interval, time, _skipSliders);
 
 			return Merge(points, newPoints);
 		}
@@ -93,7 +93,7 @@ std::vector<std::pair<irr::core::vector2d<double>, double>> OSUSTANDARD::getPatt
 
 			// go to previous point on slider 
 			std::vector<std::pair<irr::core::vector2d<double>, double>> newPoints;
-			newPoints = getPosPoints(_hitobjects, _num - 1, _interval, _time - _interval, _skipSliders);
+			newPoints = getPattern(_hitobjects, _num - 1, _interval, _time - _interval, _skipSliders);
 
 			return Merge(points, newPoints);
 		}
@@ -108,7 +108,7 @@ std::vector<std::pair<irr::core::vector2d<double>, double>> OSUSTANDARD::getPatt
 		
 		// go to previous hitobject
 		std::vector<std::pair<irr::core::vector2d<double>, double>> newPoints;
-		newPoints = getPosPoints(_hitobjects, _num - 1, _interval, (*_hitobjects)[i - 1].getEndTime(), _skipSliders);
+		newPoints = getPattern(_hitobjects, _num - 1, _interval, (*_hitobjects)[i - 1].getEndTime(), _skipSliders);
 
 		return Merge(points, newPoints);
 	}
