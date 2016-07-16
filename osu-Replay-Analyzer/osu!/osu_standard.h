@@ -16,6 +16,7 @@ namespace OSUSTANDARD
 	};
 
 	int FindHitobjectAt(std::vector<Hitobject>* _hitobjects, double _time);
+	std::vector<std::pair<irr::core::vector2d<double>, double>> getPattern(std::vector<Hitobject>* _hitobjects, int _num, double _interval, double _time, bool _skipSliders = false);
 }
 
 #endif
