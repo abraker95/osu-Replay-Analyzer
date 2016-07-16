@@ -79,31 +79,31 @@ void OsuStdRenderer::RenderVisible(Window& _win)
 
 void OsuStdRenderer::RenderPaths(Window& _win)
 {
-	Beatmap* beatmap = play->beatmap;
-	std::pair<int, int> visibilityTimes = beatmap->getIndicesVisibleAt(*viewTime, 0.3);
+	std::vector<Hitobject>& hitobjects = play->beatmap->getHitobjects();
+	
+	int i = std::min(OSUSTANDARD::FindHitobjectAt(&hitobjects, *viewTime) + 1, (int) hitobjects.size() - 2);
+	if (i >= (int)hitobjects.size() - 1)
+		return;
 
-	// \TODO: Restore the getPattern function
-	// \TODO: Non visible hitcircles don't update, causing the path to get locations of stuff that hasn't been applied to the aspect ratio
-	int i = std::max(1, visibilityTimes.first);
-	vector2di prevPos, currPos, nextPos;
+	int numIter = 3;
+	if (hitobjects[i + 1].isHitobjectLong()) numIter++;
 
-	if (BTWN(0, i, hitCircles.size() - 1))
-		currPos = hitCircles[i + 0]->getPos();
-	else
-		currPos = vector2di(-1, -1);
+	std::vector<std::pair<irr::core::vector2d<double>, double>> points = OSUSTANDARD::getPattern(&hitobjects, numIter, 100, hitobjects[i + 1].getTime(), true);
 
-	if (i - 1 > 0)
-		prevPos = hitCircles[i - 1]->getPos();
-	else
-		prevPos = currPos;
+	double widthRatio = getDim().Width / 512.0;
+	double heightRatio = getDim().Height / 386.0;
 
-	if (i + 1 < hitCircles.size())
-		nextPos = hitCircles[i + 1]->getPos();
-	else
-		nextPos = currPos;
+	if (points.size() < 2)
+		return;
 
-	_win.driver->draw2DLine(prevPos, currPos, SColor(255, 255, 0, 0));
-	_win.driver->draw2DLine(currPos, nextPos, SColor(255, 255, 0, 0));
+	for (int i = 0; i < points.size() - 1; i++)
+	{
+		vector2di p1, p2;
+			p1 = vector2di(points[i].first.X*widthRatio + this->absXpos, points[i].first.Y*heightRatio + this->absYpos);
+			p2 = vector2di(points[i + 1].first.X*widthRatio + this->absXpos, points[i + 1].first.Y*heightRatio + this->absYpos);
+		
+		_win.driver->draw2DLine(p1, p2, SColor(255, 255, 0, 0));
+	}
 }
 
 void OsuStdRenderer::RenderDensities(Window& _win)
