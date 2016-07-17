@@ -160,6 +160,7 @@ double getCircleOverlapArea(double _radius, double _dist)
 		return 2*_radius*_radius*acos(_dist / (2.0*_radius)) - (_dist / 4.0)*sqrt(4.0*_radius*_radius - _dist*_dist);
 }
 
+/// \TODO: This currently return only the first overlap detected. Do we need to keep checking for more in case of crazy sliders?
 double GetHitobjectOverlapArea(Play *_play, int _indexA, int _indexB)
 {
 	std::vector<Hitobject>& hitobjects = _play->beatmap->getHitobjects();
@@ -169,7 +170,7 @@ double GetHitobjectOverlapArea(Play *_play, int _indexA, int _indexB)
 		return 0;
 
 	// Load up the needed vars
-	double diameter = CS2px(_play->getMod()->getCS())*1.5;
+	double diameter = CS2px(_play->getMod()->getCS());
 
 	double startTimeA = hitobjects[_indexA].getTime();
 	double startTimeB = hitobjects[_indexB].getTime();
@@ -195,26 +196,56 @@ double GetHitobjectOverlapArea(Play *_play, int _indexA, int _indexB)
 	if (velocityB == 0.0) velocityB = 1.0;
 
 	double area = 0.0;
+	double currDistA = INT_MAX, prevDistA = INT_MAX;
 	for (double timeA = startTimeA; timeA <= endTimeA; timeA += (diameter / 2.0*velocityA))
 	{
+		prevDistA = currDistA;
+
+		double currDistB = INT_MAX, prevDistB = INT_MAX;
 		for (double timeB = startTimeB; timeB <= endTimeB; timeB += (diameter / 2.0*velocityB))
 		{
+			// set the points to calculate
 			vector2d<double> pointA, pointB;
 			if (sliderA == nullptr)	pointA = hitobjects[_indexA].getPos();
 			else					pointA = sliderA->GetSliderPos(timeA);
-			
+
 			if (sliderB == nullptr)	pointB = hitobjects[_indexB].getPos();
 			else					pointB = sliderB->GetSliderPos(timeB);
 
-			double overlapArea = getCircleOverlapArea(diameter / 2.0, getDist(pointA, pointB));
-			
-			// if there is an overlap, apporoximate it to a square area and jump ahead for both objects
-			if (overlapArea > 0.0)
+			// Calculate distance
+			prevDistB = currDistB;
+			currDistB = getDist(pointA, pointB);
+
+			// If this is not a slider, then there is nothing to iterate over
+			// There is also no previous calculation, so take currDistB instead
+			if (sliderB == nullptr)
 			{
-				area += diameter*diameter;
-				timeA += diameter / velocityA;
-				timeB += diameter / velocityA;
+				currDistA = currDistB;
+				break;
 			}
+
+			// Find closest point between the 2 object when iterating over object B
+			if (currDistB > prevDistB)
+			{
+				currDistA = prevDistB;
+				break;
+			}
+		}
+
+		// if this is not a slider, then there is nothing to iterate over
+		if (sliderA == nullptr)
+		{
+			// Since this is a point, there is no previous distance measurement
+			area = getCircleOverlapArea(diameter / 2.0, currDistA);
+			break;
+		}
+	
+		// Find closest point between the 2 object when iterating over object A
+		if (currDistA > prevDistA)
+		{
+			// The previous distance measurement is actaully the closer one
+			area = getCircleOverlapArea(diameter / 2.0, prevDistA);
+			break;
 		}
 	}
 
