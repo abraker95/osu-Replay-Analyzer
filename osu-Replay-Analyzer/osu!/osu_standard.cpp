@@ -20,7 +20,7 @@ int OSUSTANDARD::FindTimingAt(std::vector<TIMING>& _timings, double _time)
 	}
 }
 
-int OSUSTANDARD::FindHitobjectAt(std::vector<Hitobject>* _hitobjects, double _time)
+int OSUSTANDARD::FindHitobjectAt(std::vector<Hitobject*>* _hitobjects, double _time)
 {
 	int start = 0;
 	int end = _hitobjects->size() - 2;
@@ -30,20 +30,20 @@ int OSUSTANDARD::FindHitobjectAt(std::vector<Hitobject>* _hitobjects, double _ti
 	{
 		mid = (start + end) / 2;
 
-		if (BTWN((*_hitobjects)[mid].getTime(), _time, (*_hitobjects)[mid].getEndTime()))
+		if (BTWN((*_hitobjects)[mid]->getTime(), _time, (*_hitobjects)[mid]->getEndTime()))
 			return mid;
 
-		if (BTWN((*_hitobjects)[mid].getTime(), _time, (*_hitobjects)[mid + 1].getTime()))
+		if (BTWN((*_hitobjects)[mid]->getTime(), _time, (*_hitobjects)[mid + 1]->getTime()))
 			return mid + 1;
 
-		if (_time < (*_hitobjects)[mid].getTime())
+		if (_time < (*_hitobjects)[mid]->getTime())
 			end = mid - 1;
 		else 
 			start = mid + 1;
 	}
 }
 
-std::vector<std::pair<irr::core::vector2d<double>, double>> OSUSTANDARD::getPattern(std::vector<Hitobject>* _hitobjects, int _num, double _interval, double _time, bool _skipSliders)
+std::vector<std::pair<irr::core::vector2d<double>, double>> OSUSTANDARD::getPattern(std::vector<Hitobject*>* _hitobjects, int _num, double _interval, double _time, bool _skipSliders)
 {
 	// make sure we have something to get
 	if(_num <= 0)
@@ -56,21 +56,21 @@ std::vector<std::pair<irr::core::vector2d<double>, double>> OSUSTANDARD::getPatt
 		return std::vector<std::pair<irr::core::vector2d<double>, double>>();
 
 	std::vector<std::pair<irr::core::vector2d<double>, double>> points;
-	if ((*_hitobjects)[i].isHitobjectLong())
+	if ((*_hitobjects)[i]->isHitobjectLong())
 	{
 		// if we are ahead of the slider
-		if (_time < (*_hitobjects)[i].getTime())
+		if (_time < (*_hitobjects)[i]->getTime())
 		{
 			// record the slider's end point
 			std::pair<irr::core::vector2d<double>, double> point;
 
-			point.first = (*_hitobjects)[i].getPos();
-			point.second = (*_hitobjects)[i].getTime();
+			point.first = (*_hitobjects)[i]->getPos();
+			point.second = (*_hitobjects)[i]->getTime();
 			points.push_back(point);
 
 			// go record from slider end
 			std::vector<std::pair<irr::core::vector2d<double>, double>> newPoints;
-			newPoints = getPattern(_hitobjects, _num - 1, _interval, (*_hitobjects)[i - 1].getEndTime(), _skipSliders);
+			newPoints = getPattern(_hitobjects, _num - 1, _interval, (*_hitobjects)[i - 1]->getEndTime(), _skipSliders);
 
 			return Merge(points, newPoints);
 		}
@@ -78,23 +78,23 @@ std::vector<std::pair<irr::core::vector2d<double>, double>> OSUSTANDARD::getPatt
 		{
 			// go iterate backwards, skipping middle of slider
 			double time;
-			double closeToEndTime = ABS(_time - (*_hitobjects)[i].getEndTime());
-			double closeToBegTime = ABS(_time - (*_hitobjects)[i].getTime());
+			double closeToEndTime = ABS(_time - (*_hitobjects)[i]->getEndTime());
+			double closeToBegTime = ABS(_time - (*_hitobjects)[i]->getTime());
 
 			// record this slider's beginning point
 			std::pair<irr::core::vector2d<double>, double> point;
 
 			if (closeToEndTime < closeToBegTime)
 			{
-				point.first = (*_hitobjects)[i].slider.GetSliderPos((*_hitobjects)[i].getEndTime());
-				point.second = (*_hitobjects)[i].getEndTime();
-				time = (*_hitobjects)[i].getTime();
+				point.first = (*_hitobjects)[i]->getSlider()->GetSliderPos((*_hitobjects)[i]->getEndTime());
+				point.second = (*_hitobjects)[i]->getEndTime();
+				time = (*_hitobjects)[i]->getTime();
 			}
 			else
 			{
-				point.first = (*_hitobjects)[i].getPos();
-				point.second = (*_hitobjects)[i].getTime();
-				time = (*_hitobjects)[i - 1].getEndTime();
+				point.first = (*_hitobjects)[i]->getPos();
+				point.second = (*_hitobjects)[i]->getTime();
+				time = (*_hitobjects)[i - 1]->getEndTime();
 			}
 	
 			points.push_back(point);
@@ -108,7 +108,7 @@ std::vector<std::pair<irr::core::vector2d<double>, double>> OSUSTANDARD::getPatt
 		{
 			// record this point on the slider
 			std::pair<irr::core::vector2d<double>, double> point;
-			point.first = (*_hitobjects)[i].slider.GetSliderPos(_time);
+			point.first = (*_hitobjects)[i]->getSlider()->GetSliderPos(_time);
 			point.second = _time;
 			points.push_back(point);
 
@@ -123,13 +123,13 @@ std::vector<std::pair<irr::core::vector2d<double>, double>> OSUSTANDARD::getPatt
 	{
 		// record this hitobject
 		std::pair<irr::core::vector2d<double>, double> point;
-			point.first = (*_hitobjects)[i].getPos();
-			point.second = (*_hitobjects)[i].getTime();
+			point.first = (*_hitobjects)[i]->getPos();
+			point.second = (*_hitobjects)[i]->getTime();
 		points.push_back(point);
 		
 		// go to previous hitobject
 		std::vector<std::pair<irr::core::vector2d<double>, double>> newPoints;
-		newPoints = getPattern(_hitobjects, _num - 1, _interval, (*_hitobjects)[i - 1].getEndTime(), _skipSliders);
+		newPoints = getPattern(_hitobjects, _num - 1, _interval, (*_hitobjects)[i - 1]->getEndTime(), _skipSliders);
 
 		return Merge(points, newPoints);
 	}

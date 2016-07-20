@@ -5,6 +5,7 @@
 #include <assert.h>
 #include <memory>
 #include "../../irrlicht/include/vector2d.h"
+#include "SliderHitObject.h"
 
 #include "filereader.h"
 
@@ -80,24 +81,24 @@ void Beatmap::ResetModified()
 {
 	for (auto& hitobject : modHitobjects)
 	{
-		hitobject.~Hitobject();
+		hitobject->~Hitobject();
 	}
 
 	modHitobjects.clear();
-	std::vector<Hitobject>().swap(modHitobjects);
+	std::vector<Hitobject*>().swap(modHitobjects);
 
 	modTimingPoints.clear();
 	std::vector<TimingPoint>().swap(modTimingPoints);
 }
 
-std::vector<Hitobject>& Beatmap::getHitobjects()
+std::vector<Hitobject*>& Beatmap::getHitobjects()
 {
 	return modHitobjects;
 }
 
 int Beatmap::getNumHitobjectsVisibleAt(int _index, double _opacity)
 {
-	std::pair<int, int> indices = getIndicesVisibleAt(modHitobjects[_index].getTime(), _opacity);
+	std::pair<int, int> indices = getIndicesVisibleAt(modHitobjects[_index]->getTime(), _opacity);
 	return indices.second - indices.first;
 }
 
@@ -109,7 +110,7 @@ std::pair<int, int> Beatmap::getIndicesVisibleAt(int _time, double _opacity)
 	// Find first note visible
 	for (index = max(index, 0); index < modHitobjects.size(); index++)
 	{
-		if (modHitobjects[index].isVisibleAt(_time, mods.getAR(), mods.getModifier().HD))
+		if (modHitobjects[index]->isVisibleAt(_time, mods.getAR(), mods.getModifier().HD))
 			break;
 	}
 	range.first = index;
@@ -117,7 +118,7 @@ std::pair<int, int> Beatmap::getIndicesVisibleAt(int _time, double _opacity)
 	// Find last note visible
 	for (; index < modHitobjects.size(); index++)
 	{
-		if (!(modHitobjects[index].isVisibleAt(_time, mods.getAR(), mods.getModifier().HD)))
+		if (!(modHitobjects[index]->isVisibleAt(_time, mods.getAR(), mods.getModifier().HD)))
 			break;
 	}
 	range.second = index;
@@ -153,7 +154,7 @@ TimingPoint* Beatmap::getTimingPointAt(int _time)
 Hitobject* Beatmap::getHitobjectAt(int _time)
 {
 	int index = this->FindHitobjectAt(_time);
-	return &this->modHitobjects[index];
+	return this->modHitobjects[index];
 }
 
 //---------------- [PRIVATE] ----------------------
@@ -620,38 +621,39 @@ int Beatmap::ReadHitobjects(std::string line)
 {
 	std::vector<std::string> objectData, sliderData;
 	FileReader::tokenize(line, objectData, ",");
-
-	if(atoi(objectData[HITOBJECTNORMAL::TYPE].data()) & HITOBJECTYPE::SLIDER)
-		FileReader::tokenize(objectData[5], sliderData, "|");
-
-	Hitobject* hitObject = new Hitobject(objectData, sliderData);
+	int type = atoi(objectData[HITOBJECTNORMAL::TYPE].data());
 
 	/// \TODO: color hacks types
-	if (hitObject->getHitobjectType() & HITOBJECTYPE::CIRCLE)
+	if (type & HITOBJECTYPE::CIRCLE)
 	{
-		this->origHitobjects.push_back(hitObject);
+		this->origHitobjects.push_back(new Hitobject(objectData));
+
 		//this->hitObjectsTimeStart.push_back(std::pair<Hitobject*, int>(hitObject, hitObject->getTime()));
 		//this->hitObjectsTimeEnd.push_back(std::pair<Hitobject*, int>(hitObject, hitObject->getTime()));
 		return 1;
 	}
 
-	if (hitObject->getHitobjectType() & HITOBJECTYPE::SLIDER)
+	if (type & HITOBJECTYPE::SLIDER)
 	{
-		this->origHitobjects.push_back(hitObject);
+		FileReader::tokenize(objectData[5], sliderData, "|");
+		this->origHitobjects.push_back(new SliderHitObject(objectData, sliderData));
+
 		//this->hitObjectsTimeStart.push_back(std::pair<Hitobject*, int>(hitObject, hitObject->getTime()));
 		//this->hitObjectsTimeEnd.push_back(std::pair<Hitobject*, int>(hitObject, hitObject->slider->getEndTime()));
 		return 1;
 	}
 
-	if (hitObject->getHitobjectType() & HITOBJECTYPE::SPINNER)
+	if (type & HITOBJECTYPE::SPINNER)
 	{
 		this->spinners++;
 		return 0;
 	}
 
-	if (hitObject->getHitobjectType() & HITOBJECTYPE::MANIALONG)
+	if (type & HITOBJECTYPE::MANIALONG)
 	{
-		this->origHitobjects.push_back(hitObject);
+		FileReader::tokenize(objectData[5], sliderData, "|");
+		this->origHitobjects.push_back(new SliderHitObject(objectData, sliderData));
+
 		//this->hitObjectsTimeStart.push_back(std::pair<Hitobject*, int>(hitObject, hitObject->getTime()));
 		//this->hitObjectsTimeEnd.push_back(std::pair<Hitobject*, int>(hitObject, hitObject->slider->getEndTime()));
 		return 0;
@@ -707,28 +709,31 @@ void Beatmap::PrepareSliderData()
 {
 	for (auto& hitObject : this->modHitobjects)
 	{
-		if (hitObject.IsHitObjectType(HITOBJECTYPE::SLIDER))
+		if (hitObject->isHitobjectLong())
 		{
 			// Generate the slider types
-			switch (hitObject.slider.curveType)
+			SliderHitObject* slider = hitObject->getSlider();
+			switch (slider->curveType)
 			{
 				case 'B':
-					hitObject.slider.newSlider(&hitObject, false, false);
+					hitObject->getSlider()->newSlider(false, false);
 					break;
 
 				case 'P':
-					if (hitObject.slider.curve.size() == 2)
-						hitObject.slider.newSlider(&hitObject, false, true);
+					if (hitObject->getSlider()->curves.size() == 2)
+						hitObject->getSlider()->newSlider(false, true);
 					else
-						hitObject.slider.newSlider(&hitObject, false, false);
+						hitObject->getSlider()->newSlider(false, false);
 
 					break;
 
 				case 'L': case 'C':
-					hitObject.slider.newSlider(&hitObject, true, false);
+					hitObject->getSlider()->newSlider(true, false);
 					break;
 			}
-			hitObject.slider.endPoint = (hitObject.slider.repeat % 2) ? hitObject.slider.curve.back() : hitObject.slider.curve.front();
+
+			//SliderHitObject* slider = hitObject.getSlider();
+			slider->endPoint = (slider->repeat % 2) ? slider->curves.back() : slider->curves.front();
 		}
 	}
 }
@@ -738,17 +743,18 @@ void Beatmap::GenerateSliderPoints()
 	for (auto& hitObject : this->modHitobjects)
 	{
 		// Generate timepoing dependent slider info
-		if (hitObject.IsHitObjectType(HITOBJECTYPE::SLIDER))
+		if (hitObject->IsHitObjectType(HITOBJECTYPE::SLIDER))
 		{
-			TimingPoint* tp = getTimingPointAt(hitObject.getTime());
+			SliderHitObject *slider = hitObject->getSlider();
+			TimingPoint* tp = getTimingPointAt(slider->getTime());
 			double BPM = tp->getBPM();
 
-			hitObject.slider.toRepeatTime = round((double)(((-600.0 / BPM) * hitObject.slider.pixelLength * tp->sm) / (100.0 * diff.sm)));
-			hitObject.slider.endTime = hitObject.getTime() + hitObject.slider.toRepeatTime * hitObject.slider.repeat;
-			hitObject.slider.RecordRepeatTimes();
+			slider->toRepeatTime = round((double)(((-600.0 / BPM) * slider->pixelLength * tp->sm) / (100.0 * diff.sm)));
+			slider->endTime = slider->getTime() + slider->toRepeatTime * slider->repeat;
+			slider->RecordRepeatTimes();
 
 			double tickInterval = tp->beatLength / diff.st;
-			hitObject.slider.RecordTickIntervals(tickInterval);
+			slider->RecordTickIntervals(tickInterval);
 		}
 	}
 }

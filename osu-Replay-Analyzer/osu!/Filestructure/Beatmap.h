@@ -40,7 +40,7 @@ class Beatmap
 		
 		std::string getName();
 		GAMEMODE getGamemode();
-		std::vector<Hitobject>& getHitobjects();
+		std::vector<Hitobject*>& getHitobjects();
 
 		Mods getMods();
 		Diff& getDiff();
@@ -77,7 +77,7 @@ class Beatmap
 
 		std::vector<TimingPoint> origTimingPoints, modTimingPoints;
 		std::vector<Hitobject*> origHitobjects;
-		std::vector<Hitobject> modHitobjects;
+		std::vector<Hitobject*> modHitobjects;
 
 		/// \NOTE: unused for now
 		std::vector<std::pair<Hitobject*, int>> hitObjectsTimeStart;

@@ -4,6 +4,8 @@
 #include "../../utils/mathUtils.h"
 #include "../osuCalc.h"
 
+#include "../Filestructure/SliderHitObject.h"
+
 #include <algorithm>
 #include <assert.h>
 
@@ -43,6 +45,7 @@ void Play::ProcessBeatmap()
 	this->beatmap->Process();
 }
 
+/// \TODO: Perhaps split this off to another thread
 void Play::LoadBeatmap(std::string _beatmapFile)
 {
 	beatmap->ClearObjects();
@@ -56,6 +59,7 @@ void Play::LoadBeatmap(std::string _beatmapFile)
 	ProcessBeatmap();
 }
 
+/// \TODO: Perhaps split this off to another thread
 void Play::LoadReplay(std::string _replayFile)
 {
 	replay->ProcessReplay(_replayFile, beatmap);
@@ -120,7 +124,12 @@ void Play::ResetTimings()
 	this->beatmap->modTimingPoints = this->beatmap->origTimingPoints;
 
 	for (Hitobject* hitobject : this->beatmap->origHitobjects)
-		beatmap->modHitobjects.push_back(*hitobject);
+	{
+		if (hitobject->isHitobjectLong())
+			beatmap->modHitobjects.push_back(new SliderHitObject(*hitobject->getSlider()));			
+		else
+			beatmap->modHitobjects.push_back(new Hitobject(*hitobject));
+	}
 }
 
 
@@ -137,13 +146,12 @@ void Play::ApplyTimings()
 	}
 
 	// Mod hitobject timings
-	for (auto &hitobject : this->beatmap->modHitobjects)
+	for (auto hitobject : this->beatmap->modHitobjects)
 	{
-		hitobject.time /= divisor;
-		int type = hitobject.getHitobjectType();
+		hitobject->time /= divisor;
 
-		if (type == HITOBJECTYPE::MANIALONG || type == HITOBJECTYPE::SLIDER || type == HITOBJECTYPE::SPINNER)
-			hitobject.slider.endTime /= divisor;
+		if (hitobject->isHitobjectLong())
+			hitobject->getSlider()->endTime /= divisor;
 	}
 }
 
@@ -179,6 +187,6 @@ void Play::ApplyVisual()
 	{
 		// flip on the diagonal x-y axis
 		for (auto &hitobject : this->beatmap->modHitobjects)
-			hitobject.setPos(irr::core::vector2d<double>(hitobject.getPos().Y, hitobject.getPos().X));
+			hitobject->setPos(irr::core::vector2d<double>(hitobject->getPos().Y, hitobject->getPos().X));
 	}
 }

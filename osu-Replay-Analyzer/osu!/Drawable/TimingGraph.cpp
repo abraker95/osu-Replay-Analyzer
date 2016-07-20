@@ -81,7 +81,7 @@ void TimingGraph::GenerateVisibilityTimings()
 	timingObjects.resize(beatmap->getHitobjects().size());
 	for (int i = 0; i < timingObjects.size(); i++)
 	{
-		std::pair<int, int> visibilityTimes = beatmap->getHitobjects()[i].getVisiblityTimes(play->getMod()->getAR(), play->getMod()->getModifier().HD, 0.1, 0.1);
+		std::pair<int, int> visibilityTimes = beatmap->getHitobjects()[i]->getVisiblityTimes(play->getMod()->getAR(), play->getMod()->getModifier().HD, 0.1, 0.1);
 
 		if (layer <= 1)
 		{

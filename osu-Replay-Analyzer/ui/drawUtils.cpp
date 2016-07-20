@@ -1,6 +1,7 @@
 #include "drawUtils.h"
 #include "../utils/Geometry.h"
 #include "../utils/mathUtils.h"
+#include "../osu!/Filestructure/SliderHitobject.h"
 
 void DrawLine(Window &_win, Hitobject& _hc1, Hitobject& _hc2)
 {
@@ -30,9 +31,11 @@ void DrawAngle(Window &_win, Hitobject& _hc1, Hitobject& _hc2, Hitobject& _hc3)
 	double thetaRot;
 	double angle = getAngle(_hc1.getPos(), _hc2.getPos(), _hc3.getPos());
 	
-	vector2d<double> pos1 = _hc1.slider.GetSliderPos(_hc1.slider.getEndTime());
-	vector2d<double> pos2 = _hc2.slider.GetSliderPos(_hc2.slider.getEndTime());
+	vector2d<double> pos1 = _hc1.getSlider()->GetSliderPos(_hc1.getEndTime());
+	vector2d<double> pos2 = _hc2.getSlider()->GetSliderPos(_hc2.getEndTime());
 
+	_win.driver->draw2DLine(vector2di(pos1.X, pos1.Y), vector2di(_hc2.getPos().X, _hc2.getPos().Y), SColor(255, 255, 0, 0));
+	_win.driver->draw2DLine(vector2di(pos2.X, pos2.Y), vector2di(_hc3.getPos().X, _hc3.getPos().Y), SColor(255, 255, 0, 0));
 	
 	_win.font->draw(core::stringw(rad2deg(angle)),
 		core::rect<s32>(_hc2.getPos().X + 10, _hc2.getPos().Y + 10, 100, 10),

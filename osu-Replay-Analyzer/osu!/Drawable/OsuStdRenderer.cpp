@@ -44,7 +44,7 @@ void OsuStdRenderer::GenerateHitcircles()
 
 	for (int i = 0; i < hitCircles.size(); i++)
 	{
-		hitCircles[i] = new Hitcircle(play->getMod(), &beatmap->getHitobjects()[i], viewTime);
+		hitCircles[i] = new Hitcircle(play->getMod(), beatmap->getHitobjects()[i], viewTime);
 		hitCircles[i]->setParent(this);
 	}
 }
@@ -79,16 +79,16 @@ void OsuStdRenderer::RenderVisible(Window& _win)
 
 void OsuStdRenderer::RenderPaths(Window& _win)
 {
-	std::vector<Hitobject>& hitobjects = play->beatmap->getHitobjects();
+	std::vector<Hitobject*>& hitobjects = play->beatmap->getHitobjects();
 	
 	int i = std::min(OSUSTANDARD::FindHitobjectAt(&hitobjects, *viewTime) + 1, (int) hitobjects.size() - 2);
 	if (i >= (int)hitobjects.size() - 1)
 		return;
 
 	int numIter = 3;
-	if (hitobjects[i + 1].isHitobjectLong()) numIter++;
+	if (hitobjects[i + 1]->isHitobjectLong()) numIter++;
 
-	std::vector<std::pair<irr::core::vector2d<double>, double>> points = OSUSTANDARD::getPattern(&hitobjects, numIter, 100, hitobjects[i + 1].getTime(), true);
+	std::vector<std::pair<irr::core::vector2d<double>, double>> points = OSUSTANDARD::getPattern(&hitobjects, numIter, 100, hitobjects[i + 1]->getTime(), true);
 
 	double widthRatio = getDim().Width / 512.0;
 	double heightRatio = getDim().Height / 386.0;

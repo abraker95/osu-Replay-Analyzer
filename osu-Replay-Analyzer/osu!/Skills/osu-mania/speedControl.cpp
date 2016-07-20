@@ -160,13 +160,13 @@ void OSUMANIA::SPEED_CONTROL::genDiff(Play* _play)
 		// never a miss
 		if (true)
 		{
-			bool isHoldObject = !(hitobject.getHitobjectType() & HITOBJECTYPE::CIRCLE);
-			int noteXpos = hitobject.getPos().X;
+			bool isHoldObject = !(hitobject->getHitobjectType() & HITOBJECTYPE::CIRCLE);
+			int noteXpos = hitobject->getPos().X;
 			int column = OSUMANIA::getKey(noteXpos, KEYS);
 
 			//shift: prev <- curr, curr <- next
 			hitPeriodPrev[column] = hitPeriodCurr[column];
-			hitPeriodCurr[column] = hitobject.getTime();
+			hitPeriodCurr[column] = hitobject->getTime();
 
 			// check if we have a note release first
 			for (OSUMANIA::TIMING &release : releases)
@@ -205,7 +205,7 @@ void OSUMANIA::SPEED_CONTROL::genDiff(Play* _play)
 			{
 				//shift: prev <- curr, curr <- next
 				timing[column].data  = 0.0;						// release has no strain on tapping
-				timing[column].time  = hitobject.getEndTime();
+				timing[column].time  = hitobject->getEndTime();
 				timing[column].press = false;					// this is a release
 
 				releases[column] = timing[column];				// wait until we have reached the time

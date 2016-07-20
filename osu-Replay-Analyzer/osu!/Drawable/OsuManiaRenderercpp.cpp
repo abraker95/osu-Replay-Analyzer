@@ -48,7 +48,7 @@ void OsuManiaRenderer::GenerateHitNotes()
 	hitNotes.resize(beatmap->getHitobjects().size());
 	for (int i = 0; i < hitNotes.size(); i++)
 	{
-		hitNotes[i] = new HitNote(play->getMod(), &beatmap->getHitobjects()[i], viewTime, &zoom);
+		hitNotes[i] = new HitNote(play->getMod(), beatmap->getHitobjects()[i], viewTime, &zoom);
 			hitNotes[i]->setParent(this);
 	}
 }
@@ -91,14 +91,14 @@ void OsuManiaRenderer::Draw(Window& _win)
 void OsuManiaRenderer::RenderVisible(Window& _win)
 {
 	Beatmap* beatmap = play->beatmap;
-	std::vector<Hitobject>& hitobjects = beatmap->getHitobjects();
+	std::vector<Hitobject*>& hitobjects = beatmap->getHitobjects();
 
 	/// \TODO: Faster object search
 	for (int i = 0; i < hitobjects.size(); i++)
 	{
-		bool HoldStart = BTWN(hitobjects[i].getTime(), getStartTime(), hitobjects[i].getEndTime());
-		bool HoldEnd = BTWN(hitobjects[i].getTime(), getEndTime(), hitobjects[i].getEndTime());
-		bool circle = BTWN(getStartTime(), hitobjects[i].getTime(), getEndTime());
+		bool HoldStart = BTWN(hitobjects[i]->getTime(), getStartTime(), hitobjects[i]->getEndTime());
+		bool HoldEnd = BTWN(hitobjects[i]->getTime(), getEndTime(), hitobjects[i]->getEndTime());
+		bool circle = BTWN(getStartTime(), hitobjects[i]->getTime(), getEndTime());
 		
 		if (HoldStart || HoldEnd || circle)
 			hitNotes[i]->Update(_win);

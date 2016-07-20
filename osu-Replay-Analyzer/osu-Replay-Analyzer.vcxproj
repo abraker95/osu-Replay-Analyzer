@@ -104,7 +104,7 @@
     <ClCompile Include="osu!\Filestructure\Mods.cpp" />
     <ClCompile Include="osu!\Filestructure\Play.cpp" />
     <ClCompile Include="osu!\Filestructure\Replay.cpp" />
-    <ClCompile Include="osu!\Filestructure\SliderHitobject.cpp" />
+    <ClCompile Include="osu!\Filestructure\SliderHitObject.cpp" />
     <ClCompile Include="osu!\Filestructure\TimingPoint.cpp" />
     <ClCompile Include="osu!\osuCalc.cpp" />
     <ClCompile Include="osu!\osu_standard.cpp" />
@@ -191,6 +191,7 @@
     <ClInclude Include="osu!\Filestructure\Mods.h" />
     <ClInclude Include="osu!\Filestructure\Play.h" />
     <ClInclude Include="osu!\Filestructure\Replay.h" />
+    <ClInclude Include="osu!\Filestructure\SliderHitobject.h" />
     <ClInclude Include="osu!\Filestructure\TimingPoint.h" />
     <ClInclude Include="osu!\osuCalc.h" />
     <ClInclude Include="osu!\osuEnums.h" />

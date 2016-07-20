@@ -1,106 +1,92 @@
-#include "Hitobject.h"
+#include "SliderHitObject.h"
+#include "filereader.h"
 
-Hitobject::Slider::Slider(Hitobject* object) : hitobject(object), circle(nullptr) 
+SliderHitObject::SliderHitObject(std::vector<std::string> &_objectData, std::vector<std::string> &_sliderData) : Hitobject(_objectData)
 {
-	//circle = nullptr;
 	this->toRepeatTime = -1;
+	ProcessSliderData(_objectData, _sliderData);
 }
 
-void Hitobject::Slider::newSlider(Hitobject* object, bool isline, bool iscircle)
+void SliderHitObject::newSlider(bool isline, bool iscircle)
 {
-	if (object != nullptr)
+	std::vector<Bezier> beziers;
+
+	// Beziers: splits points into different Beziers if has the same points (red points)
+	// a b c - c d - d e f g
+	// Lines: generate a new curve for each sequential pair
+	// ab  bc  cd  de  ef  fg
+	int controlPoints = this->curves.size() + 1;
+	std::vector<irr::core::vector2di> points;  // temporary list of points to separate different Bezier curves
+	irr::core::vector2di lastPoi(-1, -1);
+
+	for (int i = 0; i < this->curves.size(); i++)
 	{
-		std::vector<Bezier> beziers;
+		sliderX.push_back(this->curves[i].X);
+		sliderY.push_back(this->curves[i].Y);
+	}
 
-		// Beziers: splits points into different Beziers if has the same points (red points)
-		// a b c - c d - d e f g
-		// Lines: generate a new curve for each sequential pair
-		// ab  bc  cd  de  ef  fg
-		int controlPoints = this->curve.size() + 1;
-		std::vector<irr::core::vector2di> points;  // temporary list of points to separate different Bezier curves
-		irr::core::vector2di lastPoi(-1, -1);
+	x = pos.X;
+	y = pos.Y;
 
-		for (int i = 0; i < this->curve.size(); i++)
+	for (int i = 0; i < controlPoints; i++)
+	{
+		irr::core::vector2di tpoi = irr::core::vector2di(getX(i), getY(i));
+		if (isline)
 		{
-			sliderX.push_back(this->curve[i].X);
-			sliderY.push_back(this->curve[i].Y);
-		}
-
-		x = hitobject->pos.X;
-		y = hitobject->pos.Y;
-
-		for (int i = 0; i < controlPoints; i++)
-		{
-			irr::core::vector2di tpoi = irr::core::vector2di(getX(i), getY(i));
-			if (isline)
+			if (lastPoi != irr::core::vector2di(-1, -1))
 			{
-				if (lastPoi != irr::core::vector2di(-1, -1))
-				{
-					points.push_back(tpoi);
-					beziers.push_back(Bezier(points));
-					points.clear();
-				}
-			}
-			else if ((lastPoi != irr::core::vector2di(-1, -1)) && (tpoi == lastPoi))
-			{
-				if (points.size() >= 2)
-					beziers.push_back(Bezier(points));
+				points.push_back(tpoi);
+				beziers.push_back(Bezier(points));
 				points.clear();
 			}
-			points.push_back(tpoi);
-			lastPoi = tpoi;
 		}
-
-		if (isline || points.size() < 2)
+		else if ((lastPoi != irr::core::vector2di(-1, -1)) && (tpoi == lastPoi))
 		{
-			// trying to continue Bezier with less than 2 points
-			// probably ending on a red point, just ignore it
-		}
-		else
-		{
-			beziers.push_back(Bezier(points));
+			if (points.size() >= 2)
+				beziers.push_back(Bezier(points));
 			points.clear();
 		}
-
-		init(beziers);
-
-		if (iscircle)
-		{
-		//	this->circle = std::make_unique<CircumscribedCircle>(this);
-		}
-			
+		points.push_back(tpoi);
+		lastPoi = tpoi;
 	}
+
+	if (isline || points.size() < 2)
+	{
+		// trying to continue Bezier with less than 2 points
+		// probably ending on a red point, just ignore it
+	}
+	else
+	{
+		beziers.push_back(Bezier(points));
+		points.clear();
+	}
+
+	init(beziers);
+
+	// make this a circle if this is a circular slider
+	if (iscircle)
+		this->MakeCircle();
 }
 
-Hitobject::Slider::~Slider()
+SliderHitObject::~SliderHitObject()
 { 
-	//if(circle != nullptr)
-		circle.~CircumscribedCircle();
-
-	//circle.release();
-
 	sliderX.clear();
 	sliderY.clear();
 	ticks.clear();
 	genCurve.clear();
-	curve.clear();
+	curves.clear();
 
 	std::vector<double>().swap(sliderX);
 	std::vector<double>().swap(sliderY);
 	std::vector<int>().swap(ticks);
 	std::vector<irr::core::vector2di>().swap(genCurve);
-	std::vector<irr::core::vector2di>().swap(curve);
+	std::vector<irr::core::vector2di>().swap(curves);
 }
 
-/*void Hitobject::Slider::operator=(Slider slider)
-{
-	*this = slider;
-}*/
-
-irr::core::vector2d<double> Hitobject::Slider::GetSliderPos(int time)
+irr::core::vector2d<double> SliderHitObject::GetSliderPos(int time)
 {
 	// convert time to percent
-	double percent = getPercent(hitobject->time, time, this->endTime);
+	double percent = getPercent(this->time, time, this->endTime);
 		
 	// get the points
 	double indexF = percent * ncurve;
@@ -120,14 +106,14 @@ irr::core::vector2d<double> Hitobject::Slider::GetSliderPos(int time)
 	}
 }
 
-int Hitobject::Slider::getTimeDistFrom(int _time, int _dist, bool _dir)
+int SliderHitObject::getTimeDistFrom(int _time, int _dist, bool _dir)
 {
 	irr::core::vector2d<double> sliderPos = GetSliderPos(_time);
 	int start = 0, end = 0, mid = 0;
 
 	if (_dir == 0)
 	{
-		int start = hitobject->getTime();
+		int start = getTime();
 		int end = _time;
 		int mid;
 	}
@@ -153,18 +139,18 @@ int Hitobject::Slider::getTimeDistFrom(int _time, int _dist, bool _dir)
 	return -1;
 }
 
-int Hitobject::Slider::getEndTime()
+int SliderHitObject::getEndTime()
 {
-	int hitObjectType = this->hitobject->getHitobjectType();
+	int hitObjectType = getHitobjectType();
 
 	if (hitObjectType & (HITOBJECTYPE::CIRCLE))
 	{
-		return this->hitobject->time;
+		return time;
 	}
 
 	if (hitObjectType & (HITOBJECTYPE::SLIDER))
 	{
-		return this->hitobject->time + this->toRepeatTime * this->repeat;
+		return this->time + this->toRepeatTime * this->repeat;
 	}
 	
 	if (hitObjectType & (HITOBJECTYPE::SPINNER))
@@ -178,7 +164,7 @@ int Hitobject::Slider::getEndTime()
 	}
 }
 
-int Hitobject::Slider::GetLastTickTime()
+int SliderHitObject::GetLastTickTime()
 {
 	double tickInterval = 0;
 
@@ -187,31 +173,31 @@ int Hitobject::Slider::GetLastTickTime()
 		if (this->repeat > 1)
 			return this->endTime - (this->endTime - this->repeatTimes.back()) / 2.0;
 		else
-			return this->endTime - (this->endTime - this->hitobject->time) / 2.0;
+			return this->endTime - (this->endTime - this->time) / 2.0;
 	}
 
 	else
 		return this->endTime - (this->endTime - this->ticks.back()) / 2.0;
 }
 
-double Hitobject::Slider::getLength()
+double SliderHitObject::getLength()
 {
 	return pixelLength;
 }
 
-double Hitobject::Slider::getVelocity()
+double SliderHitObject::getVelocity()
 {
-	double period = this->GetLastTickTime() - hitobject->time;
+	double period = this->GetLastTickTime() - this->time;
 	double length = this->getLength();
 	return length / period;
 }
 
-void Hitobject::Slider::RecordRepeatTimes()
+void SliderHitObject::RecordRepeatTimes()
 {
 	// Saving the time of repeats
 	if (this->repeat > 1)
 	{
-		for (int i = this->hitobject->time; i < this->endTime; i += this->toRepeatTime)
+		for (int i = this->time; i < this->endTime; i += this->toRepeatTime)
 		{
 			if (i > this->endTime)
 				break;
@@ -220,16 +206,16 @@ void Hitobject::Slider::RecordRepeatTimes()
 	}
 }
 
-void Hitobject::Slider::RecordTickIntervals(int _beatmapTickInterval)
+void SliderHitObject::RecordTickIntervals(int _beatmapTickInterval)
 {
 	const int errInterval = 10;
 	int j = 1;
 
-	for (int i = this->hitobject->time + _beatmapTickInterval; i < (this->endTime - errInterval); i += _beatmapTickInterval)
+	for (int i = this->time + _beatmapTickInterval; i < (this->endTime - errInterval); i += _beatmapTickInterval)
 	{
 		if (i > this->endTime)
 			break;
-		int tickTime = this->hitobject->time + _beatmapTickInterval * j;
+		int tickTime = this->time + _beatmapTickInterval * j;
 		this->ticks.push_back(tickTime);
 		j++;
 	}
@@ -237,7 +223,7 @@ void Hitobject::Slider::RecordTickIntervals(int _beatmapTickInterval)
 
 // ----------------- [PRIVATE] ------------------
 
-void Hitobject::Slider::init(std::vector<Bezier> curvesList)
+void SliderHitObject::init(std::vector<Bezier> curvesList)
 {
 	// now try to creates points the are equidistant to each other
 	ncurve = (int)(this->pixelLength / CURVE_POINTS_SEPERATION);
@@ -316,9 +302,44 @@ void Hitobject::Slider::init(std::vector<Bezier> curvesList)
 	//	}
 }
 
-double Hitobject::Slider::getEndAngle() { return endAngle; }
-double Hitobject::Slider::getStartAngle() { return startAngle; }
+void SliderHitObject::ProcessSliderData(std::vector<std::string> &_objectData, std::vector<std::string> &_sliderData)
+{
+	// curve parsing
+	curveType = (CurveType)_sliderData[0].c_str()[0];
+
+	for (int i = 1; i < _sliderData.size(); i++)
+	{
+		std::vector<std::string> curveTokens;
+		FileReader::tokenize(_sliderData[i], curveTokens, ":");
+
+		// curve points parsing
+		{
+			irr::core::vector2di curve;
+			curve.X = atoi(curveTokens[0].c_str());
+			curve.Y = atoi(curveTokens[1].c_str());
+
+			curves.push_back(curve);
+		}
+	}
+
+	repeat = atoi(_objectData[6].c_str());
+	pixelLength = atof(_objectData[7].c_str());
+
+	if (this->getHitobjectType() & HITOBJECTYPE::SPINNER)
+	{
+		endTime = atoi(_objectData[5].c_str());
+	}
+
+	if (this->getHitobjectType() & HITOBJECTYPE::MANIALONG)
+	{
+		FileReader::tokenize(_objectData[5], _sliderData, ":");
+		endTime = atoi(_sliderData[0].c_str());
+	}
+}
+
+double SliderHitObject::getEndAngle() { return endAngle; }
+double SliderHitObject::getStartAngle() { return startAngle; }
 
 
-double Hitobject::Slider::getX(int i) { return (i == 0) ? x : sliderX[i - 1]; }
-double Hitobject::Slider::getY(int i) { return (i == 0) ? y : sliderY[i - 1]; }
+double SliderHitObject::getX(int i) { return (i == 0) ? x : sliderX[i - 1]; }
+double SliderHitObject::getY(int i) { return (i == 0) ? y : sliderY[i - 1]; }

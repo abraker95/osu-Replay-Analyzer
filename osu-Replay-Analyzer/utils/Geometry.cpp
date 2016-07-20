@@ -4,6 +4,7 @@
 #include <math.h>
 #include "../irrlicht/include/irrlicht.h"
 #include "../osu!/osuCalc.h"
+#include "../osu!/Filestructure/SliderHitObject.h"
 
 double getSlope(position2d<double> _p1, position2d<double> _p2)
 {
@@ -160,10 +161,11 @@ double getCircleOverlapArea(double _radius, double _dist)
 		return 2*_radius*_radius*acos(_dist / (2.0*_radius)) - (_dist / 4.0)*sqrt(4.0*_radius*_radius - _dist*_dist);
 }
 
+/// \TODO: This might not be working as intended. TEST THE CRAP OUT OF THIS
 /// \TODO: This currently return only the first overlap detected. Do we need to keep checking for more in case of crazy sliders?
 double GetHitobjectOverlapArea(Play *_play, int _indexA, int _indexB)
 {
-	std::vector<Hitobject>& hitobjects = _play->beatmap->getHitobjects();
+	std::vector<Hitobject*>& hitobjects = _play->beatmap->getHitobjects();
 
 	// out of bounds check
 	if (!(BTWN(0, _indexA, hitobjects.size() - 1) && BTWN(0, _indexB, hitobjects.size() - 1)))
@@ -172,16 +174,16 @@ double GetHitobjectOverlapArea(Play *_play, int _indexA, int _indexB)
 	// Load up the needed vars
 	double diameter = CS2px(_play->getMod()->getCS());
 
-	double startTimeA = hitobjects[_indexA].getTime();
-	double startTimeB = hitobjects[_indexB].getTime();
+	double startTimeA = hitobjects[_indexA]->getTime();
+	double startTimeB = hitobjects[_indexB]->getTime();
 
-	double endTimeA = hitobjects[_indexA].getEndTime();
-	double endTimeB = hitobjects[_indexB].getEndTime();
+	double endTimeA = hitobjects[_indexA]->getEndTime();
+	double endTimeB = hitobjects[_indexB]->getEndTime();
 
-	Hitobject::Slider* sliderA = nullptr, *sliderB = nullptr;
+	SliderHitObject* sliderA = nullptr, *sliderB = nullptr;
 	
-	if (hitobjects[_indexA].isHitobjectLong())	sliderA = &hitobjects[_indexA].slider;
-	if (hitobjects[_indexB].isHitobjectLong())	sliderB = &hitobjects[_indexB].slider;
+	if (hitobjects[_indexA]->isHitobjectLong())	sliderA = hitobjects[_indexA]->getSlider();
+	if (hitobjects[_indexB]->isHitobjectLong())	sliderB = hitobjects[_indexB]->getSlider();
 
 	// if it's a non sliders, then just iterate by 1 ms
 	double velocityA, velocityB;
@@ -206,10 +208,10 @@ double GetHitobjectOverlapArea(Play *_play, int _indexA, int _indexB)
 		{
 			// set the points to calculate
 			vector2d<double> pointA, pointB;
-			if (sliderA == nullptr)	pointA = hitobjects[_indexA].getPos();
+			if (sliderA == nullptr)	pointA = hitobjects[_indexA]->getPos();
 			else					pointA = sliderA->GetSliderPos(timeA);
 
-			if (sliderB == nullptr)	pointB = hitobjects[_indexB].getPos();
+			if (sliderB == nullptr)	pointB = hitobjects[_indexB]->getPos();
 			else					pointB = sliderB->GetSliderPos(timeB);
 
 			// Calculate distance

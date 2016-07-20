@@ -5,6 +5,7 @@
 #include "../../utils/mathUtils.h"
 #include "../../ui/drawUtils.h"
 #include "../osuCalc.h"
+#include "../Filestructure/SliderHitObject.h"
 
 #include <iostream>
 #include <tuple>
@@ -123,7 +124,7 @@ void HitNote::UpdateAbsDim(Window& _win)
 	if (hitobject->getHitobjectType() & HITOBJECTYPE::MANIALONG)
 	{
 		int startTime = std::max(hitobject->getTime(), ((OsuManiaRenderer*)parent)->getStartTime());
-		int endTime = std::min(hitobject->slider.getEndTime(), ((OsuManiaRenderer*)parent)->getEndTime());
+		int endTime = std::min(hitobject->getSlider()->getEndTime(), ((OsuManiaRenderer*)parent)->getEndTime());
 
 		height = (double)(endTime - startTime) * (*zoom) + 15;
 	}
