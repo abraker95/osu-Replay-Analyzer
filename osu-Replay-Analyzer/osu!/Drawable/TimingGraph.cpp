@@ -4,6 +4,7 @@
 #include "../../utils/mathUtils.h"
 #include "../osuCalc.h"
 #include "../../utils/Geometry.h"
+#include "../Filestructure/SliderHitObject.h"
 //#include "reaction.h"
 //#include "analysis.h"
 
@@ -96,7 +97,7 @@ void TimingGraph::GenerateVisibilityTimings()
 		const int layerHeight = 4;
 
 		//timingObjects[i] = new TimingObject(startPos, layerPos, endPos-startPos, layerHeight, beatmap->hitObjects[i], this, this);
-		timingObjects[i] = new TimingObject(0, layerPos, 0, layerHeight, &beatmap->getHitobjects()[i], play->getMod(), this);
+		timingObjects[i] = new TimingObject(0, layerPos, 0, layerHeight, beatmap->getHitobjects()[i], play->getMod(), this);
 		layer--;
 	}
  }
@@ -132,20 +133,20 @@ void TimingGraph::drawHitobjectHitTimings(Window &_win)
 	std::pair<int, int> viewTimes = this->getViewTimes();
 	int startIndex = 0, endIndex = beatmap->getHitobjects().size() - 1;
 
-	if (viewTimes.first > beatmap->getHitobjects()[0].getTime())
+	if (viewTimes.first > beatmap->getHitobjects()[0]->getTime())
 		startIndex = beatmap->FindHitobjectAt(viewTimes.first);
 
-	if (viewTimes.second < beatmap->getHitobjects()[0].getTime())
+	if (viewTimes.second < beatmap->getHitobjects()[0]->getTime())
 		endIndex = beatmap->FindHitobjectAt(viewTimes.second);
 
 	for (int i = startIndex; i < endIndex; i++)
 	{
-		int hitobjectBegTime = beatmap->getHitobjects()[i].getTime();
+		int hitobjectBegTime = beatmap->getHitobjects()[i]->getTime();
 		int hitobjectEndTime = hitobjectBegTime;
 		
 		// get the actual end time if it is a slider
-		if (beatmap->getHitobjects()[i].IsHitObjectType(SLIDER))
-			hitobjectEndTime = beatmap->getHitobjects()[i].slider.getEndTime();
+		if (beatmap->getHitobjects()[i]->IsHitObjectType(SLIDER))
+			hitobjectEndTime = beatmap->getHitobjects()[i]->getSlider()->getEndTime();
 		
 		int posBeg = (hitobjectBegTime - viewTimes.first)*zoom;
 		int posEnd = (hitobjectEndTime - viewTimes.first)*zoom;
@@ -164,10 +165,10 @@ void TimingGraph::drawHitobjectVisibilityTimings(Window &_win)
 	std::pair<int, int> viewTimes = this->getViewTimes();
 	int startIndex = 0, endIndex = beatmap->getHitobjects().size() - 1;
 
-	if (viewTimes.first > beatmap->getHitobjects()[0].getTime())
+	if (viewTimes.first > beatmap->getHitobjects()[0]->getTime())
 		startIndex = beatmap->FindHitobjectAt(viewTimes.first);
 
-	if (viewTimes.second < beatmap->getHitobjects()[beatmap->getHitobjects().size() - 1].getTime())
+	if (viewTimes.second < beatmap->getHitobjects()[beatmap->getHitobjects().size() - 1]->getTime())
 		endIndex = beatmap->FindHitobjectAt(viewTimes.second + AR2ms(play->getMod()->getAR()));
 
 	if (endIndex <= startIndex) endIndex = beatmap->getHitobjects().size() - 1;
