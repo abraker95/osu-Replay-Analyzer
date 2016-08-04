@@ -11,7 +11,7 @@ class GuiObj
 	public:
 		enum CLIPPOS
 		{
-							  NONE = 0,
+							  NONEPOS = 0,
 			TOPLEFT = 1,    TOPCENTER = 2,  TOPRIGHT = 3,
 			MIDLEFT = 4,	MIDCENTER = 5,	MIDRIGHT = 6,
 			BTMLEFT = 7,	BTMCENTER = 8,	BTMRIGHT = 9,
@@ -19,7 +19,7 @@ class GuiObj
 		
 		enum CLIPDIM
 		{
-			BTM = 1, CENTERY = 2, CENTERX = 4, RIGHT = 8
+			BTM = 1, CENTERY = 2, CENTERX = 4, RIGHT = 8, NONEDIM = 16
 		};
 
 		void Update(Window& _win);
@@ -56,7 +56,6 @@ class GuiObj
 		GuiObj* parent;
 		//std::vector<GuiObj*> children;
 		int id;
-
 
 		CLIPPOS clipPos;
 		int clipDim;

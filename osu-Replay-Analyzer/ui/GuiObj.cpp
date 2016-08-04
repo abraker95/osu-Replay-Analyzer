@@ -3,7 +3,7 @@
 
 #include <vector>
 
-//#define DEBUG
+//	#define DEBUG
 
 std::vector<GuiObj*> guiEnv;
 GuiObj* top;
@@ -42,6 +42,11 @@ GuiObj::GuiObj(int _xpos, int _ypos, int _width, int _height, GuiObj* _parent)
 
 	parent = _parent;
 	visible = true;
+	clipPos = CLIPPOS::NONEPOS;
+	clipDim = CLIPDIM::NONEDIM;
+
+	marginRight = 0;
+	marginBtm = 0;
 
 	guiEnv.push_back(this);
 	id = guiEnv.size() - 1;
@@ -197,7 +202,7 @@ void GuiObj::UpdateAbsPos(Window& _win)
 	{
 		switch (this->clipPos)
 		{
-			case NONE:
+			case NONEPOS:
 				absXpos = parent->absXpos + this->xpos;
 				absYpos = parent->absYpos + this->ypos;
 				break;
@@ -257,7 +262,7 @@ void GuiObj::UpdateAbsPos(Window& _win)
 	{
 		switch (clipPos)
 		{
-			case NONE:
+			case NONEPOS:
 				absXpos = this->xpos;
 				absYpos = this->ypos;
 				break;
