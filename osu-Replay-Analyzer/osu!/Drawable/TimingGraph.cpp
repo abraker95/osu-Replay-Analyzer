@@ -13,7 +13,7 @@
 using namespace irr;
 using namespace core;
 
-TimingGraph::TimingGraph(Window& _win, Play* _play) : GuiObj(0, 0, _win.getDimentions().Width, 0)
+TimingGraph::TimingGraph(int _xpos, int _ypos, Window& _win, Play* _play) : GuiObj(_xpos, _ypos, _win.getDimentions().Width, 0)
 {
 	guiType = "Timing_Graph";
 	play = _play;
@@ -21,7 +21,6 @@ TimingGraph::TimingGraph(Window& _win, Play* _play) : GuiObj(0, 0, _win.getDimen
 	autoPlay = false;
 
 	height = HEIGHT;
-	ypos = -HEIGHT;
 
 	layerMask = 0;
 	layerMask = REFRESHRATE_TICKS | HITOBJECT_HIT_TIMINGS | HITOBJECT_VISIBILTITY;

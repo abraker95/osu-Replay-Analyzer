@@ -11,7 +11,7 @@
 class TimingGraph : public GuiObj
 {
 	public:
-		TimingGraph(Window& _win, Play* _play); // _res = resolution in px/ms
+		TimingGraph(int _xpos, int _ypos, Window& _win, Play* _play); // _res = resolution in px/ms
 		virtual ~TimingGraph();
 
 		enum LAYER
