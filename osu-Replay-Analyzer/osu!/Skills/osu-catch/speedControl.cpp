@@ -1,11 +1,11 @@
 #include "speedControl.h"
 
 #include "../SkillEngine.h"
-#include "../../osu_mania.h"
+#include "../../osu_catch.h"
 
-std::vector<OSUCATCH::TIMING> OSUCATCH::SPEED_CONTROL::scores,
-							  OSUCATCH::SPEED_CONTROL::skills,
-							  OSUCATCH::SPEED_CONTROL::diffs;
+std::vector<osu::TIMING> OSUCATCH::SPEED_CONTROL::scores,
+						 OSUCATCH::SPEED_CONTROL::skills,
+						 OSUCATCH::SPEED_CONTROL::diffs;
 
 void OSUCATCH::SPEED_CONTROL::genScore(Play* _play)
 {

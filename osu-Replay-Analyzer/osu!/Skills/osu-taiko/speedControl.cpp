@@ -2,10 +2,11 @@
 
 #include "../SkillEngine.h"
 #include "../../osu_taiko.h"
+#include "../../osuStructs.h"
 
-std::vector<OSUTAIKO::TIMING> OSUTAIKO::SPEED_CONTROL::scores,
-							  OSUTAIKO::SPEED_CONTROL::skills,
-							  OSUTAIKO::SPEED_CONTROL::diffs;
+std::vector<osu::TIMING> OSUTAIKO::SPEED_CONTROL::scores,
+						 OSUTAIKO::SPEED_CONTROL::skills,
+						 OSUTAIKO::SPEED_CONTROL::diffs;
 
 
 void OSUTAIKO::SPEED_CONTROL::genScore(Play* _play)

@@ -5,15 +5,15 @@
 
 #include "../../osu_dodge.h"
 #include "../../Filestructure/Play.h"
+#include "../../osuStructs.h"
 
 namespace OSUDODGE
 {
-	extern std::vector<OSUDODGE::TIMING> accTimings;
+	extern std::vector<osu::TIMING> accTimings;
 
 	void genAccTimings(Play* _play);
 
 	std::tuple<long, int, int> getNextEvent(int* _iFrame);
-	Hitobject* getNextNoteOnColumn(int _column, int* _iNote);
 
 	std::pair<double, double> getODms(Hitobject* _prevNote, Hitobject* _currNote, Hitobject* _nextNote, bool _press);
 };

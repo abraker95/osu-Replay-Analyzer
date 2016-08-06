@@ -1,23 +1,15 @@
 #include "score.h"
 
-std::vector<OSUSTANDARD::TIMING> OSUSTANDARD::accTimings;
+std::vector<osu::TIMING> OSUSTANDARD::accTimings;
 static Play* play;
 
-struct KeyInfo
-{
-	double hitTiming;
-	int key;
-	std::vector<bool>* pressState;
-	bool* nextNote;
-};
-
-bool sortAccTimings(OSUSTANDARD::TIMING i, OSUSTANDARD::TIMING j)
+bool OSUSTANDARD::sortAccTimings(osu::TIMING i, osu::TIMING j)
 {
 	return i.time < j.time;
 }
 
 
-int OSUSTANDARD::getJudgment(int _frameTime, int _noteTime, bool _pressState)
+int OSUSTANDARD::SCORE::getJudgment(int _frameTime, int _noteTime, bool _pressState)
 {
 	bool hit = false;
 	bool miss = true;  // assume miss to start with
@@ -51,7 +43,7 @@ int OSUSTANDARD::getJudgment(int _frameTime, int _noteTime, bool _pressState)
 	else					return 3;
 }
 
-void processHit(std::vector<OSUSTANDARD::TIMING>* _accTimings, Hitobject* _currNote, KeyInfo _info)
+void OSUSTANDARD::SCORE::processHit(std::vector<osu::TIMING>* _accTimings, Hitobject* _currNote, KeyInfo _info)
 {
 	bool isHoldObject = !(_currNote->getHitobjectType() & HITOBJECTYPE::CIRCLE);
 	bool different = true;
@@ -71,9 +63,9 @@ void processHit(std::vector<OSUSTANDARD::TIMING>* _accTimings, Hitobject* _currN
 	if (different)
 	{
 		if ((*_info.pressState)[key] == true) // if we are pressing
-			_accTimings->push_back((OSUSTANDARD::TIMING{ _currNote->getTime(), _info.hitTiming, _info.key, (*_info.pressState)[key] }));
+			_accTimings->push_back((osu::TIMING{ _currNote->getTime(), _info.hitTiming, _info.key, (*_info.pressState)[key] }));
 		else						  // if we are releasing
-			_accTimings->push_back((OSUSTANDARD::TIMING{ _currNote->getEndTime(), _info.hitTiming, _info.key, (*_info.pressState)[key] }));
+			_accTimings->push_back((osu::TIMING{ _currNote->getEndTime(), _info.hitTiming, _info.key, (*_info.pressState)[key] }));
 	}
 
 	// go to next note only if it's not a hold. We are expecting a release otherwise
@@ -91,28 +83,28 @@ void processHit(std::vector<OSUSTANDARD::TIMING>* _accTimings, Hitobject* _currN
 }
 
 
-void processMiss(std::vector<OSUSTANDARD::TIMING>* _accTimings, Hitobject* _currNote, KeyInfo _info)
+void OSUSTANDARD::SCORE::processMiss(std::vector<osu::TIMING>* _accTimings, Hitobject* _currNote, KeyInfo _info)
 {
 	bool isHoldObject = !(_currNote->getHitobjectType() & HITOBJECTYPE::CIRCLE);
 	int key = _info.key;
 
 	if (!isHoldObject)
-		_accTimings->push_back((OSUSTANDARD::TIMING{ _currNote->getTime(), (double)INT_MAX, _info.key, (*_info.pressState)[key] }));
+		_accTimings->push_back((osu::TIMING{ _currNote->getTime(), (double)INT_MAX, _info.key, (*_info.pressState)[key] }));
 	else
-		_accTimings->push_back((OSUSTANDARD::TIMING{ _currNote->getEndTime(), (double)INT_MAX, _info.key, (*_info.pressState)[key] }));
+		_accTimings->push_back((osu::TIMING{ _currNote->getEndTime(), (double)INT_MAX, _info.key, (*_info.pressState)[key] }));
 
 	*_info.nextNote = true;		// set to fetch next note
 	(*_info.pressState)[key] = true;	// we are expecting a press next
 }
 
-void HandleEarlyMiss(std::vector<OSUSTANDARD::TIMING>* _accTimings, Hitobject* _currNote, KeyInfo _info)
+void OSUSTANDARD::SCORE::HandleEarlyMiss(std::vector<osu::TIMING>* _accTimings, Hitobject* _currNote, KeyInfo _info)
 {
 	int key = _info.key;
 
 	if ((*_info.pressState)[key] == true) // if we are pressing
-		_accTimings->push_back((OSUSTANDARD::TIMING{ _currNote->getTime(), (double)INT_MAX, _info.key, (*_info.pressState)[key] }));
+		_accTimings->push_back((osu::TIMING{ _currNote->getTime(), (double)INT_MAX, _info.key, (*_info.pressState)[key] }));
 	else						  // if we are releasing
-		_accTimings->push_back((OSUSTANDARD::TIMING{ _currNote->getEndTime(), (double)INT_MAX, _info.key, (*_info.pressState)[key] }));
+		_accTimings->push_back((osu::TIMING{ _currNote->getEndTime(), (double)INT_MAX, _info.key, (*_info.pressState)[key] }));
 
 	*_info.nextNote = true;		// set to fetch next note
 	(*_info.pressState)[key] = true;	// we are expecting a press next
@@ -122,7 +114,7 @@ void HandleEarlyMiss(std::vector<OSUSTANDARD::TIMING>* _accTimings, Hitobject* _
 void OSUSTANDARD::genAccTimings(Play* _play)
 {
 	accTimings.clear();
-	std::vector<OSUSTANDARD::TIMING>().swap(accTimings);
+	std::vector<osu::TIMING>().swap(accTimings);
 
 	play = _play;
 	const int KEYS = 2;
@@ -175,16 +167,16 @@ void OSUSTANDARD::genAccTimings(Play* _play)
 				{
 					if (pressStates[key] == true)	// if we are pressing the key
 					{
-						hitState = getJudgment(std::get<0>(frame), currNotes->getTime(), pressStates[key]);
+						hitState = SCORE::getJudgment(std::get<0>(frame), currNotes->getTime(), pressStates[key]);
 						hitTiming = std::get<0>(frame) - currNotes->getTime();
 					}
 					else							// if we are releasing the key
 					{
-						hitState = getJudgment(std::get<0>(frame), currNotes->getEndTime(), pressStates[key]);
+						hitState = SCORE::getJudgment(std::get<0>(frame), currNotes->getEndTime(), pressStates[key]);
 						hitTiming = std::get<0>(frame) - currNotes->getEndTime();
 					}
 
-					KeyInfo info = {};
+					SCORE::KeyInfo info = {};
 						info.hitTiming = hitTiming;
 						info.key = key;
 						info.nextNote = &nextNote;
@@ -193,15 +185,15 @@ void OSUSTANDARD::genAccTimings(Play* _play)
 					switch (hitState)
 					{
 						case 0:		// hit
-							processHit(&accTimings, currNotes, info);
+							SCORE::processHit(&accTimings, currNotes, info);
 							break;
 
 						case 1:		// hit and miss
-							processMiss(&accTimings, currNotes, info);
+							SCORE::processMiss(&accTimings, currNotes, info);
 							break;
 
 						case 2:     // never hit the note
-							processMiss(&accTimings, currNotes, info);
+							SCORE::processMiss(&accTimings, currNotes, info);
 
 							// get next note
 							if (nextNote == true)
@@ -258,25 +250,25 @@ Hitobject* OSUSTANDARD::getNextNote(int* _iNote)
 std::tuple<long, int, int> OSUSTANDARD::getNextEvent(int* _iFrame)
 {
 	int currKeyMask = 0, prevKeyMask = 0;
-	std::tuple<long, irr::core::vector2df, int> frame;
+	osu::TIMING frame;
 
 	*_iFrame += 1;
 	if (*_iFrame > 1)
-		currKeyMask = std::get<2>(play->replay->getFrame((*_iFrame) - 1));
+		currKeyMask = play->replay->getFrame((*_iFrame) - 1).key;
 
 	for (; *_iFrame < play->replay->getNumFrames(); (*_iFrame)++)
 	{
 		frame = play->replay->getFrame(*_iFrame);
 
 		prevKeyMask = currKeyMask;
-		currKeyMask = std::get<2>(frame);
+		currKeyMask = frame.key;
 
 		if ((prevKeyMask ^ currKeyMask) != 0)
 			break;
 	}
 
-	unsigned int presses = (currKeyMask & ~(0x0)) & (~prevKeyMask & ~(0x0));  // curr -> press,        prev -> not pressed
+	unsigned int presses  = (currKeyMask & ~(0x0)) & (~prevKeyMask & ~(0x0));  // curr -> press,        prev -> not pressed
 	unsigned int releases = (~currKeyMask & ~(0x0)) & (prevKeyMask & ~(0x0));  // curr -> not pressed   prev -> pressed
 
-	return std::tuple<long, int, int>(std::get<0>(frame), presses, releases);
+	return std::tuple<long, int, int>(frame.time, presses, releases);
 }

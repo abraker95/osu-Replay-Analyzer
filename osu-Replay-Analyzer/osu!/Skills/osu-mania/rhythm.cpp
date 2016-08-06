@@ -2,10 +2,11 @@
 
 #include "../SkillEngine.h"
 #include "../../osu_mania.h"
+#include "../../osuStructs.h"
 
-std::vector<OSUMANIA::TIMING> OSUMANIA::RHYTHM::scores,
-							  OSUMANIA::RHYTHM::skills,
-							  OSUMANIA::RHYTHM::diffs;
+std::vector<osu::TIMING> OSUMANIA::RHYTHM::scores,
+						 OSUMANIA::RHYTHM::skills,
+						 OSUMANIA::RHYTHM::diffs;
 
 
 void OSUMANIA::RHYTHM::genScore(Play* _play)

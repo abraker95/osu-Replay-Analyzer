@@ -107,6 +107,7 @@
     <ClCompile Include="osu!\Filestructure\SliderHitObject.cpp" />
     <ClCompile Include="osu!\Filestructure\TimingPoint.cpp" />
     <ClCompile Include="osu!\osuCalc.cpp" />
+    <ClCompile Include="osu!\osuStructs.cpp" />
     <ClCompile Include="osu!\osu_standard.cpp" />
     <ClCompile Include="osu!\Score\osu-catch\score.cpp" />
     <ClCompile Include="osu!\Score\osu-dodge\score.cpp" />
@@ -195,6 +196,7 @@
     <ClInclude Include="osu!\Filestructure\TimingPoint.h" />
     <ClInclude Include="osu!\osuCalc.h" />
     <ClInclude Include="osu!\osuEnums.h" />
+    <ClInclude Include="osu!\osuStructs.h" />
     <ClInclude Include="osu!\osu_catch.h" />
     <ClInclude Include="osu!\osu_dodge.h" />
     <ClInclude Include="osu!\osu_mania.h" />

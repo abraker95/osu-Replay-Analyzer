@@ -1,12 +1,12 @@
 #include "score.h"
 
-std::vector<OSUCATCH::TIMING> OSUCATCH::accTimings;
+std::vector<osu::TIMING> OSUCATCH::accTimings;
 static Play* play;
 
 void OSUCATCH::genAccTimings(Play* _play)
 {
 	accTimings.clear();
-	std::vector<OSUCATCH::TIMING>().swap(accTimings);
+	std::vector<osu::TIMING>().swap(accTimings);
 
 	play = _play;
 }

@@ -10,7 +10,7 @@ namespace OSUSTANDARD
 {
 	namespace READING
 	{
-		extern std::vector<OSUSTANDARD::TIMING> scores, skills, diffs;
+		extern std::vector<osu::TIMING> scores, skills, diffs;
 		extern double diff; 
 
 		void genScore(Play* _play);

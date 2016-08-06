@@ -1,9 +1,10 @@
 #include "score.h"
 
 #include <tuple>
+#include <assert.h>
 #include <iostream>
 
-std::vector<OSUMANIA::TIMING> OSUMANIA::accTimings;
+std::vector<osu::TIMING> OSUMANIA::accTimings;
 static Play* play;
 
 
@@ -13,15 +14,7 @@ const double MAX_RELEASE_TIME = +100;
 const double MIN_RELEASE_TIME = -100;
 
 
-struct KeyInfo
-{
-	double hitTiming;
-	int key;
-	std::vector<bool>* pressState;
-	std::vector<bool>* nextNote;
-};
-
-bool sortAccTimings(OSUMANIA::TIMING i, OSUMANIA::TIMING j)
+bool OSUMANIA::sortAccTimings(osu::TIMING i, osu::TIMING j)
 {
 	return i.time < j.time;
 }
@@ -33,7 +26,7 @@ int OSUMANIA::getJudgment(int _frameTime, int _noteTime, bool _pressState)
 	int hitTiming = _frameTime - _noteTime;
 
 	// check if the note is long gone or not
-	if (_frameTime > _noteTime + 150)
+	if (_frameTime > _noteTime + 200)
 		return 2;
 
 	// judge
@@ -59,7 +52,7 @@ int OSUMANIA::getJudgment(int _frameTime, int _noteTime, bool _pressState)
 }
 
 
-void processHit(std::vector<OSUMANIA::TIMING>* _accTimings, Hitobject* _currNote, KeyInfo _info)
+void OSUMANIA::SCORE::processHit(std::vector<osu::TIMING>* _accTimings, Hitobject* _currNote, KeyInfo _info)
 {
 	bool isHoldObject = !(_currNote->getHitobjectType() & HITOBJECTYPE::CIRCLE);
 	bool different = true;
@@ -81,9 +74,9 @@ void processHit(std::vector<OSUMANIA::TIMING>* _accTimings, Hitobject* _currNote
 	if (different)
 	{
 		if((*_info.pressState)[key] == true) // if we are pressing
-			_accTimings->push_back((OSUMANIA::TIMING{ _currNote->getTime(), _info.hitTiming, _info.key, (*_info.pressState)[key] }));
+			_accTimings->push_back((osu::TIMING{ _currNote->getTime(), _info.hitTiming, _info.key, (*_info.pressState)[key] }));
 		else						  // if we are releasing
-			_accTimings->push_back((OSUMANIA::TIMING{ _currNote->getEndTime(), _info.hitTiming, _info.key, (*_info.pressState)[key] }));
+			_accTimings->push_back((osu::TIMING{ _currNote->getEndTime(), _info.hitTiming, _info.key, (*_info.pressState)[key] }));
 	}
 
 	// go to next note only if it's not a hold. We are expecting a release otherwise
@@ -101,28 +94,28 @@ void processHit(std::vector<OSUMANIA::TIMING>* _accTimings, Hitobject* _currNote
 }
 
 
-void processMiss(std::vector<OSUMANIA::TIMING>* _accTimings, Hitobject* _currNote, KeyInfo _info)
+void OSUMANIA::SCORE::processMiss(std::vector<osu::TIMING>* _accTimings, Hitobject* _currNote, KeyInfo _info)
 {
 	bool isHoldObject = !(_currNote->getHitobjectType() & HITOBJECTYPE::CIRCLE);
 	int key = _info.key;
 
 	if (!isHoldObject)			
-		_accTimings->push_back((OSUMANIA::TIMING{ _currNote->getTime(), (double)INT_MAX, _info.key, (*_info.pressState)[key] }));
+		_accTimings->push_back((osu::TIMING{ _currNote->getTime(), (double)INT_MAX, _info.key, (*_info.pressState)[key] }));
 	else
-		_accTimings->push_back((OSUMANIA::TIMING{ _currNote->getEndTime(), (double)INT_MAX, _info.key, (*_info.pressState)[key] }));
+		_accTimings->push_back((osu::TIMING{ _currNote->getEndTime(), (double)INT_MAX, _info.key, (*_info.pressState)[key] }));
 
 	(*_info.nextNote)[key] = true;		// set to fetch next note
 	(*_info.pressState)[key] = true;	// we are expecting a press next
 }
 
-void HandleEarlyMiss(std::vector<OSUMANIA::TIMING>* _accTimings, Hitobject* _currNote, KeyInfo _info)
+void OSUMANIA::SCORE::HandleEarlyMiss(std::vector<osu::TIMING>* _accTimings, Hitobject* _currNote, KeyInfo _info)
 {
 	int key = _info.key;
 
 	if ((*_info.pressState)[key] == true) // if we are pressing
-		_accTimings->push_back((OSUMANIA::TIMING{ _currNote->getTime(), (double)INT_MAX, _info.key, (*_info.pressState)[key] }));
+		_accTimings->push_back((osu::TIMING{ _currNote->getTime(), (double)INT_MAX, _info.key, (*_info.pressState)[key] }));
 	else						  // if we are releasing
-		_accTimings->push_back((OSUMANIA::TIMING{ _currNote->getEndTime(), (double)INT_MAX, _info.key, (*_info.pressState)[key] }));
+		_accTimings->push_back((osu::TIMING{ _currNote->getEndTime(), (double)INT_MAX, _info.key, (*_info.pressState)[key] }));
 
 	(*_info.nextNote)[key] = true;		// set to fetch next note
 	(*_info.pressState)[key] = true;	// we are expecting a press next
@@ -132,7 +125,7 @@ void HandleEarlyMiss(std::vector<OSUMANIA::TIMING>* _accTimings, Hitobject* _cur
 void OSUMANIA::genAccTimings(Play* _play)
 {
 	accTimings.clear();
-	std::vector<OSUMANIA::TIMING>().swap(accTimings);
+	std::vector<osu::TIMING>().swap(accTimings);
 
 	play = _play;
 
@@ -202,7 +195,7 @@ void OSUMANIA::genAccTimings(Play* _play)
 						hitTiming = std::get<0>(frame) - currNotes[key]->getEndTime();
 					}
 
-					KeyInfo info = {};
+					SCORE::KeyInfo info = {};
 						info.hitTiming = hitTiming;
 						info.key = key;
 						info.nextNote = &nextNote;
@@ -211,15 +204,15 @@ void OSUMANIA::genAccTimings(Play* _play)
 					switch (hitState)
 					{
 						case 0:		// hit
-							processHit(&accTimings, currNotes[key], info);
+							SCORE::processHit(&accTimings, currNotes[key], info);
 						break;
 
 						case 1:		// hit and miss
-							processMiss(&accTimings, currNotes[key], info);
+							SCORE::processMiss(&accTimings, currNotes[key], info);
 							break;
 
 						case 2:     // never hit the note
-							processMiss(&accTimings, currNotes[key], info);
+							SCORE::processMiss(&accTimings, currNotes[key], info);
 
 							// get next note
 							if (nextNote[key] == true)
@@ -265,7 +258,7 @@ void OSUMANIA::genAccTimings(Play* _play)
 
 
 // note's valid hitRange (unused for now)
-std::pair<double, double> OSUMANIA::getODms(Hitobject* _prevNote, Hitobject* _currNote, Hitobject* _nextNote, bool _press)
+std::pair<double, double> OSUMANIA::SCORE::getODms(Hitobject* _prevNote, Hitobject* _currNote, Hitobject* _nextNote, bool _press)
 {
 	double earliestTime = 0.0;
 	double latestTime = 0.0;
@@ -435,18 +428,18 @@ Hitobject* OSUMANIA::getNextNoteOnColumn(int _column, int* _iNote)
 std::tuple<long, int, int> OSUMANIA::getNextEvent(int* _iFrame)
 {
 	int currKeyMask = 0, prevKeyMask = 0;
-	std::tuple<long, irr::core::vector2df, int> frame;
+	osu::TIMING frame;
 
 	*_iFrame += 1;
 	if (*_iFrame > 1)
-		currKeyMask = std::get<1>(play->replay->getFrame((*_iFrame) - 1)).X;
+		currKeyMask = play->replay->getFrame((*_iFrame) - 1).pos.X;
 
 	for (; *_iFrame < play->replay->getNumFrames(); (*_iFrame)++)
 	{
 		frame = play->replay->getFrame(*_iFrame);
 
 		prevKeyMask = currKeyMask;
-		currKeyMask = std::get<1>(frame).X;
+		currKeyMask = frame.pos.X;
 
 		if ((prevKeyMask ^ currKeyMask) != 0)
 			break;
@@ -455,5 +448,5 @@ std::tuple<long, int, int> OSUMANIA::getNextEvent(int* _iFrame)
 	unsigned int presses = (currKeyMask & ~(0x0)) & (~prevKeyMask & ~(0x0));  // curr -> press,        prev -> not pressed
 	unsigned int releases = (~currKeyMask & ~(0x0)) & (prevKeyMask & ~(0x0));  // curr -> not pressed   prev -> pressed
 
-	return std::tuple<long, int, int>(std::get<0>(frame), presses, releases);
+	return std::tuple<long, int, int>(frame.time, presses, releases);
 }

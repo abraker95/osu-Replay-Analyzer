@@ -5,12 +5,11 @@
 #include "../../Filestructure/Play.h"
 #include "../../../utils/mathUtils.h"
 
-
 namespace OSUSTANDARD
 {
 	namespace AIM_CONTROL
 	{
-		extern std::vector<OSUSTANDARD::TIMING> scores, skills, diffs;
+		extern std::vector<osu::TIMING> scores, skills, diffs;
 
 		void genScore(Play* _play);
 		void genSkill(Play* _play);

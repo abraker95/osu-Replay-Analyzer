@@ -10,7 +10,7 @@ namespace OSUCATCH
 {
 	namespace PRECISION
 	{
-		extern std::vector<OSUCATCH::TIMING> scores, skills, diffs;
+		extern std::vector<osu::TIMING> scores, skills, diffs;
 
 		void genScore(Play* _play);
 		void genSkill(Play* _play);

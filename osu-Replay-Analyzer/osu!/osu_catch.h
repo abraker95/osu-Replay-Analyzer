@@ -2,16 +2,11 @@
 #define OSU_CATCH_H
 
 #include <math.h>
+#include "osuStructs.h"
 
 namespace OSUCATCH
 {
-	struct TIMING
-	{
-		long time;
-		double data;
-		bool press;
-		// ???
-	};
+
 }
 
 #endif

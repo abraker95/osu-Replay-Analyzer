@@ -1,11 +1,11 @@
 #include "reading.h"
 
 #include "../SkillEngine.h"
-#include "../../osu_mania.h"
+#include "../../osu_catch.h"
 
-std::vector<OSUCATCH::TIMING> OSUCATCH::READING::scores,
-							  OSUCATCH::READING::skills,
-							  OSUCATCH::READING::diffs;
+std::vector<osu::TIMING> OSUCATCH::READING::scores,
+						 OSUCATCH::READING::skills,
+						 OSUCATCH::READING::diffs;
 
 void OSUCATCH::READING::genScore(Play* _play)
 {

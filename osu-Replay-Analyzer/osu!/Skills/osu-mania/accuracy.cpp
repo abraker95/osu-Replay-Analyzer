@@ -1,10 +1,11 @@
 #include "accuracy.h"
 #include "../SkillEngine.h"
 #include "../../osu_mania.h"
+#include "../../osuStructs.h"
 
-std::vector<OSUMANIA::TIMING> OSUMANIA::ACCURACY::scores, 
-							  OSUMANIA::ACCURACY::skills,
-							  OSUMANIA::ACCURACY::diffs;
+std::vector<osu::TIMING> OSUMANIA::ACCURACY::scores,
+						 OSUMANIA::ACCURACY::skills,
+						 OSUMANIA::ACCURACY::diffs;
 
 void OSUMANIA::ACCURACY::genScore(Play* _play)
 {

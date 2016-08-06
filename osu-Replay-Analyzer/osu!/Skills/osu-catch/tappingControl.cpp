@@ -1,11 +1,11 @@
 #include "tappingControl.h"
 
 #include "../SkillEngine.h"
-#include "../../osu_mania.h"
+#include "../../osu_catch.h"
 
-std::vector<OSUCATCH::TIMING> OSUCATCH::TAPPING_CONTROL::scores,
-							  OSUCATCH::TAPPING_CONTROL::skills,
-							  OSUCATCH::TAPPING_CONTROL::diffs;
+std::vector<osu::TIMING> OSUCATCH::TAPPING_CONTROL::scores,
+						 OSUCATCH::TAPPING_CONTROL::skills,
+						 OSUCATCH::TAPPING_CONTROL::diffs;
 
 void OSUCATCH::TAPPING_CONTROL::genScore(Play* _play)
 {

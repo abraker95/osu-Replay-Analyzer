@@ -1,6 +1,6 @@
 #include "score.h"
 
-std::vector<OSUTAIKO::TIMING> OSUTAIKO::accTimings;
+std::vector<osu::TIMING> OSUTAIKO::accTimings;
 static Play* play;
 
 void OSUTAIKO::genAccTimings(Play* _play)

@@ -2,16 +2,21 @@
 
 #include "../SkillEngine.h"
 #include "../../osu_standard.h"
+#include "../../osuStructs.h"
+#include "../../osuCalc.h"
 
-std::vector<OSUSTANDARD::TIMING> OSUSTANDARD::READING::scores,
-								 OSUSTANDARD::READING::skills,
-								 OSUSTANDARD::READING::diffs;
+std::vector<osu::TIMING> OSUSTANDARD::READING::scores,
+						 OSUSTANDARD::READING::skills,
+						 OSUSTANDARD::READING::diffs;
+std::vector<osu::TIMING> OSUSTANDARD::READING::velocities,
+						 OSUSTANDARD::READING::notesRate,
+						 OSUSTANDARD::READING::overlaps;
 double OSUSTANDARD::READING::diff;
 
 void OSUSTANDARD::READING::genScore(Play* _play)
 {
 	scores.clear();
-	std::vector<OSUSTANDARD::TIMING>().swap(scores);
+	std::vector<osu::TIMING>().swap(scores);
 
 	/// \TODO
 }
@@ -19,7 +24,7 @@ void OSUSTANDARD::READING::genScore(Play* _play)
 void OSUSTANDARD::READING::genSkill(Play* _play)
 {
 	skills.clear();
-	std::vector<OSUSTANDARD::TIMING>().swap(skills);
+	std::vector<osu::TIMING>().swap(skills);
 
 	/// \TODO
 }
@@ -29,7 +34,7 @@ void OSUSTANDARD::READING::genDiff(Play* _play)
 	/// \TODO
 	diff = -1;
 	diffs.clear();
-	std::vector<OSUSTANDARD::TIMING>().swap(diffs);
+	std::vector<osu::TIMING>().swap(diffs);
 
 }
 

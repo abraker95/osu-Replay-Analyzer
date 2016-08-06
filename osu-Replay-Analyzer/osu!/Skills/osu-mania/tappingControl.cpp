@@ -2,10 +2,11 @@
 
 #include "../SkillEngine.h"
 #include "../../osu_mania.h"
+#include "../../osuStructs.h"
 
-std::vector<OSUMANIA::TIMING> OSUMANIA::TAPPING_CONTROL::scores,
-							  OSUMANIA::TAPPING_CONTROL::skills,
-							  OSUMANIA::TAPPING_CONTROL::diffs;
+std::vector<osu::TIMING> OSUMANIA::TAPPING_CONTROL::scores,
+						 OSUMANIA::TAPPING_CONTROL::skills,
+						 OSUMANIA::TAPPING_CONTROL::diffs;
 
 void OSUMANIA::TAPPING_CONTROL::genScore(Play* _play)
 {

@@ -2,16 +2,10 @@
 #define OSU_TAIKO_H
 
 #include <math.h>
+#include "osuStructs.h"
 
 namespace OSUTAIKO
 {
-	struct TIMING
-	{
-		long time;
-		double data;
-		bool press;
-		// ???
-	};
 }
 
 #endif

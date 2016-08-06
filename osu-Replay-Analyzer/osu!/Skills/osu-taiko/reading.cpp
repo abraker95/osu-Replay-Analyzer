@@ -2,10 +2,11 @@
 
 #include "../SkillEngine.h"
 #include "../../osu_taiko.h"
+#include "../../osuStructs.h"
 
-std::vector<OSUTAIKO::TIMING> OSUTAIKO::READING::scores,
-							  OSUTAIKO::READING::skills,
-							  OSUTAIKO::READING::diffs;
+std::vector<osu::TIMING> OSUTAIKO::READING::scores,
+						 OSUTAIKO::READING::skills,
+						 OSUTAIKO::READING::diffs;
 
 
 void OSUTAIKO::READING::genScore(Play* _play)

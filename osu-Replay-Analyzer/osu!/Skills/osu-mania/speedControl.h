@@ -10,7 +10,7 @@ namespace OSUMANIA
 {
 	namespace SPEED_CONTROL
 	{
-		extern std::vector<OSUMANIA::TIMING> scores, skills, diffs;
+		extern std::vector<osu::TIMING> scores, skills, diffs;
 		extern double diff;
 
 		void genScore(Play* _play);

@@ -2,15 +2,11 @@
 #define OSU_DODGE_H
 
 #include <math.h>
+#include "osuStructs.h"
 
 namespace OSUDODGE
 {
-	struct TIMING
-	{
-		long time;
-		double data;
-		// ??? 
-	};
+
 }
 
 #endif

@@ -2,10 +2,11 @@
 
 #include "../SkillEngine.h"
 #include "../../osu_mania.h"
+#include "../../osuStructs.h"
 
-std::vector<OSUMANIA::TIMING> OSUMANIA::FINGER_BALANCE::scores,
-							  OSUMANIA::FINGER_BALANCE::skills,
-							  OSUMANIA::FINGER_BALANCE::diffs;
+std::vector<osu::TIMING> OSUMANIA::FINGER_BALANCE::scores,
+						 OSUMANIA::FINGER_BALANCE::skills,
+						 OSUMANIA::FINGER_BALANCE::diffs;
 
 
 void OSUMANIA::FINGER_BALANCE::genScore(Play* _play)

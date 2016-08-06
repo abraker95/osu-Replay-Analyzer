@@ -1,11 +1,11 @@
 #include "precision.h"
 
 #include "../SkillEngine.h"
-#include "../../osu_mania.h"
+#include "../../osu_catch.h"
 
-std::vector<OSUCATCH::TIMING> OSUCATCH::PRECISION::scores,
-							  OSUCATCH::PRECISION::skills,
-							  OSUCATCH::PRECISION::diffs;
+std::vector<osu::TIMING> OSUCATCH::PRECISION::scores,
+					     OSUCATCH::PRECISION::skills,
+						 OSUCATCH::PRECISION::diffs;
 
 void OSUCATCH::PRECISION::genScore(Play* _play)
 {

@@ -2,10 +2,11 @@
 
 #include "../SkillEngine.h"
 #include "../../osu_mania.h"
+#include "../../osuStructs.h"
 
-std::vector<OSUMANIA::TIMING> OSUMANIA::READING::scores,
-							  OSUMANIA::READING::skills,
-							  OSUMANIA::READING::diffs;
+std::vector<osu::TIMING> OSUMANIA::READING::scores,
+						 OSUMANIA::READING::skills,
+						 OSUMANIA::READING::diffs;
 
 
 void OSUMANIA::READING::genScore(Play* _play)

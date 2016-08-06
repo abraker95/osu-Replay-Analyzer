@@ -2,10 +2,11 @@
 
 #include "../SkillEngine.h"
 #include "../../osu_standard.h"
+#include "../../osuStructs.h"
 
-std::vector<OSUSTANDARD::TIMING> OSUSTANDARD::TAPPING_CONTROL::scores,
-								 OSUSTANDARD::TAPPING_CONTROL::skills,
-								 OSUSTANDARD::TAPPING_CONTROL::diffs;
+std::vector<osu::TIMING> OSUSTANDARD::TAPPING_CONTROL::scores,
+						 OSUSTANDARD::TAPPING_CONTROL::skills,
+						 OSUSTANDARD::TAPPING_CONTROL::diffs;
 
 void OSUSTANDARD::TAPPING_CONTROL::genScore(Play* _play)
 {

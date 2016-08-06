@@ -2,17 +2,10 @@
 #define OSU_MANIA_H
 
 #include "../utils/mathUtils.h"
+#include "osuStructs.h"
 
 namespace OSUMANIA
 {
-	struct TIMING
-	{
-		long time;
-		double data;
-		int key;
-		bool press;
-	};
-
 	inline int getKey(int _xpos, int _keys)
 	{
 		float localWDivisor = 512.0f / _keys;

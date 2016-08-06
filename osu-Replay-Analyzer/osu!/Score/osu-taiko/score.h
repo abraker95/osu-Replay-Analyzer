@@ -5,10 +5,11 @@
 
 #include "../../osu_taiko.h"
 #include "../../Filestructure/Play.h"
+#include "../../osuStructs.h"
 
 namespace OSUTAIKO
 {
-	extern std::vector<OSUTAIKO::TIMING> accTimings;
+	extern std::vector<osu::TIMING> accTimings;
 
 	void genAccTimings(Play* _play);
 

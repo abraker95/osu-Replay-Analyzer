@@ -2,10 +2,11 @@
 
 #include "../SkillEngine.h"
 #include "../../osu_standard.h"
+#include "../../osuStructs.h"
 
-std::vector<OSUSTANDARD::TIMING> OSUSTANDARD::PRECISION_CONTROL::scores,
-								 OSUSTANDARD::PRECISION_CONTROL::skills,
-								 OSUSTANDARD::PRECISION_CONTROL::diffs;
+std::vector<osu::TIMING> OSUSTANDARD::PRECISION_CONTROL::scores,
+						 OSUSTANDARD::PRECISION_CONTROL::skills,
+						 OSUSTANDARD::PRECISION_CONTROL::diffs;
 
 void OSUSTANDARD::PRECISION_CONTROL::genScore(Play* _play)
 {

@@ -2,10 +2,11 @@
 
 #include "../SkillEngine.h"
 #include "../../osu_standard.h"
+#include "../../osuStructs.h"
 
-std::vector<OSUSTANDARD::TIMING> OSUSTANDARD::MOVEMENT_CONTROL::scores,
-								 OSUSTANDARD::MOVEMENT_CONTROL::skills,
-								 OSUSTANDARD::MOVEMENT_CONTROL::diffs;
+std::vector<osu::TIMING> OSUSTANDARD::MOVEMENT_CONTROL::scores,
+						 OSUSTANDARD::MOVEMENT_CONTROL::skills,
+						 OSUSTANDARD::MOVEMENT_CONTROL::diffs;
 
 
 void OSUSTANDARD::MOVEMENT_CONTROL::genScore(Play* _play)

@@ -3,12 +3,14 @@
 #include "../SkillEngine.h"
 
 #include "../../osu_mania.h"
+#include "../../osuStructs.h"
+
 #include "../osuMania_skills.h"
 #include "../../Score/osu-mania/score.h"
 
 #include <iostream>
 
-std::vector<OSUMANIA::TIMING> OSUMANIA::SPEED_CONTROL::scores, 
+std::vector<osu::TIMING> OSUMANIA::SPEED_CONTROL::scores, 
 							  OSUMANIA::SPEED_CONTROL::skills,
 							  OSUMANIA::SPEED_CONTROL::diffs;
 double OSUMANIA::SPEED_CONTROL::diff;
@@ -16,10 +18,11 @@ double OSUMANIA::SPEED_CONTROL::diff;
 void OSUMANIA::SPEED_CONTROL::genScore(Play* _play)
 {
 	scores.clear();
-	std::vector<OSUMANIA::TIMING>().swap(scores);
+	std::vector<osu::TIMING>().swap(scores);
 
+	double skillScore = 1.0, maxScore = 1.0; 
 	double missesPunisher = 1.0;
-	OSUMANIA::TIMING timing;
+	osu::TIMING timing;
 
 	// max score calc
 	for (int i = 0; i < OSUMANIA::accTimings.size(); i++)
@@ -64,10 +67,10 @@ void OSUMANIA::SPEED_CONTROL::genScore(Play* _play)
 void OSUMANIA::SPEED_CONTROL::genSkill(Play* _play)
 {
 	skills.clear();
-	std::vector<OSUMANIA::TIMING>().swap(skills);
+	std::vector<osu::TIMING>().swap(skills);
 
 	int KEYS = _play->beatmap->getMods().getCS();
-	std::vector<OSUMANIA::TIMING> timing;
+	std::vector<osu::TIMING> timing;
 		timing.resize(KEYS);
 	std::vector<double> hitPeriodPrev, hitPeriodCurr;
 		hitPeriodPrev.resize(KEYS);
@@ -79,7 +82,7 @@ void OSUMANIA::SPEED_CONTROL::genSkill(Play* _play)
 		timing[key].data = 0.0;
 	}
 
-	for (OSUMANIA::TIMING &accTiming : OSUMANIA::accTimings)
+	for (osu::TIMING &accTiming : OSUMANIA::accTimings)
 	{
 		// if it's not a miss
 		if (accTiming.data != INT_MAX)
@@ -125,7 +128,7 @@ void OSUMANIA::SPEED_CONTROL::genSkill(Play* _play)
 		else // miss
 		{
 			// place holder so diffScores and accTimings match up
-			skills.push_back(OSUMANIA::TIMING{ accTiming.time, 0.0, -1, false });
+			skills.push_back(osu::TIMING{ accTiming.time, 0.0, -1, false });
 		}
 	}
 
@@ -138,10 +141,10 @@ void OSUMANIA::SPEED_CONTROL::genDiff(Play* _play)
 {
 	diff = -1;
 	diffs.clear();
-	std::vector<OSUMANIA::TIMING>().swap(diffs);
+	std::vector<osu::TIMING>().swap(diffs);
 
 	int KEYS = _play->beatmap->getMods().getCS();
-	std::vector<OSUMANIA::TIMING> timing, releases;
+	std::vector<osu::TIMING> timing, releases;
 		timing.resize(KEYS);
 		releases.resize(KEYS);
 	std::vector<double> hitPeriodPrev, hitPeriodCurr;
@@ -169,7 +172,7 @@ void OSUMANIA::SPEED_CONTROL::genDiff(Play* _play)
 			hitPeriodCurr[column] = hitobject->getTime();
 
 			// check if we have a note release first
-			for (OSUMANIA::TIMING &release : releases)
+			for (osu::TIMING &release : releases)
 			{
 				if (release.press == false)			// if there is something waiting
 				{
@@ -214,7 +217,7 @@ void OSUMANIA::SPEED_CONTROL::genDiff(Play* _play)
 	}
 
 	// push any remaining releases
-	for (OSUMANIA::TIMING &release : releases)
+	for (osu::TIMING &release : releases)
 	{
 		if (release.press == false)			// if there is something waiting
 		{
@@ -225,7 +228,7 @@ void OSUMANIA::SPEED_CONTROL::genDiff(Play* _play)
 
 	// The longer it lasts, the more effective it is
 	for (int i = 1; i < diffs.size(); i++)
-		diffs[i].data = 0.5*diffs[i].data + 0.5*diffs[i - 1].data;
+		diffs[i].data = 0.5*diffs[i].data + 0.5*diffs[i - 1].data;	
 }
 
 
@@ -234,7 +237,7 @@ double OSUMANIA::SPEED_CONTROL::getScore()
 {
 	double score = 0.0;
 
-	for (OSUMANIA::TIMING &timing : SPEED_CONTROL::scores)
+	for (osu::TIMING &timing : SPEED_CONTROL::scores)
 		score += timing.data;
 
 	return score;
@@ -247,7 +250,7 @@ double OSUMANIA::SPEED_CONTROL::getSkill()
 	for (OSUMANIA::TIMING &timing : SPEED_CONTROL::skills)
 		skill += timing.data;
 
-	return skill;
+	return skill/12.0;
 }
 
 double OSUMANIA::SPEED_CONTROL::getDiff()
@@ -257,8 +260,8 @@ double OSUMANIA::SPEED_CONTROL::getDiff()
 
 	diff = 0.0;
 
-	for (OSUMANIA::TIMING &timing : SPEED_CONTROL::diffs)
-		diff += timing.data;
+	for (osu::TIMING &timing : SPEED_CONTROL::diffs)
+			diff += timing.data;
 
 	return diff;
 }

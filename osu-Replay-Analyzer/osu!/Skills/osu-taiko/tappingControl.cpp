@@ -2,10 +2,11 @@
 
 #include "../SkillEngine.h"
 #include "../../osu_taiko.h"
+#include "../../osuStructs.h"
 
-std::vector<OSUTAIKO::TIMING> OSUTAIKO::TAPPING_CONTROL::scores,
-							  OSUTAIKO::TAPPING_CONTROL::skills,
-							  OSUTAIKO::TAPPING_CONTROL::diffs;
+std::vector<osu::TIMING> OSUTAIKO::TAPPING_CONTROL::scores,
+						 OSUTAIKO::TAPPING_CONTROL::skills,
+						 OSUTAIKO::TAPPING_CONTROL::diffs;
 
 
 void OSUTAIKO::TAPPING_CONTROL::genScore(Play* _play)
