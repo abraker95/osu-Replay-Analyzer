@@ -37,14 +37,6 @@ Play::~Play()
 		delete scoreEngine;
 }
 
-void Play::ProcessBeatmap()
-{
-	if (!beatmap->isValid())	
-		return;
-
-	this->beatmap->Process();
-}
-
 /// \TODO: Perhaps split this off to another thread
 void Play::LoadBeatmap(std::string _beatmapFile)
 {
@@ -57,6 +49,14 @@ void Play::LoadBeatmap(std::string _beatmapFile)
 	ResetTimings();
 	setMods(BEATMAP);
 	ProcessBeatmap();
+}
+
+void Play::ProcessBeatmap()
+{
+	if (!beatmap->isValid())
+		return;
+
+	this->beatmap->Process();
 }
 
 /// \TODO: Perhaps split this off to another thread

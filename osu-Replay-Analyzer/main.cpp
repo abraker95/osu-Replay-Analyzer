@@ -144,8 +144,8 @@ int main()
 	const int RESY =  50+480;
 
 	Window win(RESX, RESY);
-	win.device->setWindowCaption(L"osu! Replay Analyzer");
-	win.device->setResizable(true);
+		win.device->setWindowCaption(L"osu! Replay Analyzer");
+		win.device->setResizable(true);
 
 	double CS = 4;
 	double AR = 9;
