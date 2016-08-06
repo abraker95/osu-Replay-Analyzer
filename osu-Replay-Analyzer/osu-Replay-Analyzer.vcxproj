@@ -75,6 +75,7 @@
     <ClCompile Include="osu!\Drawable\HitTimingMarker.cpp" />
     <ClCompile Include="osu!\Drawable\OsuManiaRenderercpp.cpp" />
     <ClCompile Include="osu!\Drawable\OsuStdRenderer.cpp" />
+    <ClCompile Include="osu!\Drawable\StatGraph.cpp" />
     <ClCompile Include="osu!\Drawable\TimingGraph.cpp" />
     <ClCompile Include="osu!\Drawable\TimingObject.cpp" />
     <ClCompile Include="osu!\Filestructure\Beatmap.cpp" />
@@ -142,9 +143,11 @@
     <ClCompile Include="osu!\Skills\osuTaiko_skills.cpp" />
     <ClCompile Include="osu!\Skills\SkillEngine.cpp" />
     <ClCompile Include="ui\Button.cpp" />
+    <ClCompile Include="ui\ColorTable.cpp" />
     <ClCompile Include="ui\Dialog.cpp" />
     <ClCompile Include="ui\drawUtils.cpp" />
     <ClCompile Include="ui\Event.cpp" />
+    <ClCompile Include="ui\Graph.cpp" />
     <ClCompile Include="ui\GuiObj.cpp" />
     <ClCompile Include="ui\pane.cpp" />
     <ClCompile Include="ui\Scrollbar.cpp" />
@@ -161,6 +164,7 @@
     <ClInclude Include="osu!\Drawable\HitTimingMarker.h" />
     <ClInclude Include="osu!\Drawable\OsuManiaRenderer.h" />
     <ClInclude Include="osu!\Drawable\OsuStdRenderer.h" />
+    <ClInclude Include="osu!\Drawable\StatGraph.h" />
     <ClInclude Include="osu!\Drawable\TimingGraph.h" />
     <ClInclude Include="osu!\Drawable\TimingObject.h" />
     <ClInclude Include="osu!\Filestructure\Beatmap.h" />
@@ -235,9 +239,11 @@
     <ClInclude Include="osu!\Skills\osuTaiko_skills.h" />
     <ClInclude Include="osu!\Skills\SkillEngine.h" />
     <ClInclude Include="ui\Button.h" />
+    <ClInclude Include="ui\ColorTable.h" />
     <ClInclude Include="ui\Dialog.h" />
     <ClInclude Include="ui\drawUtils.h" />
     <ClInclude Include="ui\Event.h" />
+    <ClInclude Include="ui\Graph.h" />
     <ClInclude Include="ui\GuiObj.h" />
     <ClInclude Include="ui\pane.h" />
     <ClInclude Include="ui\Scrollbar.h" />

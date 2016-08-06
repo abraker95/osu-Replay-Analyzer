@@ -381,6 +381,9 @@
     <ClCompile Include="osu!\Filestructure\SliderHitObject.cpp">
       <Filter>Source Files\osu!\File Structure</Filter>
     </ClCompile>
+    <ClCompile Include="ui\ColorTable.cpp">
+      <Filter>Source Files\ui</Filter>
+    </ClCompile>
     <ClCompile Include="osu!\osuStructs.cpp">
       <Filter>Source Files\osu!</Filter>
     </ClCompile>
@@ -661,6 +664,9 @@
     </ClInclude>
     <ClInclude Include="osu!\Filestructure\SliderHitobject.h">
       <Filter>Header Files\osu!\File structure</Filter>
+    </ClInclude>
+    <ClInclude Include="ui\ColorTable.h">
+      <Filter>Header Files\ui</Filter>
     </ClInclude>
     <ClInclude Include="osu!\osuStructs.h">
       <Filter>Header Files\osu!</Filter>
