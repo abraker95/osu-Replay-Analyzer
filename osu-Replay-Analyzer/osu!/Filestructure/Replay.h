@@ -8,6 +8,7 @@
 #include "../../irrlicht/include/vector2d.h"
 
 #include "../osuEnums.h"
+#include "../osuStructs.h"
 #include "Beatmap.h"
 
 
@@ -21,8 +22,11 @@ class Replay
 
 		void ProcessReplay(std::string _filepath, Beatmap* _beatmap);
 		
-		std::tuple<irr::core::vector2df, int> getDataAt(long _time);
-		std::tuple<long, irr::core::vector2df, int> getFrame(int _frame) const;
+		//std::tuple<irr::core::vector2df, int> getDataAt(long _time);
+		//std::tuple<long, irr::core::vector2df, int> getFrame(int _frame) const;
+		
+		osu::TIMING getFrameAt(long _time);
+		osu::TIMING getFrame(int _frame) const;
 		int getNumFrames();
 
 		Mods getMods();
@@ -40,7 +44,8 @@ class Replay
 		};
 
 		// Generated
-		std::vector<std::tuple<long, irr::core::vector2df, int>> replayStream;
+		std::vector<osu::TIMING> replayStream;
+		//std::vector<std::tuple<long, irr::core::vector2df, int>> replayStream;
 
 		// Extracted from replay data
 		std::string beatmapMD5;

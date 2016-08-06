@@ -42,22 +42,22 @@ void Replay::ProcessReplay(std::string _filepath, Beatmap* _beatmap)
 	/// \TODO: Make sure the stream data is ordered time-wise
 }
 
-std::tuple<irr::core::vector2df, int> Replay::getDataAt(long _time)
+osu::TIMING Replay::getFrameAt(long _time)
 {
-	int frame = FindFrameAt(_time);
+	int frame = osu::FindTimingAt(replayStream, _time);
 
-	if(_time != -1 && frame != -1)
-		return std::tuple<irr::core::vector2df, int>(std::get<DATA::MOUSE>(replayStream[frame]), std::get<DATA::KEYBRD>(replayStream[frame]));
+	if (_time != -1 && frame != -1)
+		return replayStream[frame];
 	else 
-		return std::tuple<irr::core::vector2df, int>(irr::core::vector2df(-1, -1), 0);
+		return osu::TIMING();
 }
 
-std::tuple<long, irr::core::vector2df, int> Replay::getFrame(int _frame) const
+osu::TIMING Replay::getFrame(int _frame) const
 {
 	if(_frame < replayStream.size())
 		return replayStream[_frame];
 	else
-		return std::tuple<long, irr::core::vector2df, int>(-1, irr::core::vector2df(-1, -1), -1);
+		return osu::TIMING();
 }
 
 int Replay::getNumFrames()
@@ -90,26 +90,7 @@ bool Replay::isGamemode(GAMEMODE _gamemode)
 void Replay::ClearReplay()
 {
 	replayStream.clear();
-	std::vector<std::tuple<long, irr::core::vector2df, int>>().swap(replayStream);
-}
-
-int Replay::FindFrameAt(long _time)
-{
-	int start = 1;
-	int end = this->replayStream.size() - 2;
-	int mid;
-
-	while (start <= end)
-	{
-		mid = (start + end) / 2;
-		if (BTWN(std::get<DATA::TIME>(replayStream[mid]), _time, std::get<DATA::TIME>(replayStream[mid - 1])))
-			return max(0, mid - 1);
-		else if (_time < std::get<DATA::TIME>(replayStream[mid]))
-			end = mid - 1;
-		else start = mid + 1;
-	}
-
-	return -1;
+	std::vector<osu::TIMING>().swap(replayStream);
 }
 
 std::string Replay::ReadOsuStr(std::ifstream &_replayFile)
@@ -223,7 +204,7 @@ return modStr;
 void Replay::ParseReplayData(unsigned char* _data, size_t _length, char _gamemode)
 {
 	std::string Replaydata = std::string((const char*)_data);
-	std::tuple<long, irr::core::vector2df, int> dataPointStruct;
+	osu::TIMING frame;
 	int time = 0;
 
 	std::vector<std::string> dataPoints;
@@ -238,13 +219,13 @@ void Replay::ParseReplayData(unsigned char* _data, size_t _length, char _gamemod
 		{
 			time += atoi(data[0].data());
 
-			std::get<DATA::TIME>(dataPointStruct) = time;
-			std::get<DATA::MOUSE>(dataPointStruct).X = atoi(data[1].data());
-			std::get<DATA::MOUSE>(dataPointStruct).Y = atoi(data[2].data());
-			std::get<DATA::KEYBRD>(dataPointStruct) = atoi(data[3].data());
+			frame.time = time;
+			frame.pos.X = atoi(data[1].data());
+			frame.pos.Y = atoi(data[2].data());
+			frame.key = atoi(data[3].data());
 
-			if (std::get<DATA::TIME>(dataPointStruct) != -12345) // Record if it's not this...
-				replayStream.push_back(dataPointStruct);
+			if (frame.key != -12345) // Record if it's not this...
+				replayStream.push_back(frame);
 		}
 	}
 }
@@ -273,5 +254,5 @@ void Replay::ValidateMods()
 
 	// Mod replay stream timings
 	for (auto &frame : replayStream)
-		std::get<0>(frame) /= divisor;
+		frame.time /= divisor;
 }
