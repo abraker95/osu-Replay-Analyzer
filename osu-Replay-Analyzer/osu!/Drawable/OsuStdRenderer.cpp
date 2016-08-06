@@ -114,13 +114,13 @@ void OsuStdRenderer::RenderDensities(Window& _win)
 void OsuStdRenderer::RenderReplay(Window& _win)
 {
 	Replay* replay = play->replay;
-	std::tuple<irr::core::vector2df, int> data = replay->getDataAt(*viewTime);
+	osu::TIMING frame = replay->getFrameAt(*viewTime);
 
 	double widthRatio = getDim().Width / 512.0;
 	double heightRatio = getDim().Height / 386.0;
 
-	int cursorXpos = (double)std::get<0>(data).X*widthRatio + this->absXpos;
-	int cursorYpos = (double)std::get<0>(data).Y*heightRatio + this->absYpos;
+	int cursorXpos = (double)frame.pos.X*widthRatio + this->absXpos;
+	int cursorYpos = (double)frame.pos.Y*heightRatio + this->absYpos;
 
 	DrawArc(_win, cursorXpos, cursorYpos, 5, SColor(255, 100, 100, 255));	
 }
@@ -128,7 +128,7 @@ void OsuStdRenderer::RenderReplay(Window& _win)
 void OsuStdRenderer::RenderReplayPath(Window& _win)
 {
 	Replay* replay = play->replay;
-	std::tuple<irr::core::vector2df, int> data = replay->getDataAt(*viewTime - 1000);
+	osu::TIMING frame = replay->getFrameAt(*viewTime - 1000);
 
 	double widthRatio = getDim().Width / 512.0;
 	double heightRatio = getDim().Height / 386.0;
@@ -144,19 +144,19 @@ void OsuStdRenderer::RenderReplayPath(Window& _win)
 	for (int i = *viewTime - 1000; i < *viewTime; i += samplePeriod)
 	{
 		// get sample
-		std::tuple<irr::core::vector2df, int> prevData = replay->getDataAt(i - samplePeriod);
-		std::tuple<irr::core::vector2df, int> currData = replay->getDataAt(i);
+		osu::TIMING prevData = replay->getFrameAt(i - samplePeriod);
+		osu::TIMING currData = replay->getFrameAt(i);
 
 		// cursor pos
 		CursorData prev, curr;
-			curr.pos = vector2di((double)std::get<0>(currData).X*widthRatio + this->absXpos,
-								 (double)std::get<0>(currData).Y*heightRatio + this->absYpos);
-			prev.pos = vector2di((double)std::get<0>(prevData).X*widthRatio + this->absXpos,
-								 (double)std::get<0>(prevData).Y*heightRatio + this->absYpos);
+			curr.pos = vector2di((double)frame.pos.X*widthRatio   + this->absXpos,
+								 (double)frame.pos.Y*heightRatio  + this->absYpos);
+			prev.pos = vector2di((double)frame.pos.X*widthRatio   + this->absXpos,
+								 (double)frame.pos.Y*heightRatio  + this->absYpos);
 
 		// mouse buttons
-		bool left = (std::get<1>(currData) == 1) || (std::get<1>(currData) == 5);
-		bool right = (std::get<1>(currData) == 2) || (std::get<1>(currData) == 10);
+		bool left  = (frame.key == 1) || (frame.key == 5);
+		bool right = (frame.key == 2) || (frame.key == 10);
 
 			 if (left && right) curr.color = SColor(100, 255, 150, 255);
 		else if (left)	  	    curr.color = SColor(100, 255, 150, 150);

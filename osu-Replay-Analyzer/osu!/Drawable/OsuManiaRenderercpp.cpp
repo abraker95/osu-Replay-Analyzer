@@ -108,13 +108,13 @@ void OsuManiaRenderer::RenderVisible(Window& _win)
 void OsuManiaRenderer::RenderReplay(Window& _win)
 {
 	Replay* replay = play->replay;
-	std::tuple<irr::core::vector2df, int> data = replay->getDataAt(*viewTime);
+	osu::TIMING frame = replay->getFrameAt(*viewTime);
 	int hitYpos = this->height;
 	const int KEYS = play->beatmap->getMods().getCS();
 
 	for (int key = 0; key < KEYS; key++)
 	{
-		if ((int)std::get<0>(data).X & (1 << key))
+		if ((int)frame.pos.X & (1 << key))
 		{
 			int hitXpos = key * (this->width / KEYS) + (this->absXpos - this->width / 2);
 			int width = ((this->width) / KEYS) - (2 * KEYS);
@@ -133,7 +133,7 @@ void OsuManiaRenderer::RenderHitTimings(Window& _win)
 {
 	const int KEYS = play->beatmap->getMods().getCS();
 
-	for (OSUMANIA::TIMING timing : OSUMANIA::accTimings)
+	for (osu::TIMING timing : OSUMANIA::accTimings)
 	{
 		if (BTWN(getStartTime(), timing.time + timing.data, getEndTime())) // hits
 		{
@@ -165,7 +165,7 @@ void OsuManiaRenderer::RenderTappingDiffs(Window& _win)
 {
 	const int KEYS = play->beatmap->getMods().getCS();
 
-	for (OSUMANIA::TIMING timing : OSUMANIA::SPEED_CONTROL::diffs)
+	for (osu::TIMING timing : OSUMANIA::SPEED_CONTROL::diffs)
 	{
 		if (BTWN(getStartTime(), timing.time, getEndTime())) // hits
 		{
@@ -178,7 +178,7 @@ void OsuManiaRenderer::RenderTappingDiffs(Window& _win)
 		}
 	}
 
-	for (OSUMANIA::TIMING timing : OSUMANIA::SPEED_CONTROL::scores)
+	for (osu::TIMING timing : OSUMANIA::SPEED_CONTROL::scores)
 	{
 		if (BTWN(getStartTime(), timing.time, getEndTime())) // hits
 		{
