@@ -44,12 +44,11 @@ void Replay::ProcessReplay(std::string _filepath, Beatmap* _beatmap)
 
 osu::TIMING Replay::getFrameAt(long _time)
 {
+	if(replayStream.size() == 0)	return osu::TIMING();  // make sure there is a replay to search
 	int frame = osu::FindTimingAt(replayStream, _time);
 
-	if (_time != -1 && frame != -1)
-		return replayStream[frame];
-	else 
-		return osu::TIMING();
+	if(_time == -1 || frame == -1)	return osu::TIMING();  // make sure we found something to return
+	return replayStream[frame];
 }
 
 osu::TIMING Replay::getFrame(int _frame) const
