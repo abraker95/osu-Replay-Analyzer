@@ -22,9 +22,6 @@ class Replay
 
 		void ProcessReplay(std::string _filepath, Beatmap* _beatmap);
 		
-		//std::tuple<irr::core::vector2df, int> getDataAt(long _time);
-		//std::tuple<long, irr::core::vector2df, int> getFrame(int _frame) const;
-		
 		osu::TIMING getFrameAt(long _time);
 		osu::TIMING getFrame(int _frame) const;
 		int getNumFrames();
@@ -45,7 +42,6 @@ class Replay
 
 		// Generated
 		std::vector<osu::TIMING> replayStream;
-		//std::vector<std::tuple<long, irr::core::vector2df, int>> replayStream;
 
 		// Extracted from replay data
 		std::string beatmapMD5;
