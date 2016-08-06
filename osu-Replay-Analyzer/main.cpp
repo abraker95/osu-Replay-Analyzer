@@ -27,6 +27,7 @@
 #include "osu!/Drawable/TimingGraph.h"
 #include "osu!/Drawable/HitTimingGraph.h"
 #include "osu!/Drawable/HitTimingMarker.h"
+#include "osu!/Drawable/StatGraph.h"
 
 #include "osu!/Skills/SkillEngine.h"
 
@@ -213,6 +214,9 @@ int main()
 		renderer.addClipDimTo(GuiObj::RIGHT);
 		renderer.setMargin(250, 100);		
 
+	StatGraph graphs(0, -50, &viewTime);
+		graphs.ClipPosTo(GuiObj::BTMLEFT);
+		graphs.addClipDimTo(GuiObj::RIGHT);
 
 	/// \TODO: Are there no memory leaks?
 	/// \TODO: Implement a textbox gui object (OH BOY... >.>)
@@ -257,6 +261,7 @@ int main()
 				play.LoadBeatmap(getAnalyzerTXT().first);
 				skillEngine.Generate(&play);
 				renderer.InitRenderer(&play, &viewTime);
+				graphs.InitGraph();
 			}
 
 			if (btnReplay.isTriggered())
