@@ -69,6 +69,7 @@ void Play::LoadReplay(std::string _replayFile)
 
 	ResetTimings();
 	setMods(REPLAY);
+	ProcessBeatmap();
 	scoreEngine->genAccTimings(this);
 }
 
