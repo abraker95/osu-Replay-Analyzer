@@ -384,6 +384,12 @@
     <ClCompile Include="ui\ColorTable.cpp">
       <Filter>Source Files\ui</Filter>
     </ClCompile>
+    <ClCompile Include="ui\Graph.cpp">
+      <Filter>Source Files\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="osu!\Drawable\StatGraph.cpp">
+      <Filter>Source Files\osu!\Drawable</Filter>
+    </ClCompile>
     <ClCompile Include="osu!\osuStructs.cpp">
       <Filter>Source Files\osu!</Filter>
     </ClCompile>
@@ -667,6 +673,12 @@
     </ClInclude>
     <ClInclude Include="ui\ColorTable.h">
       <Filter>Header Files\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="ui\Graph.h">
+      <Filter>Header Files\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\Drawable\StatGraph.h">
+      <Filter>Header Files\osu!\Drawable</Filter>
     </ClInclude>
     <ClInclude Include="osu!\osuStructs.h">
       <Filter>Header Files\osu!</Filter>
