@@ -7,7 +7,6 @@
 class SliderHitObject : Hitobject
 {
 	friend class Hitobject;
-	friend class CircumscribedCircle;
 	friend class Beatmap;
 	friend class Play;
 
