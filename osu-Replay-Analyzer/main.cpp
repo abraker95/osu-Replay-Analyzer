@@ -196,7 +196,7 @@ int main()
 
 	cout << "Tapping | Score: " << speedScore << "   Skill: " << speedSkill << "   Max diff: " << speedDiff << endl;
 
-	TimingGraph timingGraph(win, &play);
+	TimingGraph timingGraph(0, -20, win, &play);
 		timingGraph.ClipPosTo(GuiObj::BTMLEFT);
 		timingGraph.addClipDimTo(GuiObj::RIGHT);
 		timingGraph.DisableLayer(TimingGraph::LAYER::HITOBJECT_VISIBILTITY);
@@ -206,13 +206,13 @@ int main()
 
 	HitTimingMarker hitTimingMarker(0, 0, &play, &viewTime);
 		hitTimingMarker.ClipPosTo(GuiObj::BTMLEFT);
-		hitTimingMarker.setMargin(0, 10);
 
 	GamemodeRenderer renderer(10, 10, win.getDimentions().Width, win.getDimentions().Height, &play, &viewTime);
 		renderer.ClipPosTo(GuiObj::TOPLEFT);
 		renderer.addClipDimTo(GuiObj::BTM);
 		renderer.addClipDimTo(GuiObj::RIGHT);
-		renderer.setMargin(250, 100);
+		renderer.setMargin(250, 100);		
+
 
 	/// \TODO: Are there no memory leaks?
 	/// \TODO: Implement a textbox gui object (OH BOY... >.>)
