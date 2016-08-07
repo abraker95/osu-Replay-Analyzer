@@ -24,6 +24,10 @@ void StatGraph::InitGraph()
 {
 	timings = getSelection();
 
+	// Make sure we have timings
+	if (timings == nullptr)	return;
+	if (timings->size() == 0) return;
+
 	std::vector<double> velX;
 	std::vector<double> velY;
 
@@ -47,8 +51,9 @@ void StatGraph::InitGraph()
 
 void StatGraph::Draw(Window &_win) 
 {
-	if (timings == nullptr)
-		return;
+	// Make sure we have timings
+	if (timings == nullptr)	return;
+	if (timings->size() == 0) return;
 
 	double maxTime = (*timings)[timings->size() - 1].time;
 	double pos = getValue(0, velGraph.getDim().Width, (*viewtime) / maxTime);
@@ -65,8 +70,8 @@ void StatGraph::UpdateInternal(Window &_win)
 {
 	UpdateDataSelect();
 
-	if (timings == nullptr)
-		return;
+	if (timings == nullptr) return;
+	if (timings->size() == 0) return;
 
 	/// \TODO: This belongs in the Graph object
 	if (velGraph.isMouseOnObj(_win, false))
