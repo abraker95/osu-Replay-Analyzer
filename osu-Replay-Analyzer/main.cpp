@@ -98,25 +98,6 @@ void DrawDebug(Window &_win, std::vector<Hitcircle> &_hitcircles, int _time, dou
 
 }*/
 
-void DrawGraph(Window &_win, std::function<double(double)> _y, int* _ref, double _step = 1, double _xscale = 1, double _yscale = 1)
-{
-	dimension2di dim = _win.getDimentions();
-	while (_win.device->run())
-	{
-		vector2di prev = vector2di(0, 0);
-		_win.driver->beginScene(true, true, SColor(255, 0, 0, 0));
-
-			for (int x = *_ref; x <= (*_ref + dim.Width)/_xscale; x += _step)
-			{
-				vector2di curr = vector2di((x - *_ref)*_xscale, dim.Height - _y(x)*_yscale);
-				_win.driver->draw2DLine(prev, curr, SColor(255, 255, 255, 255));
-				prev = curr;
-			}
-
-		_win.driver->endScene();
-	}
-}
-
 std::pair<std::string, std::string> getAnalyzerTXT()
 {
 	const std::string file = "analyze.txt";
@@ -171,10 +152,6 @@ int main()
 
 	Button btnReplay(-25, 10, 100, 10);
 		btnReplay.ClipPosTo(GuiObj::TOPRIGHT);
-
-	/// \TODO: Figure out how to exit this thread safely when closing window
-//	std::function<double(double)> reactFoo = [&circles, &CS, &AR, &hidden](int _x) { return getReactionSkill(circles, _x, CS, AR, hidden); };
-//	std::thread first(DrawGraph, winGraph, reactFoo, &time_ms, 10.0, 1, 0.5);
 
 	/// \TODO: Open file dialog box
 
@@ -249,12 +226,7 @@ int main()
 			double readDiff  = skillEngine.getDiff(SkillEngine::ANY_READING);
 			win.font->draw(core::stringw("Reading diff: ") + core::stringw(readDiff), core::rect<s32>(RESX - 225, 20, 100, 10), video::SColor(255, 255, 255, 255));
 
-			//getParamVelVec(circles, time_ms, CS);
-
 			UpdateGuiObjs(win);
-			
-			//dialogBox.Update(win);
-			//scrollbar.Draw(win);
 
 			if (btnBeatmap.isTriggered())
 			{
