@@ -101,6 +101,7 @@ void Play::ApplyMods()
 {
 	this->ApplyVisual();
 
+	// Check if timing mod has changed
 	if (prevMods.getTM() != activeMods.getTM())
 	{
 		beatmap->ResetModified();
@@ -110,6 +111,7 @@ void Play::ApplyMods()
 
 void Play::ApplyTimings()
 {
+	// Get the modded divisor (bpm speed factor)
 	double divisor = activeMods.getTM();
 
 	// Mod timing points
