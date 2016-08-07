@@ -34,7 +34,6 @@ class Play
 	private:
 		
 		void ValidateMods();
-		void ProcessBeatmap();
 
 		void ResetTimings();
 		void ApplyMods();

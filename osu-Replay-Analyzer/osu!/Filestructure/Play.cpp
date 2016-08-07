@@ -17,8 +17,6 @@ Play::Play()
 
 	activeMods = custom;
 
-	//ProcessBeatmap();
-
 	/*  \TODO: Implement ability to compare beatmap MD5 hash to validate replay
 		if(beatmap->getMD5() != replay->getBeatmapMD5())
 			delete replay;
@@ -48,15 +46,7 @@ void Play::LoadBeatmap(std::string _beatmapFile)
 
 	ResetTimings();
 	setMods(BEATMAP);
-	ProcessBeatmap();
-}
-
-void Play::ProcessBeatmap()
-{
-	if (!beatmap->isValid())
-		return;
-
-	this->beatmap->Process();
+	beatmap->Process();
 }
 
 /// \TODO: Perhaps split this off to another thread
@@ -69,7 +59,7 @@ void Play::LoadReplay(std::string _replayFile)
 
 	ResetTimings();
 	setMods(REPLAY);
-	ProcessBeatmap();
+	beatmap->Process();
 	scoreEngine->genAccTimings(this);
 }
 
