@@ -194,6 +194,7 @@ int main()
 	StatGraph graphs(0, -50, &viewTime);
 		graphs.ClipPosTo(GuiObj::BTMLEFT);
 		graphs.addClipDimTo(GuiObj::RIGHT);
+		graphs.Init();
 
 	/// \TODO: Are there no memory leaks?
 	/// \TODO: Implement a textbox gui object (OH BOY... >.>)
@@ -241,6 +242,7 @@ int main()
 				play.LoadReplay(getAnalyzerTXT().second);
 				skillEngine.Generate(&play);
 				renderer.InitRenderer(&play, &viewTime);
+				graphs.Init();
 			}
 				
 
