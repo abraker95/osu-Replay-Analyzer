@@ -125,6 +125,9 @@ std::vector<osu::TIMING>* StatGraph::getSelection()
 		case DIFF:
 			return &OSUSTANDARD::READING::diffs;
 
+		case OVRLP:
+			return &OSUSTANDARD::READING::overlaps;
+
 		default:
 			return nullptr;
 	}

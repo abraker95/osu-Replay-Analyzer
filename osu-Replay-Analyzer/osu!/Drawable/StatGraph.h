@@ -18,6 +18,7 @@ class StatGraph : public GuiObj
 		{
 			VEL,
 			NPS,
+			OVRLP,
 			DIFF,
 			NUM_SELECTIONS
 		};
