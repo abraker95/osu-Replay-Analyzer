@@ -38,6 +38,7 @@ void Replay::ProcessReplay(std::string _filepath, Beatmap* _beatmap)
 
 	mod = _beatmap->getMods();
 	this->ValidateMods();
+	this->ApplyMods();
 
 	/// \TODO: Make sure the stream data is ordered time-wise
 }
@@ -246,12 +247,23 @@ void Replay::ValidateMods()
 	if (mods & FL) mod.setModifier(Mods::MODS::FL);
 	if (mods & HD) mod.setModifier(Mods::MODS::HD);
 	if (mods & FI) mod.setModifier(Mods::MODS::FI);
+}
 
-	// adjust frame timings due to DT or HT mod
+void Replay::ApplyMods()
+{
+	// Get speed divisor
 	double divisor = mod.getTM();
-	if (divisor == 1.0) return;
+	if (divisor != 1.0)
+	{
+		// Adjust frame timings due to DT or HT mod
+		for (auto &frame : replayStream)
+			frame.time /= divisor;
+	}
 
-	// Mod replay stream timings
-	for (auto &frame : replayStream)
-		frame.time /= divisor;
+	if (mod.getModifier().HR)
+	{
+		// Apply HR mod's flipping
+		for (auto &frame : replayStream)
+			std::swap(frame.pos.X, frame.pos.Y);
+	}
 }

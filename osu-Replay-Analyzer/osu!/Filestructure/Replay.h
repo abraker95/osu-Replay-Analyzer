@@ -71,6 +71,7 @@ class Replay
 
 		// Data processing
 		void ValidateMods();
+		void ApplyMods();
 
 		int FindFrameAt(long _time);
 
