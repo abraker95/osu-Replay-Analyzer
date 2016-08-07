@@ -4,6 +4,8 @@
 SliderHitObject::SliderHitObject(std::vector<std::string> &_objectData, std::vector<std::string> &_sliderData) : Hitobject(_objectData)
 {
 	this->toRepeatTime = -1;
+	this->endTime = -1;
+
 	ProcessSliderData(_objectData, _sliderData);
 }
 
@@ -194,15 +196,15 @@ double SliderHitObject::getVelocity()
 
 void SliderHitObject::RecordRepeatTimes()
 {
-	// Saving the time of repeats
-	if (this->repeat > 1)
+	// Make sure we have the correct data for recording
+	if (endTime == -1)	   return;
+	if (toRepeatTime <= 1) return;
+
+	// Record the time of the repeats
+	for (int i = this->time; i < this->endTime; i += this->toRepeatTime)
 	{
-		for (int i = this->time; i < this->endTime; i += this->toRepeatTime)
-		{
-			if (i > this->endTime)
-				break;
-			this->repeatTimes.push_back(i);
-		}
+		if (i > this->endTime)	break;
+		this->repeatTimes.push_back(i);
 	}
 }
 
