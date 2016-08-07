@@ -41,8 +41,8 @@ void Play::LoadBeatmap(std::string _beatmapFile)
 	beatmap->ClearObjects();
 	beatmap->Read(_beatmapFile);
 
-	if (!beatmap->isValid())
-		return;
+	// Make sure the beatmap is valid before continuing
+	if (!beatmap->isValid()) return;
 
 	beatmap->ResetModified();
 	setMods(BEATMAP);
@@ -54,8 +54,8 @@ void Play::LoadReplay(std::string _replayFile)
 {
 	replay->ProcessReplay(_replayFile, beatmap);
 
-	if (!replay->isValid())
-		return;
+	// Make sure the replay is valid before continuing
+	if (!replay->isValid())	return;
 
 	beatmap->ResetModified();
 	setMods(REPLAY);
