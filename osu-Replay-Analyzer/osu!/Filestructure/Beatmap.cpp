@@ -45,6 +45,9 @@ void Beatmap::Read(std::string _beatmapfile)
 
 void Beatmap::Process()
 {
+	// Make sure the beat maps is loaded
+	if (!isValid()) return;
+
 	PrepareTimingPoints();
 
 	/// \TODO: Is there a way to put these into the hitobject class?
@@ -609,8 +612,8 @@ int Beatmap::ReadTimingpoints(std::string line)
 	std::vector<std::string> tokens;
 	FileReader::tokenize(line, tokens, ",");
 
-	if (tokens.size() < 2)
-		return 0;
+	// Make sure we got the correct data
+	if (tokens.size() < 2) return 0;
 
 	tPoint.offset = atoi(tokens[0].c_str());
 	tPoint.beatInterval = atof(tokens[1].c_str());
@@ -724,32 +727,32 @@ void Beatmap::PrepareSliderData()
 {
 	for (auto& hitObject : this->modHitobjects)
 	{
-		if (hitObject->isHitobjectLong())
+		// Make sure this is a slider
+		if (!hitObject->isHitobjectLong())
+			continue;
+
+		// Generate the slider types
+		SliderHitObject* slider = hitObject->getSlider();
+		switch (slider->curveType)
 		{
-			// Generate the slider types
-			SliderHitObject* slider = hitObject->getSlider();
-			switch (slider->curveType)
-			{
-				case 'B':
+			case 'B':
+				hitObject->getSlider()->newSlider(false, false);
+				break;
+
+			case 'P':
+				if (hitObject->getSlider()->curves.size() == 2)
+					hitObject->getSlider()->newSlider(false, true);
+				else
 					hitObject->getSlider()->newSlider(false, false);
-					break;
 
-				case 'P':
-					if (hitObject->getSlider()->curves.size() == 2)
-						hitObject->getSlider()->newSlider(false, true);
-					else
-						hitObject->getSlider()->newSlider(false, false);
+				break;
 
-					break;
-
-				case 'L': case 'C':
-					hitObject->getSlider()->newSlider(true, false);
-					break;
-			}
-
-			//SliderHitObject* slider = hitObject.getSlider();
-			slider->endPoint = (slider->repeat % 2) ? slider->curves.back() : slider->curves.front();
+			case 'L': case 'C':
+				hitObject->getSlider()->newSlider(true, false);
+				break;
 		}
+
+		slider->endPoint = (slider->repeat % 2) ? slider->curves.back() : slider->curves.front();
 	}
 }
 
@@ -757,20 +760,21 @@ void Beatmap::GenerateSliderPoints()
 {
 	for (auto& hitObject : this->modHitobjects)
 	{
-		// Generate timepoing dependent slider info
-		if (hitObject->IsHitObjectType(HITOBJECTYPE::SLIDER))
-		{
-			SliderHitObject *slider = hitObject->getSlider();
-			TimingPoint* tp = getTimingPointAt(slider->getTime());
-			double BPM = tp->getBPM();
+		// Make sure this is a slider
+		if (!hitObject->IsHitObjectType(HITOBJECTYPE::SLIDER))
+			continue;
 
-			slider->toRepeatTime = round((double)(((-600.0 / BPM) * slider->pixelLength * tp->sm) / (100.0 * diff.sm)));
-			slider->endTime = slider->getTime() + slider->toRepeatTime * slider->repeat;
-			slider->RecordRepeatTimes();
+		// Generate timepoint dependent slider info
+		SliderHitObject *slider = hitObject->getSlider();
+		TimingPoint* tp = getTimingPointAt(slider->getTime());
+		double BPM = tp->getBPM();
 
-			double tickInterval = tp->beatLength / diff.st;
-			slider->RecordTickIntervals(tickInterval);
-		}
+		slider->toRepeatTime = round((double)(((-600.0 / BPM) * slider->pixelLength * tp->sm) / (100.0 * diff.sm)));
+		slider->endTime = slider->getTime() + slider->toRepeatTime * slider->repeat;
+		slider->RecordRepeatTimes();
+
+		double tickInterval = tp->beatLength / diff.st;
+		slider->RecordTickIntervals(tickInterval);
 	}
 }
 
@@ -918,6 +922,4 @@ void Beatmap::ClearObjects()
 
 	origTimingPoints.clear();
 	std::vector<TimingPoint>().swap(origTimingPoints);
-
-	ResetModified();
 }
