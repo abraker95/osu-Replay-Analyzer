@@ -233,7 +233,7 @@ int main()
 				play.LoadBeatmap(getAnalyzerTXT().first);
 				skillEngine.Generate(&play);
 				renderer.InitRenderer(&play, &viewTime);
-				graphs.InitGraph();
+				graphs.Init();
 			}
 
 			if (btnReplay.isTriggered())

@@ -11,7 +11,7 @@ class StatGraph : public GuiObj
 		StatGraph(int _xpos, int _ypos, int *_viewtime);
 		virtual ~StatGraph();
 
-		void InitGraph();
+		void Init();
 
 	private:
 		enum SELECTIONS

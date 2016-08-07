@@ -9,18 +9,20 @@ StatGraph::StatGraph(int _xpos, int _ypos, int *_viewtime) : GuiObj(_xpos, _ypos
 	selection = 0;
 
 	velGraph = Graph(this);
-		velGraph.Resize(0, 0);
+		velGraph.Resize(0, this->height);
+		velGraph.addClipDimTo(GuiObj::RIGHT);
+		velGraph.setMargin(20, 0);
 
 	btnUp = Button(-1, 0, 15, 10, this);
 		btnUp.ClipPosTo(GuiObj::TOPRIGHT);
 
 	btnDwn = Button(-1, 1, 15, 10, this);
-		btnDwn.ClipPosTo(GuiObj::BTMRIGHT);
+		btnDwn.ClipPosTo(GuiObj::BTMRIGHT);	
 }
 
 StatGraph::~StatGraph(){}
 
-void StatGraph::InitGraph()
+void StatGraph::Init()
 {
 	timings = getSelection();
 
@@ -43,9 +45,6 @@ void StatGraph::InitGraph()
 	velGraph.Clear();
 	velGraph.SetStaticParam(&velX, &velY, 1000);
 	velGraph.setWindow(0, 0, velX[velX.size() - 1], max);
-	velGraph.Resize(0, this->height);
-	velGraph.addClipDimTo(GuiObj::RIGHT);
-	velGraph.setMargin(20, 0);
 }
 
 
@@ -104,7 +103,7 @@ void StatGraph::CycleSelectUp()
 	else
 		selection++;
 
-	InitGraph();
+	Init();
 }
 
 void StatGraph::CycleSelectDwn()
@@ -114,7 +113,7 @@ void StatGraph::CycleSelectDwn()
 	else
 		selection--;
 
-	InitGraph();
+	Init();
 }
 
 std::vector<osu::TIMING>* StatGraph::getSelection()
