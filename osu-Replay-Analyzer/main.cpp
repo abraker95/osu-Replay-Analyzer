@@ -243,6 +243,7 @@ int main()
 				skillEngine.Generate(&play);
 				renderer.InitRenderer(&play, &viewTime);
 				graphs.Init();
+				hitTimingGraph.Init();
 			}
 				
 

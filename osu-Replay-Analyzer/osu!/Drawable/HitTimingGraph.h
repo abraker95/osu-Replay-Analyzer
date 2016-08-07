@@ -11,6 +11,7 @@ class HitTimingGraph : public GuiObj
 {
 	public:
 		HitTimingGraph(int _xpos, int _ypos, Play* _play);
+		void Init();
 
 	private:
 		virtual void Draw(Window& _win);
@@ -24,6 +25,7 @@ class HitTimingGraph : public GuiObj
 
 		std::vector<int> bins;
 		std::vector<core::stringw> textBins;
+		Play* play;
 };
 
 #endif // !HIT_TIMING_GRAPH

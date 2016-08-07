@@ -9,7 +9,13 @@
 
 HitTimingGraph::HitTimingGraph(int _xpos, int _ypos, Play* _play) : GuiObj(_xpos, _ypos, 0, 0, nullptr)
 {
-	switch (_play->beatmap->getGamemode())
+	play = _play;
+}
+
+
+void HitTimingGraph::Init()
+{
+	switch (play->beatmap->getGamemode())
 	{
 		case GAMEMODE::OSU_STANDARD:
 			this->genStdBins();
@@ -36,12 +42,14 @@ HitTimingGraph::HitTimingGraph(int _xpos, int _ypos, Play* _play) : GuiObj(_xpos
 	}
 }
 
-
 // ----------- PRIVATE ----------------
 
 
 void HitTimingGraph::Draw(Window& _win)
 {
+	// Make sure there is something to draw
+	if (bins.size() == 0) return;
+
 	// get highest bin for normalization
 	int max = 1;
 	for (int i = 0; i < bins.size(); i++)
