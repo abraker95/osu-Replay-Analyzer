@@ -35,7 +35,6 @@ class Play
 		
 		void ValidateMods();
 
-		void ResetTimings();
 		void ApplyMods();
 		void ApplyVisual();
 		void ApplyTimings();

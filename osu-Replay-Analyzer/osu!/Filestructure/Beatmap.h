@@ -46,6 +46,7 @@ class Beatmap
 		Diff& getDiff();
 		void setDiff(Diff _diff);
 
+		void ClearModified();
 		void ResetModified();
 
 		/// \TODO: Move these out of here

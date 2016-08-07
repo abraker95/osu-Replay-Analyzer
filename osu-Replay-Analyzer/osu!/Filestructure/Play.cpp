@@ -44,7 +44,7 @@ void Play::LoadBeatmap(std::string _beatmapFile)
 	if (!beatmap->isValid())
 		return;
 
-	ResetTimings();
+	beatmap->ResetModified();
 	setMods(BEATMAP);
 	beatmap->Process();
 }
@@ -57,7 +57,7 @@ void Play::LoadReplay(std::string _replayFile)
 	if (!replay->isValid())
 		return;
 
-	ResetTimings();
+	beatmap->ResetModified();
 	setMods(REPLAY);
 	beatmap->Process();
 	scoreEngine->genAccTimings(this);
@@ -103,26 +103,10 @@ void Play::ApplyMods()
 
 	if (prevMods.getTM() != activeMods.getTM())
 	{
-		this->ResetTimings();
+		beatmap->ResetModified();
 		this->ApplyTimings();
 	}
 }
-
-void Play::ResetTimings()
-{
-	// reset diffs, timingpoints, and modified hitobjects
-	this->beatmap->ResetModified();
-	this->beatmap->modTimingPoints = this->beatmap->origTimingPoints;
-
-	for (Hitobject* hitobject : this->beatmap->origHitobjects)
-	{
-		if (hitobject->isHitobjectLong())
-			beatmap->modHitobjects.push_back(new SliderHitObject(*hitobject->getSlider()));			
-		else
-			beatmap->modHitobjects.push_back(new Hitobject(*hitobject));
-	}
-}
-
 
 void Play::ApplyTimings()
 {

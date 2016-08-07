@@ -77,7 +77,7 @@ Mods Beatmap::getMods()
 	return mods;
 }
 
-void Beatmap::ResetModified()
+void Beatmap::ClearModified()
 {
 	for (auto& hitobject : modHitobjects)
 	{
@@ -89,6 +89,21 @@ void Beatmap::ResetModified()
 
 	modTimingPoints.clear();
 	std::vector<TimingPoint>().swap(modTimingPoints);
+}
+
+void Beatmap::ResetModified()
+{
+	// reset diffs, timingpoints, and modified hitobjects
+	ClearModified();
+	modTimingPoints = origTimingPoints;
+
+	for (Hitobject* hitobject : origHitobjects)
+	{
+		if (hitobject->isHitobjectLong())
+			modHitobjects.push_back(new SliderHitObject(*hitobject->getSlider()));
+		else
+			modHitobjects.push_back(new Hitobject(*hitobject));
+	}
 }
 
 std::vector<Hitobject*>& Beatmap::getHitobjects()
