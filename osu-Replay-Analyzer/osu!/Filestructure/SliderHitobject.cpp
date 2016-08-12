@@ -324,19 +324,22 @@ void SliderHitObject::ProcessSliderData(std::vector<std::string> &_objectData, s
 		}
 	}
 
-	repeat = atoi(_objectData[6].c_str());
-	pixelLength = atof(_objectData[7].c_str());
-
 	if (this->getHitobjectType() & HITOBJECTYPE::SPINNER)
 	{
 		endTime = atoi(_objectData[5].c_str());
+		return;
 	}
 
 	if (this->getHitobjectType() & HITOBJECTYPE::MANIALONG)
 	{
 		FileReader::tokenize(_objectData[5], _sliderData, ":");
 		endTime = atoi(_sliderData[0].c_str());
+		return;
 	}
+
+	// otherwise this is a osu!std slider and we should get additional data
+	repeat = atoi(_objectData[6].c_str());
+	pixelLength = atof(_objectData[7].c_str());
 }
 
 double SliderHitObject::getEndAngle() { return endAngle; }

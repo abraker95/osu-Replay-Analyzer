@@ -750,6 +750,9 @@ void Beatmap::PrepareSliderData()
 			case 'L': case 'C':
 				hitObject->getSlider()->newSlider(true, false);
 				break;
+
+			case '1': // Mania
+				return;
 		}
 
 		slider->endPoint = (slider->repeat % 2) ? slider->curves.back() : slider->curves.front();
