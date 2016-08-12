@@ -728,8 +728,10 @@ void Beatmap::PrepareSliderData()
 	for (auto& hitObject : this->modHitobjects)
 	{
 		// Make sure this is a slider
-		if (!hitObject->isHitobjectLong())
-			continue;
+		if (!hitObject->isHitobjectLong()) continue;
+
+		// nothing to do here ._.
+		if (hitObject->getHitobjectType() & HITOBJECTYPE::MANIALONG) break;
 
 		// Generate the slider types
 		SliderHitObject* slider = hitObject->getSlider();
@@ -750,9 +752,6 @@ void Beatmap::PrepareSliderData()
 			case 'L': case 'C':
 				hitObject->getSlider()->newSlider(true, false);
 				break;
-
-			case '1': // Mania
-				return;
 		}
 
 		slider->endPoint = (slider->repeat % 2) ? slider->curves.back() : slider->curves.front();
