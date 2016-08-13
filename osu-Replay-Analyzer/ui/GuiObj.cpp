@@ -167,6 +167,7 @@ void GuiObj::UpdateID()
 	// \TODO: detect ones that are not found
 }
 
+/// \TODO: This is VERY ineffecient
 bool GuiObj::isMouseOnObj(Window& _win, bool _only)
 {
 	position2di pos = _win.reciever.GetMouseState().positionCurr;
@@ -184,8 +185,11 @@ bool GuiObj::isMouseOnObj(Window& _win, bool _only)
 				// if there is on another object on top of it, then
 				// the cursor is not on this object
 				bool isOnAnotherObj = false;
-				for (int i = this->id + 1; i < guiEnv.size(); i++)
+				for (int i = 0; i < guiEnv.size(); i++)
+				{
+					if (guiEnv[i] == this) continue; // Don't check against itself
 					isOnAnotherObj |= guiEnv[i]->isMouseOnObj(_win);
+				}
 					
 				if (isOnAnotherObj)
 					onObj = false;
