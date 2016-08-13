@@ -33,6 +33,16 @@ namespace OSUMANIA
 		*_iNote = MANIA_END;
 		return nullptr;
 	}
+
+	// Checks to see if all indices came to an end in terms of time indicated by indices _i
+	inline bool isAtEnd(int _KEYS, std::vector<int>& _i, std::vector<Hitobject*>& _hitobjects)
+	{
+		bool finish = true;
+		for (int key = 0; key < _KEYS; key++)
+			finish &= (_i[key] >= _hitobjects.size());
+		return finish;
+	}
+	
 }
 
 #endif // !OSU_MANIA_H
