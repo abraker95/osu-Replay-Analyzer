@@ -72,6 +72,8 @@ class GuiObj
 
 
 void UpdateGuiObjs(Window& _win);
+void SortGuiObjs();
 void SetRelativeGuiLayer(GuiObj* _top, GuiObj* _btm);
+int FindGuiObj(GuiObj* _guiObj);
 
 #endif

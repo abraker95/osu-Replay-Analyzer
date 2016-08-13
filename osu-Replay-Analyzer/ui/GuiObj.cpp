@@ -34,6 +34,40 @@ void SetRelativeGuiLayer(GuiObj* _top, GuiObj* _btm)
 	}
 }
 
+bool sortGui(GuiObj* i, GuiObj* j)
+{
+	return i < j;
+}
+
+
+void SortGuiObjs()
+{
+	std::sort(guiEnv.begin(), guiEnv.end(), sortGui);
+}
+
+int FindGuiObj(GuiObj* _guiObj)
+{
+	int start = 0;
+	int end = guiEnv.size() - 2;
+	int mid;
+
+	while (start <= end)
+	{
+		mid = (start + end) / 2;
+
+		if (BTWN((int)guiEnv[mid], (int)_guiObj, (int)guiEnv[mid + 1]))
+			return mid + 1;
+
+		if (_guiObj < guiEnv[mid])
+			end = mid - 1;
+		else
+			start = mid + 1;
+	}
+
+	return -1;
+}
+
+
 GuiObj::GuiObj(int _xpos, int _ypos, int _width, int _height, GuiObj* _parent)
 {
 	xpos = _xpos;	ypos = _ypos;
