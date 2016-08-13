@@ -13,12 +13,6 @@ const double MIN_PRESS_TIME   = -100;
 const double MAX_RELEASE_TIME = +100;
 const double MIN_RELEASE_TIME = -100;
 
-
-bool OSUMANIA::sortAccTimings(osu::TIMING i, osu::TIMING j)
-{
-	return i.time < j.time;
-}
-
 int OSUMANIA::getJudgment(int _frameTime, int _noteTime, bool _pressState)
 {
 	bool hit = false;
@@ -253,7 +247,7 @@ void OSUMANIA::genAccTimings(Play* _play)
 		stop = !(iFrame < play->replay->getNumFrames()); // stop when we reached end of replay
 	} while (!stop);
 
-	std::sort(accTimings.begin(), accTimings.end(), sortAccTimings);
+	osu::SortByTime(accTimings);
 }
 
 

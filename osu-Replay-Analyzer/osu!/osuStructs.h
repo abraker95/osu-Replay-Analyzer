@@ -17,6 +17,7 @@ namespace osu
 	};
 
 	int FindTimingAt(std::vector<TIMING>& _timings, double _time);
+	void SortByTime(std::vector<TIMING>& _timings);
 };
 
 #endif // !OSUSTRUCTS_H

@@ -20,3 +20,14 @@ int osu::FindTimingAt(std::vector<TIMING>& _timings, double _time)
 			start = mid + 1;
 	}
 }
+
+bool sortATimings(osu::TIMING i, osu::TIMING j)
+{
+	return i.time < j.time;
+}
+
+
+void osu::SortByTime(std::vector<TIMING>& _timings)
+{
+	std::sort(_timings.begin(), _timings.end(), sortATimings);
+}
