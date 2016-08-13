@@ -293,7 +293,10 @@ double SkillEngine::getTotalDiffAt(SKILL _skill, int _time)
 
 void SkillEngine::genScores(Play* _play)
 {
+	// need beatmap and replay for score generation
 	if (!_play->beatmap->isValid())	return;
+	if (!_play->replay->isValid())	return;
+
 	switch (gamemode)
 	{
 		case GAMEMODE::OSU_STANDARD:
@@ -338,7 +341,10 @@ void SkillEngine::genScores(Play* _play)
 
 void SkillEngine::genSkills(Play* _play)
 {
+	// need beatmap and replay for score generation
 	if (!_play->beatmap->isValid())	return;
+	if (!_play->replay->isValid())	return;
+
 	switch (gamemode)
 	{
 		case GAMEMODE::OSU_STANDARD:
