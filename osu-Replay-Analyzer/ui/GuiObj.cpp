@@ -88,13 +88,11 @@ GuiObj::GuiObj(int _xpos, int _ypos, int _width, int _height, GuiObj* _parent)
 
 GuiObj::~GuiObj()
 {
-	/// \TODO: order these and use binary search
-	// find and remove the object from the environment
-	for (int i = 0; i < guiEnv.size(); i++)
-	{
-		if (guiEnv[i] == this)
-			guiEnv.erase(guiEnv.begin() + i);
-	}
+	int i = FindGuiObj(this);
+	if (i == -1) return;
+
+	if (guiEnv[i] == this)
+		guiEnv.erase(guiEnv.begin() + i);
 }
 
 void GuiObj::Update(Window& _win)
