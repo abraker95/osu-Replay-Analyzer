@@ -2,10 +2,14 @@
 #define OSU_MANIA_H
 
 #include "../utils/mathUtils.h"
+#include "../osu!/Filestructure/Play.h"
 #include "osuStructs.h"
 
 namespace OSUMANIA
 {
+	const int MANIA_END = -1;
+
+	// Returns the key column based on the xpos of the note and the number of keys there are
 	inline int getKey(int _xpos, int _keys)
 	{
 		float localWDivisor = 512.0f / _keys;
