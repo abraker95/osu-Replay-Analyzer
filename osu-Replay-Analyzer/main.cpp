@@ -196,6 +196,8 @@ int main()
 		graphs.addClipDimTo(GuiObj::RIGHT);
 		graphs.Init();
 
+	SortGuiObjs();
+
 	/// \TODO: Are there no memory leaks?
 	/// \TODO: Implement a textbox gui object (OH BOY... >.>)
 	while (win.device->run())
@@ -235,6 +237,7 @@ int main()
 				skillEngine.Generate(&play);
 				renderer.InitRenderer(&play, &viewTime);
 				graphs.Init();
+				SortGuiObjs();
 			}
 
 			if (btnReplay.isTriggered())
@@ -244,6 +247,7 @@ int main()
 				renderer.InitRenderer(&play, &viewTime);
 				graphs.Init();
 				hitTimingGraph.Init();
+				SortGuiObjs();
 			}
 				
 
