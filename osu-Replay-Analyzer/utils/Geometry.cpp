@@ -80,6 +80,7 @@ double getVelocity(position2d<double> _p1, position2d<double> _p2, double _t1, d
 {
 	double dist = getDist(_p1, _p2);
 	double time = ABS(_t2 - _t1);
+
 	return dist / time;
 }
 

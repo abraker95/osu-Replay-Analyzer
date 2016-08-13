@@ -78,7 +78,6 @@ void Button::UpdateInternal(Window &_win)
 void Button::IdleLogic(Window &_win)
 {
 	bool leftEdge = _win.reciever.GetMouseState().LeftButtonEdge;
-
 	if (this->isMouseOnObj(_win, true) && leftEdge)
 	{
 		state = HOLD;
