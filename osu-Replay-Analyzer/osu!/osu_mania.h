@@ -43,6 +43,22 @@ namespace OSUMANIA
 		return finish;
 	}
 	
+	// Checks to see of _keyCheck is behind all other columns in terms of time indicated by indices _i
+	inline bool isBehindOtherColumns(int _KEYS, int _keyCheck, std::vector<int>& _i, std::vector<Hitobject*>& _hitobjects)
+	{
+		// If what we are checking against has ended, then it can't possibly be behind
+		if (_i[_keyCheck] == MANIA_END) return false;
+
+		bool get = true;
+		for (int key = 0; key < _KEYS; key++)
+		{
+			if (key == _keyCheck) continue;      // we don't want it to compare against itself
+			if (_i[key] == MANIA_END) continue;  // no need to compare against something that ended
+
+			get &= (_hitobjects[_i[_keyCheck]]->getTime() <= _hitobjects[_i[key]]->getTime());
+		}
+		return get;
+	}
 }
 
 #endif // !OSU_MANIA_H
