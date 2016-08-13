@@ -12,10 +12,7 @@ namespace OSUMANIA
 	extern std::vector<osu::TIMING> accTimings;
 
 	void genAccTimings(Play* _play);
-	bool sortAccTimings(osu::TIMING i, osu::TIMING j);
-
 	std::tuple<long, int, int> getNextEvent(int* _iFrame);
-	Hitobject* getNextNoteOnColumn(int _column, int* _iNote);
 
 	int getJudgment(int _frameTime, int _noteTime, bool _pressState);
 

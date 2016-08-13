@@ -149,8 +149,8 @@ void OSUMANIA::genAccTimings(Play* _play)
 		{
 			iNote[key] = -1;
 
-			currNotes[key] = getNextNoteOnColumn(key, &iNote[key]);
-			nextNotes[key] = getNextNoteOnColumn(key, &iNote[key]);
+			currNotes[key] = getNextNoteOnColumn(play, key, &iNote[key]);
+			nextNotes[key] = getNextNoteOnColumn(play, key, &iNote[key]);
 
 			nextNote[key] = false;
 			pressStates[key] = true;
@@ -213,7 +213,7 @@ void OSUMANIA::genAccTimings(Play* _play)
 							{
 								prevNotes[key] = currNotes[key];
 								currNotes[key] = nextNotes[key];
-								nextNotes[key] = getNextNoteOnColumn(key, &iNote[key]);
+								nextNotes[key] = getNextNoteOnColumn(play, key, &iNote[key]);
 
 								nextNote[key] = false;
 							}
@@ -237,7 +237,7 @@ void OSUMANIA::genAccTimings(Play* _play)
 			{
 				prevNotes[key] = currNotes[key];
 				currNotes[key] = nextNotes[key];
-				nextNotes[key] = getNextNoteOnColumn(key, &iNote[key]);
+				nextNotes[key] = getNextNoteOnColumn(play, key, &iNote[key]);
 
 				nextNote[key] = false;
 			}
@@ -398,26 +398,6 @@ std::pair<double, double> OSUMANIA::SCORE::getODms(Hitobject* _prevNote, Hitobje
 
 	return std::pair<double, double>(earliestTime, latestTime);
 }
-
-
-Hitobject* OSUMANIA::getNextNoteOnColumn(int _column, int* _iNote)
-{
-	(*_iNote) += 1;
-	for (; (*_iNote) < play->beatmap->getHitobjects().size(); (*_iNote)++)
-	{
-		int KEYS = play->beatmap->getMods().getCS();
-		int noteXpos = play->beatmap->getHitobjects()[*_iNote]->getPos().X;
-
-		float localWDivisor = 512.0f / KEYS;
-		int column = std::min((int)std::floor(noteXpos / localWDivisor), KEYS - 1);
-
-		if (column == _column)
-			return play->beatmap->getHitobjects()[*_iNote];
-	}
-
-	return nullptr;
-}
-
 
 std::tuple<long, int, int> OSUMANIA::getNextEvent(int* _iFrame)
 {
