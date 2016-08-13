@@ -24,7 +24,8 @@ Hitcircle::~Hitcircle()
 
 void Hitcircle::Draw(Window &_win)
 {
-	// \TODO: Known problem: pixel perfect overlaps causes circles to "blink"
+	/// \TODO: Known problem: pixel perfect overlaps causes circles to "blink"
+	/// \TODO: Slider follow point doubles due to the condition being satisfied for 2 iterations
 
 	double opacity = hitobject->getOpacityAt(*(this->viewTime), mods->getAR(), mods->getModifier().HD);
 	SColor fade = SColor(255, edgeCol.getRed() * opacity, edgeCol.getGreen() * opacity, edgeCol.getBlue() * opacity);
@@ -130,9 +131,10 @@ void Hitcircle::SelectedLogic(Window &_win)
 		// has to be += due the fact that x - xoffset = 0, 
 		// resolving the assignment to x = pos.x
 		// this->x = pos.X - this->xOffset + this->x  => this->x = pos.X - 0;
-		vector2d<double> newPos(hitobject->getPos().X + (double)mouseDelta.X/this->getWidthRatio(), hitobject->getPos().Y + (double)mouseDelta.Y/this->getHeightRatio());
-		hitobject->setPos(newPos);
 
+		this->xpos += mouseDelta.X;
+		this->ypos += mouseDelta.Y;
+		
 		edgeCol = SELECTED_COLOR;
 	}
 }
