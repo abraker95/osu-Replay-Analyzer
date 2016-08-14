@@ -28,10 +28,12 @@ class GuiObj
 		void setMargin(int _right, int _btm);
 		void setParent(GuiObj* _obj);
 		void setVisible(bool _visible);
+		void setDepth(int _depth);
 
 		core::vector2di getPos() const;
 		core::vector2di getMid() const;
 		core::dimension2di getDim() const;
+		int getDepth() const;
 
 
 		bool isMouseOnObj(Window& _win, bool _only = false);
@@ -55,7 +57,9 @@ class GuiObj
 		
 		GuiObj* parent;
 		//std::vector<GuiObj*> children;
+		
 		int id;
+		int depth;
 
 		CLIPPOS clipPos;
 		int clipDim;
