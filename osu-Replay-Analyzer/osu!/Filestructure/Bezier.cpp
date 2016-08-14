@@ -13,6 +13,17 @@ Bezier::Bezier(std::vector<irr::core::vector2di> _points)
 	init(approxlength);
 }
 
+Bezier::~Bezier()
+{
+	points.clear();
+	curvePoints.clear();
+	curveDis.clear();
+
+	std::vector<irr::core::vector2di>().swap(points);
+	std::vector<irr::core::vector2di>().swap(curvePoints);
+	std::vector<double>().swap(curveDis);
+}
+
 void Bezier::init(double approxlength)
 {
 	// subdivide the curve

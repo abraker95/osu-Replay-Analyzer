@@ -21,6 +21,7 @@ class Bezier
 		// Constructor
 		// @param points the control points*/
 		Bezier(std::vector<irr::core::vector2di> _points);
+		virtual ~Bezier();
 
 		void init(double approxlength);
 
