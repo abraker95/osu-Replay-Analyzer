@@ -44,15 +44,15 @@ void SortGuiObjs()
 int FindGuiObj(GuiObj* _guiObj)
 {
 	int start = 0;
-	int end = guiEnv.size() - 2;
+	int end = guiEnv.size() - 1;
 	int mid;
 
 	while (start <= end)
 	{
 		mid = (start + end) / 2;
 
-		if (BTWN((int)guiEnv[mid], (int)_guiObj, (int)guiEnv[mid + 1]))
-			return mid + 1;
+		if (guiEnv[mid] == _guiObj)
+			return mid;
 
 		if (_guiObj < guiEnv[mid])
 			end = mid - 1;
