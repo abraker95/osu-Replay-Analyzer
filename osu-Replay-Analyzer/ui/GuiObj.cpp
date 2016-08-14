@@ -10,16 +10,12 @@ GuiObj* top;
 
 void UpdateGuiObjs(Window& _win)
 {
-	/// \TODO: order these and use binary search
 	for (int i = 0; i < guiEnv.size(); i++)
 	{
-		if (guiEnv[i] != nullptr)
-		{
-			if (guiEnv[i]->hasParent() == false)
-			{
-				guiEnv[i]->Update(_win);
-			}
-		}
+		if (guiEnv[i] == nullptr) continue;				// make sure the guiObj is not deleted
+		if (guiEnv[i]->hasParent() != false)  continue; // make sure it is not a child of another guiObj. Those are to be updated by the parent
+			
+		guiEnv[i]->Update(_win);
 	}
 }
 
