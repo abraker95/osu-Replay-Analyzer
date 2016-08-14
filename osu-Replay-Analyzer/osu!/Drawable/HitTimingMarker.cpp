@@ -17,6 +17,7 @@ HitTimingMarker::HitTimingMarker(int _xpos, int _ypos, Play* _play, int* _viewTi
 void HitTimingMarker::Draw(Window& _win)
 {
 	_win.driver->draw2DRectangleOutline(recti(absXpos, absYpos, absXpos + width - 1, absYpos + height), edgeCol);
+	if (play->beatmap == nullptr) return;
 
 	switch (play->beatmap->getGamemode())
 	{

@@ -75,8 +75,10 @@ bool TimingGraph::ViewTimeChanged()
 
 void TimingGraph::GenerateVisibilityTimings()
 {
-	int layer = 1;
 	Beatmap* beatmap = play->beatmap;
+	if (beatmap == nullptr) return;
+
+	int layer = 1;
 
 	timingObjects.resize(beatmap->getHitobjects().size());
 	for (int i = 0; i < timingObjects.size(); i++)
@@ -129,6 +131,8 @@ void TimingGraph::drawRefreshRateTimings(Window &_win, double _FPS)
 void TimingGraph::drawHitobjectHitTimings(Window &_win)
 {
 	Beatmap* beatmap = play->beatmap;
+	if (beatmap == nullptr) return;
+
 	std::pair<int, int> viewTimes = this->getViewTimes();
 	int startIndex = 0, endIndex = beatmap->getHitobjects().size() - 1;
 
@@ -161,6 +165,8 @@ void TimingGraph::drawHitobjectHitTimings(Window &_win)
 void TimingGraph::drawHitobjectVisibilityTimings(Window &_win)
 {
 	Beatmap* beatmap = play->beatmap;
+	if (beatmap == nullptr) return;
+
 	std::pair<int, int> viewTimes = this->getViewTimes();
 	int startIndex = 0, endIndex = beatmap->getHitobjects().size() - 1;
 
@@ -382,7 +388,6 @@ void TimingGraph::UpdateViewTime(Window& _win)
 		prevViewTime = currViewTime;
 		
 		double newTime_ms = currViewTime + 1000.0/_win.getFPS(); // 1000 Frames / (Frames/second)
-
 		if (newTime_ms >= 0)
 			currViewTime = newTime_ms;
 	}

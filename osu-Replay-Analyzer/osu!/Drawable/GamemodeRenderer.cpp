@@ -33,6 +33,11 @@ void GamemodeRenderer::setGamemode(GAMEMODE _gamemode)
 void GamemodeRenderer::InitRenderer(Play* _play, int* _viewTime)
 {
 	DestroyRenderers();
+	if (_play->beatmap == nullptr)
+	{
+		gamemode = GAMEMODE::GAMEMODE_ERROR;
+		return;
+	}
 
 	gamemode = _play->beatmap->getGamemode();
 	switch (gamemode)
