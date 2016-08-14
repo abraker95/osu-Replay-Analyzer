@@ -13,6 +13,7 @@ Beatmap::Beatmap() { gamemode = GAMEMODE_ERROR; }
 
 Beatmap::~Beatmap()
 {
+	ClearModified();
 	ClearObjects();
 }
 
@@ -82,10 +83,9 @@ Mods Beatmap::getMods()
 
 void Beatmap::ClearModified()
 {
-	for (auto& hitobject : modHitobjects)
-	{
-		hitobject->~Hitobject();
-	}
+	if (modHitobjects.size() == 0) return;
+	for (Hitobject* hitobject : modHitobjects)
+		delete hitobject;
 
 	modHitobjects.clear();
 	std::vector<Hitobject*>().swap(modHitobjects);
@@ -913,11 +913,9 @@ void Beatmap::SortEndTimes(int _left, int _right)
 
 void Beatmap::ClearObjects()
 {
+	if (origHitobjects.size() == 0) return;
 	for (auto* hitobject : origHitobjects)
-	{
-		hitobject->~Hitobject();
 		delete hitobject;
-	}
 	
 	origHitobjects.clear();
 	std::vector<Hitobject*>().swap(origHitobjects);

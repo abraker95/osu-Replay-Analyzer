@@ -77,8 +77,7 @@ class Beatmap
 		GAMEMODE gamemode;
 
 		std::vector<TimingPoint> origTimingPoints, modTimingPoints;
-		std::vector<Hitobject*> origHitobjects;
-		std::vector<Hitobject*> modHitobjects;
+		std::vector<Hitobject*> origHitobjects, modHitobjects;
 
 		/// \NOTE: unused for now
 		std::vector<std::pair<Hitobject*, int>> hitObjectsTimeStart;
@@ -111,8 +110,6 @@ class Beatmap
 
 		void PrepareSliderData();
 		void GenerateSliderPoints();
-
-		void SortEndTimes(int _left, int _right);
 
 		void ClearObjects();
 };
