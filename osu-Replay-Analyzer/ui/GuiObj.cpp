@@ -87,10 +87,11 @@ GuiObj::GuiObj(int _xpos, int _ypos, int _width, int _height, GuiObj* _parent)
 GuiObj::~GuiObj()
 {
 	int i = FindGuiObj(this);
-	if (i == -1) return;
 
-	if (guiEnv[i] == this)
-		guiEnv.erase(guiEnv.begin() + i);
+	if (i == -1) return;				// make sure we found the guiObj
+	if (guiEnv[i] != this) return;		// make sure it is indeed the guiObj (findGuiObj is working correctly?)
+	
+	guiEnv.erase(guiEnv.begin() + i);
 }
 
 void GuiObj::Update(Window& _win)
