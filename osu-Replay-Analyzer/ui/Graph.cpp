@@ -101,7 +101,8 @@ void Graph::Draw(Window &_win)
 	if (vals.second.size() == 0)	return;
 	if (vals.first.size() == 0)		return;
 
-	int sampleRate = MAX(vals.second.size() / (xBeg - xEnd), 1);
+	double multiplier = ((double)width) / ((double)xEnd - (double)xBeg);
+	int sampleRate = MAX(vals.second.size() * multiplier, 1);
 	int i = sampleRate;
 	for (; i < vals.second.size(); i += sampleRate)
 	{
