@@ -149,9 +149,11 @@ int main()
 
 	Button btnBeatmap(-130, 10, 100, 10);
 		btnBeatmap.ClipPosTo(GuiObj::TOPRIGHT);
+		btnBeatmap.setDepth(1);
 
 	Button btnReplay(-25, 10, 100, 10);
 		btnReplay.ClipPosTo(GuiObj::TOPRIGHT);
+		btnReplay.setDepth(1);
 
 	/// \TODO: Open file dialog box
 
