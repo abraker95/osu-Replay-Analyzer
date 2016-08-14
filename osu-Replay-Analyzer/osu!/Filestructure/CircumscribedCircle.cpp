@@ -9,9 +9,6 @@ void SliderHitObject::MakeCircle()
 		this->sliderY.push_back(this->curves[i].Y);
 	}
 
-	//this->x = this->pos.X;
-	//this->y = this->pos.Y;
-
 	// construct the three points
 	this->start = irr::core::vector2di(this->getX(0), this->getY(0));
 	this->mid = irr::core::vector2di(this->getX(1), this->getY(1));
