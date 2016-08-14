@@ -80,6 +80,8 @@ GuiObj::GuiObj(int _xpos, int _ypos, int _width, int _height, GuiObj* _parent)
 
 	guiEnv.push_back(this);
 	id = guiEnv.size() - 1;
+
+	std::sort(guiEnv.begin(), guiEnv.end(), sortGui);
 }
 
 GuiObj::~GuiObj()
