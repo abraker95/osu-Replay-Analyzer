@@ -21,13 +21,7 @@ void UpdateGuiObjs(Window& _win)
 
 void SetRelativeGuiLayer(GuiObj* _top, GuiObj* _btm)
 {
-	// \TODO: Object's children must be applied too
-	if (_top->getID() < _btm->getID())
-	{
-		swap(guiEnv[_top->getID()], guiEnv[_btm->getID()]);
-		_top->UpdateID();
-		_btm->UpdateID();
-	}
+	_top->setDepth(_btm->getDepth() + 1);
 }
 
 bool sortGui(GuiObj* i, GuiObj* j)
@@ -72,6 +66,8 @@ GuiObj::GuiObj(int _xpos, int _ypos, int _width, int _height, GuiObj* _parent)
 
 	parent = _parent;
 	visible = true;
+	depth = 0;
+
 	clipPos = CLIPPOS::NONEPOS;
 	clipDim = CLIPDIM::NONEDIM;
 
@@ -98,6 +94,10 @@ void GuiObj::Update(Window& _win)
 {
 	if (this->visible)
 	{
+		// children are drawn on top of the parent
+		if(parent != nullptr)
+			depth = parent->getDepth() + 1;
+
 		this->UpdateAbsPos(_win);
 		this->UpdateAbsDim(_win);
 		this->Draw(_win);
@@ -151,6 +151,11 @@ core::dimension2di GuiObj::getDim() const
 	return dimension2di(width, height);
 }
 
+int GuiObj::getDepth() const
+{
+	return depth;
+}
+
 bool GuiObj::hasParent()
 {
 	return !(this->parent == nullptr);
@@ -177,6 +182,11 @@ void GuiObj::addClipDimTo(CLIPDIM _dir)
 void GuiObj::setVisible(bool _visible)
 {
 	visible = _visible;
+}
+
+void GuiObj::setDepth(int _depth)
+{
+	depth = _depth;
 }
 
 int GuiObj::getID() const
@@ -215,15 +225,13 @@ bool GuiObj::isMouseOnObj(Window& _win, bool _only)
 			{
 				// if there is on another object on top of it, then
 				// the cursor is not on this object
-				bool isOnAnotherObj = false;
 				for (int i = 0; i < guiEnv.size(); i++)
 				{
 					if (guiEnv[i] == this) continue; // Don't check against itself
-					isOnAnotherObj |= guiEnv[i]->isMouseOnObj(_win);
+					if (guiEnv[i]->isMouseOnObj(_win) == true)
+						if(depth <= guiEnv[i]->depth)
+							return false;
 				}
-					
-				if (isOnAnotherObj)
-					onObj = false;
 			}
 		}
 	}
