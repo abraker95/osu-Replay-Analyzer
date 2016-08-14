@@ -11,7 +11,7 @@
 
 Play::Play()
 {
-	beatmap = new Beatmap();
+
 	replay = new Replay();
 	scoreEngine = new ScoreEngine();
 
@@ -38,13 +38,16 @@ Play::~Play()
 /// \TODO: Perhaps split this off to another thread
 void Play::LoadBeatmap(std::string _beatmapFile)
 {
-	beatmap->ClearObjects();
+	if (beatmap != nullptr)
+		delete beatmap;
+	
+	beatmap = new Beatmap();
 	beatmap->Read(_beatmapFile);
 
 	// Make sure the beatmap is valid before continuing
 	if (!beatmap->isValid()) return;
-
 	beatmap->ResetModified();
+
 	setMods(BEATMAP);
 	beatmap->Process();
 }
