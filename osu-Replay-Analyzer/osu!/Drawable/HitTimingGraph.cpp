@@ -21,6 +21,7 @@ void HitTimingGraph::Init()
 {
 	Clear();
 
+	if (play->beatmap == nullptr) return;
 	switch (play->beatmap->getGamemode())
 	{
 		case GAMEMODE::OSU_STANDARD:
