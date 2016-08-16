@@ -222,19 +222,40 @@ int main()
 
 			if (btnBeatmap.isTriggered())
 			{
+				cout << endl << "Loading Beatmap..." << endl;
 				play.LoadBeatmap(getAnalyzerTXT().first);
 
+				cout << "Starting Beatmap Analysis..." << endl;
+				AnalysisStruct::beatmapAnalysis.StartAnalysis(&play);
+
+				cout << "Loading objects for rendering..." << endl;
 				renderer.InitRenderer(&play, &viewTime);
+
+				cout << "Loading graph data..." << endl;
 				graphs.Init();
+				
+				cout << "... Done" << endl << endl;
 			}
 
 			if (btnReplay.isTriggered())
 			{
+				cout << endl << "Loading Beatmap..." << endl;
 				play.LoadReplay(getAnalyzerTXT().second);
 
+				cout << "Starting Beatmap Analysis..." << endl;
+				AnalysisStruct::beatmapAnalysis.StartAnalysis(&play);
+				//AnalysisStruct::replayAnalysis.StartAnalysis(&play);
+
+				cout << "Loading objects for rendering..." << endl;
 				renderer.InitRenderer(&play, &viewTime);
+
+				cout << "Loading graph data..." << endl;
 				graphs.Init();
+
+				cout << "Loading hit timing data..." << endl;
 				hitTimingGraph.Init();
+
+				cout << "... Done" << endl;
 			}
 				
 
