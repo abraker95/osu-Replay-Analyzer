@@ -6,6 +6,7 @@
 #include "../../ui/Window.h"
 #include "../../ui/GuiObj.h"
 #include "../Filestructure/Play.h"
+#include "../../ui/ColorTable.h"
 
 class HitTimingGraph : public GuiObj
 {
@@ -29,6 +30,8 @@ class HitTimingGraph : public GuiObj
 
 		std::vector<int> bins;
 		std::vector<core::stringw> textBins;
+
+		ColorTable colorTable;
 		Play* play;
 };
 

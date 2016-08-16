@@ -11,6 +11,17 @@ HitTimingGraph::HitTimingGraph(int _xpos, int _ypos, Play* _play) : GuiObj(_xpos
 {
 	play = _play;
 
+	colorTable.AddValueMap(0, SColor(255, 255, 255, 255));
+	colorTable.AddValueMap(1, SColor(255, 128, 128, 255));
+	colorTable.AddValueMap(2, SColor(255, 128, 255, 128));
+	colorTable.AddValueMap(3, SColor(255, 255, 255, 128));
+	colorTable.AddValueMap(4, SColor(255, 255, 128, 128));
+	colorTable.AddValueMap(5, SColor(255, 128, 128, 128));
+	colorTable.AddValueMap(6, SColor(255, 255, 255, 255));
+	colorTable.AddValueMap(7, SColor(255, 255, 255, 255));
+	colorTable.AddValueMap(8, SColor(255, 255, 255, 255));
+}
+
 HitTimingGraph::~HitTimingGraph()
 {
 	Clear();
@@ -74,13 +85,7 @@ void HitTimingGraph::Draw(Window& _win)
 	for (int i = 0; i < bins.size(); i++)
 	{
 		text = textBins[i];
-
-			 if (i == 0) color = SColor(255, 255, 255, 255);
-		else if (i == 1) color = SColor(255, 128, 128, 255);
-		else if (i == 2) color = SColor(255, 128, 255, 128);
-		else if (i == 3) color = SColor(255, 255, 255, 128);
-		else if (i == 4) color = SColor(255, 255, 128, 128);
-		else if (i == 5) color = SColor(255, 128, 128, 128);
+		color = colorTable.getColor(i);
 
 		_win.driver->draw2DRectangle(color, rect<s32>(absXpos + xScale*i, absYpos - yScale*bins[i], absXpos + xScale*i + seperation, absYpos));
 		_win.font->draw(text, core::rect<s32>(absXpos + xScale*i, absYpos, 100, 10), video::SColor(255, 255, 255, 255));
