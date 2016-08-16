@@ -33,18 +33,19 @@ void StatGraph::Init()
 	std::vector<double> velX;
 	std::vector<double> velY;
 
-	double max = INT_MIN;
+	double max = INT_MIN, min = INT_MAX;
 	for (osu::TIMING timing : *timings)
 	{
 		velX.push_back(timing.time);
 		velY.push_back(timing.data);
 
 		max = MAX(timing.data, max);
+		min = MIN(timing.data, min);
 	}
 
 	velGraph.Clear();
 	velGraph.SetStaticParam(&velX, &velY, 1000);
-	velGraph.setWindow(0, 0, velX[velX.size() - 1], max);
+	velGraph.setWindow(0, min, velX[velX.size() - 1], max);
 }
 
 
