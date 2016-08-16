@@ -181,7 +181,7 @@ int main()
 		timingGraph.addClipDimTo(GuiObj::RIGHT);
 		timingGraph.DisableLayer(TimingGraph::LAYER::HITOBJECT_VISIBILTITY);
 
-	HitTimingGraph hitTimingGraph(-235, -100, &play);
+	HitTimingGraph hitTimingGraph(-38, 100, &play);
 		hitTimingGraph.ClipPosTo(GuiObj::BTMRIGHT);
 
 	HitTimingMarker hitTimingMarker(0, 0, &play, &viewTime);
