@@ -206,6 +206,7 @@ void Replay::ParseReplayData(unsigned char* _data, size_t _length, char _gamemod
 	std::string Replaydata = std::string((const char*)_data);
 	osu::TIMING frame;
 	int time = 0;
+	int prevKey = 0;
 
 	std::vector<std::string> dataPoints;
 	FileReader::tokenize(Replaydata, dataPoints, ",");
@@ -219,13 +220,16 @@ void Replay::ParseReplayData(unsigned char* _data, size_t _length, char _gamemod
 		{
 			time += atoi(data[0].data());
 
-			frame.time = time;
-			frame.pos.X = atoi(data[1].data());
-			frame.pos.Y = atoi(data[2].data());
-			frame.key = atoi(data[3].data());
+			frame.time = time;						// record time
+			frame.pos.X = atoi(data[1].data());		// x pos of cursor
+			frame.pos.Y = atoi(data[2].data());		// y pos of cursor
+			frame.key = atoi(data[3].data());		// which key is being pressed
+			frame.press = (frame.key != prevKey);	// key event flag
 
 			if (frame.key != -12345) // Record if it's not this...
 				replayStream.push_back(frame);
+
+			prevKey = frame.key;
 		}
 	}
 }
