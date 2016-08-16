@@ -60,6 +60,11 @@ void HitTimingGraph::Init()
 	}
 }
 
+void HitTimingGraph::setBinTable(std::vector<double> _binTable)
+{
+	binTable = _binTable;
+}
+
 // ----------- PRIVATE ----------------
 
 
@@ -103,34 +108,35 @@ void HitTimingGraph::UpdateInternal(Window& _win)
 
 void HitTimingGraph::genStdBins()
 {
-	const int NUM_BINS = 5;
-	bins.resize(NUM_BINS + 1);
+	setBinTable(
+	{ 
+		0.000,
+		4.500,
+		10.000,
+		20.000,
+		40.000,
+		80.500,
+		160.000,
+		320.000 
+	});
+
+	bins.resize(binTable.size() + 1);
 	for (int& bin : bins)
 		bin = 0;
 
-	const double BIN_TABLE[] =
-	{
-		  0.000,
-		 20.000,
-		 40.000,
-		 80.500,
-		160.000,
-		320.000
-	};
-
 	for (auto& timing : OSUSTANDARD::accTimings)
 	{
-		for (int i = 0; i < NUM_BINS; i++)
+		for (int i = 0; i < binTable.size() - 1; i++)
 		{
 			// miss
-			if (timing.data > BIN_TABLE[NUM_BINS])
+			if (timing.data > binTable[binTable.size() - 1])
 			{
-				bins[NUM_BINS]++;
+				bins[binTable.size()]++;
 				break;
 			}
 
 			// hit
-			if (BTWN(-BIN_TABLE[i + 1], timing.data, -BIN_TABLE[i]) || BTWN(BIN_TABLE[i], timing.data, BIN_TABLE[i + 1]))
+			if (BTWN(binTable[i], abs(timing.data), binTable[i + 1]))
 			{
 				bins[i]++;
 				break;
@@ -138,10 +144,10 @@ void HitTimingGraph::genStdBins()
 		}
 	}
 
-	textBins.resize(NUM_BINS + 1);
-	for (int i = 0; i < NUM_BINS; i++)
-		textBins[i] = (std::to_string((int)BIN_TABLE[i]) + " - " + std::to_string((int)BIN_TABLE[i + 1])).data();
-	textBins[NUM_BINS] = "MISSES";
+	textBins.resize(binTable.size() + 1);
+	for (int i = 0; i < binTable.size(); i++)
+		textBins[i] = (std::to_string((int)binTable[i])/* + " - " + std::to_string((int)binTable[i + 1])*/).data();
+	textBins[binTable.size()] = "MISSES";
 }
 
 void HitTimingGraph::genCtbBins()
@@ -156,34 +162,33 @@ void HitTimingGraph::genTaikoBins()
 
 void HitTimingGraph::genManiaBins()
 {
-	const int NUM_BINS = 5;
-	bins.resize(NUM_BINS + 1);
+	setBinTable(
+	{
+		0.000,
+		20.000,
+		40.000,
+		80.500,
+		160.000,
+		320.000
+	});
+
+	bins.resize(binTable.size() + 1);
 	for (int& bin : bins)
 		bin = 0;
 
-	const double BIN_TABLE[] =
-	{
-		 0.000,
-		 3.125,
-		 6.350,
-		12.500,
-		25.000,
-		50.000
-	};
-
 	for (auto& timing : OSUMANIA::accTimings)
 	{
-		for (int i = 0; i < NUM_BINS; i++)
+		for (int i = 0; i < binTable.size() - 1; i++)
 		{
 			// miss
-			if (timing.data > BIN_TABLE[NUM_BINS])
+			if (timing.data > binTable[binTable.size() - 1])
 			{
-				bins[NUM_BINS]++;
+				bins[binTable.size()]++;
 				break;
 			}
 
 			// hit
-			if (BTWN(-BIN_TABLE[i + 1], timing.data, -BIN_TABLE[i]) || BTWN(BIN_TABLE[i], timing.data, BIN_TABLE[i + 1]))
+			if (BTWN(binTable[i], abs(timing.data), binTable[i + 1]))
 			{
 				bins[i]++;
 				break;
@@ -191,10 +196,10 @@ void HitTimingGraph::genManiaBins()
 		}
 	}
 
-	textBins.resize(NUM_BINS + 1);
-	for (int i = 0; i < NUM_BINS; i++)
-		textBins[i] = (std::to_string((int)BIN_TABLE[i]) + " - " + std::to_string((int)BIN_TABLE[i + 1])).data();
-	textBins[NUM_BINS] = "MISSES";
+	textBins.resize(binTable.size() + 1);
+	for (int i = 0; i < binTable.size(); i++)
+		textBins[i] = (std::to_string((int)binTable[i])/* + " - " + std::to_string((int)binTable[i + 1])*/).data();
+	textBins[binTable.size()] = "MISSES";
 }
 
 void HitTimingGraph::genDodgeBins()

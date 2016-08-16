@@ -14,6 +14,7 @@ class HitTimingGraph : public GuiObj
 		HitTimingGraph(int _xpos, int _ypos, Play* _play);
 		virtual ~HitTimingGraph();
 
+		void setBinTable(std::vector<double> _binTable);
 		void Init();
 
 	private:
@@ -29,6 +30,7 @@ class HitTimingGraph : public GuiObj
 		void Clear();
 
 		std::vector<int> bins;
+		std::vector<double> binTable;
 		std::vector<core::stringw> textBins;
 
 		ColorTable colorTable;
