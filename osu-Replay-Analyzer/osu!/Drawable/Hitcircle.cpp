@@ -3,6 +3,8 @@
 #include "../../ui/drawUtils.h"
 #include "../osuCalc.h"
 
+#include "../Filestructure/SliderHitObject.h"
+
 #include <iostream>
 #include <tuple>
 
