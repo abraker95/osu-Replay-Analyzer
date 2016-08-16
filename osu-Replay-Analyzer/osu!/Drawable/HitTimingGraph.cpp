@@ -10,11 +10,17 @@
 HitTimingGraph::HitTimingGraph(int _xpos, int _ypos, Play* _play) : GuiObj(_xpos, _ypos, 0, 0, nullptr)
 {
 	play = _play;
+
+HitTimingGraph::~HitTimingGraph()
+{
+	Clear();
 }
 
 
 void HitTimingGraph::Init()
 {
+	Clear();
+
 	switch (play->beatmap->getGamemode())
 	{
 		case GAMEMODE::OSU_STANDARD:

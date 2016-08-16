@@ -11,6 +11,8 @@ class HitTimingGraph : public GuiObj
 {
 	public:
 		HitTimingGraph(int _xpos, int _ypos, Play* _play);
+		virtual ~HitTimingGraph();
+
 		void Init();
 
 	private:
