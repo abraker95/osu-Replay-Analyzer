@@ -10,11 +10,13 @@ int OSUSTANDARD::FindHitobjectAt(std::vector<Hitobject*>* _hitobjects, double _t
 	{
 		mid = (start + end) / 2;
 
+		// Between ends of a hold object
 		if (BTWN((*_hitobjects)[mid]->getTime(), _time, (*_hitobjects)[mid]->getEndTime()))
 			return mid;
 
-		if (BTWN((*_hitobjects)[mid]->getTime(), _time, (*_hitobjects)[mid + 1]->getTime()))
-			return mid + 1;
+		// Between some two objects
+		if (BTWN((*_hitobjects)[mid]->getEndTime(), _time, (*_hitobjects)[mid + 1]->getTime()))
+			return mid;
 
 		if (_time < (*_hitobjects)[mid]->getTime())
 			end = mid - 1;
