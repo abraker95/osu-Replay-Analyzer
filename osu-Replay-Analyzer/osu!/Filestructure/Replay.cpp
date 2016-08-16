@@ -18,8 +18,8 @@ Replay::~Replay()
 void Replay::ProcessReplay(std::string _filepath, Beatmap* _beatmap)
 {
 	// Can't have a replay without a beatmap
-	if (!_beatmap->isValid())
-		return;
+	if (_beatmap == nullptr)	return;
+	if (!_beatmap->isValid())	return;
 
 	std::ifstream replayFile(_filepath, std::ios::binary);
 	if (replayFile.is_open())
