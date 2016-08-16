@@ -117,4 +117,13 @@ std::vector<std::pair<irr::core::vector2d<double>, double>> OSUSTANDARD::getPatt
 
 		return Merge(points, newPoints);
 	}
+
+bool OSUSTANDARD::isHitobjectAt(std::vector<Hitobject*>& _hitobjects, double _prevTime, double _currTime)
+{
+	int i = FindHitobjectAt(&_hitobjects, _currTime);
+	if (BTWN(_prevTime, _hitobjects[i]->getTime(), _currTime)) return true;						// a normal note
+	if (BTWN(_hitobjects[i]->getTime(), _currTime, _hitobjects[i]->getEndTime())) return true;  // a hold note
+
+	return false;
+}
 }
