@@ -117,6 +117,7 @@ std::vector<std::pair<irr::core::vector2d<double>, double>> OSUSTANDARD::getPatt
 
 		return Merge(points, newPoints);
 	}
+}
 
 bool OSUSTANDARD::isHitobjectAt(std::vector<Hitobject*>& _hitobjects, double _prevTime, double _currTime)
 {
