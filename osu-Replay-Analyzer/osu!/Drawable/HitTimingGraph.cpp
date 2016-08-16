@@ -195,3 +195,14 @@ void HitTimingGraph::genDodgeBins()
 {
 
 }
+
+void HitTimingGraph::Clear()
+{
+	bins.clear();
+	binTable.clear();
+	textBins.clear();
+
+	std::vector<int>().swap(bins);
+	std::vector<double>().swap(binTable);
+	std::vector<core::stringw>().swap(textBins);
+}

@@ -25,6 +25,8 @@ class HitTimingGraph : public GuiObj
 		void genManiaBins();
 		void genDodgeBins();
 
+		void Clear();
+
 		std::vector<int> bins;
 		std::vector<core::stringw> textBins;
 		Play* play;
