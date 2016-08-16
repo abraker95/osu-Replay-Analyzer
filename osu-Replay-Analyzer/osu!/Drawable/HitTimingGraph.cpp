@@ -7,7 +7,7 @@
 #include "../Score/osu-mania/score.h"
 #include "../Score/osu-dodge/score.h"
 
-HitTimingGraph::HitTimingGraph(int _xpos, int _ypos, Play* _play) : GuiObj(_xpos, _ypos, 0, 0, nullptr)
+HitTimingGraph::HitTimingGraph(int _xpos, int _ypos, Play* _play) : GuiObj(_xpos, _ypos, 195, 200.0, nullptr)
 {
 	play = _play;
 
@@ -79,10 +79,10 @@ void HitTimingGraph::Draw(Window& _win)
 		if (bins[i] > max)
 			max = bins[i];
 	
-	int xScale = 37;
-	double yScale = 200.0 / max;
-	int seperation = xScale - 2;
-
+	int seperation = 2;
+	double xScale = ((double)width/(double)bins.size()) - ((double)seperation/(double)bins.size());
+	double yScale = (double)height / (double)max;
+	
 	_win.driver->draw2DLine(vector2di(absXpos, absYpos), vector2di(absXpos + xScale*bins.size(), absYpos), SColor(255, 255, 255, 255));
 
 	SColor color;
@@ -92,7 +92,7 @@ void HitTimingGraph::Draw(Window& _win)
 		text = textBins[i];
 		color = colorTable.getColor(i);
 
-		_win.driver->draw2DRectangle(color, rect<s32>(absXpos + xScale*i, absYpos - yScale*bins[i], absXpos + xScale*i + seperation, absYpos));
+		_win.driver->draw2DRectangle(color, rect<s32>(absXpos + xScale*i, absYpos - yScale*bins[i], absXpos + xScale*(i + 1) - seperation, absYpos));
 		_win.font->draw(text, core::rect<s32>(absXpos + xScale*i, absYpos, 100, 10), video::SColor(255, 255, 255, 255));
 		_win.font->draw(core::stringw(bins[i]), core::rect<s32>(absXpos + xScale*i, absYpos - yScale*bins[i] - 10, 100, 10), video::SColor(255, 255, 255, 255));
 	}
