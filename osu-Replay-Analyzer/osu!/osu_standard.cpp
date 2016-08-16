@@ -126,4 +126,29 @@ bool OSUSTANDARD::isHitobjectAt(std::vector<Hitobject*>& _hitobjects, double _pr
 
 	return false;
 }
+
+int OSUSTANDARD::getButtonState(int _prevKey, int _currKey)
+{
+	int state = 0;
+	for (int i = 0; i < 4; i++) // osu standard has 4 buttons
+	{
+		int prevKey = _prevKey & (1 << i);
+		int currKey = _currKey & (1 << i);
+
+		// trigger down
+		if ((prevKey == 0) && (currKey != 0))
+		{
+			if (state == 2)	state = 3; // press & release
+			else			state = 1; // pressed
+		}
+
+		// trigger up
+		if ((prevKey != 0) && (currKey == 0))
+		{
+			if (state == 1)	state = 3; // press & release
+			else			state = 2; // release
+		}
+	}
+
+	return state;
 }

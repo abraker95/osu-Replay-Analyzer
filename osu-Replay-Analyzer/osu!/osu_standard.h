@@ -14,6 +14,7 @@ namespace OSUSTANDARD
 	bool isHitobjectAt(std::vector<Hitobject*>& _hitobjects, double _prevTime, double _currTime);
 
 	std::vector<std::pair<irr::core::vector2d<double>, double>> getPattern(std::vector<Hitobject*>* _hitobjects, int _num, double _interval, double _time, bool _skipSliders = false);
+	int getButtonState(int _prevKey, int _currKey);
 }
 
 #endif
