@@ -122,7 +122,11 @@ void OsuStdRenderer::RenderReplay(Window& _win)
 	int cursorXpos = (double)frame.pos.X*widthRatio + this->absXpos;
 	int cursorYpos = (double)frame.pos.Y*heightRatio + this->absYpos;
 
-	DrawArc(_win, cursorXpos, cursorYpos, 5, SColor(255, 100, 100, 255));	
+	SColor color;
+	if (frame.key != 0) color = SColor(255, 200, 200, 255);
+	else				color = SColor(255, 100, 100, 255);
+
+	DrawArc(_win, cursorXpos, cursorYpos, 5, color);	
 }
 
 void OsuStdRenderer::RenderReplayPath(Window& _win)
