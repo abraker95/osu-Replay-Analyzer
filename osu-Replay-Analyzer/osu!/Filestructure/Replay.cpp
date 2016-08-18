@@ -60,6 +60,11 @@ osu::TIMING Replay::getFrame(int _frame) const
 		return osu::TIMING();
 }
 
+std::vector<osu::TIMING>& const Replay::getReplayStream()
+{
+	return replayStream;
+}
+
 int Replay::getNumFrames()
 {
 	return replayStream.size();

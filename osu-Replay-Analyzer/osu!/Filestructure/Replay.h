@@ -24,6 +24,7 @@ class Replay
 		
 		osu::TIMING getFrameAt(long _time);
 		osu::TIMING getFrame(int _frame) const;
+		std::vector<osu::TIMING>& const getReplayStream();
 		int getNumFrames();
 
 		Mods getMods();
