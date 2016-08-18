@@ -81,7 +81,7 @@ irr::core::vector2di SliderHitObject::intersect(irr::core::vector2di a, irr::cor
 	double des = tb.X * ta.Y - tb.Y * ta.X;
 	if (abs(des) < 0.00001)
 	{
-		std::cout << "Vectors are parallel." << std::endl;
+		std::cout << "Curcumscribed circle failed. Falling back to Bezier." << std::endl;
 		return irr::core::vector2di(-1, -1);
 	}
 	double u = ((b.Y - a.Y) * ta.X + (a.X - b.X) * ta.Y) / des;
