@@ -167,6 +167,17 @@ void Play::ApplyVisual()
 	{
 		// flip on the x axis
 		for (auto &hitobject : this->beatmap->modHitobjects)
+		{
+			// Flip hitobject's position
 			hitobject->setPos(irr::core::vector2d<double>(hitobject->getPos().X, 384 - hitobject->getPos().Y));
+			
+			// Flip slider points
+			if (hitobject->isHitobjectLong())
+			{
+				SliderHitObject* slider = hitobject->getSlider();
+				for (irr::core::vector2di& point : slider->curves)
+					point.Y = 384 - point.Y;
+			}
+		}
 	}
 }
