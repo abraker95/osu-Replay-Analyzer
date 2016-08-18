@@ -128,9 +128,10 @@ std::vector<osu::TIMING> OSUSTANDARD::getPattern(std::vector<Hitobject*>& _hitob
 	}
 }
 
-bool OSUSTANDARD::isHitobjectAt(std::vector<Hitobject*>& _hitobjects, double _prevTime, double _currTime)
+
+bool OSUSTANDARD::isHitobjectAt(std::vector<Hitobject*>& _hitobjects, long _prevTime, long _currTime)
 {
-	int i = FindHitobjectAt(&_hitobjects, _currTime);
+	int i = FindHitobjectAt(_hitobjects, _currTime);
 	if (BTWN(_prevTime, _hitobjects[i]->getTime(), _currTime)) return true;						// a normal note
 	if (BTWN(_hitobjects[i]->getTime(), _currTime, _hitobjects[i]->getEndTime())) return true;  // a hold note
 
