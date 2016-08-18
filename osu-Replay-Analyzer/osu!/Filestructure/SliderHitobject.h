@@ -25,7 +25,7 @@ class SliderHitObject : Hitobject
 		double getY(int i);
 		double getX(int i);
 
-		irr::core::vector2d<double> GetSliderPos(int _time);
+		irr::core::vector2d<double> GetSliderPos(double _time);
 		int getTimeDistFrom(int _time, int _dist, bool _dir);  // 0 - back, 1 - forward
 
 		double getLength();

@@ -85,7 +85,7 @@ SliderHitObject::~SliderHitObject()
 	std::vector<irr::core::vector2di>().swap(curves);
 }
 
-irr::core::vector2d<double> SliderHitObject::GetSliderPos(int time)
+irr::core::vector2d<double> SliderHitObject::GetSliderPos(double time)
 {
 	// convert time to percent
 	double percent = getPercent(this->time, time, this->endTime);
