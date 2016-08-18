@@ -25,8 +25,9 @@ void Beatmap::Read(std::string _beatmapfile)
 		ClearObjects();
 
 		bool success = this->ParseBeatmap(beatmapFile);
-		if (!success)
-			gamemode = GAMEMODE_ERROR;
+
+		if (gamemode == GAMEMODE_ERROR) gamemode = GAMEMODE::OSU_STANDARD; // old maps didn't specify gamemodes
+		if (!success)	gamemode = GAMEMODE_ERROR;						   // make sure everything went ok while parsing
 
 		beatmapFile.close();
 	}
