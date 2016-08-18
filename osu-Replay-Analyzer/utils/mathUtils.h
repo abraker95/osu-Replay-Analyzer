@@ -3,6 +3,7 @@
 
 #include <algorithm>
 #include <stdint.h>
+#include <vector>
 
 #define	M_PI	(3.14159265358979323846)
 
@@ -87,6 +88,15 @@ static uint64_t decodeULEB128(const uint8_t *p, unsigned *n = nullptr)
 	} while (*p++ >= 128);
 
 	return Value;
+}
+
+template <typename T>
+static std::vector<T> Merge(std::vector<T> first, std::vector<T> second)
+{
+	for (T x : second)
+		first.push_back(x);
+
+	return first;
 }
 
 
