@@ -162,4 +162,17 @@ int OSUSTANDARD::getButtonState(int _prevKey, int _currKey)
 	}
 
 	return state;
+
+/// \TODO: This prob belongs in the HitObject class
+// Useful for sliders. Returns the timing of a slider end to which a point in time is closer to
+long OSUSTANDARD::getCloserTime(Hitobject* _hitobject, long _time)
+{
+	long sliderEndTime = _hitobject->getEndTime();
+	long sliderSrtTime = _hitobject->getTime();
+	long sliderMidTime = (sliderEndTime + sliderSrtTime) / 2;
+
+	if (sliderMidTime < _time) _time = sliderEndTime;
+	else					   _time = sliderSrtTime;
+
+	return _time;
 }
