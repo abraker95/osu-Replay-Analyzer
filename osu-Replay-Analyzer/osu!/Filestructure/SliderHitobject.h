@@ -19,9 +19,6 @@ class SliderHitObject : Hitobject
 
 		void newSlider(bool isline, bool iscircle);
 
-		//double getEndAngle();
-		//double getStartAngle();
-
 		double getY(int i);
 		double getX(int i);
 
@@ -55,9 +52,6 @@ class SliderHitObject : Hitobject
 
 		// Points generated along the curve should be spaced this far apart.
 		const int CURVE_POINTS_SEPERATION = 5;
-
-		// The angles of the first and last control points for drawing.
-		//double startAngle, endAngle;
 
 		// The scaled starting x, y coordinates.
 		double x, y;
