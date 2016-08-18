@@ -55,6 +55,10 @@ void Play::LoadBeatmap(std::string _beatmapFile)
 /// \TODO: Perhaps split this off to another thread
 void Play::LoadReplay(std::string _replayFile)
 {
+	if (replay != nullptr)
+		delete replay;
+
+	replay = new Replay();
 	replay->ProcessReplay(_replayFile, beatmap);
 
 	// Make sure the replay is valid before continuing
