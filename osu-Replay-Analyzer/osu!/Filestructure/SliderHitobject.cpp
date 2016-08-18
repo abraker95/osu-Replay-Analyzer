@@ -238,13 +238,10 @@ void SliderHitObject::init(std::vector<Bezier> curvesList)
 	irr::core::vector2di lastCurve = curCurve.getCurvePoint()[0];
 	double lastDistanceAt = 0;
 
-	// length of Curve should equal pixel length (in 640x480)
-	double pixelLength = this->pixelLength;
-
 	// for each distance, try to get in between the two points that are between it
 	for (int i = 0; i < ncurve + 1; i++) 
 	{
-		int prefDistance = (int)(i * pixelLength / ncurve);
+		int prefDistance = (int)(i * this->pixelLength / ncurve);
 		while (distanceAt < prefDistance)
 		{
 			lastDistanceAt = distanceAt;

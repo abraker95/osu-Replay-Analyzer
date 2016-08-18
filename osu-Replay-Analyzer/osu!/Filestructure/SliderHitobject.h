@@ -29,9 +29,9 @@ class SliderHitObject : Hitobject
 		int getTimeDistFrom(int _time, int _dist, bool _dir);  // 0 - back, 1 - forward
 
 		double getLength();
+		double getVelocity();
 		int GetLastTickTime();
 		int getEndTime();
-		double getVelocity();
 
 		void RecordRepeatTimes();
 		void RecordTickIntervals(int _beatmapTickInterval);
