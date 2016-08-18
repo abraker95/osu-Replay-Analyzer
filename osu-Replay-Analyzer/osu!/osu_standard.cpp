@@ -1,9 +1,11 @@
 #include "osu_standard.h"
 
-int OSUSTANDARD::FindHitobjectAt(std::vector<Hitobject*>* _hitobjects, double _time)
+// dir = true -> look forward
+// dir = false -> look backward
+int OSUSTANDARD::FindHitobjectAt(std::vector<Hitobject*>& _hitobjects, long _time, bool _dir)
 {
 	int start = 0;
-	int end = _hitobjects->size() - 2;
+	int end = _hitobjects.size() - 2;
 	int mid;
 
 	while (start <= end)
@@ -11,21 +13,28 @@ int OSUSTANDARD::FindHitobjectAt(std::vector<Hitobject*>* _hitobjects, double _t
 		mid = (start + end) / 2;
 
 		// Between ends of a hold object
-		if (BTWN((*_hitobjects)[mid]->getTime(), _time, (*_hitobjects)[mid]->getEndTime()))
-			return mid;
+		if (BTWN(_hitobjects[mid]->getTime(), _time, _hitobjects[mid]->getEndTime()))
+		{
+			// Return next object if next object's timings overlap with this one
+			if (BTWN(_hitobjects[mid + 1]->getTime(), _time, _hitobjects[mid + 1]->getEndTime()))
+				return mid + 1;
+			else
+				return mid;
+		}
+			
 
 		// Between some two objects
-		if (BTWN((*_hitobjects)[mid]->getEndTime(), _time, (*_hitobjects)[mid + 1]->getTime()))
-			return mid;
+		if (BTWN(_hitobjects[mid]->getEndTime(), _time, _hitobjects[mid + 1]->getTime()))
+			return mid + (long)_dir;
 
-		if (_time < (*_hitobjects)[mid]->getTime())
+		if (_time < _hitobjects[mid]->getTime())
 			end = mid - 1;
 		else 
 			start = mid + 1;
 	}
 }
 
-std::vector<std::pair<irr::core::vector2d<double>, double>> OSUSTANDARD::getPattern(std::vector<Hitobject*>* _hitobjects, int _num, double _interval, double _time, bool _skipSliders)
+std::vector<osu::TIMING> OSUSTANDARD::getPattern(std::vector<Hitobject*>& _hitobjects, int _num, double _interval, long _time, bool _skipSliders, bool _newHitobject)
 {
 	// make sure we have something to get
 	if(_num <= 0)

@@ -81,7 +81,7 @@ void OsuStdRenderer::RenderPaths(Window& _win)
 {
 	std::vector<Hitobject*>& hitobjects = play->beatmap->getHitobjects();
 	
-	int i = std::min(OSUSTANDARD::FindHitobjectAt(&hitobjects, *viewTime) + 1, (int) hitobjects.size() - 2);
+	int i = std::min(OSUSTANDARD::FindHitobjectAt(hitobjects, *viewTime) + 1, (int) hitobjects.size() - 2);
 	if (i >= (int)hitobjects.size() - 1)
 		return;
 
