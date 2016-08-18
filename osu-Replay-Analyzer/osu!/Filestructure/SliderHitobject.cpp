@@ -279,29 +279,6 @@ void SliderHitObject::init(std::vector<Bezier> curvesList)
 		else
 			genCurve[i] = thisCurve;
 	}
-
-	//	if (hitObject.getRepeatCount() > 1) {
-	
-	// start angle
-	irr::core::vector2di c1 = genCurve[0];
-	int cnt = 1;
-	irr::core::vector2di c2 = genCurve[cnt++];
-
-	while (cnt <= ncurve && c2.getDistanceFrom(c1) < 1)
-		c2 = genCurve[cnt++];
-
-	startAngle = (double)(atan2(c2.Y - c1.Y, c2.X - c1.X) * 180 / M_PI);
-
-	// end angle
-	c1 = genCurve[ncurve];
-	cnt = ncurve - 1;
-	c2 = genCurve[cnt--];
-	
-	while (cnt >= 0 && c2.getDistanceFrom(c1) < 1)
-		c2 = genCurve[cnt--];
-	
-	endAngle = (double)(atan2(c2.Y - c1.Y, c2.X - c1.X) * 180 / M_PI);
-	//	}
 }
 
 void SliderHitObject::ProcessSliderData(std::vector<std::string> &_objectData, std::vector<std::string> &_sliderData)
@@ -341,10 +318,6 @@ void SliderHitObject::ProcessSliderData(std::vector<std::string> &_objectData, s
 	repeat = atoi(_objectData[6].c_str());
 	pixelLength = atof(_objectData[7].c_str());
 }
-
-double SliderHitObject::getEndAngle() { return endAngle; }
-double SliderHitObject::getStartAngle() { return startAngle; }
-
 
 double SliderHitObject::getX(int i) { return (i == 0) ? x : sliderX[i - 1]; }
 double SliderHitObject::getY(int i) { return (i == 0) ? y : sliderY[i - 1]; }
