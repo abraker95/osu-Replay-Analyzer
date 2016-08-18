@@ -36,6 +36,9 @@ void SliderHitObject::MakeCircle()
 	// find the angles that pass through midAng
 	if (!BTWN(startAng, midAng, endAng))
 	{
+		const double TWO_PI = (double)(M_PI * 2.),
+					 HALF_PI = (double)(M_PI / 2.);
+
 		if (abs(startAng + TWO_PI - endAng) < TWO_PI && BTWN(startAng + (TWO_PI), midAng, endAng))
 			startAng += TWO_PI;
 		else if (abs(startAng - (endAng + TWO_PI)) < TWO_PI && BTWN(startAng, midAng, endAng + (TWO_PI)))

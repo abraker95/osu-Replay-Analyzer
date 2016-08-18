@@ -67,9 +67,6 @@ class SliderHitObject : Hitobject
 		irr::core::vector2di intersect(irr::core::vector2di a, irr::core::vector2di ta, irr::core::vector2di b, irr::core::vector2di tb);
 		irr::core::vector2di pointAt(double t);
 
-		const double TWO_PI = (double)(M_PI * 2.),
-			HALF_PI = (double)(M_PI / 2.);
-
 		// The center of the Circumscribed Circle. 
 		irr::core::vector2di circleCenter;
 
