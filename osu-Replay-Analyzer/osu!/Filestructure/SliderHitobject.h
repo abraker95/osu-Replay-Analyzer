@@ -28,6 +28,8 @@ class SliderHitObject : Hitobject
 		irr::core::vector2d<double> GetSliderPos(double _time);
 		int getTimeDistFrom(int _time, int _dist, bool _dir);  // 0 - back, 1 - forward
 
+		std::vector<int> getTickTimes();
+
 		double getLength();
 		double getVelocity();
 		int GetLastTickTime();

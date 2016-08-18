@@ -194,6 +194,11 @@ double SliderHitObject::getVelocity()
 	return length / period;
 }
 
+std::vector<int> SliderHitObject::getTickTimes()
+{
+	return ticks;
+}
+
 void SliderHitObject::RecordRepeatTimes()
 {
 	// Make sure we have the correct data for recording
