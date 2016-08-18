@@ -165,8 +165,8 @@ void Play::ApplyVisual()
 
 	if (activeMods.getModifier().HR)
 	{
-		// flip on the diagonal x-y axis
+		// flip on the x axis
 		for (auto &hitobject : this->beatmap->modHitobjects)
-			hitobject->setPos(irr::core::vector2d<double>(hitobject->getPos().Y, hitobject->getPos().X));
+			hitobject->setPos(irr::core::vector2d<double>(hitobject->getPos().X, 384 - hitobject->getPos().Y));
 	}
 }

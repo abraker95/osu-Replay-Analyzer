@@ -266,8 +266,6 @@ void Replay::ApplyMods()
 
 	if (mod.getModifier().HR)
 	{
-		// Apply HR mod's flipping
-		for (auto &frame : replayStream)
-			std::swap(frame.pos.X, frame.pos.Y);
+
 	}
 }
