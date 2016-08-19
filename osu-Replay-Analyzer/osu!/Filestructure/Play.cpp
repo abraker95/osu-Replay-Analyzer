@@ -120,13 +120,18 @@ void Play::ApplyTimings()
 {
 	// Get the modded divisor (bpm speed factor)
 	double divisor = activeMods.getTM();
+	int adjustedOffset = 0;
+	
+	// v3 and v4 maps have their offsets adjusted +24 ms for some reason
+	if ((beatmap->metadata.format == 3) || (beatmap->metadata.format == 4))
+		adjustedOffset = 24;
 
 	// Mod timing points
 	for (auto &tp : this->beatmap->modTimingPoints)
 	{
 		if (tp.beatInterval > 0)
 			tp.beatInterval /= divisor;
-		tp.offset = ceil((double)tp.offset / divisor);
+		tp.offset = ceil((double)tp.offset / divisor) + (double)adjustedOffset;
 	}
 
 	// Mod hitobject timings
