@@ -61,6 +61,13 @@ void Play::LoadReplay(std::string _replayFile)
 	replay = new Replay();
 	replay->ProcessReplay(_replayFile, beatmap);
 
+	// v3 and v4 maps have their offsets adjusted +24 ms for some reason
+	if ((beatmap->metadata.format == 3) || (beatmap->metadata.format == 4))
+	{
+		for (osu::TIMING& timing : replay->replayStream)
+			timing.time += 24;
+	}
+
 	// Make sure the replay is valid before continuing
 	if (!replay->isValid())	return;
 
