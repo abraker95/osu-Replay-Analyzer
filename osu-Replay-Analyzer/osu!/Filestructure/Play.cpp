@@ -139,10 +139,14 @@ void Play::ApplyTimings()
 	// Mod hitobject timings
 	for (auto hitobject : this->beatmap->modHitobjects)
 	{
+		hitobject->time += adjustedOffset;
 		hitobject->time /= divisor;
 
 		if (hitobject->isHitobjectLong())
+		{
+			hitobject->getSlider()->endTime += adjustedOffset;
 			hitobject->getSlider()->endTime /= divisor;
+		}
 	}
 }
 
