@@ -9,80 +9,73 @@ SliderHitObject::SliderHitObject(std::vector<std::string> &_objectData, std::vec
 	PreprocessSliderData(_objectData, _sliderData);
 }
 
-void SliderHitObject::newSlider(bool isline, bool iscircle)
+void SliderHitObject::newSlider(SLIDERTYPE _sliderType)
 {
-	std::vector<Bezier> beziers;
+	switch (_sliderType)
+	{
+		case LINEAR:
+			this->MakeLinear();
+			break;
 
-	// Beziers: splits points into different Beziers if has the same points (red points)
-	// a b c - c d - d e f g
+		case BEZIER:
+			this->MakeBezier();
+			break;
+
+		case CIRCUMSCRIBED:
+			this->MakeCircle();
+			break;
+		
+		default:
+			break;
+	};
+}
+
+void SliderHitObject::MakeLinear()
+{
 	// Lines: generate a new curve for each sequential pair
 	// ab  bc  cd  de  ef  fg
-	int controlPoints = this->curves.size() + 1;
-	std::vector<irr::core::vector2di> points;  // temporary list of points to separate different Bezier curves
-	irr::core::vector2di lastPoi(-1, -1);
 
-	for (int i = 0; i < this->curves.size(); i++)
+	std::vector<Bezier> beziers;
+	for (int i = 0; i < this->readCurvePoints.size() + 1; i++)
+		beziers.push_back(Bezier({ getReadPoint(i), getReadPoint(i + 1) }));
+
+	init(beziers);
+}
+
+void SliderHitObject::MakeBezier()
+{
+	// Beziers: splits points into different Beziers if has the same points (red points)
+	// a b c - c d - d e f g
+
+	std::vector<Bezier> beziers;
+	std::vector<irr::core::vector2di> points;
+
+	for (int i = 0; i <= this->readCurvePoints.size() + 1; i++)
 	{
-		sliderX.push_back(this->curves[i].X);
-		sliderY.push_back(this->curves[i].Y);
-	}
+		// Don't record beyond what the list provides
+		if(i < this->readCurvePoints.size() + 1)
+			points.push_back(getReadPoint(i));
 
-	x = pos.X;
-	y = pos.Y;
-
-	for (int i = 0; i < controlPoints; i++)
-	{
-		irr::core::vector2di tpoi = irr::core::vector2di(getX(i), getY(i));
-		if (isline)
+		// If we reached a red point or the end of the point list, then segment the bezier
+		if (getReadPoint(i) == getReadPoint(i + 1) || (i > this->readCurvePoints.size()))
 		{
-			if (lastPoi != irr::core::vector2di(-1, -1))
-			{
-				points.push_back(tpoi);
-				beziers.push_back(Bezier(points));
-				points.clear();
-			}
-		}
-		else if ((lastPoi != irr::core::vector2di(-1, -1)) && (tpoi == lastPoi))
-		{
-			if (points.size() >= 2)
-				beziers.push_back(Bezier(points));
+			beziers.push_back(Bezier(points));
 			points.clear();
 		}
-		points.push_back(tpoi);
-		lastPoi = tpoi;
-	}
-
-	if (isline || points.size() < 2)
-	{
-		// trying to continue Bezier with less than 2 points
-		// probably ending on a red point, just ignore it
-	}
-	else
-	{
-		beziers.push_back(Bezier(points));
-		points.clear();
 	}
 
 	init(beziers);
-
-	// make this a circle if this is a circular slider
-	if (iscircle)
-		this->MakeCircle();
 }
 
 SliderHitObject::~SliderHitObject()
 { 
-	sliderX.clear();
-	sliderY.clear();
 	ticks.clear();
 	genCurve.clear();
-	curves.clear();
+	readCurvePoints.clear();
 
-	std::vector<double>().swap(sliderX);
-	std::vector<double>().swap(sliderY);
 	std::vector<int>().swap(ticks);
 	std::vector<irr::core::vector2di>().swap(genCurve);
-	std::vector<irr::core::vector2di>().swap(curves);
+	std::vector<irr::core::vector2di>().swap(readCurvePoints);
 }
 
 irr::core::vector2d<double> SliderHitObject::GetSliderPos(double time)
@@ -300,10 +293,10 @@ void SliderHitObject::PreprocessSliderData(std::vector<std::string> &_objectData
 		// curve points parsing
 		{
 			irr::core::vector2di curve;
-			curve.X = atoi(curveTokens[0].c_str());
-			curve.Y = atoi(curveTokens[1].c_str());
+				curve.X = atoi(curveTokens[0].c_str());
+				curve.Y = atoi(curveTokens[1].c_str());
 
-			curves.push_back(curve);
+			readCurvePoints.push_back(curve);
 		}
 	}
 
@@ -325,5 +318,10 @@ void SliderHitObject::PreprocessSliderData(std::vector<std::string> &_objectData
 	pixelLength = atof(_objectData[7].c_str());
 }
 
-double SliderHitObject::getX(int i) { return (i == 0) ? x : sliderX[i - 1]; }
-double SliderHitObject::getY(int i) { return (i == 0) ? y : sliderY[i - 1]; }
+irr::core::vector2di SliderHitObject::getReadPoint(int _i)
+{
+	if (_i > readCurvePoints.size()) return irr::core::vector2di(INT_MIN, INT_MIN);
+
+	// The first actual point is the slider's starting position, followed by all other read points
+	return (_i == 0) ? irr::core::vector2di(pos.X, pos.Y) : readCurvePoints[_i - 1];
+}

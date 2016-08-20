@@ -739,23 +739,24 @@ void Beatmap::PrepareSliderData()
 		switch (slider->curveType)
 		{
 			case 'B':
-				hitObject->getSlider()->newSlider(false, false);
+				hitObject->getSlider()->newSlider(SliderHitObject::BEZIER);
 				break;
 
 			case 'P':
-				if (hitObject->getSlider()->curves.size() == 2)
-					hitObject->getSlider()->newSlider(false, true);
+				if (hitObject->getSlider()->readCurvePoints.size() == 2)
+					hitObject->getSlider()->newSlider(SliderHitObject::CIRCUMSCRIBED);
 				else
-					hitObject->getSlider()->newSlider(false, false);
+					hitObject->getSlider()->newSlider(SliderHitObject::BEZIER);
 
 				break;
 
 			case 'L': case 'C':
-				hitObject->getSlider()->newSlider(true, false);
+				hitObject->getSlider()->newSlider(SliderHitObject::LINEAR);
 				break;
 		}
 
-		slider->endPoint = (slider->repeat % 2) ? slider->curves.back() : slider->curves.front();
+		// Get last point if repeat doesn't end with turn back, otherwise first point
+		slider->endPoint = (slider->repeat % 2) ? slider->readCurvePoints.back() : slider->readCurvePoints.front();
 	}
 }
 

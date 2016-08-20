@@ -184,7 +184,7 @@ void Play::ApplyVisual()
 			if (hitobject->isHitobjectLong())
 			{
 				SliderHitObject* slider = hitobject->getSlider();
-				for (irr::core::vector2di& point : slider->curves)
+				for (irr::core::vector2di& point : slider->readCurvePoints)
 					point.Y = 384 - point.Y;
 			}
 		}

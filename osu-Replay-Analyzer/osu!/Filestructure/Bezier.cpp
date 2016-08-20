@@ -32,7 +32,6 @@ void Bezier::init(double approxlength)
 		curvePoints.push_back(pointAt(i / (double)(ncurve - 1)));
 
 	// find the distance of each point from the previous point
-	//curveDis = new double[ncurve];
 	totalDistance = 0;
 	for (int i = 0; i < ncurve; i++) 
 	{

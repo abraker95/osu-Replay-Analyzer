@@ -3,16 +3,16 @@
 
 void SliderHitObject::MakeCircle()
 {
-	for (int i = 0; i < curves.size(); i++)
+	/*for (int i = 0; i < readCurvePoints.size(); i++)
 	{
-		this->sliderX.push_back(this->curves[i].X);
-		this->sliderY.push_back(this->curves[i].Y);
-	}
+		this->sliderX.push_back(this->readCurvePoints[i].X);
+		this->sliderY.push_back(this->readCurvePoints[i].Y);
+	}*/
 
 	// construct the three points
-	this->start = irr::core::vector2di(this->getX(0), this->getY(0));
-	this->mid = irr::core::vector2di(this->getX(1), this->getY(1));
-	this->end = irr::core::vector2di(this->getX(2), this->getY(2));
+	this->start = getReadPoint(0);
+	this->mid   = getReadPoint(1);
+	this->end   = getReadPoint(2);
 
 	// find the circle center
 	irr::core::vector2di mida = start.midPoint(mid);
@@ -21,17 +21,16 @@ void SliderHitObject::MakeCircle()
 	irr::core::vector2di norb = (mid - end).nor();
 
 	this->circleCenter = intersect(mida, nora, midb, norb);
-	if (circleCenter == irr::core::vector2di(-1, -1))
-		return;
+	if (circleCenter == irr::core::vector2di(-1, -1)) return;
 
 	// find the angles relative to the circle center
 	irr::core::vector2di startAngPoint = start - circleCenter;
-	irr::core::vector2di midAngPoint = mid - circleCenter;
-	irr::core::vector2di endAngPoint = end - circleCenter;
+	irr::core::vector2di midAngPoint   = mid - circleCenter;
+	irr::core::vector2di endAngPoint   = end - circleCenter;
 
 	this->startAng = atan2(startAngPoint.Y, startAngPoint.X);
-	this->midAng = atan2(midAngPoint.Y, midAngPoint.X);
-	this->endAng = atan2(endAngPoint.Y, endAngPoint.X);
+	this->midAng   = atan2(midAngPoint.Y, midAngPoint.X);
+	this->endAng   = atan2(endAngPoint.Y, endAngPoint.X);
 
 	// find the angles that pass through midAng
 	if (!BTWN(startAng, midAng, endAng))
@@ -49,7 +48,7 @@ void SliderHitObject::MakeCircle()
 			endAng -= TWO_PI;
 		else
 		{
-			std::cout << "Cannot find angles between midAng (%.3f %.3f %.3f)." << std::endl;
+			std::cout << "Cannot find angles between midAng" << std::endl;
 			return;
 		}
 	}
@@ -84,9 +83,11 @@ irr::core::vector2di SliderHitObject::intersect(irr::core::vector2di a, irr::cor
 		std::cout << "Curcumscribed circle failed. Falling back to Bezier." << std::endl;
 		return irr::core::vector2di(-1, -1);
 	}
+
 	double u = ((b.Y - a.Y) * ta.X + (a.X - b.X) * ta.Y) / des;
 	b.X += tb.X * u;
 	b.Y += tb.Y * u;
+	
 	return b;
 }
 
