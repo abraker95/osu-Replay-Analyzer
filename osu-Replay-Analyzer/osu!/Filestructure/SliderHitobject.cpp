@@ -242,6 +242,7 @@ void SliderHitObject::init(std::vector<Bezier> curvesList)
 	Bezier curCurve = curvesList[curveCounter++];
 	irr::core::vector2di lastCurve = curCurve.getCurvePoint()[0];
 	double lastDistanceAt = 0;
+	double itr = Triangle(curPoint*repeat, (2 * curCurve.getCurvesCount()) - 1);
 
 	// for each distance, try to get in between the two points that are between it
 	for (int i = 0; i < ncurve + 1; i++) 
@@ -250,8 +251,9 @@ void SliderHitObject::init(std::vector<Bezier> curvesList)
 		while (distanceAt < prefDistance)
 		{
 			lastDistanceAt = distanceAt;
-			lastCurve = curCurve.getCurvePoint()[curPoint];
+			lastCurve = curCurve.getCurvePoint()[itr];
 			curPoint++;
+			itr = Triangle(curPoint*repeat, (2 * curCurve.getCurvesCount()) - 1);
 
 			if (curPoint >= curCurve.getCurvesCount())
 			{
@@ -259,10 +261,12 @@ void SliderHitObject::init(std::vector<Bezier> curvesList)
 				{
 					curCurve = curvesList[curveCounter++];
 					curPoint = 0;
+					itr = Triangle(curPoint*repeat, (2 * curCurve.getCurvesCount()) - 1);
 				}
 				else 
 				{
 					curPoint = curCurve.getCurvesCount() - 1;
+					itr = Triangle(curPoint*repeat, (2 * curCurve.getCurvesCount()) - 1);
 					
 					// out of points even though the preferred distance hasn't been reached
 					if (lastDistanceAt == distanceAt) break;	
@@ -270,7 +274,7 @@ void SliderHitObject::init(std::vector<Bezier> curvesList)
 			}
 			distanceAt += curCurve.getCurveDistances()[curPoint];
 		}
-		irr::core::vector2di thisCurve = curCurve.getCurvePoint()[curPoint];
+		irr::core::vector2di thisCurve = curCurve.getCurvePoint()[itr];
 
 		// interpolate the point between the two closest distances
 		if (distanceAt - lastDistanceAt > 1) 
