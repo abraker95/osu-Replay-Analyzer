@@ -54,7 +54,7 @@ void Beatmap::Process()
 
 	/// \TODO: Is there a way to put these into the hitobject class?
 	PrepareSliderData();
-	GenerateSliderPoints();
+	GenerateSliderMetadata();
 }
 
 bool Beatmap::isValid()
@@ -759,7 +759,7 @@ void Beatmap::PrepareSliderData()
 	}
 }
 
-void Beatmap::GenerateSliderPoints()
+void Beatmap::GenerateSliderMetadata()
 {
 	for (auto& hitObject : this->modHitobjects)
 	{

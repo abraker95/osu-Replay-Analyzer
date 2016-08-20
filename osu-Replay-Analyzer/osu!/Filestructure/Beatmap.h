@@ -109,7 +109,7 @@ class Beatmap
 		int ReadHitobjects(std::string line);
 
 		void PrepareSliderData();
-		void GenerateSliderPoints();
+		void GenerateSliderMetadata();
 
 		void ClearObjects();
 };
