@@ -99,8 +99,8 @@ void OsuStdRenderer::RenderPaths(Window& _win)
 	for (int i = 0; i < points.size() - 1; i++)
 	{
 		vector2di p1, p2;
-			p1 = vector2di(points[i].first.X*widthRatio + this->absXpos, points[i].first.Y*heightRatio + this->absYpos);
-			p2 = vector2di(points[i + 1].first.X*widthRatio + this->absXpos, points[i + 1].first.Y*heightRatio + this->absYpos);
+			p1 = vector2di(points[i].pos.X*widthRatio + this->absXpos, points[i].pos.Y*heightRatio + this->absYpos);
+			p2 = vector2di(points[i + 1].pos.X*widthRatio + this->absXpos, points[i + 1].pos.Y*heightRatio + this->absYpos);
 		
 		_win.driver->draw2DLine(p1, p2, SColor(255, 255, 0, 0));
 	}
