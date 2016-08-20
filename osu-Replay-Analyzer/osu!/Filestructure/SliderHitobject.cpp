@@ -6,7 +6,7 @@ SliderHitObject::SliderHitObject(std::vector<std::string> &_objectData, std::vec
 	this->toRepeatTime = -1;
 	this->endTime = -1;
 
-	ProcessSliderData(_objectData, _sliderData);
+	PreprocessSliderData(_objectData, _sliderData);
 }
 
 void SliderHitObject::newSlider(bool isline, bool iscircle)
@@ -287,7 +287,7 @@ void SliderHitObject::init(std::vector<Bezier> curvesList)
 	}
 }
 
-void SliderHitObject::ProcessSliderData(std::vector<std::string> &_objectData, std::vector<std::string> &_sliderData)
+void SliderHitObject::PreprocessSliderData(std::vector<std::string> &_objectData, std::vector<std::string> &_sliderData)
 {
 	// curve parsing
 	curveType = (CurveType)_sliderData[0].c_str()[0];

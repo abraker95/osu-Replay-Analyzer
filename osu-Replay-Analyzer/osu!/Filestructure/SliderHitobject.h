@@ -61,7 +61,7 @@ class SliderHitObject : Hitobject
 
 	private:
 		void init(std::vector<Bezier> curvesList);
-		void ProcessSliderData(std::vector<std::string> &_objectData, std::vector<std::string> &_sliderData);
+		void PreprocessSliderData(std::vector<std::string> &_objectData, std::vector<std::string> &_sliderData);
 
 		void MakeCircle();
 		irr::core::vector2di intersect(irr::core::vector2di a, irr::core::vector2di ta, irr::core::vector2di b, irr::core::vector2di tb);
