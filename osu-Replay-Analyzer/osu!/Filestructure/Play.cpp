@@ -113,14 +113,9 @@ Mods* Play::getMod()
 
 void Play::ApplyMods()
 {
+	beatmap->ResetModified();
 	this->ApplyVisual();
-
-	// Check if timing mod has changed
-	if (prevMods.getTM() != activeMods.getTM())
-	{
-		beatmap->ResetModified();
-		this->ApplyTimings();
-	}
+	this->ApplyTimings();
 }
 
 void Play::ApplyTimings()
