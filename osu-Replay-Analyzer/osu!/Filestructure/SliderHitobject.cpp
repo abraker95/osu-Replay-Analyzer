@@ -9,7 +9,7 @@ SliderHitObject::SliderHitObject(std::vector<std::string> &_objectData, std::vec
 	PreprocessSliderData(_objectData, _sliderData);
 }
 
-void SliderHitObject::newSlider(SLIDERTYPE _sliderType)
+void SliderHitObject::GenerateSlider(SLIDERTYPE _sliderType)
 {
 	switch (_sliderType)
 	{

@@ -739,19 +739,19 @@ void Beatmap::PrepareSliderData()
 		switch (slider->curveType)
 		{
 			case 'B':
-				hitObject->getSlider()->newSlider(SliderHitObject::BEZIER);
+				hitObject->getSlider()->GenerateSlider(SliderHitObject::BEZIER);
 				break;
 
 			case 'P':
 				if (hitObject->getSlider()->readCurvePoints.size() == 2)
-					hitObject->getSlider()->newSlider(SliderHitObject::CIRCUMSCRIBED);
+					hitObject->getSlider()->GenerateSlider(SliderHitObject::CIRCUMSCRIBED);
 				else
-					hitObject->getSlider()->newSlider(SliderHitObject::BEZIER);
+					hitObject->getSlider()->GenerateSlider(SliderHitObject::BEZIER);
 
 				break;
 
 			case 'L': case 'C':
-				hitObject->getSlider()->newSlider(SliderHitObject::LINEAR);
+				hitObject->getSlider()->GenerateSlider(SliderHitObject::LINEAR);
 				break;
 		}
 
