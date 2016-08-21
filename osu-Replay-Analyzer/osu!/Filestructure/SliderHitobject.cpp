@@ -82,6 +82,9 @@ SliderHitObject::~SliderHitObject()
 
 irr::core::vector2d<double> SliderHitObject::GetSliderPos(double time)
 {
+	// Just give the object's starting position if this is the case.
+	if (genCurve.size() == 0)	return pos;
+
 	// convert time to percent
 	double percent = getPercent(this->time, time, this->endTime);
 
