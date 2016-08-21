@@ -27,31 +27,37 @@ Hitcircle::~Hitcircle()
 void Hitcircle::Draw(Window &_win)
 {
 	/// \TODO: Known problem: pixel perfect overlaps causes circles to "blink"
-	/// \TODO: Slider follow point doubles due to the condition being satisfied for 2 iterations
 
 	double opacity = hitobject->getOpacityAt(*(this->viewTime), mods->getAR(), mods->getModifier().HD);
 	SColor fade = SColor(255, edgeCol.getRed() * opacity, edgeCol.getGreen() * opacity, edgeCol.getBlue() * opacity);
 	
 	vector2df radius(this->width / 2.0, this->height / 2.0);
-
 	DrawArc(_win, this->absXpos, this->absYpos, std::min(radius.X, radius.Y), fade);
 
 	// draw slider
 	if (hitobject->IsHitObjectType(SLIDER))
 	{
-		// draw slider
 		double velocity = hitobject->getSlider()->getVelocity();
+		double itrStep = 1.0 / velocity;
+	
+		long startTime = hitobject->getTime(),
+			 endTime = hitobject->getSlider()->getEndTime();
+		 
 		if (velocity != 0.0)
 		{
-			for (double t = hitobject->getTime(); t < hitobject->getSlider()->getEndTime(); t += (1.0 / velocity))
+			for (double t = startTime; t < endTime - itrStep; t += itrStep)
 			{
-				vector2d<double> sliderPoint = hitobject->getSlider()->GetSliderPos(t);
-				_win.driver->drawPixel(sliderPoint.X*getWidthRatio() + parent->getPos().X, sliderPoint.Y*getHeightRatio() + parent->getPos().Y, fade);
+				vector2d<double> currSliderPoint = hitobject->getSlider()->GetSliderPos(t);
+				vector2d<double> nextSliderPoint = hitobject->getSlider()->GetSliderPos(MIN(t + itrStep, endTime - itrStep));
 
-				if (BTWN(t - (1.0 / velocity), *(this->viewTime), t + (1.0 / velocity)))
-				{
-					DrawArc(_win, sliderPoint.X*getWidthRatio() + parent->getPos().X, sliderPoint.Y*getHeightRatio() + parent->getPos().Y, 5, fade);  // draw slider point
-				}
+				_win.driver->draw2DLine(vector2di(currSliderPoint.X*getWidthRatio() + parent->getPos().X, currSliderPoint.Y*getHeightRatio() + parent->getPos().Y),
+										vector2di(nextSliderPoint.X*getWidthRatio() + parent->getPos().X, nextSliderPoint.Y*getHeightRatio() + parent->getPos().Y),
+										fade);
+
+				//_win.driver->drawPixel(sliderPoint.X*getWidthRatio() + parent->getPos().X, sliderPoint.Y*getHeightRatio() + parent->getPos().Y, fade);
+
+				if (BTWN(t, *(this->viewTime), t + itrStep))
+					DrawArc(_win, currSliderPoint.X*getWidthRatio() + parent->getPos().X, currSliderPoint.Y*getHeightRatio() + parent->getPos().Y, 5, fade);  // draw slider point
 			}
 		}
 	}
