@@ -11,6 +11,8 @@ SliderHitObject::SliderHitObject(std::vector<std::string> &_objectData, std::vec
 
 void SliderHitObject::GenerateSlider(SLIDERTYPE _sliderType)
 {
+	genCurve.clear();
+
 	switch (_sliderType)
 	{
 		case LINEAR:
