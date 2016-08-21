@@ -52,9 +52,11 @@ static inline double PARITY(double val)
 	return ((ABS(val) / val - 1) / 2);
 }
 
-static inline double lerp(double a, double b, double t)
+// Linear interpolation
+// Percent: 0.0 -> 1.0
+static inline double lerp(double _low, double _hi, double _percent)
 {
-	return a * (1 - t) + b * t;
+	return _low * (1 - _percent) + _hi * _percent;
 }
 
 static long binomialCoefficient(int n, int k)
