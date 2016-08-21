@@ -38,7 +38,7 @@ void SliderHitObject::MakeLinear()
 	// ab  bc  cd  de  ef  fg
 
 	std::vector<Bezier> beziers;
-	for (int i = 0; i < this->readCurvePoints.size() + 1; i++)
+	for (int i = 0; i < this->readCurvePoints.size(); i++)
 		beziers.push_back(Bezier({ getReadPoint(i), getReadPoint(i + 1) }));
 
 	init(beziers);
