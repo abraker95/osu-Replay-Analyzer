@@ -101,5 +101,13 @@ static std::vector<T> Merge(std::vector<T> first, std::vector<T> second)
 	return first;
 }
 
+// Guassian function
+static double Guassian(double _val, double _sigma, bool _norm = true)
+{
+	double guass = 1.0 / (2.0 * _sigma*sqrt(M_PI))*exp(-((_val / (2.0*_sigma))*(_val / (2.0*_sigma))));
+
+	if(_norm)	return guass / Guassian(0, _sigma, false);
+	else		return guass;
+}
 
 #endif
