@@ -84,22 +84,26 @@ irr::core::vector2d<double> SliderHitObject::GetSliderPos(double time)
 {
 	// convert time to percent
 	double percent = getPercent(this->time, time, this->endTime);
-		
-	// get the points
-	double indexF = percent * ncurve;
-	int index = (int)indexF;
-	
-	if (index >= this->ncurve)
+
+	// convert percent to index
+	double indexPercent = percent*genCurve.size();
+	double indexPos = Triangle(indexPercent*repeat, (2 * genCurve.size()) - 1);
+
+	if (indexPos + 1 >= genCurve.size()) // last point
 	{
-		irr::core::vector2di poi = this->genCurve[this->ncurve];
+		irr::core::vector2di poi = this->genCurve[genCurve.size() - 1];
 		return irr::core::vector2d<double>(poi.X, poi.Y);
 	}
-	else
+	else // every other point
 	{
-		irr::core::vector2di poi = this->genCurve[index];
-		irr::core::vector2di poi2 = this->genCurve[index + 1];
-		double t2 = indexF - index;
-		return irr::core::vector2d<double>(lerp(poi.X, poi2.X, t2), lerp(poi.Y, poi2.Y, t2));
+		irr::core::vector2di poi = this->genCurve[indexPos];
+		irr::core::vector2di poi2 = this->genCurve[indexPos + 1];
+		
+		int indexPosRound = indexPos;
+		double percentPoint = indexPos - indexPosRound;  // percent between this point and next
+
+		irr::core::vector2d<double> p = irr::core::vector2d<double>(lerp(poi.X, poi2.X, percentPoint), lerp(poi.Y, poi2.Y, percentPoint));
+		return p;
 	}
 }
 
