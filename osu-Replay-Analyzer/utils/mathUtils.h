@@ -110,4 +110,10 @@ static double Guassian(double _val, double _sigma, bool _norm = true)
 	else		return guass;
 }
 
+// Returns a triangle wave function
+static double Triangle(double _val, double _amp)
+{
+	return abs((fmod(_val + (_amp / 2.0), _amp)) - (_amp / 2.0));
+}
+
 #endif
