@@ -225,60 +225,12 @@ void SliderHitObject::RecordTickIntervals(int _beatmapTickInterval)
 
 // ----------------- [PRIVATE] ------------------
 
-void SliderHitObject::init(std::vector<Bezier> curvesList)
+void SliderHitObject::init(std::vector<Bezier> _curvesList)
 {
-	// now try to creates points the are equidistant to each other
-	ncurve = (int)(this->pixelLength / CURVE_POINTS_SEPERATION);
-	genCurve.resize(ncurve + 1);
-
-	double distanceAt = 0;
-	int curveCounter = 0;
-	int curPoint = 0;
-	Bezier curCurve = curvesList[curveCounter++];
-	irr::core::vector2di lastCurve = curCurve.getCurvePoint()[0];
-	double lastDistanceAt = 0;
-	double itr = Triangle(curPoint*repeat, (2 * curCurve.getCurvesCount()) - 1);
-
-	// for each distance, try to get in between the two points that are between it
-	for (int i = 0; i < ncurve + 1; i++) 
+	for (Bezier& curve : _curvesList)
 	{
-		int prefDistance = (int)(i * this->pixelLength / ncurve);
-		while (distanceAt < prefDistance)
-		{
-			lastDistanceAt = distanceAt;
-			lastCurve = curCurve.getCurvePoint()[itr];
-			curPoint++;
-			itr = Triangle(curPoint*repeat, (2 * curCurve.getCurvesCount()) - 1);
-
-			if (curPoint >= curCurve.getCurvesCount())
-			{
-				if (curveCounter < curvesList.size())
-				{
-					curCurve = curvesList[curveCounter++];
-					curPoint = 0;
-					itr = Triangle(curPoint*repeat, (2 * curCurve.getCurvesCount()) - 1);
-				}
-				else 
-				{
-					curPoint = curCurve.getCurvesCount() - 1;
-					itr = Triangle(curPoint*repeat, (2 * curCurve.getCurvesCount()) - 1);
-					
-					// out of points even though the preferred distance hasn't been reached
-					if (lastDistanceAt == distanceAt) break;	
-				}
-			}
-			distanceAt += curCurve.getCurveDistances()[curPoint];
-		}
-		irr::core::vector2di thisCurve = curCurve.getCurvePoint()[itr];
-
-		// interpolate the point between the two closest distances
-		if (distanceAt - lastDistanceAt > 1) 
-		{
-			double t = (prefDistance - lastDistanceAt) / (distanceAt - lastDistanceAt);
-			genCurve[i] = irr::core::vector2di(lerp(lastCurve.X, thisCurve.X, t), lerp(lastCurve.Y, thisCurve.Y, t));
-		}
-		else
-			genCurve[i] = thisCurve;
+		for (irr::core::vector2di point : curve.getCurvePoint())
+			genCurve.push_back(point);
 	}
 }
 
