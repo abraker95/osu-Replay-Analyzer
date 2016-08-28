@@ -32,17 +32,17 @@ void Beatmap::Read(std::string _beatmapfile)
 
 		beatmapFile.close();
 
+		// for old maps which had AR as part as OD
+		if (this->mods.getAR() == -1)
+			this->mods.setAR(mods.getOD());
+		this->mods.setTM(1.0);
+
 		metadata.BeatmapMD5 = md5wrapper().getHashFromFile(_beatmapfile);
 	}
 	else
 	{
 		gamemode = GAMEMODE_ERROR;
 	}
-
-	// for old maps which had AR as part as OD
-	if (this->mods.getAR() == -1)
-		this->mods.setAR(mods.getOD());
-	this->mods.setTM(1.0);
 
 	//SortEndTimes(0, hitObjectsTimeEnd.size());
 	//modifiedDiff = origDiff;
