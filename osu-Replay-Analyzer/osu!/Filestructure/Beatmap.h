@@ -29,6 +29,7 @@ class Beatmap
 			std::string version; // difficulty name
 			std::string creator;
 			std::string name;	 // Artist - Title (Creator) [Difficulty]
+			std::string BeatmapMD5; // generated
 		};
 
 		Beatmap();
@@ -39,6 +40,7 @@ class Beatmap
 		bool isValid();
 		
 		std::string getName();
+		std::string getMD5();
 		GAMEMODE getGamemode();
 		std::vector<Hitobject*>& getHitobjects();
 

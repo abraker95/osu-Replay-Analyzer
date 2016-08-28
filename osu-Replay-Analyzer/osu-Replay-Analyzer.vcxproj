@@ -47,6 +47,7 @@
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <ObjectFileName>$(IntDir)\%(RelativeDir)\%(Filename).obj</ObjectFileName>
+      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -155,6 +156,8 @@
     <ClCompile Include="ui\Window.cpp" />
     <ClCompile Include="utils\Geometry.cpp" />
     <ClCompile Include="utils\Lambert.cpp" />
+    <ClCompile Include="utils\MD5\hl_md5.cpp" />
+    <ClCompile Include="utils\MD5\hl_md5wrapper.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="osu!\Drawable\GamemodeRenderer.h" />
@@ -253,6 +256,11 @@
     <ClInclude Include="utils\Lambert.h" />
     <ClInclude Include="utils\LambertW.h" />
     <ClInclude Include="utils\mathUtils.h" />
+    <ClInclude Include="utils\MD5\hl_exception.h" />
+    <ClInclude Include="utils\MD5\hl_hashwrapper.h" />
+    <ClInclude Include="utils\MD5\hl_md5.h" />
+    <ClInclude Include="utils\MD5\hl_md5wrapper.h" />
+    <ClInclude Include="utils\MD5\hl_types.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

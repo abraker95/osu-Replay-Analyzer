@@ -8,6 +8,7 @@
 #include "SliderHitObject.h"
 
 #include "filereader.h"
+#include "../../utils/MD5/hl_md5wrapper.h"
 
 Beatmap::Beatmap() { gamemode = GAMEMODE_ERROR; }
 
@@ -30,6 +31,8 @@ void Beatmap::Read(std::string _beatmapfile)
 		if (!success)	gamemode = GAMEMODE_ERROR;						   // make sure everything went ok while parsing
 
 		beatmapFile.close();
+
+		metadata.BeatmapMD5 = md5wrapper().getHashFromFile(_beatmapfile);
 	}
 	else
 	{
@@ -80,6 +83,11 @@ void Beatmap::setDiff(Diff _diff)
 Mods Beatmap::getMods()
 {
 	return mods;
+}
+
+std::string Beatmap::getMD5()
+{
+	return metadata.BeatmapMD5;
 }
 
 void Beatmap::ClearModified()
