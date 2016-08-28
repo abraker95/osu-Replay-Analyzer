@@ -149,6 +149,19 @@ std::pair<int, int> Hitobject::getVisiblityTimes(double _AR, bool _hidden, doubl
 	}
 }
 
+// Useful for sliders. Returns the timing of a slider end to which a point in time is closer to
+long Hitobject::getCloserTime(long _time)
+{
+	long sliderEndTime = this->getEndTime();
+	long sliderSrtTime = this->getTime();
+	long sliderMidTime = (sliderEndTime + sliderSrtTime) / 2;
+
+	if (sliderMidTime < _time) _time = sliderEndTime;
+	else					   _time = sliderSrtTime;
+
+	return _time;
+}
+
 bool Hitobject::isVisibleAt(int _time, double _AR, bool _hidden)
 {
 	double opacity = this->getOpacityAt(_time, _AR, _hidden);
