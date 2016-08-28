@@ -2,6 +2,34 @@
 #include <string>
 
 using namespace OSUMANIA;
+
+std::vector<std::vector<int>> hitobjectAtlas;
+std::string md5;
+
+void GenHitobjectAtlas(Play* _play)
+{
+	// Clear the vector
+	for (std::vector<int>& indices : hitobjectAtlas)
+	{
+		indices.clear();
+		std::vector<int>().swap(indices);
+	}
+	
+	hitobjectAtlas.clear();
+	std::vector<std::vector<int>>().swap(hitobjectAtlas);
+
+	// Reserve space in vector
+	std::vector<Hitobject*> hitobjects = _play->beatmap->getHitobjects();
+	hitobjectAtlas.resize(_play->beatmap->getMods().getCS());
+
+	// Fill in vector with list of hitobject idices correspending the column the hitobject is at
+	for (int i = 0; i < hitobjects.size(); i++)
+		hitobjectAtlas[getKey(hitobjects[i]->getPos().X, _play->beatmap->getMods().getCS())].push_back(i);
+
+	// record beatmap's signature for later checking
+	md5 = _play->beatmap->getMD5();
+}
+
 // Returns the key column based on the xpos of the note and the number of keys there are
 int OSUMANIA::getKey(int _xpos, int _keys)
 {
