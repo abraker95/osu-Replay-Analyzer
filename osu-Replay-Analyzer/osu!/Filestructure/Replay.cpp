@@ -8,8 +8,19 @@
 #include <fstream>
 #include <assert.h>
 
-Replay::Replay(std::string _filepath)
+Replay::Replay(){}
+
+Replay::~Replay()
 {
+	ClearReplay();
+}
+
+void Replay::ProcessReplay(std::string _filepath, Beatmap* _beatmap)
+{
+	// Can't have a replay without a beatmap
+	if (_beatmap == nullptr)	return;
+	if (!_beatmap->isValid())	return;
+
 	std::ifstream replayFile(_filepath, std::ios::binary);
 	if (replayFile.is_open())
 	{
@@ -18,26 +29,40 @@ Replay::Replay(std::string _filepath)
 		replayFile.close();
 	}
 
-	// \TODO: Make sure the stream data is ordered time-wise
+	// make sure the replay is of the same gamemode as the map
+	if (!isGamemode(_beatmap->getGamemode()))
+	{
+		ClearReplay();
+		return;
+	}
+
+	mod = _beatmap->getMods();
 	this->ValidateMods();
+	this->ApplyMods();
+
+	/// \TODO: Make sure the stream data is ordered time-wise
 }
 
-std::tuple<irr::core::vector2df, int> Replay::getDataAt(long _time)
+osu::TIMING Replay::getFrameAt(long _time)
 {
-	int frame = FindFrameAt(_time);
+	if(replayStream.size() == 0)	return osu::TIMING();  // make sure there is a replay to search
+	int frame = osu::FindTimingAt(replayStream, _time);
 
-	if(_time != -1 && frame != -1)
-		return std::tuple<irr::core::vector2df, int>(std::get<DATA::MOUSE>(replayStream[frame]), std::get<DATA::KEYBRD>(replayStream[frame]));
-	else 
-		return std::tuple<irr::core::vector2df, int>(irr::core::vector2df(-1, -1), 0);
+	if(_time == -1 || frame == -1)	return osu::TIMING();  // make sure we found something to return
+	return replayStream[frame];
 }
 
-std::tuple<long, irr::core::vector2df, int> Replay::getFrame(int _frame) const
+osu::TIMING Replay::getFrame(int _frame) const
 {
 	if(_frame < replayStream.size())
 		return replayStream[_frame];
 	else
-		return std::tuple<long, irr::core::vector2df, int>(-1, irr::core::vector2df(-1, -1), -1);
+		return osu::TIMING();
+}
+
+std::vector<osu::TIMING>& const Replay::getReplayStream()
+{
+	return replayStream;
 }
 
 int Replay::getNumFrames()
@@ -45,11 +70,15 @@ int Replay::getNumFrames()
 	return replayStream.size();
 }
 
-bool Replay::HasMod(MODS _mod)
+Mods Replay::getMods()
 {
-	return (mods & _mod);
+	return mod;
 }
 
+bool Replay::isValid()
+{
+	return (replayStream.size() != 0);
+}
 
 bool Replay::isBeatmap(std::string* _MD5)
 {
@@ -63,23 +92,10 @@ bool Replay::isGamemode(GAMEMODE _gamemode)
 
 // ------- [PRIVATE] --------
 
-int Replay::FindFrameAt(long _time)
+void Replay::ClearReplay()
 {
-	int start = 1;
-	int end = this->replayStream.size() - 2;
-	int mid;
-
-	while (start <= end)
-	{
-		mid = (start + end) / 2;
-		if (BTWN(std::get<DATA::TIME>(replayStream[mid]), _time, std::get<DATA::TIME>(replayStream[mid - 1])))
-			return mid;
-		else if (_time < std::get<DATA::TIME>(replayStream[mid]))
-			end = mid - 1;
-		else start = mid + 1;
-	}
-
-	return -1;
+	replayStream.clear();
+	std::vector<osu::TIMING>().swap(replayStream);
 }
 
 std::string Replay::ReadOsuStr(std::ifstream &_replayFile)
@@ -193,8 +209,9 @@ return modStr;
 void Replay::ParseReplayData(unsigned char* _data, size_t _length, char _gamemode)
 {
 	std::string Replaydata = std::string((const char*)_data);
-	std::tuple<long, irr::core::vector2df, int> dataPointStruct;
+	osu::TIMING frame;
 	int time = 0;
+	int prevKey = 0;
 
 	std::vector<std::string> dataPoints;
 	FileReader::tokenize(Replaydata, dataPoints, ",");
@@ -208,26 +225,52 @@ void Replay::ParseReplayData(unsigned char* _data, size_t _length, char _gamemod
 		{
 			time += atoi(data[0].data());
 
-			std::get<DATA::TIME>(dataPointStruct) = time;
-			std::get<DATA::MOUSE>(dataPointStruct).X = atoi(data[1].data());
-			std::get<DATA::MOUSE>(dataPointStruct).Y = atoi(data[2].data());
-			std::get<DATA::KEYBRD>(dataPointStruct) = atoi(data[3].data());
+			frame.time = time;						// record time
+			frame.pos.X = atoi(data[1].data());		// x pos of cursor
+			frame.pos.Y = atoi(data[2].data());		// y pos of cursor
+			frame.key = atoi(data[3].data());		// which key is being pressed
+			frame.press = (frame.key != prevKey);	// key event flag
 
-			if (gameMode == GAMEMODE::OSU_STANDARD)
-			{
-				//std::get<DATA::MOUSE>(dataPointStruct).X = (double)std::get<DATA::MOUSE>(dataPointStruct).X;
-				//std::get<DATA::MOUSE>(dataPointStruct).Y = (double)std::get<DATA::MOUSE>(dataPointStruct).Y;
-			}
+			if (frame.key != -12345) // Record if it's not this...
+				replayStream.push_back(frame);
 
-			if (std::get<DATA::TIME>(dataPointStruct) != -12345) // Record if it's not this...
-				replayStream.push_back(dataPointStruct);
+			prevKey = frame.key;
 		}
 	}
 }
 
 void Replay::ValidateMods()
 {
+	// If one of these asserts triggers, then someone has been hacking the replay
 	assert(((this->mods & EZ) != true) && ((this->mods & HR) != true));
 	assert(((this->mods & DT) != true) && ((this->mods & HT) != true));
 	assert(((this->mods & HD) != true) && ((this->mods & FL) != true));
+
+	mod.setTM(1.0);
+
+	// Set mod flags
+	if (mods & EZ) mod.setModifier(Mods::MODS::EZ);
+	if (mods & HR) mod.setModifier(Mods::MODS::HR);
+	if (mods & HT) mod.setModifier(Mods::MODS::HT);
+	if (mods & DT) mod.setModifier(Mods::MODS::DT);
+	if (mods & FL) mod.setModifier(Mods::MODS::FL);
+	if (mods & HD) mod.setModifier(Mods::MODS::HD);
+	if (mods & FI) mod.setModifier(Mods::MODS::FI);
+}
+
+void Replay::ApplyMods()
+{
+	// Get speed divisor
+	double divisor = mod.getTM();
+	if (divisor != 1.0)
+	{
+		// Adjust frame timings due to DT or HT mod
+		for (auto &frame : replayStream)
+			frame.time /= divisor;
+	}
+
+	if (mod.getModifier().HR)
+	{
+
+	}
 }

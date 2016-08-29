@@ -11,7 +11,7 @@ class TimingGraph;
 class TimingObject : public GuiObj
 {
 	public:
-		TimingObject(int _xpos, int ypos, int _width, int _height, Hitobject* _hitobject, Beatmap::Modifier* _modifier, Beatmap::Diff* _diff, TimingGraph* _timingGraph);
+		TimingObject(int _xpos, int ypos, int _width, int _height, Hitobject* _hitobject, Mods* _mods, TimingGraph* _timingGraph);
 
 	private:
 		virtual void UpdateInternal(Window& _win);
@@ -31,8 +31,7 @@ class TimingObject : public GuiObj
 		SColor color;
 
 		TimingGraph* timingGraph;
-		Beatmap::Diff* diff;
-		Beatmap::Modifier* modifier;
+		Mods* mods;
 		Hitobject* hitobject;
 
 		int origXpos, origWidth;

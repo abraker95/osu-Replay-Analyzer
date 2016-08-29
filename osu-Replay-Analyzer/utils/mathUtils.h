@@ -3,6 +3,7 @@
 
 #include <algorithm>
 #include <stdint.h>
+#include <vector>
 
 #define	M_PI	(3.14159265358979323846)
 
@@ -51,9 +52,11 @@ static inline double PARITY(double val)
 	return ((ABS(val) / val - 1) / 2);
 }
 
-static inline double lerp(double a, double b, double t)
+// Linear interpolation
+// Percent: 0.0 -> 1.0
+static inline double lerp(double _low, double _hi, double _percent)
 {
-	return a * (1 - t) + b * t;
+	return _low * (1 - _percent) + _hi * _percent;
 }
 
 static long binomialCoefficient(int n, int k)
@@ -89,5 +92,28 @@ static uint64_t decodeULEB128(const uint8_t *p, unsigned *n = nullptr)
 	return Value;
 }
 
+template <typename T>
+static std::vector<T> Merge(std::vector<T> first, std::vector<T> second)
+{
+	for (T x : second)
+		first.push_back(x);
+
+	return first;
+}
+
+// Guassian function
+static double Guassian(double _val, double _sigma, bool _norm = true)
+{
+	double guass = 1.0 / (2.0 * _sigma*sqrt(M_PI))*exp(-((_val / (2.0*_sigma))*(_val / (2.0*_sigma))));
+
+	if(_norm)	return guass / Guassian(0, _sigma, false);
+	else		return guass;
+}
+
+// Returns a triangle wave function
+static double Triangle(double _val, double _amp)
+{
+	return abs((fmod(_val + (_amp / 2.0), _amp)) - (_amp / 2.0));
+}
 
 #endif

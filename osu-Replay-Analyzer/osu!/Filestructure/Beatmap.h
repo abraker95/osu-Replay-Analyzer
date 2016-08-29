@@ -7,6 +7,7 @@
 #include "../osuEnums.h"
 #include "TimingPoint.h"
 #include "Hitobject.h"
+#include "Mods.h"
 
 class Beatmap
 {
@@ -15,19 +16,9 @@ class Beatmap
 	public:
 		struct Diff
 		{
-			double ar = -1;
-			double cs = -1;
-			double od = -1;
 			double hp = -1;
 			double sm = -1;     // slider multiplier
 			double st = -1;     // slider tick rate
-		};
-
-		struct Modifier
-		{
-			bool hidden = false;
-			bool fadeIn = false;
-			bool flashlight = false;
 		};
 
 		struct Metadata
@@ -38,26 +29,29 @@ class Beatmap
 			std::string version; // difficulty name
 			std::string creator;
 			std::string name;	 // Artist - Title (Creator) [Difficulty]
+			std::string BeatmapMD5; // generated
 		};
 
-		Beatmap(std::string file);
+		Beatmap();
 		virtual ~Beatmap();
 
+		void Read(std::string _beatmapfile);
 		void Process();
-
-		std::vector<Hitobject*> hitObjects;
-		std::string getName();
+		bool isValid();
 		
+		std::string getName();
+		std::string getMD5();
 		GAMEMODE getGamemode();
+		std::vector<Hitobject*>& getHitobjects();
 
+		Mods getMods();
 		Diff& getDiff();
 		void setDiff(Diff _diff);
-		void resetDiff();
 
-		Modifier& getModifiers();
-		void setModifiers(Modifier _modifier);
-		void resetModifiers();
+		void ClearModified();
+		void ResetModified();
 
+		/// \TODO: Move these out of here
 		int getNumHitobjectsVisibleAt(int _index, double _opacity);
 		std::pair<int, int> getIndicesVisibleAt(int _time, double _opacity);
 
@@ -75,15 +69,19 @@ class Beatmap
 			SECTION_DIFFICULTY,
 			SECTION_EVENTS,
 			SECTION_TIMINGPOINTS,
+			SECTION_COLOURS,
 			SECTION_HITOBJECTS
 		};
 
-		Diff modifiedDiff, origDiff;
-		Modifier modifiedMod, origMod;
+		Diff diff;
+		Mods mods;
 		Metadata metadata;
 		GAMEMODE gamemode;
 
-		std::vector<TimingPoint> timingPoints;
+		std::vector<TimingPoint> origTimingPoints, modTimingPoints;
+		std::vector<Hitobject*> origHitobjects, modHitobjects;
+
+		/// \NOTE: unused for now
 		std::vector<std::pair<Hitobject*, int>> hitObjectsTimeStart;
 		std::vector<std::pair<Hitobject*, int>> hitObjectsTimeEnd;
 
@@ -104,6 +102,7 @@ class Beatmap
 		bool ParseDifficultysection(std::ifstream &_filepath, std::string &_line);
 		bool ParseEventsSection(std::ifstream &_filepath, std::string &_line);
 		bool ParseTimingPointsSection(std::ifstream &_filepath, std::string &_line);
+		bool ParseColourSection(std::ifstream &_filepath, std::string &_line);
 		bool ParseHitobjectsSection(std::ifstream &_filepath, std::string &_line);
 	
 		void PrepareTimingPoints();
@@ -111,12 +110,10 @@ class Beatmap
 		int ReadTimingpoints(std::string line);
 		int ReadHitobjects(std::string line);
 
-		//int getRepeatTimes(Hitobject* _hitObject);
-
 		void PrepareSliderData();
-		void GenerateSliderPoints();
+		void GenerateSliderMetadata();
 
-		void SortEndTimes(int _left, int _right);
+		void ClearObjects();
 };
 
 #endif

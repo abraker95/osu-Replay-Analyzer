@@ -1,6 +1,8 @@
 #include "Button.h"
 #include "../utils/mathUtils.h"
 
+Button::Button(GuiObj* _parent) : GuiObj(0, 0, 0, 0, _parent){}
+
 Button::Button(int _xpos, int _ypos, int _width, int _height, GuiObj* _parent) : GuiObj(_xpos, _ypos, _width, _height, _parent)
 {
 	pressed = false;
@@ -76,7 +78,6 @@ void Button::UpdateInternal(Window &_win)
 void Button::IdleLogic(Window &_win)
 {
 	bool leftEdge = _win.reciever.GetMouseState().LeftButtonEdge;
-
 	if (this->isMouseOnObj(_win, true) && leftEdge)
 	{
 		state = HOLD;

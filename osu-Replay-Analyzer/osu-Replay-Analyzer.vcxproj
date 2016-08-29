@@ -45,6 +45,9 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <ObjectFileName>$(IntDir)\%(RelativeDir)\%(Filename).obj</ObjectFileName>
+      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -66,11 +69,30 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="osu!\Analysis\Analysis.cpp" />
+    <ClCompile Include="osu!\Analysis\AnalysisStruct.cpp" />
+    <ClCompile Include="osu!\Analysis\Analyzer.cpp" />
+    <ClCompile Include="osu!\Analysis\Beatmap\Difficulty\Reading.cpp" />
+    <ClCompile Include="osu!\Analysis\Beatmap\DistSize.cpp" />
+    <ClCompile Include="osu!\Analysis\Beatmap\IntensityForHand.cpp" />
+    <ClCompile Include="osu!\Analysis\Beatmap\NoteRate.cpp" />
+    <ClCompile Include="osu!\Analysis\Beatmap\NoteRatePerKey.cpp" />
+    <ClCompile Include="osu!\Analysis\Beatmap\NoteRatePerKeyPrecise.cpp" />
+    <ClCompile Include="osu!\Analysis\Beatmap\Overlaps.cpp" />
+    <ClCompile Include="osu!\Analysis\Beatmap\TapEventIntervals.cpp" />
+    <ClCompile Include="osu!\Analysis\Beatmap\Velocity.cpp" />
+    <ClCompile Include="osu!\Analysis\Replay\aim-deviation.cpp" />
+    <ClCompile Include="osu!\Analysis\Replay\tap-deviation.cpp" />
+    <ClCompile Include="osu!\Analysis\Score\AimScore.cpp" />
+    <ClCompile Include="osu!\Analysis\Score\TapScore.cpp" />
     <ClCompile Include="osu!\Drawable\GamemodeRenderer.cpp" />
     <ClCompile Include="osu!\Drawable\Hitcircle.cpp" />
     <ClCompile Include="osu!\Drawable\HitNote.cpp" />
+    <ClCompile Include="osu!\Drawable\HitTimingGraph.cpp" />
+    <ClCompile Include="osu!\Drawable\HitTimingMarker.cpp" />
     <ClCompile Include="osu!\Drawable\OsuManiaRenderercpp.cpp" />
     <ClCompile Include="osu!\Drawable\OsuStdRenderer.cpp" />
+    <ClCompile Include="osu!\Drawable\StatGraph.cpp" />
     <ClCompile Include="osu!\Drawable\TimingGraph.cpp" />
     <ClCompile Include="osu!\Drawable\TimingObject.cpp" />
     <ClCompile Include="osu!\Filestructure\Beatmap.cpp" />
@@ -97,23 +119,21 @@
     <ClCompile Include="osu!\Filestructure\LZMA\easylzma\pavlov\LzmaDec.c" />
     <ClCompile Include="osu!\Filestructure\LZMA\easylzma\pavlov\LzmaEnc.c" />
     <ClCompile Include="osu!\Filestructure\LZMA\easylzma\pavlov\LzmaLib.c" />
+    <ClCompile Include="osu!\Filestructure\Mods.cpp" />
     <ClCompile Include="osu!\Filestructure\Play.cpp" />
     <ClCompile Include="osu!\Filestructure\Replay.cpp" />
-    <ClCompile Include="osu!\Filestructure\ScoreEngine.cpp" />
-    <ClCompile Include="osu!\Filestructure\SliderHitobject.cpp" />
+    <ClCompile Include="osu!\Filestructure\SliderHitObject.cpp" />
     <ClCompile Include="osu!\Filestructure\TimingPoint.cpp" />
     <ClCompile Include="osu!\osuCalc.cpp" />
-    <ClCompile Include="osu!\Skills\osu!std\agility.cpp" />
-    <ClCompile Include="osu!\Skills\osu!std\analysis.cpp" />
-    <ClCompile Include="osu!\Skills\osu!std\control.cpp" />
-    <ClCompile Include="osu!\Skills\osu!std\precision.cpp" />
-    <ClCompile Include="osu!\Skills\osu!std\reaction.cpp" />
-    <ClCompile Include="osu!\Skills\osu!std\reading.cpp" />
-    <ClCompile Include="osu!\Skills\osu!std\tenacity.cpp" />
+    <ClCompile Include="osu!\osuStructs.cpp" />
+    <ClCompile Include="osu!\osu_mania.cpp" />
+    <ClCompile Include="osu!\osu_standard.cpp" />
     <ClCompile Include="ui\Button.cpp" />
+    <ClCompile Include="ui\ColorTable.cpp" />
     <ClCompile Include="ui\Dialog.cpp" />
     <ClCompile Include="ui\drawUtils.cpp" />
     <ClCompile Include="ui\Event.cpp" />
+    <ClCompile Include="ui\Graph.cpp" />
     <ClCompile Include="ui\GuiObj.cpp" />
     <ClCompile Include="ui\pane.cpp" />
     <ClCompile Include="ui\Scrollbar.cpp" />
@@ -121,13 +141,34 @@
     <ClCompile Include="ui\Window.cpp" />
     <ClCompile Include="utils\Geometry.cpp" />
     <ClCompile Include="utils\Lambert.cpp" />
+    <ClCompile Include="utils\MD5\hl_md5.cpp" />
+    <ClCompile Include="utils\MD5\hl_md5wrapper.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="osu!\Analysis\Analysis.h" />
+    <ClInclude Include="osu!\Analysis\AnalysisStruct.h" />
+    <ClInclude Include="osu!\Analysis\Analyzer.h" />
+    <ClInclude Include="osu!\Analysis\Beatmap\Difficulty\Reading.h" />
+    <ClInclude Include="osu!\Analysis\Beatmap\Distance-size.h" />
+    <ClInclude Include="osu!\Analysis\Beatmap\IntensityForHand.h" />
+    <ClInclude Include="osu!\Analysis\Beatmap\NoteRate.h" />
+    <ClInclude Include="osu!\Analysis\Beatmap\NoteRatePerKey.h" />
+    <ClInclude Include="osu!\Analysis\Beatmap\NoteRatePerKeyPrecise.h" />
+    <ClInclude Include="osu!\Analysis\Beatmap\Overlaps.h" />
+    <ClInclude Include="osu!\Analysis\Beatmap\TapEventIntervals.h" />
+    <ClInclude Include="osu!\Analysis\Beatmap\Velocity.h" />
+    <ClInclude Include="osu!\Analysis\Replay\aim-deviation.h" />
+    <ClInclude Include="osu!\Analysis\Replay\tap-deviation.h" />
+    <ClInclude Include="osu!\Analysis\Score\AimScore.h" />
+    <ClInclude Include="osu!\Analysis\Score\TapScore.h" />
     <ClInclude Include="osu!\Drawable\GamemodeRenderer.h" />
     <ClInclude Include="osu!\Drawable\Hitcircle.h" />
     <ClInclude Include="osu!\Drawable\HitNote.h" />
+    <ClInclude Include="osu!\Drawable\HitTimingGraph.h" />
+    <ClInclude Include="osu!\Drawable\HitTimingMarker.h" />
     <ClInclude Include="osu!\Drawable\OsuManiaRenderer.h" />
     <ClInclude Include="osu!\Drawable\OsuStdRenderer.h" />
+    <ClInclude Include="osu!\Drawable\StatGraph.h" />
     <ClInclude Include="osu!\Drawable\TimingGraph.h" />
     <ClInclude Include="osu!\Drawable\TimingObject.h" />
     <ClInclude Include="osu!\Filestructure\Beatmap.h" />
@@ -156,23 +197,25 @@
     <ClInclude Include="osu!\Filestructure\LZMA\easylzma\pavlov\LzmaEnc.h" />
     <ClInclude Include="osu!\Filestructure\LZMA\easylzma\pavlov\LzmaLib.h" />
     <ClInclude Include="osu!\Filestructure\LZMA\easylzma\pavlov\Types.h" />
+    <ClInclude Include="osu!\Filestructure\Mods.h" />
     <ClInclude Include="osu!\Filestructure\Play.h" />
     <ClInclude Include="osu!\Filestructure\Replay.h" />
-    <ClInclude Include="osu!\Filestructure\ScoreEngine.h" />
+    <ClInclude Include="osu!\Filestructure\SliderHitobject.h" />
     <ClInclude Include="osu!\Filestructure\TimingPoint.h" />
     <ClInclude Include="osu!\osuCalc.h" />
     <ClInclude Include="osu!\osuEnums.h" />
-    <ClInclude Include="osu!\Skills\osu!std\agility.h" />
-    <ClInclude Include="osu!\Skills\osu!std\analysis.h" />
-    <ClInclude Include="osu!\Skills\osu!std\control.h" />
-    <ClInclude Include="osu!\Skills\osu!std\precision.h" />
-    <ClInclude Include="osu!\Skills\osu!std\reaction.h" />
-    <ClInclude Include="osu!\Skills\osu!std\reading.h" />
-    <ClInclude Include="osu!\Skills\osu!std\tenacity.h" />
+    <ClInclude Include="osu!\osuStructs.h" />
+    <ClInclude Include="osu!\osu_catch.h" />
+    <ClInclude Include="osu!\osu_dodge.h" />
+    <ClInclude Include="osu!\osu_mania.h" />
+    <ClInclude Include="osu!\osu_standard.h" />
+    <ClInclude Include="osu!\osu_taiko.h" />
     <ClInclude Include="ui\Button.h" />
+    <ClInclude Include="ui\ColorTable.h" />
     <ClInclude Include="ui\Dialog.h" />
     <ClInclude Include="ui\drawUtils.h" />
     <ClInclude Include="ui\Event.h" />
+    <ClInclude Include="ui\Graph.h" />
     <ClInclude Include="ui\GuiObj.h" />
     <ClInclude Include="ui\pane.h" />
     <ClInclude Include="ui\Scrollbar.h" />
@@ -182,6 +225,11 @@
     <ClInclude Include="utils\Lambert.h" />
     <ClInclude Include="utils\LambertW.h" />
     <ClInclude Include="utils\mathUtils.h" />
+    <ClInclude Include="utils\MD5\hl_exception.h" />
+    <ClInclude Include="utils\MD5\hl_hashwrapper.h" />
+    <ClInclude Include="utils\MD5\hl_md5.h" />
+    <ClInclude Include="utils\MD5\hl_md5wrapper.h" />
+    <ClInclude Include="utils\MD5\hl_types.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

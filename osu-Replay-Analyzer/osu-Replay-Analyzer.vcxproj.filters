@@ -16,9 +16,6 @@
     <Filter Include="Header Files\osu!">
       <UniqueIdentifier>{0e8bfce2-d818-4cc5-8120-c389905d5d02}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\osu!\Skills">
-      <UniqueIdentifier>{23911ad5-30ef-4440-acc4-07f8f3d9548b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\osu!">
       <UniqueIdentifier>{440f2137-0c85-46de-ac56-7c7d7f0fd364}</UniqueIdentifier>
     </Filter>
@@ -30,9 +27,6 @@
     </Filter>
     <Filter Include="Source Files\math">
       <UniqueIdentifier>{b3d1ce74-c772-48c5-a96d-d483bba0184c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\osu!\Skills">
-      <UniqueIdentifier>{2bc4d5b3-e6ee-4615-b2cd-1ceba30d1395}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\osu!\File structure">
       <UniqueIdentifier>{ef39ef96-90db-4ed5-a692-b7515e315d0f}</UniqueIdentifier>
@@ -58,38 +52,44 @@
     <Filter Include="Source Files\osu!\File Structure\LZMA\7-ZIP">
       <UniqueIdentifier>{f0f6cb39-e493-4cfe-8408-2b3dbe2c4f47}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\osu!\Skills\osu!std">
-      <UniqueIdentifier>{42910582-9999-47a8-b450-29061f302288}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\osu!\Skills\osu!catch">
-      <UniqueIdentifier>{09b1affd-e4f3-4478-b8f5-88a4cca6b60e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\osu!\Skills\osu!taiko">
-      <UniqueIdentifier>{0985dca4-cd17-4995-877c-5a4951b3d1bc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\osu!\Skills\osu!mania">
-      <UniqueIdentifier>{16d7e77f-c7bb-486f-a5fa-304d633c66de}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\ui">
       <UniqueIdentifier>{13d556fa-178f-42cb-9901-d7eb666e182c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\osu!\Skills\osu!dodge">
-      <UniqueIdentifier>{81514976-d826-46e1-811d-83a2ebc9e942}</UniqueIdentifier>
+    <Filter Include="Header Files\osu!\Analysis">
+      <UniqueIdentifier>{a0428678-dfc0-4b32-9b01-8e9d8eec61db}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\osu!\Skills\osu!std">
-      <UniqueIdentifier>{6892c392-9386-4286-9948-03a959637dbb}</UniqueIdentifier>
+    <Filter Include="Source Files\osu!\Analysis">
+      <UniqueIdentifier>{3d06dcbd-dd86-4778-9ae5-1e5605332bc1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\osu!\Skills\osu!catch">
-      <UniqueIdentifier>{6d9be190-bceb-4206-81cc-813c4ab5379b}</UniqueIdentifier>
+    <Filter Include="Source Files\osu!\Analysis\Beatmap">
+      <UniqueIdentifier>{46e58985-60c4-4bed-b338-83c8edda8ef0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\osu!\Skills\osu!taiko">
-      <UniqueIdentifier>{ab555368-e842-482a-8785-2b75a11ebf91}</UniqueIdentifier>
+    <Filter Include="Source Files\osu!\Analysis\Replay">
+      <UniqueIdentifier>{62a4012f-8647-43f6-8327-a69ca4b91fb2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\osu!\Skills\osu!mania">
-      <UniqueIdentifier>{caf438d1-da27-499d-b6a8-f66b3cc89dc1}</UniqueIdentifier>
+    <Filter Include="Source Files\osu!\Analysis\Score">
+      <UniqueIdentifier>{5fa730e6-b321-4fb5-a079-5b8d7791c8b0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\osu!\Skills\osu!dodge">
-      <UniqueIdentifier>{456af879-6431-449f-9907-fb810c9c8dfa}</UniqueIdentifier>
+    <Filter Include="Header Files\osu!\Analysis\Beatmap">
+      <UniqueIdentifier>{7cdafeda-f51d-4703-9e91-6ec975f2c8df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\osu!\Analysis\Replay">
+      <UniqueIdentifier>{40435d6c-fb8d-4742-9f86-f8b8c3dcf951}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\osu!\Analysis\Score">
+      <UniqueIdentifier>{41367f48-a281-463e-b5d8-e472f6d3b599}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\osu!\Analysis\Beatmap\Difficulty">
+      <UniqueIdentifier>{2fb9c993-5601-4eb6-9e5b-366508e848ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\osu!\Analysis\Beatmap\Difficulty">
+      <UniqueIdentifier>{afa4c15d-0e58-45fd-b070-bd3b9bf057dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\math\MD5">
+      <UniqueIdentifier>{7363fca5-7972-4e7d-8a02-4322d70dbc58}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\math\MD5">
+      <UniqueIdentifier>{e52ef29c-c444-47d1-af09-c4a5b82f5b63}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -171,12 +171,6 @@
     <ClCompile Include="osu!\Filestructure\Replay.cpp">
       <Filter>Source Files\osu!\File Structure</Filter>
     </ClCompile>
-    <ClCompile Include="osu!\Filestructure\ScoreEngine.cpp">
-      <Filter>Source Files\osu!\File Structure</Filter>
-    </ClCompile>
-    <ClCompile Include="osu!\Filestructure\SliderHitobject.cpp">
-      <Filter>Source Files\osu!\File Structure</Filter>
-    </ClCompile>
     <ClCompile Include="osu!\Drawable\Hitcircle.cpp">
       <Filter>Source Files\osu!\Drawable</Filter>
     </ClCompile>
@@ -194,24 +188,6 @@
     </ClCompile>
     <ClCompile Include="osu!\Drawable\TimingObject.cpp">
       <Filter>Source Files\osu!\Drawable</Filter>
-    </ClCompile>
-    <ClCompile Include="osu!\Skills\osu!std\agility.cpp">
-      <Filter>Source Files\osu!\Skills\osu!std</Filter>
-    </ClCompile>
-    <ClCompile Include="osu!\Skills\osu!std\control.cpp">
-      <Filter>Source Files\osu!\Skills\osu!std</Filter>
-    </ClCompile>
-    <ClCompile Include="osu!\Skills\osu!std\precision.cpp">
-      <Filter>Source Files\osu!\Skills\osu!std</Filter>
-    </ClCompile>
-    <ClCompile Include="osu!\Skills\osu!std\reaction.cpp">
-      <Filter>Source Files\osu!\Skills\osu!std</Filter>
-    </ClCompile>
-    <ClCompile Include="osu!\Skills\osu!std\reading.cpp">
-      <Filter>Source Files\osu!\Skills\osu!std</Filter>
-    </ClCompile>
-    <ClCompile Include="osu!\Skills\osu!std\tenacity.cpp">
-      <Filter>Source Files\osu!\Skills\osu!std</Filter>
     </ClCompile>
     <ClCompile Include="ui\Button.cpp">
       <Filter>Source Files\ui</Filter>
@@ -249,9 +225,6 @@
     <ClCompile Include="utils\Lambert.cpp">
       <Filter>Source Files\math</Filter>
     </ClCompile>
-    <ClCompile Include="osu!\Skills\osu!std\analysis.cpp">
-      <Filter>Source Files\osu!\Skills\osu!std</Filter>
-    </ClCompile>
     <ClCompile Include="osu!\Filestructure\Hitobject.cpp">
       <Filter>Source Files\osu!\File Structure</Filter>
     </ClCompile>
@@ -260,6 +233,90 @@
     </ClCompile>
     <ClCompile Include="osu!\Drawable\GamemodeRenderer.cpp">
       <Filter>Source Files\osu!\Drawable</Filter>
+    </ClCompile>
+    <ClCompile Include="osu!\Drawable\HitTimingGraph.cpp">
+      <Filter>Source Files\osu!\Drawable</Filter>
+    </ClCompile>
+    <ClCompile Include="osu!\Drawable\HitTimingMarker.cpp">
+      <Filter>Source Files\osu!\Drawable</Filter>
+    </ClCompile>
+    <ClCompile Include="osu!\Filestructure\Mods.cpp">
+      <Filter>Source Files\osu!\File Structure</Filter>
+    </ClCompile>
+    <ClCompile Include="osu!\osu_standard.cpp">
+      <Filter>Source Files\osu!</Filter>
+    </ClCompile>
+    <ClCompile Include="osu!\Filestructure\SliderHitObject.cpp">
+      <Filter>Source Files\osu!\File Structure</Filter>
+    </ClCompile>
+    <ClCompile Include="ui\ColorTable.cpp">
+      <Filter>Source Files\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="ui\Graph.cpp">
+      <Filter>Source Files\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="osu!\Drawable\StatGraph.cpp">
+      <Filter>Source Files\osu!\Drawable</Filter>
+    </ClCompile>
+    <ClCompile Include="osu!\osuStructs.cpp">
+      <Filter>Source Files\osu!</Filter>
+    </ClCompile>
+    <ClCompile Include="osu!\Analysis\Analysis.cpp">
+      <Filter>Source Files\osu!\Analysis</Filter>
+    </ClCompile>
+    <ClCompile Include="osu!\Analysis\Analyzer.cpp">
+      <Filter>Source Files\osu!\Analysis</Filter>
+    </ClCompile>
+    <ClCompile Include="osu!\Analysis\Beatmap\Velocity.cpp">
+      <Filter>Source Files\osu!\Analysis\Beatmap</Filter>
+    </ClCompile>
+    <ClCompile Include="osu!\Analysis\AnalysisStruct.cpp">
+      <Filter>Source Files\osu!\Analysis</Filter>
+    </ClCompile>
+    <ClCompile Include="osu!\Analysis\Beatmap\NoteRate.cpp">
+      <Filter>Source Files\osu!\Analysis\Beatmap</Filter>
+    </ClCompile>
+    <ClCompile Include="osu!\Analysis\Beatmap\Overlaps.cpp">
+      <Filter>Source Files\osu!\Analysis\Beatmap</Filter>
+    </ClCompile>
+    <ClCompile Include="osu!\Analysis\Beatmap\Difficulty\Reading.cpp">
+      <Filter>Source Files\osu!\Analysis\Beatmap\Difficulty</Filter>
+    </ClCompile>
+    <ClCompile Include="osu!\Analysis\Beatmap\NoteRatePerKey.cpp">
+      <Filter>Source Files\osu!\Analysis\Beatmap</Filter>
+    </ClCompile>
+    <ClCompile Include="osu!\Analysis\Beatmap\NoteRatePerKeyPrecise.cpp">
+      <Filter>Source Files\osu!\Analysis\Beatmap</Filter>
+    </ClCompile>
+    <ClCompile Include="osu!\Analysis\Replay\aim-deviation.cpp">
+      <Filter>Source Files\osu!\Analysis\Replay</Filter>
+    </ClCompile>
+    <ClCompile Include="osu!\Analysis\Replay\tap-deviation.cpp">
+      <Filter>Source Files\osu!\Analysis\Replay</Filter>
+    </ClCompile>
+    <ClCompile Include="osu!\Analysis\Beatmap\DistSize.cpp">
+      <Filter>Source Files\osu!\Analysis\Beatmap</Filter>
+    </ClCompile>
+    <ClCompile Include="osu!\Analysis\Beatmap\TapEventIntervals.cpp">
+      <Filter>Source Files\osu!\Analysis\Beatmap</Filter>
+    </ClCompile>
+    <ClCompile Include="osu!\Analysis\Score\AimScore.cpp">
+      <Filter>Source Files\osu!\Analysis\Score</Filter>
+    </ClCompile>
+    <ClCompile Include="osu!\Analysis\Score\TapScore.cpp">
+      <Filter>Source Files\osu!\Analysis\Score</Filter>
+    </ClCompile>
+    <ClCompile Include="osu!\Analysis\Beatmap\IntensityForHand.cpp">
+      <Filter>Source Files\osu!\Analysis\Beatmap</Filter>
+    </ClCompile>
+    <ClCompile Include="osu!\osu_mania.cpp">
+      <Filter>Source Files\osu!</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\MD5\hl_md5.cpp">
+      <Filter>Source Files\math\MD5</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\MD5\hl_md5wrapper.cpp">
+      <Filter>Source Files\math\MD5</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -344,9 +401,6 @@
     <ClInclude Include="osu!\Filestructure\Replay.h">
       <Filter>Header Files\osu!\File structure</Filter>
     </ClInclude>
-    <ClInclude Include="osu!\Filestructure\ScoreEngine.h">
-      <Filter>Header Files\osu!\File structure</Filter>
-    </ClInclude>
     <ClInclude Include="osu!\Drawable\GamemodeRenderer.h">
       <Filter>Header Files\osu!\Drawable</Filter>
     </ClInclude>
@@ -367,24 +421,6 @@
     </ClInclude>
     <ClInclude Include="osu!\Drawable\TimingObject.h">
       <Filter>Header Files\osu!\Drawable</Filter>
-    </ClInclude>
-    <ClInclude Include="osu!\Skills\osu!std\agility.h">
-      <Filter>Header Files\osu!\Skills\osu!std</Filter>
-    </ClInclude>
-    <ClInclude Include="osu!\Skills\osu!std\control.h">
-      <Filter>Header Files\osu!\Skills\osu!std</Filter>
-    </ClInclude>
-    <ClInclude Include="osu!\Skills\osu!std\precision.h">
-      <Filter>Header Files\osu!\Skills\osu!std</Filter>
-    </ClInclude>
-    <ClInclude Include="osu!\Skills\osu!std\reaction.h">
-      <Filter>Header Files\osu!\Skills\osu!std</Filter>
-    </ClInclude>
-    <ClInclude Include="osu!\Skills\osu!std\reading.h">
-      <Filter>Header Files\osu!\Skills\osu!std</Filter>
-    </ClInclude>
-    <ClInclude Include="osu!\Skills\osu!std\tenacity.h">
-      <Filter>Header Files\osu!\Skills\osu!std</Filter>
     </ClInclude>
     <ClInclude Include="ui\pane.h">
       <Filter>Header Files\ui</Filter>
@@ -431,14 +467,113 @@
     <ClInclude Include="utils\mathUtils.h">
       <Filter>Header Files\math</Filter>
     </ClInclude>
-    <ClInclude Include="osu!\Skills\osu!std\analysis.h">
-      <Filter>Header Files\osu!\Skills\osu!std</Filter>
-    </ClInclude>
     <ClInclude Include="osu!\Filestructure\Hitobject.h">
       <Filter>Header Files\osu!\File structure</Filter>
     </ClInclude>
     <ClInclude Include="osu!\Filestructure\TimingPoint.h">
       <Filter>Header Files\osu!\File structure</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\Drawable\HitTimingGraph.h">
+      <Filter>Header Files\osu!\Drawable</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\osu_mania.h">
+      <Filter>Header Files\osu!</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\osu_standard.h">
+      <Filter>Header Files\osu!</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\osu_taiko.h">
+      <Filter>Header Files\osu!</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\osu_catch.h">
+      <Filter>Header Files\osu!</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\osu_dodge.h">
+      <Filter>Header Files\osu!</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\Drawable\HitTimingMarker.h">
+      <Filter>Header Files\osu!\Drawable</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\Filestructure\Mods.h">
+      <Filter>Header Files\osu!\File structure</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\Filestructure\SliderHitobject.h">
+      <Filter>Header Files\osu!\File structure</Filter>
+    </ClInclude>
+    <ClInclude Include="ui\ColorTable.h">
+      <Filter>Header Files\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="ui\Graph.h">
+      <Filter>Header Files\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\Drawable\StatGraph.h">
+      <Filter>Header Files\osu!\Drawable</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\osuStructs.h">
+      <Filter>Header Files\osu!</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\Analysis\Analysis.h">
+      <Filter>Header Files\osu!\Analysis</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\Analysis\Analyzer.h">
+      <Filter>Header Files\osu!\Analysis</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\Analysis\Beatmap\Velocity.h">
+      <Filter>Header Files\osu!\Analysis\Beatmap</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\Analysis\AnalysisStruct.h">
+      <Filter>Header Files\osu!\Analysis</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\Analysis\Beatmap\NoteRate.h">
+      <Filter>Header Files\osu!\Analysis\Beatmap</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\Analysis\Beatmap\Overlaps.h">
+      <Filter>Header Files\osu!\Analysis\Beatmap</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\Analysis\Beatmap\Difficulty\Reading.h">
+      <Filter>Header Files\osu!\Analysis\Beatmap\Difficulty</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\Analysis\Beatmap\NoteRatePerKey.h">
+      <Filter>Header Files\osu!\Analysis\Beatmap</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\Analysis\Beatmap\NoteRatePerKeyPrecise.h">
+      <Filter>Header Files\osu!\Analysis\Beatmap</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\Analysis\Replay\aim-deviation.h">
+      <Filter>Header Files\osu!\Analysis\Replay</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\Analysis\Replay\tap-deviation.h">
+      <Filter>Header Files\osu!\Analysis\Replay</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\Analysis\Beatmap\Distance-size.h">
+      <Filter>Header Files\osu!\Analysis\Beatmap</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\Analysis\Beatmap\TapEventIntervals.h">
+      <Filter>Header Files\osu!\Analysis\Beatmap</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\Analysis\Score\AimScore.h">
+      <Filter>Header Files\osu!\Analysis\Score</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\Analysis\Score\TapScore.h">
+      <Filter>Header Files\osu!\Analysis\Score</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\Analysis\Beatmap\IntensityForHand.h">
+      <Filter>Header Files\osu!\Analysis\Beatmap</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\MD5\hl_exception.h">
+      <Filter>Header Files\math\MD5</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\MD5\hl_hashwrapper.h">
+      <Filter>Header Files\math\MD5</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\MD5\hl_md5.h">
+      <Filter>Header Files\math\MD5</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\MD5\hl_md5wrapper.h">
+      <Filter>Header Files\math\MD5</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\MD5\hl_types.h">
+      <Filter>Header Files\math\MD5</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -7,9 +7,11 @@ enum GAMEMODE
 	OSU_TAIKO = 1,
 	OSU_CATCH = 2,
 	OSU_MANIA = 3,
-	OSU_DODGE = 4
+	OSU_DODGE = 4,
+	GAMEMODE_ERROR
 };
 
+/// \TODO: The Mods class takes care of this, so get rid of this
 enum MODS
 {
 	// non

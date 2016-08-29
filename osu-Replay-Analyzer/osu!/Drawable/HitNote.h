@@ -8,15 +8,15 @@
 #include "../../ui/GuiObj.h"
 #include "../../ui/Window.h"
 #include "../Filestructure/Hitobject.h"
-#include "../Filestructure/Beatmap.h"
+#include "../Filestructure/Mods.h"
 
 class HitNote : public GuiObj
 {
 public:
-	HitNote(Beatmap* _beatmap, Hitobject* _hitobject, int* _viewTime, double* _zoom);
+	HitNote(Mods* _mods, Hitobject* _hitobject, int* _viewTime, double* _zoom);
 
 private:
-	Beatmap *beatmap;
+	Mods *mods;
 	Hitobject *hitobject;
 	int *viewTime;
 	double *zoom;

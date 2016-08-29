@@ -5,32 +5,15 @@ double _widthRatio_, _heightRatio_;
 
 GamemodeRenderer::GamemodeRenderer(int _xpos, int _ypos, int _width, int _height, Play* _play, int* _viewTime) : GuiObj(_xpos, _ypos, _width, _height)
 {
-	gamemode = _play->beatmap->getGamemode();
+	stdRenderer = nullptr;
+	maniaRenderer = nullptr;
+
 	InitRenderer(_play, _viewTime);
 }
 
 GamemodeRenderer::~GamemodeRenderer()
 {
-	if(stdRenderer != nullptr)
-		delete stdRenderer;
-
-	/*
-	if(taikoRenderer != nullptr)
-		delete taikoRenderer;
-	*/
-
-	/*
-	if(catchRenderer != nullptr)
-		delete chatchRenderer;
-	*/
-
-	if (maniaRenderer != nullptr)
-		delete maniaRenderer;
-
-	/*
-	if(dodgeRenderer != nullptr)
-		delete dodgeRenderer;
-	*/
+	DestroyRenderers();
 }
 
 void GamemodeRenderer::UpdateRatios()
@@ -49,6 +32,14 @@ void GamemodeRenderer::setGamemode(GAMEMODE _gamemode)
 
 void GamemodeRenderer::InitRenderer(Play* _play, int* _viewTime)
 {
+	DestroyRenderers();
+	if (_play->beatmap == nullptr)
+	{
+		gamemode = GAMEMODE::GAMEMODE_ERROR;
+		return;
+	}
+
+	gamemode = _play->beatmap->getGamemode();
 	switch (gamemode)
 	{
 		case OSU_STANDARD:
@@ -71,7 +62,7 @@ void GamemodeRenderer::InitRenderer(Play* _play, int* _viewTime)
 				maniaRenderer->addClipDimTo(GuiObj::CENTERX);
 				maniaRenderer->addClipDimTo(GuiObj::BTM);
 				maniaRenderer->setPos(this->width / 2 - 300, 0);  /// \TODO: Set width and pos based on key amount
-				maniaRenderer->SetLayers(OsuManiaRenderer::VISIBLE | OsuManiaRenderer::REPLAY | OsuManiaRenderer::TIMINGS | OsuManiaRenderer::HITIMINGS);
+				maniaRenderer->SetLayers(OsuManiaRenderer::VISIBLE | OsuManiaRenderer::REPLAY | OsuManiaRenderer::TIMINGS | OsuManiaRenderer::HITIMINGS | OsuManiaRenderer::TAPPINGDIFFS);
 			break;
 
 		case OSU_DODGE:
@@ -93,6 +84,13 @@ void GamemodeRenderer::Draw(Window& _win)
 	_win.driver->draw2DRectangleOutline(core::rect<s32>(absXpos, absYpos, absXpos + width, absYpos + height),
 				video::SColor(255, 255, 255, 255));
 
+	if (gamemode == GAMEMODE::GAMEMODE_ERROR)
+	{
+		dimension2d<u32> dim = _win.font->getDimension(core::stringw("BEATMAP NOT LOADED!!!").c_str());
+		_win.font->draw(core::stringw("BEATMAP NOT LOADED!!!"), core::rect<s32>(absXpos + width / 2 - dim.Width/2, absYpos + height / 2 - dim.Height / 2, 100, 10), video::SColor(255, 255, 255, 255));
+		return;
+	}
+		
 	switch (gamemode)
 	{
 		case OSU_STANDARD:
@@ -153,5 +151,45 @@ void GamemodeRenderer::RenderOsuDodge(Window& _win)
 	/*
 	if (dodgeRenderer != nullptr)
 		dodgeRenderer->Update(_win);
+	*/
+}
+
+
+void GamemodeRenderer::DestroyRenderers()
+{
+	if (stdRenderer != nullptr)
+	{
+		delete stdRenderer;
+		stdRenderer = nullptr;
+	}		
+
+	/*
+	if(taikoRenderer != nullptr)
+	{
+		delete taikoRenderer;
+		taikoRenderer = nullptr;
+	}
+	*/
+
+	/*
+	if(catchRenderer != nullptr)
+	{
+		delete chatchRenderer;
+		chatchRenderer = nullptr;
+	}
+	*/
+
+	if (maniaRenderer != nullptr)
+	{
+		delete maniaRenderer;
+		maniaRenderer = nullptr;
+	}	
+
+	/*
+	if(dodgeRenderer != nullptr)
+	{
+		delete dodgeRenderer;
+		dodgeRenderer = nullptr;
+	}
 	*/
 }

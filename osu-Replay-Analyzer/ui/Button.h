@@ -7,6 +7,7 @@
 class Button: public GuiObj
 {
 	public:
+		Button(GuiObj* _parent = nullptr);
 		Button(int _xpos, int _ypos, int _width, int _height, GuiObj* parent = nullptr);
 		virtual ~Button();
 

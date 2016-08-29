@@ -11,7 +11,7 @@ class GuiObj
 	public:
 		enum CLIPPOS
 		{
-							  NONE = 0,
+							  NONEPOS = 0,
 			TOPLEFT = 1,    TOPCENTER = 2,  TOPRIGHT = 3,
 			MIDLEFT = 4,	MIDCENTER = 5,	MIDRIGHT = 6,
 			BTMLEFT = 7,	BTMCENTER = 8,	BTMRIGHT = 9,
@@ -19,7 +19,7 @@ class GuiObj
 		
 		enum CLIPDIM
 		{
-			BTM = 1, CENTERY = 2, CENTERX = 4, RIGHT = 8
+			BTM = 1, CENTERY = 2, CENTERX = 4, RIGHT = 8, NONEDIM = 16
 		};
 
 		void Update(Window& _win);
@@ -28,10 +28,12 @@ class GuiObj
 		void setMargin(int _right, int _btm);
 		void setParent(GuiObj* _obj);
 		void setVisible(bool _visible);
+		void setDepth(int _depth);
 
 		core::vector2di getPos() const;
 		core::vector2di getMid() const;
 		core::dimension2di getDim() const;
+		int getDepth() const;
 
 
 		bool isMouseOnObj(Window& _win, bool _only = false);
@@ -55,8 +57,9 @@ class GuiObj
 		
 		GuiObj* parent;
 		//std::vector<GuiObj*> children;
+		
 		int id;
-
+		int depth;
 
 		CLIPPOS clipPos;
 		int clipDim;
@@ -73,6 +76,8 @@ class GuiObj
 
 
 void UpdateGuiObjs(Window& _win);
+void SortGuiObjs();
 void SetRelativeGuiLayer(GuiObj* _top, GuiObj* _btm);
+int FindGuiObj(GuiObj* _guiObj);
 
 #endif

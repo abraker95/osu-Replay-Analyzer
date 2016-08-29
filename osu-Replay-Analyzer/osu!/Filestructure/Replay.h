@@ -8,20 +8,28 @@
 #include "../../irrlicht/include/vector2d.h"
 
 #include "../osuEnums.h"
+#include "../osuStructs.h"
 #include "Beatmap.h"
 
 
 class Replay
 {
-	public:
-		Replay(std::string _filepath);
+	friend class Play;
 
-		bool HasMod(MODS _mod);
+	public:
+		Replay();
+		virtual ~Replay();
+
+		void ProcessReplay(std::string _filepath, Beatmap* _beatmap);
 		
-		std::tuple<irr::core::vector2df, int> getDataAt(long _time);
-		std::tuple<long, irr::core::vector2df, int> getFrame(int _frame) const;
+		osu::TIMING getFrameAt(long _time);
+		osu::TIMING getFrame(int _frame) const;
+		std::vector<osu::TIMING>& const getReplayStream();
 		int getNumFrames();
 
+		Mods getMods();
+
+		bool isValid();
 		bool isBeatmap(std::string* _MD5);
 		bool isGamemode(GAMEMODE _gamemode);
 
@@ -34,7 +42,7 @@ class Replay
 		};
 
 		// Generated
-		std::vector<std::tuple<long, irr::core::vector2df, int>> replayStream;
+		std::vector<osu::TIMING> replayStream;
 
 		// Extracted from replay data
 		std::string beatmapMD5;
@@ -54,6 +62,8 @@ class Replay
 		int mods;
 		std::string graph;
 		long long timestamp;
+		
+		Mods mod;
 
 		// *.osr file reading
 		bool ParseFile(std::ifstream &_replayFile);
@@ -62,8 +72,12 @@ class Replay
 
 		// Data processing
 		void ValidateMods();
+		void ApplyMods();
 
 		int FindFrameAt(long _time);
+
+	private:
+		void ClearReplay();
 };
 
 #endif

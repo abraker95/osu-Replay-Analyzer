@@ -5,13 +5,13 @@
 
 #include "../../ui/Window.h"
 #include "../../ui/GuiObj.h"
-#include "../Filestructure/Beatmap.h"
+#include "../Filestructure/Play.h"
 #include "TimingObject.h"
 
 class TimingGraph : public GuiObj
 {
 	public:
-		TimingGraph(Window& _win, Beatmap* _beatmap); // _res = resolution in px/ms
+		TimingGraph(int _xpos, int _ypos, Window& _win, Play* _play); // _res = resolution in px/ms
 		virtual ~TimingGraph();
 
 		enum LAYER
@@ -63,7 +63,7 @@ class TimingGraph : public GuiObj
 		}state;
 
 		SColor edgeCol;
-		Beatmap* beatmap;
+		Play* play;
 		int* res;
 		
 		const int HEIGHT = 25;

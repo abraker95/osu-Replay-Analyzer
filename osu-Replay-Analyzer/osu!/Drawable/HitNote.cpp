@@ -1,17 +1,19 @@
 #include "HitNote.h"
 #include "GamemodeRenderer.h"
 
+#include "../osu_mania.h"
 #include "../../utils/mathUtils.h"
 #include "../../ui/drawUtils.h"
 #include "../osuCalc.h"
+#include "../Filestructure/SliderHitObject.h"
 
 #include <iostream>
 #include <tuple>
 
-HitNote::HitNote(Beatmap* _beatmap, Hitobject* _hitobject, int* _viewTime, double* _zoom)
+HitNote::HitNote(Mods* _mods, Hitobject* _hitobject, int* _viewTime, double* _zoom)
 	: GuiObj(log2(_hitobject->getPos().X) * 300, 0, 50, 15)
 {
-	beatmap = _beatmap;
+	mods = _mods;
 	hitobject = _hitobject;
 	viewTime = _viewTime;
 	zoom = _zoom;
@@ -101,10 +103,9 @@ void HitNote::UpdateInternal(Window &_win)
 
 void HitNote::UpdateAbsPos(Window& _win)
 {
-	const int KEYS = 4;
-	int key = (hitobject->getPos().X - 64) / 128;
-
-	xpos = key * (parent->getDim().Width / KEYS) + (parent->getDim().Width / (4.0 * KEYS));
+	int numKeys = mods->getCS();
+	int key = OSUMANIA::getKey(hitobject->getPos().X, numKeys);
+	int xpos = key * (parent->getDim().Width / numKeys) + (parent->getPos().X - parent->getDim().Width/2);
 
 	int hitPos = (*viewTime - hitobject->getTime());
 	int correction = std::max(0.0, (double)(((OsuManiaRenderer*)parent)->getStartTime() - hitobject->getTime()) * (*zoom));
@@ -117,18 +118,18 @@ void HitNote::UpdateAbsPos(Window& _win)
 
 void HitNote::UpdateAbsDim(Window& _win)
 {
+	int numKeys = mods->getCS();
+	width = ((parent->getDim().Width) / numKeys) - (2*numKeys);
+
 	if (hitobject->getHitobjectType() & HITOBJECTYPE::MANIALONG)
 	{
-		width = 50 * _widthRatio_;
-
 		int startTime = std::max(hitobject->getTime(), ((OsuManiaRenderer*)parent)->getStartTime());
-		int endTime = std::min(hitobject->slider->getEndTime(), ((OsuManiaRenderer*)parent)->getEndTime());
+		int endTime = std::min(hitobject->getSlider()->getEndTime(), ((OsuManiaRenderer*)parent)->getEndTime());
 
 		height = (double)(endTime - startTime) * (*zoom) + 15;
 	}
 	else
 	{
-		width = 50 * _widthRatio_;
 		height = 15;
 	}
 }

@@ -3,36 +3,60 @@
 
 #include <vector>
 
-//#define DEBUG
+//	#define DEBUG
 
 std::vector<GuiObj*> guiEnv;
 GuiObj* top;
 
 void UpdateGuiObjs(Window& _win)
 {
-	/// \TODO: order these and use binary search
 	for (int i = 0; i < guiEnv.size(); i++)
 	{
-		if (guiEnv[i] != nullptr)
-		{
-			if (guiEnv[i]->hasParent() == false)
-			{
-				guiEnv[i]->Update(_win);
-			}
-		}
+		if (guiEnv[i] == nullptr) continue;				// make sure the guiObj is not deleted
+		if (guiEnv[i]->hasParent() != false)  continue; // make sure it is not a child of another guiObj. Those are to be updated by the parent
+			
+		guiEnv[i]->Update(_win);
 	}
 }
 
 void SetRelativeGuiLayer(GuiObj* _top, GuiObj* _btm)
 {
-	// \TODO: Object's children must be applied too
-	if (_top->getID() < _btm->getID())
-	{
-		swap(guiEnv[_top->getID()], guiEnv[_btm->getID()]);
-		_top->UpdateID();
-		_btm->UpdateID();
-	}
+	_top->setDepth(_btm->getDepth() + 1);
 }
+
+bool sortGui(GuiObj* i, GuiObj* j)
+{
+	return i < j;
+}
+
+
+void SortGuiObjs()
+{
+	std::sort(guiEnv.begin(), guiEnv.end(), sortGui);
+}
+
+int FindGuiObj(GuiObj* _guiObj)
+{
+	int start = 0;
+	int end = guiEnv.size() - 1;
+	int mid;
+
+	while (start <= end)
+	{
+		mid = (start + end) / 2;
+
+		if (guiEnv[mid] == _guiObj)
+			return mid;
+
+		if (_guiObj < guiEnv[mid])
+			end = mid - 1;
+		else
+			start = mid + 1;
+	}
+
+	return -1;
+}
+
 
 GuiObj::GuiObj(int _xpos, int _ypos, int _width, int _height, GuiObj* _parent)
 {
@@ -42,26 +66,38 @@ GuiObj::GuiObj(int _xpos, int _ypos, int _width, int _height, GuiObj* _parent)
 
 	parent = _parent;
 	visible = true;
+	depth = 0;
+
+	clipPos = CLIPPOS::NONEPOS;
+	clipDim = CLIPDIM::NONEDIM;
+
+	marginRight = 0;
+	marginBtm = 0;
 
 	guiEnv.push_back(this);
 	id = guiEnv.size() - 1;
+
+	std::sort(guiEnv.begin(), guiEnv.end(), sortGui);
 }
 
 GuiObj::~GuiObj()
 {
-	/// \TODO: order these and use binary search
-	// find and remove the object from the environment
-	for (int i = 0; i < guiEnv.size(); i++)
-	{
-		if (guiEnv[i] == this)
-			guiEnv.erase(guiEnv.begin() + i);
-	}
+	int i = FindGuiObj(this);
+
+	if (i == -1) return;				// make sure we found the guiObj
+	if (guiEnv[i] != this) return;		// make sure it is indeed the guiObj (findGuiObj is working correctly?)
+	
+	guiEnv.erase(guiEnv.begin() + i);
 }
 
 void GuiObj::Update(Window& _win)
 {
 	if (this->visible)
 	{
+		// children are drawn on top of the parent
+		if(parent != nullptr)
+			depth = parent->getDepth() + 1;
+
 		this->UpdateAbsPos(_win);
 		this->UpdateAbsDim(_win);
 		this->Draw(_win);
@@ -115,6 +151,11 @@ core::dimension2di GuiObj::getDim() const
 	return dimension2di(width, height);
 }
 
+int GuiObj::getDepth() const
+{
+	return depth;
+}
+
 bool GuiObj::hasParent()
 {
 	return !(this->parent == nullptr);
@@ -143,6 +184,11 @@ void GuiObj::setVisible(bool _visible)
 	visible = _visible;
 }
 
+void GuiObj::setDepth(int _depth)
+{
+	depth = _depth;
+}
+
 int GuiObj::getID() const
 {
 	return id;
@@ -162,6 +208,7 @@ void GuiObj::UpdateID()
 	// \TODO: detect ones that are not found
 }
 
+/// \TODO: This is VERY ineffecient
 bool GuiObj::isMouseOnObj(Window& _win, bool _only)
 {
 	position2di pos = _win.reciever.GetMouseState().positionCurr;
@@ -178,12 +225,13 @@ bool GuiObj::isMouseOnObj(Window& _win, bool _only)
 			{
 				// if there is on another object on top of it, then
 				// the cursor is not on this object
-				bool isOnAnotherObj = false;
-				for (int i = this->id + 1; i < guiEnv.size(); i++)
-					isOnAnotherObj |= guiEnv[i]->isMouseOnObj(_win);
-					
-				if (isOnAnotherObj)
-					onObj = false;
+				for (int i = 0; i < guiEnv.size(); i++)
+				{
+					if (guiEnv[i] == this) continue; // Don't check against itself
+					if (guiEnv[i]->isMouseOnObj(_win) == true)
+						if(depth <= guiEnv[i]->depth)
+							return false;
+				}
 			}
 		}
 	}
@@ -197,7 +245,7 @@ void GuiObj::UpdateAbsPos(Window& _win)
 	{
 		switch (this->clipPos)
 		{
-			case NONE:
+			case NONEPOS:
 				absXpos = parent->absXpos + this->xpos;
 				absYpos = parent->absYpos + this->ypos;
 				break;
@@ -257,7 +305,7 @@ void GuiObj::UpdateAbsPos(Window& _win)
 	{
 		switch (clipPos)
 		{
-			case NONE:
+			case NONEPOS:
 				absXpos = this->xpos;
 				absYpos = this->ypos;
 				break;

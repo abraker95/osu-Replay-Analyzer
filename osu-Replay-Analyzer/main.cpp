@@ -20,19 +20,16 @@
 #include "osu!/osuCalc.h"
 
 #include "osu!/Filestructure/Play.h"
-#include "osu!/Filestructure/ScoreEngine.h"
+#include "osu!/Score/ScoreEngine.h"
 
 #include "osu!/Drawable/GamemodeRenderer.h"
 #include "osu!/Drawable/Hitcircle.h"
 #include "osu!/Drawable/TimingGraph.h"
+#include "osu!/Drawable/HitTimingGraph.h"
+#include "osu!/Drawable/HitTimingMarker.h"
+#include "osu!/Drawable/StatGraph.h"
 
-#include "osu!/Skills/osu!std/analysis.h"
-#include "osu!/Skills/osu!std/reaction.h"
-#include "osu!/Skills/osu!std/reading.h"
-#include "osu!/Skills/osu!std/precision.h"
-#include "osu!/Skills/osu!std/agility.h"
-#include "osu!/Skills/osu!std/tenacity.h"
-#include "osu!/Skills/osu!std/control.h"
+#include "osu!/Analysis/AnalysisStruct.h"
 
 using namespace std;
 
@@ -101,28 +98,9 @@ void DrawDebug(Window &_win, std::vector<Hitcircle> &_hitcircles, int _time, dou
 
 }*/
 
-void DrawGraph(Window &_win, std::function<double(double)> _y, int* _ref, double _step = 1, double _xscale = 1, double _yscale = 1)
-{
-	dimension2di dim = _win.getDimentions();
-	while (_win.device->run())
-	{
-		vector2di prev = vector2di(0, 0);
-		_win.driver->beginScene(true, true, SColor(255, 0, 0, 0));
-
-			for (int x = *_ref; x <= (*_ref + dim.Width)/_xscale; x += _step)
-			{
-				vector2di curr = vector2di((x - *_ref)*_xscale, dim.Height - _y(x)*_yscale);
-				_win.driver->draw2DLine(prev, curr, SColor(255, 255, 255, 255));
-				prev = curr;
-			}
-
-		_win.driver->endScene();
-	}
-}
-
 std::pair<std::string, std::string> getAnalyzerTXT()
 {
-	const std::string file = "C:\\Users\\abraker\\Documents\\C++\\Repos\\osuskills-analysis-tool\\analyze.txt";
+	const std::string file = "analyze.txt";
 	std::string beatmapFile, replayFile;
 
 	std::ifstream analyzeFile(file);
@@ -147,11 +125,8 @@ int main()
 	const int RESY =  50+480;
 
 	Window win(RESX, RESY);
-	win.device->setWindowCaption(L"osu!skill Replay Analyzer");
-	win.device->setResizable(true);
-
-	//Window winGraph(RESX, RESY);
-	//win.device->setWindowCaption(L"Reaction Skill Graph");
+		win.device->setWindowCaption(L"osu! Replay Analyzer");
+		win.device->setResizable(true);
 
 	double CS = 4;
 	double AR = 9;
@@ -159,22 +134,26 @@ int main()
 
 	bool hidden = false;
 
-	Slider csSlider(-75, 25, 120, 10);
+	Slider csSlider(-75, 100, 120, 10);
 		csSlider.setRange(0, 10);
 		csSlider.ClipPosTo(GuiObj::TOPRIGHT);
 
-	Slider arSlider(-75, 100, 120, 10);
+	Slider arSlider(-75, 150, 120, 10);
 		arSlider.setRange(0, 11);
 		arSlider.setVal(10 + 1.0 / 3.0);
 		arSlider.ClipPosTo(GuiObj::TOPRIGHT);
 
-	Slider hdSlider(-75, 175, 120, 10);
+	Slider hdSlider(-75, 200, 120, 10);
 		hdSlider.setRange(0, 1);
 		hdSlider.ClipPosTo(GuiObj::TOPRIGHT);
 
-	/// \TODO: Figure out how to exit this thread safely when closing window
-//	std::function<double(double)> reactFoo = [&circles, &CS, &AR, &hidden](int _x) { return getReactionSkill(circles, _x, CS, AR, hidden); };
-//	std::thread first(DrawGraph, winGraph, reactFoo, &time_ms, 10.0, 1, 0.5);
+	Button btnBeatmap(-130, 10, 100, 10);
+		btnBeatmap.ClipPosTo(GuiObj::TOPRIGHT);
+		btnBeatmap.setDepth(1);
+
+	Button btnReplay(-25, 10, 100, 10);
+		btnReplay.ClipPosTo(GuiObj::TOPRIGHT);
+		btnReplay.setDepth(1);
 
 	/// \TODO: Open file dialog box
 
@@ -184,24 +163,33 @@ int main()
 
 	//Dialog dialogBox(20, 20, 500, 300);
 
-	//std::string beatmapFile = "C:\\My Games\\Games\\osu!\\Songs\\3 Ni-Ni - 1,2,3,4, 007 [Wipeout Series]\\Ni-Ni - 1,2,3,4, 007 [Wipeout Series] (MCXD) [-Sweatin-].osu";
-	//std::string replayFile = "C:\\Users\\abraker\\Documents\\C++\\Repos\\osuskills-analysis-tool\\abraker - Ni-Ni - 1,2,3,4, 007 [Wipeout Series] [-Sweatin-] (2016-05-15) Osu.osr";
+	std::pair<std::string, std::string> toAnalyze;
+	Play play;
 
-	std::pair<std::string, std::string> toAnalyze = getAnalyzerTXT();
-	Play play(toAnalyze.first, toAnalyze.second);
+	if (play.replay->getNumFrames() == 0)
+		cout << "No Replay loaded!" << endl;
 
-	cout << play.scoreEngine->getTotalAccScore() << endl;
-
-	TimingGraph timingGraph(win, play.beatmap);
+	TimingGraph timingGraph(0, -20, win, &play);
 		timingGraph.ClipPosTo(GuiObj::BTMLEFT);
 		timingGraph.addClipDimTo(GuiObj::RIGHT);
 		timingGraph.DisableLayer(TimingGraph::LAYER::HITOBJECT_VISIBILTITY);
+
+	HitTimingGraph hitTimingGraph(-38, 100, &play);
+		hitTimingGraph.ClipPosTo(GuiObj::BTMRIGHT);
+
+	HitTimingMarker hitTimingMarker(0, 0, &play, &viewTime);
+		hitTimingMarker.ClipPosTo(GuiObj::BTMLEFT);
 
 	GamemodeRenderer renderer(10, 10, win.getDimentions().Width, win.getDimentions().Height, &play, &viewTime);
 		renderer.ClipPosTo(GuiObj::TOPLEFT);
 		renderer.addClipDimTo(GuiObj::BTM);
 		renderer.addClipDimTo(GuiObj::RIGHT);
-		renderer.setMargin(250, 100);
+		renderer.setMargin(250, 100);		
+
+	StatGraph graphs(0, -50, &viewTime);
+		graphs.ClipPosTo(GuiObj::BTMLEFT);
+		graphs.addClipDimTo(GuiObj::RIGHT);
+		graphs.Init();
 
 	/// \TODO: Are there no memory leaks?
 	/// \TODO: Implement a textbox gui object (OH BOY... >.>)
@@ -217,12 +205,6 @@ int main()
 
 		viewTime = timingGraph.getViewTime();
 
-		// skill calculation
-		//double reaction = getReactionSkill(circles, time_ms, CS, AR, hidden);
-		//double reading = getReadingSkill(circles, time_ms, CS, AR, hidden);
-		//double precision = getPrecisionSkill(circles, time_ms, CS, AR, hidden);
-
-
 		// render stuff
 		win.driver->beginScene(true, true, SColor(255, 0, 0, 0));
 
@@ -235,16 +217,57 @@ int main()
 			//cout << getNumIntersections(circles, time2index, AR2ms(AR)) <<endl;
 			//getNumIntersections(circles, time2index, AR2ms(AR));
 			win.font->draw(core::stringw(win.reciever.GetMouseState().positionCurr.X) + ", " + core::stringw(win.reciever.GetMouseState().positionCurr.Y), core::rect<s32>(RESX - 100, 40, 100, 10), video::SColor(255, 255, 255, 255));
-			//win.font->draw(core::stringw("Reaction: ") + core::stringw(reaction), core::rect<s32>(RESX - 150, 300, 100, 10), video::SColor(255, 255, 255, 255));
-
-			//getParamVelVec(circles, time_ms, CS);
 
 			UpdateGuiObjs(win);
-			
-			//dialogBox.Update(win);
-			//scrollbar.Draw(win);
 
-			//DrawDebug(win, circles, time_ms, AR, CS, hidden);
+			if (btnBeatmap.isTriggered())
+			{
+				cout << endl << "Loading Beatmap..." << endl;
+				play.LoadBeatmap(getAnalyzerTXT().first);
+
+				cout << "Starting Beatmap Analysis..." << endl;
+				AnalysisStruct::beatmapAnalysis.StartAnalysis(&play);
+
+				cout << "Loading objects for rendering..." << endl;
+				renderer.InitRenderer(&play, &viewTime);
+
+				cout << "Loading graph data..." << endl;
+				graphs.Init();
+				
+				cout << "... Done" << endl << endl;
+			}
+
+			if (btnReplay.isTriggered())
+			{
+				cout << endl << "Loading Beatmap..." << endl;
+				play.LoadReplay(getAnalyzerTXT().second);
+
+				cout << "Starting Beatmap Analysis..." << endl;
+				AnalysisStruct::beatmapAnalysis.StartAnalysis(&play);
+				//AnalysisStruct::replayAnalysis.StartAnalysis(&play);
+
+				cout << "Loading objects for rendering..." << endl;
+				renderer.InitRenderer(&play, &viewTime);
+
+				cout << "Loading graph data..." << endl;
+				graphs.Init();
+
+				cout << "Loading hit timing data..." << endl;
+				hitTimingGraph.Init();
+
+				cout << "... Done" << endl;
+
+				if (play.replay->isValid())
+				{
+					std::vector<osu::TIMING>* aimScore = AnalysisStruct::beatmapAnalysis.getAnalyzer("Aim Score (/M)")->getData();
+					if(aimScore->size() != 0) cout << endl << "Aim score: " << aimScore->at(aimScore->size() - 1).key << endl;
+
+					std::vector<osu::TIMING>* tapScore = AnalysisStruct::beatmapAnalysis.getAnalyzer("Tap Score (/M)")->getData();
+					if (tapScore->size() != 0) cout << endl << "Tap score: " << tapScore->at(tapScore->size() - 1).key << endl;
+				}
+			}
+				
+
 		win.driver->endScene();
 		win.device->yield();
 	}

@@ -3,13 +3,15 @@
 #include "../../ui/drawUtils.h"
 #include "../osuCalc.h"
 
+#include "../Filestructure/SliderHitObject.h"
+
 #include <iostream>
 #include <tuple>
 
-Hitcircle::Hitcircle(Beatmap* _beatmap, Hitobject* _hitobject, int* _viewTime)
-	: GuiObj(_hitobject->getPos().X, _hitobject->getPos().Y, CS2px(_beatmap->getDiff().cs), CS2px(_beatmap->getDiff().cs))
+Hitcircle::Hitcircle(Mods* _mods, Hitobject* _hitobject, int* _viewTime)
+	: GuiObj(_hitobject->getPos().X, _hitobject->getPos().Y, CS2px(_mods->getCS()), CS2px(_mods->getCS()))
 {
-	beatmap = _beatmap;
+	mods = _mods;
 	hitobject = _hitobject;
 	viewTime = _viewTime;
 
@@ -17,33 +19,45 @@ Hitcircle::Hitcircle(Beatmap* _beatmap, Hitobject* _hitobject, int* _viewTime)
 	edgeCol = IDLE_COLOR;
 }
 
+Hitcircle::~Hitcircle()
+{
+
+}
+
 void Hitcircle::Draw(Window &_win)
 {
-	// \TODO: Known problem: pixel perfect overlaps causes circles to "blink"
-	// \TODO: Fix ratio not being perfectly applied to sliders
+	/// \TODO: Known problem: pixel perfect overlaps causes circles to "blink"
 
-	double opacity = hitobject->getOpacityAt(*(this->viewTime), beatmap->getDiff().ar, beatmap->getModifiers().hidden);
+	double opacity = hitobject->getOpacityAt(*(this->viewTime), mods->getAR(), mods->getModifier().HD);
 	SColor fade = SColor(255, edgeCol.getRed() * opacity, edgeCol.getGreen() * opacity, edgeCol.getBlue() * opacity);
 	
-	// draw the hitcircle
-	int radius = std::min(this->width / 2.0, this->height / 2.0);
-	DrawArc(_win, this->absXpos + radius, this->absYpos + radius, radius, fade);
-	
+	vector2df radius(this->width / 2.0, this->height / 2.0);
+	DrawArc(_win, this->absXpos, this->absYpos, std::min(radius.X, radius.Y), fade);
+
 	// draw slider
 	if (hitobject->IsHitObjectType(SLIDER))
 	{
-		double velocity = hitobject->slider->getVelocity();
+		double velocity = hitobject->getSlider()->getVelocity();
+		double itrStep = 1.0 / velocity;
+	
+		long startTime = hitobject->getTime(),
+			 endTime = hitobject->getSlider()->getEndTime();
+		 
 		if (velocity != 0.0)
 		{
-			for (double t = hitobject->getTime(); t < hitobject->slider->getEndTime(); t += (1.0 / velocity))
+			for (double t = startTime; t < endTime - itrStep; t += itrStep)
 			{
-				vector2di sliderPoint = hitobject->slider->GetSliderPos(t);
-				_win.driver->drawPixel(sliderPoint.X*getWidthRatio() + radius, sliderPoint.Y*getHeightRatio() + radius, fade);
+				vector2d<double> currSliderPoint = hitobject->getSlider()->GetSliderPos(t);
+				vector2d<double> nextSliderPoint = hitobject->getSlider()->GetSliderPos(MIN(t + itrStep, endTime - itrStep));
 
-				if (BTWN(t - (1.0 / velocity), *(this->viewTime), t + (1.0 / velocity)))
-				{
-					DrawArc(_win, sliderPoint.X*getWidthRatio() + radius, sliderPoint.Y*getHeightRatio() + radius, 5, fade);  // draw slider point
-				}
+				_win.driver->draw2DLine(vector2di(currSliderPoint.X*getWidthRatio() + parent->getPos().X, currSliderPoint.Y*getHeightRatio() + parent->getPos().Y),
+										vector2di(nextSliderPoint.X*getWidthRatio() + parent->getPos().X, nextSliderPoint.Y*getHeightRatio() + parent->getPos().Y),
+										fade);
+
+				//_win.driver->drawPixel(sliderPoint.X*getWidthRatio() + parent->getPos().X, sliderPoint.Y*getHeightRatio() + parent->getPos().Y, fade);
+
+				if (BTWN(t, *(this->viewTime), t + itrStep))
+					DrawArc(_win, currSliderPoint.X*getWidthRatio() + parent->getPos().X, currSliderPoint.Y*getHeightRatio() + parent->getPos().Y, 5, fade);  // draw slider point
 			}
 		}
 	}
@@ -125,9 +139,10 @@ void Hitcircle::SelectedLogic(Window &_win)
 		// has to be += due the fact that x - xoffset = 0, 
 		// resolving the assignment to x = pos.x
 		// this->x = pos.X - this->xOffset + this->x  => this->x = pos.X - 0;
-		vector2d<double> newPos(hitobject->getPos().X + (double)mouseDelta.X/this->getWidthRatio(), hitobject->getPos().Y + (double)mouseDelta.Y/this->getHeightRatio());
-		hitobject->setPos(newPos);
 
+		this->xpos += mouseDelta.X;
+		this->ypos += mouseDelta.Y;
+		
 		edgeCol = SELECTED_COLOR;
 	}
 }
@@ -161,8 +176,8 @@ void Hitcircle::UpdateDimentions()
 	xpos = hitobject->getPos().X*getWidthRatio();
 	ypos = hitobject->getPos().Y*getHeightRatio();
 
-	int diameter = std::min(CS2px(beatmap->getDiff().cs)*getWidthRatio(),
-							CS2px(beatmap->getDiff().cs)*getHeightRatio());
+	int diameter = std::min(CS2px(mods->getCS())*getWidthRatio(),
+							CS2px(mods->getCS())*getHeightRatio());
 
 	width = diameter;
 	height = diameter;
@@ -170,10 +185,10 @@ void Hitcircle::UpdateDimentions()
 
 double Hitcircle::getWidthRatio()
 {
-	return parent->getDim().Width / 640.0;
+	return parent->getDim().Width / 512.0;
 }
 
 double Hitcircle::getHeightRatio()
 {
-	return parent->getDim().Height / 480.0;
+	return parent->getDim().Height / 386.0;
 }

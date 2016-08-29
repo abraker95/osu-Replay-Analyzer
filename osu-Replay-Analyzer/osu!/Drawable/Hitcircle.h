@@ -13,10 +13,11 @@
 class Hitcircle: public GuiObj
 {
 	public:
-		Hitcircle(Beatmap* _beatmap, Hitobject* _hitobject, int* _viewTime);
+		Hitcircle(Mods* _mods, Hitobject* _hitobject, int* _viewTime);
+		virtual ~Hitcircle();
 
 	private:
-		Beatmap *beatmap;
+		Mods *mods;
 		Hitobject *hitobject;
 		int *viewTime;
 

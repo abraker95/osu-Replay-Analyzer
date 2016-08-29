@@ -13,12 +13,13 @@ class OsuManiaRenderer : public GuiObj
 
 		enum Layer
 		{
-			VISIBLE   = 1 << 0,
+			VISIBLE      = 1 << 0,
 			// non
-			DENSITY   = 1 << 2,
-			REPLAY	  = 1 << 3,
-			TIMINGS   = 1 << 4,
-			HITIMINGS = 1 << 5
+			// not density
+			REPLAY	     = 1 << 3,
+			TIMINGS      = 1 << 4,
+			HITIMINGS    = 1 << 5,
+			TAPPINGDIFFS = 1 << 6
 		};
 
 		void SetLayers(int _layer);
@@ -27,6 +28,7 @@ class OsuManiaRenderer : public GuiObj
 		int getEndTime();
 
 	private:
+		void ClearHitnotes();
 		void GenerateHitNotes();
 
 		virtual void UpdateAbsDim(Window& _win);
@@ -38,10 +40,10 @@ class OsuManiaRenderer : public GuiObj
 		virtual void Draw(Window& _win);
 
 		void RenderVisible(Window& _win);
-		void RenderDensities(Window& _win);
 		void RenderReplay(Window& _win);
 		void RenderTimings(Window& _win);
 		void RenderHitTimings(Window& _win);
+		void RenderTappingDiffs(Window& _win);
 
 		int Time2px(double _time);
 		int px2Time(double _px);

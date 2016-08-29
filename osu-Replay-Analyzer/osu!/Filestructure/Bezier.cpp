@@ -13,6 +13,17 @@ Bezier::Bezier(std::vector<irr::core::vector2di> _points)
 	init(approxlength);
 }
 
+Bezier::~Bezier()
+{
+	points.clear();
+	curvePoints.clear();
+	curveDis.clear();
+
+	std::vector<irr::core::vector2di>().swap(points);
+	std::vector<irr::core::vector2di>().swap(curvePoints);
+	std::vector<double>().swap(curveDis);
+}
+
 void Bezier::init(double approxlength)
 {
 	// subdivide the curve
@@ -21,7 +32,6 @@ void Bezier::init(double approxlength)
 		curvePoints.push_back(pointAt(i / (double)(ncurve - 1)));
 
 	// find the distance of each point from the previous point
-	//curveDis = new double[ncurve];
 	totalDistance = 0;
 	for (int i = 0; i < ncurve; i++) 
 	{

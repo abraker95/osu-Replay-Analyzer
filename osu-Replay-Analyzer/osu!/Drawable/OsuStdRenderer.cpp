@@ -2,19 +2,21 @@
 #include "../Filestructure/Play.h"
 #include "../../ui/drawUtils.h"
 
+#include "../osu_standard.h"
+
 OsuStdRenderer::OsuStdRenderer(Play* _play, int* _viewTime, GuiObj* _parent) : GuiObj(0, 0, _parent->getDim().Width, _parent->getDim().Height, _parent)
 {
 	play = _play;
 	viewTime = _viewTime;
 
-	hitCircles.resize(_play->beatmap->hitObjects.size());
+	hitCircles.resize(_play->beatmap->getHitobjects().size());
 
 	GenerateHitcircles();
 }
 
 OsuStdRenderer::~OsuStdRenderer()
 {
-	hitCircles.clear();
+	ClearHitcircles();
 }
 
 void OsuStdRenderer::SetLayers(int _layer)
@@ -25,14 +27,26 @@ void OsuStdRenderer::SetLayers(int _layer)
 
 // ---------- [PRIVATE] ----------
 
+void OsuStdRenderer::ClearHitcircles()
+{
+	for (Hitcircle* circle : hitCircles)
+		if (circle != nullptr)
+			delete circle;
+
+	hitCircles.clear();
+	std::vector<Hitcircle*>().swap(hitCircles);
+}
+
 void OsuStdRenderer::GenerateHitcircles()
 {
+	ClearHitcircles();
+
 	Beatmap* beatmap = play->beatmap;
-	hitCircles.resize(beatmap->hitObjects.size());
+	hitCircles.resize(beatmap->getHitobjects().size());
 
 	for (int i = 0; i < hitCircles.size(); i++)
 	{
-		hitCircles[i] = new Hitcircle(beatmap, beatmap->hitObjects[i], viewTime);
+		hitCircles[i] = new Hitcircle(play->getMod(), beatmap->getHitobjects()[i], viewTime);
 		hitCircles[i]->setParent(this);
 	}
 }
@@ -44,67 +58,60 @@ void OsuStdRenderer::UpdateInternal(Window& _win)
 
 void OsuStdRenderer::Draw(Window& _win)
 {
-	if (layerState & VISIBLE)
-	{
-		this->RenderVisible(_win);
-	}
+	if (play->beatmap->getGamemode() == GAMEMODE::GAMEMODE_ERROR)
+		return;
 
-	if (layerState & PATHS)
-	{
-		this->RenderPaths(_win);
-	}
-
-	if (layerState & DENSITY)
-	{
-		this->RenderDensities(_win);
-	}	
-
-	if (layerState & REPLAY)
-	{
-		this->RenderReplay(_win);
-	}
+	if (layerState & VISIBLE)    this->RenderVisible(_win);
+	if (layerState & PATHS)      this->RenderPaths(_win);
+	if (layerState & DENSITY)    this->RenderDensities(_win);
+	if (layerState & REPLAY)     this->RenderReplay(_win);
+	if (layerState & REPLAYPATH) this->RenderReplayPath(_win);
 }
 
 void OsuStdRenderer::RenderVisible(Window& _win)
 {
 	Beatmap* beatmap = play->beatmap;
-	std::vector<Hitobject*>& hitobjects = beatmap->hitObjects;
 	std::pair<int, int> visibilityTimes = beatmap->getIndicesVisibleAt(*viewTime, 0.3);
 
 	for (int i = visibilityTimes.first; i < visibilityTimes.second; i++)
 	{
 		hitCircles[i]->Update(_win);
 	}
+
+	double widthRatio = getDim().Width / 512.0;
+	double heightRatio = getDim().Height / 386.0;
+
+	int i = OSUSTANDARD::FindHitobjectAt(play->beatmap->getHitobjects(), *viewTime);
+	DrawArc(_win, play->beatmap->getHitobjects()[i]->getPos().X*widthRatio + this->absXpos, play->beatmap->getHitobjects()[i]->getPos().Y*heightRatio + this->absYpos, 5, SColor(255, 255, 0, 0));
 }
 
 void OsuStdRenderer::RenderPaths(Window& _win)
 {
-	Beatmap* beatmap = play->beatmap;
-	std::vector<Hitobject*>& hitobjects = beatmap->hitObjects;
-	std::pair<int, int> visibilityTimes = beatmap->getIndicesVisibleAt(*viewTime, 0.3);
+	std::vector<Hitobject*>& hitobjects = play->beatmap->getHitobjects();
+	
+	int i = std::min(OSUSTANDARD::FindHitobjectAt(hitobjects, *viewTime) + 1, (int) hitobjects.size() - 2);
+	if (i >= (int)hitobjects.size() - 1)
+		return;
 
-	// \TODO: Restore the getPattern function
-	// \TODO: Non visible hitcircles don't update, causing the path to get locations of stuff that hasn't been applied to the aspect ratio
-	int i = std::max(1, visibilityTimes.first);
-	vector2di prevPos, currPos, nextPos;
+	int numIter = 3;
+	if (hitobjects[i + 1]->isHitobjectLong()) numIter++;
 
-	if (BTWN(0, i, hitCircles.size() - 1))
-		currPos = vector2di(hitCircles[i + 0]->getMid().X, hitCircles[i + 0]->getMid().Y);
-	else
-		currPos = vector2di(-1, -1);
+	std::vector<osu::TIMING> points = OSUSTANDARD::getPattern(hitobjects, numIter, 100, hitobjects[i + 1]->getTime(), true);
 
-	if (i - 1 > 0)
-		prevPos = vector2di(hitCircles[i - 1]->getMid().X, hitCircles[i - 1]->getMid().Y);
-	else
-		prevPos = currPos;
+	double widthRatio = getDim().Width / 512.0;
+	double heightRatio = getDim().Height / 386.0;
 
-	if (i + 1 < hitCircles.size())
-		nextPos = vector2di(hitCircles[i + 1]->getMid().X, hitCircles[i + 1]->getMid().Y);
-	else
-		nextPos = currPos;
+	if (points.size() < 2)
+		return;
 
-	_win.driver->draw2DLine(prevPos, currPos, SColor(255, 255, 0, 0));
-	_win.driver->draw2DLine(currPos, nextPos, SColor(255, 255, 0, 0));
+	for (int i = 0; i < points.size() - 1; i++)
+	{
+		vector2di p1, p2;
+			p1 = vector2di(points[i].pos.X*widthRatio + this->absXpos, points[i].pos.Y*heightRatio + this->absYpos);
+			p2 = vector2di(points[i + 1].pos.X*widthRatio + this->absXpos, points[i + 1].pos.Y*heightRatio + this->absYpos);
+		
+		_win.driver->draw2DLine(p1, p2, SColor(255, 255, 0, 0));
+	}
 }
 
 void OsuStdRenderer::RenderDensities(Window& _win)
@@ -115,19 +122,59 @@ void OsuStdRenderer::RenderDensities(Window& _win)
 void OsuStdRenderer::RenderReplay(Window& _win)
 {
 	Replay* replay = play->replay;
-	std::tuple<irr::core::vector2df, int> data = replay->getDataAt(*viewTime);
+	osu::TIMING frame = replay->getFrameAt(*viewTime);
 
-	double widthRatio = getDim().Width / 640.0;
-	double heightRatio = getDim().Height / 480.0;
+	double widthRatio = getDim().Width / 512.0;
+	double heightRatio = getDim().Height / 386.0;
 
-	int cursorXpos = (double)std::get<0>(data).X*widthRatio + this->absXpos;
-	int cursorYpos = (double)std::get<0>(data).Y*heightRatio + this->absYpos;
+	int cursorXpos = (double)frame.pos.X*widthRatio + this->absXpos;
+	int cursorYpos = (double)frame.pos.Y*heightRatio + this->absYpos;
 
-	DrawArc(_win, cursorXpos, cursorYpos, 5, SColor(255, 100, 100, 255));
+	SColor color;
+	if (frame.key != 0) color = SColor(255, 200, 200, 255);
+	else				color = SColor(255, 100, 100, 255);
 
-	if((std::get<1>(data) == 1) || (std::get<1>(data) == 5))
-		_win.driver->draw2DRectangle(SColor(255, 100, 100, 100), rect<s32>(600, 300, 610, 310));
+	DrawArc(_win, cursorXpos, cursorYpos, 5, color);	
+}
 
-	if((std::get<1>(data) == 2) || (std::get<1>(data) == 10))
-		_win.driver->draw2DRectangle(SColor(255, 100, 100, 100), rect<s32>(620, 300, 630, 310));
+void OsuStdRenderer::RenderReplayPath(Window& _win)
+{
+	Replay* replay = play->replay;
+	osu::TIMING frame = replay->getFrameAt(*viewTime - 1000);
+
+	double widthRatio = getDim().Width / 512.0;
+	double heightRatio = getDim().Height / 386.0;
+
+	struct CursorData
+	{
+		SColor color;
+		vector2di pos;
+	};
+
+	const int samplePeriod = 1;
+
+	for (int i = *viewTime - 1000; i < *viewTime; i += samplePeriod)
+	{
+		// get sample
+		osu::TIMING prevData = replay->getFrameAt(i - samplePeriod);
+		osu::TIMING currData = replay->getFrameAt(i);
+
+		// cursor pos
+		CursorData prev, curr;
+			curr.pos = vector2di((double)frame.pos.X*widthRatio   + this->absXpos,
+								 (double)frame.pos.Y*heightRatio  + this->absYpos);
+			prev.pos = vector2di((double)frame.pos.X*widthRatio   + this->absXpos,
+								 (double)frame.pos.Y*heightRatio  + this->absYpos);
+
+		// mouse buttons
+		bool left  = (frame.key == 1) || (frame.key == 5);
+		bool right = (frame.key == 2) || (frame.key == 10);
+
+			 if (left && right) curr.color = SColor(100, 255, 150, 255);
+		else if (left)	  	    curr.color = SColor(100, 255, 150, 150);
+		else if (right) 		curr.color = SColor(100, 150, 150, 255); 
+		else				    curr.color = SColor(100, 0, 0, 0);		   // non
+
+		_win.driver->draw2DLine(prev.pos, curr.pos, curr.color);
+	}
 }
