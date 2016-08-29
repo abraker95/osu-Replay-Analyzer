@@ -30,6 +30,49 @@ void GenHitobjectAtlas(Play* _play)
 	md5 = _play->beatmap->getMD5();
 }
 
+// dir = true -> look forward
+// dir = false -> look backward
+int OSUMANIA::FindHitobjectAt(Play* _play, long _time, int _key, bool _dir)
+{
+	// Regenerate the hitobject atlas if it's not the same beatmap
+	if (_play->beatmap->getMD5() != md5)
+		GenHitobjectAtlas(_play);
+
+	int start = 0;
+	int end = hitobjectAtlas[_key].size() - 2;
+	int mid;
+
+	std::vector<Hitobject*> hitobjects = _play->beatmap->getHitobjects();
+	while (start <= end)
+	{
+		mid = (start + end) / 2;
+
+		int icurr = hitobjectAtlas[_key].at(mid);
+		int inext = hitobjectAtlas[_key].at(mid + 1);
+
+		// Between ends of a hold object
+		if (BTWN(hitobjects[icurr]->getTime(), _time, hitobjects[icurr]->getEndTime()))
+		{
+			// Return next object if next object's timings overlap with this one
+			if (BTWN(hitobjects[inext]->getTime(), _time, hitobjects[inext]->getEndTime()))
+				return hitobjectAtlas[_key].at(mid + 1);
+			else
+				return hitobjectAtlas[_key].at(mid);
+		}
+
+		// Between some two objects
+		if (BTWN(hitobjects[icurr]->getEndTime(), _time, hitobjects[inext]->getTime()))
+			return hitobjectAtlas[_key].at(mid + (long)_dir);
+
+		if (_time < hitobjects[icurr]->getTime())
+			end = mid - 1;
+		else
+			start = mid + 1;
+	}
+
+	return -1;
+}
+
 // Returns the key column based on the xpos of the note and the number of keys there are
 int OSUMANIA::getKey(int _xpos, int _keys)
 {
