@@ -19,6 +19,11 @@ namespace OSUMANIA
 	// Fetches the next note in the specified column. Returns nullptr and sets the index to -1 if it has reached the end
 	Hitobject* getNextNoteOnColumn(Play* _play, int _column, int* _iNote);
 
+	// Fetches the index of the next note in the specified column. Returns -1 if it has reached the end
+	int getNextIndexOnColumn(std::vector<Hitobject*>& _hitobjects, int _column, int _keys, int _iNote);
+
+	int getNumPressesOnNextTiming(Play* _play, int* _iNote);
+
 	// Checks to see if all indices came to an end in terms of time indicated by indices _i
 	bool isAtEnd(int _KEYS, std::vector<int>& _i, std::vector<Hitobject*>& _hitobjects);
 
