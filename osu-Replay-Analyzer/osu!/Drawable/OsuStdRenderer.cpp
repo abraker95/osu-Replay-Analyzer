@@ -77,6 +77,12 @@ void OsuStdRenderer::RenderVisible(Window& _win)
 	{
 		hitCircles[i]->Update(_win);
 	}
+
+	double widthRatio = getDim().Width / 512.0;
+	double heightRatio = getDim().Height / 386.0;
+
+	int i = OSUSTANDARD::FindHitobjectAt(play->beatmap->getHitobjects(), *viewTime);
+	DrawArc(_win, play->beatmap->getHitobjects()[i]->getPos().X*widthRatio + this->absXpos, play->beatmap->getHitobjects()[i]->getPos().Y*heightRatio + this->absYpos, 5, SColor(255, 255, 0, 0));
 }
 
 void OsuStdRenderer::RenderPaths(Window& _win)
