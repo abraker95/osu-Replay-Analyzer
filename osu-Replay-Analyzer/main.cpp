@@ -256,6 +256,15 @@ int main()
 				hitTimingGraph.Init();
 
 				cout << "... Done" << endl;
+
+				if (play.replay->isValid())
+				{
+					std::vector<osu::TIMING>* aimScore = AnalysisStruct::beatmapAnalysis.getAnalyzer("Aim Score (/M)")->getData();
+					if(aimScore->size() != 0) cout << endl << "Aim score: " << aimScore->at(aimScore->size() - 1).key << endl;
+
+					std::vector<osu::TIMING>* tapScore = AnalysisStruct::beatmapAnalysis.getAnalyzer("Tap Score (/M)")->getData();
+					if (tapScore->size() != 0) cout << endl << "Tap score: " << tapScore->at(tapScore->size() - 1).key << endl;
+				}
 			}
 				
 
