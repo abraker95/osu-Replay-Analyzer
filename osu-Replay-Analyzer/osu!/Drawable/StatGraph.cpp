@@ -1,6 +1,6 @@
 #include "StatGraph.h"
-#include "../Skills/osu-std/reading.h"
 #include "../../utils/mathUtils.h"
+#include "../Analysis/AnalysisStruct.h"
 
 StatGraph::StatGraph(int _xpos, int _ypos, int *_viewtime) : GuiObj(_xpos, _ypos, 0, 40, nullptr)
 {
@@ -58,8 +58,11 @@ void StatGraph::Draw(Window &_win)
 	double maxTime = (*timings)[timings->size() - 1].time;
 	double pos = getValue(0, velGraph.getDim().Width, (*viewtime) / maxTime);
 
+	std::string dataName = AnalysisStruct::beatmapAnalysis.getValidAnalyzers()[selection];
+
 	_win.driver->draw2DRectangleOutline(recti(absXpos + pos, absYpos, absXpos + pos + 1, absYpos + height), SColor(255, 255, 255, 255));
 	_win.font->draw(mouseOver.second, rect<s32>(absXpos + mouseOver.first, absYpos, 100, 10), SColor(255, 255, 255, 255));
+	_win.font->draw(core::stringw(dataName.data()), rect<s32>(absXpos + this->width/2, absYpos, 100, 10), SColor(255, 255, 255, 255));
 
 	velGraph.Update(_win);
 	btnUp.Update(_win);
@@ -99,7 +102,9 @@ void StatGraph::UpdateDataSelect()
 
 void StatGraph::CycleSelectUp()
 {
-	if (selection + 1 >= NUM_SELECTIONS)
+	int numSelections = AnalysisStruct::beatmapAnalysis.getValidAnalyzers().size();
+
+	if (selection + 1 >= numSelections)
 		selection = 0;
 	else
 		selection++;
@@ -109,8 +114,10 @@ void StatGraph::CycleSelectUp()
 
 void StatGraph::CycleSelectDwn()
 {
+	int numSelections = AnalysisStruct::beatmapAnalysis.getValidAnalyzers().size();
+
 	if (selection - 1 <= -1)
-		selection = NUM_SELECTIONS - 1;
+		selection = numSelections - 1;
 	else
 		selection--;
 
@@ -119,21 +126,8 @@ void StatGraph::CycleSelectDwn()
 
 std::vector<osu::TIMING>* StatGraph::getSelection()
 {
-	switch (selection)
-	{
-		case VEL:
-			return &OSUSTANDARD::READING::velocities;
+	std::vector<std::string> analyzers = AnalysisStruct::beatmapAnalysis.getValidAnalyzers();
+	if (analyzers.size() == 0) return nullptr;
 
-		case NPS:
-			return &OSUSTANDARD::READING::notesRate;
-
-		case DIFF:
-			return &OSUSTANDARD::READING::diffs;
-
-		case OVRLP:
-			return &OSUSTANDARD::READING::overlaps;
-
-		default:
-			return nullptr;
-	}
+	return AnalysisStruct::beatmapAnalysis.getAnalyzer(analyzers[selection])->getData();
 }
