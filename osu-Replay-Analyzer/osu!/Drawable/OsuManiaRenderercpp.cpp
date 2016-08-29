@@ -5,8 +5,7 @@
 #include "../Filestructure/Play.h"
 #include "../../ui/drawUtils.h"
 
-#include "../Score/osu-mania/score.h"
-#include "../Skills/osuMania_skills.h"
+#include "../Analysis/AnalysisStruct.h"
 
 OsuManiaRenderer::OsuManiaRenderer(Play* _play, int* _viewTime, GuiObj* _parent) : GuiObj(0, 0, _parent->getDim().Width, _parent->getDim().Height, _parent)
 {
@@ -133,7 +132,10 @@ void OsuManiaRenderer::RenderHitTimings(Window& _win)
 {
 	const int KEYS = play->beatmap->getMods().getCS();
 
-	for (osu::TIMING timing : OSUMANIA::accTimings)
+	Analyzer* analyzer = AnalysisStruct::beatmapAnalysis.getAnalyzer("Tap Deviation (ms)");
+	if (analyzer == nullptr) return;
+
+	for (osu::TIMING timing : *(analyzer->getData()))
 	{
 		if (BTWN(getStartTime(), timing.time + timing.data, getEndTime())) // hits
 		{
@@ -165,7 +167,7 @@ void OsuManiaRenderer::RenderTappingDiffs(Window& _win)
 {
 	const int KEYS = play->beatmap->getMods().getCS();
 
-	for (osu::TIMING timing : OSUMANIA::SPEED_CONTROL::diffs)
+	/*for (osu::TIMING timing : OSUMANIA::SPEED_CONTROL::diffs)
 	{
 		if (BTWN(getStartTime(), timing.time, getEndTime())) // hits
 		{
@@ -176,9 +178,9 @@ void OsuManiaRenderer::RenderTappingDiffs(Window& _win)
 
 			_win.font->draw(core::stringw(timing.data), core::rect<s32>(absXpos + hitXpos, absYpos + hitYpos, 100, 10), video::SColor(255, 255, 255, 255));
 		}
-	}
+	}*/
 
-	for (osu::TIMING timing : OSUMANIA::SPEED_CONTROL::scores)
+	/*for (osu::TIMING timing : OSUMANIA::SPEED_CONTROL::scores)
 	{
 		if (BTWN(getStartTime(), timing.time, getEndTime())) // hits
 		{
@@ -189,7 +191,7 @@ void OsuManiaRenderer::RenderTappingDiffs(Window& _win)
 
 			_win.font->draw(core::stringw(timing.data), core::rect<s32>(absXpos + hitXpos, absYpos + hitYpos - 10, 100, 10), video::SColor(255, 255, 255, 255));
 		}
-	}
+	}*/
 }
 
 void OsuManiaRenderer::UpdateAbsDim(Window& _win)

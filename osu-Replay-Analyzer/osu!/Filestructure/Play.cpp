@@ -1,5 +1,4 @@
 #include "Play.h"
-#include "../Score/ScoreEngine.h"
 
 #include "../../utils/mathUtils.h"
 #include "../osuCalc.h"
@@ -13,7 +12,6 @@ Play::Play()
 {
 
 	replay = new Replay();
-	scoreEngine = new ScoreEngine();
 
 	activeMods = custom;
 
@@ -74,7 +72,6 @@ void Play::LoadReplay(std::string _replayFile)
 	beatmap->ResetModified();
 	setMods(REPLAY);
 	beatmap->Process();
-	scoreEngine->genAccTimings(this);
 }
 
 void Play::setMods(ModSource _source)

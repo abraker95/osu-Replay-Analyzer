@@ -29,7 +29,7 @@
 #include "osu!/Drawable/HitTimingMarker.h"
 #include "osu!/Drawable/StatGraph.h"
 
-#include "osu!/Skills/SkillEngine.h"
+#include "osu!/Analysis/AnalysisStruct.h"
 
 using namespace std;
 

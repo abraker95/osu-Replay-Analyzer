@@ -1,12 +1,5 @@
 #include "HitTimingMarker.h"
-#include "../Score/ScoreEngine.h"
-
-#include "../Score/osu-std/score.h"
-#include "../Score/osu-catch/score.h"
-#include "../Score/osu-taiko/score.h"
-#include "../Score/osu-mania/score.h"
-#include "../Score/osu-dodge/score.h"
-
+#include "../Analysis/AnalysisStruct.h"
 
 HitTimingMarker::HitTimingMarker(int _xpos, int _ypos, Play* _play, int* _viewTime) : GuiObj(_xpos, _ypos, 0, 10, nullptr)
 {
@@ -72,7 +65,10 @@ void HitTimingMarker::UpdateInternal(Window& _win)
 
 void HitTimingMarker::DrawStdTimings(Window& _win)
 {
-	for (auto& timing : OSUSTANDARD::accTimings)
+	Analyzer* analyzer = AnalysisStruct::beatmapAnalysis.getAnalyzer("Tap Deviation (ms)");
+	if (analyzer == nullptr) return;
+
+	for (auto& timing : *(analyzer->getData()))
 	{
 		if (BTWN(*viewTime - timeZoom, timing.time, *viewTime))
 		{
@@ -94,7 +90,10 @@ void HitTimingMarker::DrawTaikoTimings(Window& _win)
 
 void HitTimingMarker::DrawManiaTimings(Window& _win)
 {
-	for (auto& timing : OSUMANIA::accTimings)
+	Analyzer* analyzer = AnalysisStruct::beatmapAnalysis.getAnalyzer("Tap Deviation (ms)");
+	if (analyzer == nullptr) return;
+
+	for (auto& timing : *(analyzer->getData()))
 	{
 		if (BTWN(*viewTime - timeZoom, timing.time, *viewTime))
 		{

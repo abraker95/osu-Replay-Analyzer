@@ -1,11 +1,5 @@
 #include "HitTimingGraph.h"
-#include "../Score/ScoreEngine.h"
-
-#include "../Score/osu-std/score.h"
-#include "../Score/osu-catch/score.h"
-#include "../Score/osu-taiko/score.h"
-#include "../Score/osu-mania/score.h"
-#include "../Score/osu-dodge/score.h"
+#include "../Analysis/AnalysisStruct.h"
 
 HitTimingGraph::HitTimingGraph(int _xpos, int _ypos, Play* _play) : GuiObj(_xpos, _ypos, 195, 200.0, nullptr)
 {
@@ -124,7 +118,10 @@ void HitTimingGraph::genStdBins()
 	for (int& bin : bins)
 		bin = 0;
 
-	for (auto& timing : OSUSTANDARD::accTimings)
+	Analyzer* analyzer = AnalysisStruct::beatmapAnalysis.getAnalyzer("Tap Deviation (ms)");
+	if (analyzer == nullptr) return;
+
+	for (auto& timing : *(analyzer->getData()))
 	{
 		for (int i = 0; i < binTable.size() - 1; i++)
 		{
@@ -176,7 +173,10 @@ void HitTimingGraph::genManiaBins()
 	for (int& bin : bins)
 		bin = 0;
 
-	for (auto& timing : OSUMANIA::accTimings)
+	Analyzer* analyzer = AnalysisStruct::beatmapAnalysis.getAnalyzer("Tap Deviation (ms)");
+	if (analyzer == nullptr) return;
+
+	for (auto& timing : *(analyzer->getData()))
 	{
 		for (int i = 0; i < binTable.size() - 1; i++)
 		{

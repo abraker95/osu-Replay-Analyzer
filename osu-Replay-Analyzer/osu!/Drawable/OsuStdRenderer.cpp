@@ -2,6 +2,8 @@
 #include "../Filestructure/Play.h"
 #include "../../ui/drawUtils.h"
 
+#include "../osu_standard.h"
+
 OsuStdRenderer::OsuStdRenderer(Play* _play, int* _viewTime, GuiObj* _parent) : GuiObj(0, 0, _parent->getDim().Width, _parent->getDim().Height, _parent)
 {
 	play = _play;
@@ -88,7 +90,7 @@ void OsuStdRenderer::RenderPaths(Window& _win)
 	int numIter = 3;
 	if (hitobjects[i + 1]->isHitobjectLong()) numIter++;
 
-	std::vector<std::pair<irr::core::vector2d<double>, double>> points = OSUSTANDARD::getPattern(&hitobjects, numIter, 100, hitobjects[i + 1]->getTime(), true);
+	std::vector<osu::TIMING> points = OSUSTANDARD::getPattern(hitobjects, numIter, 100, hitobjects[i + 1]->getTime(), true);
 
 	double widthRatio = getDim().Width / 512.0;
 	double heightRatio = getDim().Height / 386.0;
