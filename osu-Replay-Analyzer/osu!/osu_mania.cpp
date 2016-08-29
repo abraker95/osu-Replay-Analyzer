@@ -161,3 +161,20 @@ bool OSUMANIA::isBehindOtherColumns(int _KEYS, int _keyCheck, std::vector<int>& 
 	}
 	return get;
 }
+
+int OSUMANIA::getButtonState(int _prevKey, int _currKey, int _key)
+{
+	int state = 0;
+	int prevKey = _prevKey & (1 << _key);
+	int currKey = _currKey & (1 << _key);
+
+	// trigger down
+	if ((prevKey == 0) && (currKey != 0))
+		state = 1; // pressed
+
+	// trigger up
+	if ((prevKey != 0) && (currKey == 0))
+		state = 2; // release
+
+	return state;
+}

@@ -25,6 +25,7 @@ namespace OSUMANIA
 	// Checks to see of _keyCheck is behind all other columns in terms of time indicated by indices _i
 	bool isBehindOtherColumns(int _KEYS, int _keyCheck, std::vector<int>& _i, std::vector<Hitobject*>& _hitobjects);
 
+	int getButtonState(int _prevKey, int _currKey, int _key);
 }
 
 #endif // !OSU_MANIA_H
