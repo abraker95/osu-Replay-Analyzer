@@ -17,6 +17,7 @@ namespace OSUSTANDARD
 	osu::TIMING getNextTickPoint(std::vector<Hitobject*>& _hitobjects, long* _time);
 	
 	int getButtonState(int _prevKey, int _currKey);
+	int getButtonState(int _prevKey, int _currKey, int _key);
 }
 
 #endif
