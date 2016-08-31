@@ -1,7 +1,6 @@
 #include "OsuManiaRenderer.h"
 #include "GamemodeRenderer.h"
 
-#include "../Score/ScoreEngine.h"
 #include "../Filestructure/Play.h"
 #include "../../ui/drawUtils.h"
 

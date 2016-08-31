@@ -20,7 +20,6 @@
 #include "osu!/osuCalc.h"
 
 #include "osu!/Filestructure/Play.h"
-#include "osu!/Score/ScoreEngine.h"
 
 #include "osu!/Drawable/GamemodeRenderer.h"
 #include "osu!/Drawable/Hitcircle.h"
