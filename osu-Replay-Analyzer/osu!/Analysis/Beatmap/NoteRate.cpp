@@ -4,7 +4,7 @@
 #include "../../osu_standard.h"
 #include "../../osu_mania.h"
 
-Analyzer_NoteRate::Analyzer_NoteRate() : Analyzer("note rate (notes/ms)") {}
+Analyzer_NoteRate::Analyzer_NoteRate() : Analyzer("note rate (notes/s)") {}
 Analyzer_NoteRate::~Analyzer_NoteRate() {}
 
 void Analyzer_NoteRate::AnalyzeStd(Play* _play)

@@ -14,10 +14,11 @@ void Analyzer_AimScore::AnalyzeStd(Play* _play)
 	osu::TIMING timing;
 		timing.key = 0;
 
-	std::vector<osu::TIMING>& aimDeviations = *AnalysisStruct::beatmapAnalysis.getAnalyzer("aim deviation (px)")->getData();
-	int numPoints = aimDeviations.size();
+	Analyzer* analyzer = AnalysisStruct::beatmapAnalysis.getAnalyzer("Aim Deviation (px)");
+	if (analyzer == nullptr) return;
 
-	for (osu::TIMING aimDeviation : aimDeviations)
+	int numPoints = analyzer->getData()->size();
+	for (osu::TIMING aimDeviation : *(analyzer->getData()))
 	{
 		timing.data = 1000000.0 * (Guassian(aimDeviation.data, 15.0)/(double)numPoints);  // inidivual score
 		timing.key += timing.data;														  // cumalative score

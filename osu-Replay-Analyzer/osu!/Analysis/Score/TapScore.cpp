@@ -14,11 +14,11 @@ void Analyzer_TapScore::AnalyzeStd(Play* _play)
 	osu::TIMING timing;
 		timing.key = 0;
 
-	std::vector<osu::TIMING>* tapDeviations = AnalysisStruct::beatmapAnalysis.getAnalyzer("tap deviation (ms)")->getData();
-	if (tapDeviations == nullptr) return;
+	Analyzer* analyzer = AnalysisStruct::beatmapAnalysis.getAnalyzer("Tap Deviation (ms)");
+	if (analyzer == nullptr) return;
 
-	int numPoints = tapDeviations->size();
-	for (osu::TIMING TapDeviation : *tapDeviations)
+	int numPoints = analyzer->getData()->size();
+	for (osu::TIMING TapDeviation : *(analyzer->getData()))
 	{
 		timing.data = 1000000.0 * (Guassian(TapDeviation.data, 40.0)/(double)numPoints);  // inidivual score
 		timing.key += timing.data;														  // cumalative score

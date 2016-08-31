@@ -7,7 +7,7 @@
 #include "../../osu_standard.h"
 #include "../../osu_mania.h"
 
-Analyzer_AimDeviation::Analyzer_AimDeviation() : Analyzer("aim deviation (px)") {}
+Analyzer_AimDeviation::Analyzer_AimDeviation() : Analyzer("Aim Deviation (px)") {}
 Analyzer_AimDeviation::~Analyzer_AimDeviation() {}
 
 void Analyzer_AimDeviation::AnalyzeStd(Play* _play)
@@ -15,7 +15,7 @@ void Analyzer_AimDeviation::AnalyzeStd(Play* _play)
 	if (_play->replay->isValid() == false) return;
 	std::vector<Hitobject*>& hitobjects = _play->beatmap->getHitobjects();
 
-	std::vector<osu::TIMING>& tapDeviations = *AnalysisStruct::beatmapAnalysis.getAnalyzer("tap deviation (ms)")->getData();
+	std::vector<osu::TIMING>& tapDeviations = *AnalysisStruct::beatmapAnalysis.getAnalyzer("Tap Deviation (ms)")->getData();
 	osu::TIMING timing;
 		timing.data = 0;
 
