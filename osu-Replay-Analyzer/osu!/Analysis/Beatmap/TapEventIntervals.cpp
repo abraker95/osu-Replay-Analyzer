@@ -1,6 +1,8 @@
 #include "TapEventIntervals.h"
-#include "../../osu_standard.h"
 #include "../../../utils/geometry.h"
+
+#include "../../osu_standard.h"
+#include "../../osu_mania.h"
 
 Analyzer_TapEventIntervals::Analyzer_TapEventIntervals() : Analyzer("tap event intervals (ms)"){}
 Analyzer_TapEventIntervals::~Analyzer_TapEventIntervals(){}
@@ -100,7 +102,37 @@ void Analyzer_TapEventIntervals::AnalyzeTaiko(Play* _play)
 
 void Analyzer_TapEventIntervals::AnalyzeMania(Play* _play)
 {
+	std::vector<Hitobject*>& hitobjects = _play->beatmap->getHitobjects();
+	int KEYS = _play->beatmap->getMods().getCS();
+	
+	osu::TIMING timing;
+		timing.data = 0;
 
+	long currTime = hitobjects[0]->getTime();
+	std::vector<long> holdnoteEnds;
+		holdnoteEnds.resize(KEYS);
+
+	for (int i = 0; i < hitobjects.size(); i++)
+	{
+		if (hitobjects[i]->isHitobjectLong())
+			holdnoteEnds[OSUMANIA::getKey(hitobjects[i]->getPos().X, KEYS)] = hitobjects[i]->getEndTime();
+
+		long hitobjectTime = hitobjects[i]->getTime();
+		if (hitobjectTime > currTime)
+		{
+			timing.data = hitobjectTime - currTime;
+			timing.time = hitobjectTime;
+
+			// True = just presses, False = Presses and Releases
+			timing.press = true;
+			for (long holdnoteEnd : holdnoteEnds)
+				timing.press &= (holdnoteEnd == hitobjectTime);
+
+			data.push_back(timing);
+
+			currTime = hitobjects[i]->getTime();
+		}
+	}
 }
 
 void Analyzer_TapEventIntervals::AnalyzeDodge(Play* _play)
