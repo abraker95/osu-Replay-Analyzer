@@ -5,6 +5,8 @@
 #include "../../osu_standard.h"
 #include "../../osu_mania.h"
 
+#include "../AnalysisStruct.h"
+
 Analyzer_TapDeviation::Analyzer_TapDeviation() : Analyzer("Tap Deviation (ms)") {}
 Analyzer_TapDeviation::~Analyzer_TapDeviation() {}
 
@@ -36,7 +38,7 @@ void Analyzer_TapDeviation::AnalyzeStd(Play* _play)
 		if (i > 0) pressState = OSUSTANDARD::getButtonState(prevFrame.key, currFrame.key);
 		else	   pressState = OSUSTANDARD::getButtonState(0, currFrame.key);
 
-		bool press = ((pressState & 1) != 0);
+		bool press   = ((pressState & 1) != 0);
 		bool release = ((pressState & 2) != 0);
 
 		// Only look at key release or key press events
@@ -129,117 +131,84 @@ void Analyzer_TapDeviation::AnalyzeMania(Play* _play)
 	std::vector<Hitobject*>& hitobjects = _play->beatmap->getHitobjects();
 	int KEYS = _play->beatmap->getMods().getCS();
 
+	std::vector<long> recTimes;	recTimes.resize(KEYS);
+	for (long& recTime : recTimes) recTime = INT_MIN;
+
 	osu::TIMING timing;
 		timing.data = 0;
 
-	std::vector<int> recHitobject;		recHitobject.resize(KEYS);	// recHitobject is the hitobject we expect to record
-	std::vector<int> currIFrame;		currIFrame.resize(KEYS);
-	std::vector<int> prevIFrame;		prevIFrame.resize(KEYS);
-	std::vector<bool> recordRelease;	recordRelease.resize(KEYS);
+	// Max deviation +/- where a miss is not counted
+	int MISS_DEVIATION = 500;
 
-	// Get the starting notes of each column
-	for(int key = 0; key < KEYS; key++)
-		recHitobject[key] = OSUMANIA::getNextIndexOnColumn(hitobjects, key, KEYS, -1);
+	Analyzer* analyzer = AnalysisStruct::beatmapAnalysis.getAnalyzer("Press-Release Intervals (ms)");
+	if (analyzer == nullptr) return;
 
-	int numFrames = _play->replay->getNumFrames();
-	while(true)
+	std::vector<osu::TIMING>& tapReleaseIntervals = *(analyzer->getData());
+	if (tapReleaseIntervals.size() == 0) return;
+
+	// Split the stuff up by keys to make things easier to search
+	std::vector<std::vector<osu::TIMING>> tapRelaseIntervalsKeys; tapRelaseIntervalsKeys.resize(KEYS);
+	for (osu::TIMING tapReleaseIterval : tapReleaseIntervals)
 	{
-		for (int key = 0; key < KEYS; key++)
+		int key = tapReleaseIterval.key;
+		tapRelaseIntervalsKeys[key].push_back(tapReleaseIterval);
+	}
+
+	// Parse the map
+	for (int i = 0; i < hitobjects.size(); i++)
+	{
+		long currTime = hitobjects[i]->getTime();
+		int key = OSUMANIA::getKey(hitobjects[i]->getPos().X, KEYS);
+		
+		std::vector<osu::TIMING>& tapReleases = tapRelaseIntervalsKeys[key];
+		int index = osu::FindTimingAt(tapReleases, currTime);
+		
+		if (index != 0)
+			if (tapReleases[index - 1].time > recTimes[key])
+				index--;
+
+		if (tapReleases[index].time < recTimes[key]) continue;
+
+		// MISS
+		if (!BTWN(currTime - MISS_DEVIATION, tapReleases[index].time, currTime + MISS_DEVIATION))
 		{
-			// Check if we are done with going through the objects on the current column. Skip if so
-			if (recHitobject[key] >= hitobjects.size()) continue;
+			timing.data = INT_MAX;
+			timing.key = key;
+			timing.press = false;
+			timing.time = currTime;
 
-			// get update and get prev replay frame
-			prevIFrame[key] = currIFrame[key];
-			osu::TIMING prevFrame = _play->replay->getFrame(prevIFrame[key]);
+			//data.push_back(timing);
+			recTimes[key] = tapReleases[index].time;
+		}
+		else // HIT
+		{
+			// Normal note
+			int deviation = tapReleases[index].time - currTime;
 
-			// Get the next replay frame on this coloumn
-			osu::TIMING currFrame = _play->replay->getFrame(++currIFrame[key]);
-			if (currIFrame[key] >= _play->replay->getNumFrames()) continue; // skip this column then as we are finished with it
-
-			// Determine the press state; Blank, Press, Release, or Hold
-			int pressState;
-			if (currIFrame[key] > 0) pressState = OSUMANIA::getButtonState(prevFrame.pos.X, currFrame.pos.X, key);
-			else					 pressState = OSUMANIA::getButtonState(0, currFrame.pos.X, key);
-
-			bool press   = ((pressState & 1) != 0);
-			bool release = ((pressState & 2) != 0);
-
-			// Only look at key release or key press events
-			if (!press && !release) continue;
-
-			// Get note timing and player timing
-			long timePlayer = currFrame.time,
-				 timeTarget = hitobjects[recHitobject[key]]->getCloserTime(currFrame.time);
-
-			// find the object closest to the player timing
-			int index = OSUMANIA::FindHitobjectAt(_play, currFrame.time, key, timePlayer <= timeTarget);
-
-			// We don't need to precess releases if we are not expecting one
-			if (!recordRelease[key] && release) continue;
-
-	// [NON TAP MISS]
-			if ((index != recHitobject[key])) // we are still on previous hitobject
-			{
-				// If object was not found, just ignore. Can't be a miss
-				if (index == -1) continue;
-
-				timing.data = INT_MAX;
-				timing.pos = currFrame.pos;
-				timing.press = false;
-				timing.time = currFrame.time;
-
-				///data.push_back(timing);
-				recHitobject[key] = OSUMANIA::getNextIndexOnColumn(hitobjects, key, KEYS, index); // catch up the recorded hitobjects to the current one
-			
-				continue;
-			}
-
-			// How early or late the player hit
-			int deviation = timePlayer - timeTarget;
-	
-	// [EARLY/LATE MISS]
-			if (deviation < -500) // too early
-			{
-				continue;
-			}
-			else if (deviation > 500) // too late
-			{
-				timing.data = INT_MAX;
-				timing.pos = currFrame.pos;
-				timing.press = false;
-				timing.time = currFrame.time;
-
-				///data.push_back(timing);
-				recHitobject[key] = OSUMANIA::getNextIndexOnColumn(hitobjects, key, KEYS, index); // catch up the recorded hitobjects to the current one
-
-				continue; 
-			}
-
-	// [HIT]
-			// mark to record release if it is a hold and we pressed
-			bool isLong = hitobjects[index]->isHitobjectLong();
-			if (hitobjects[index]->isHitobjectLong() && press) recordRelease[key] = true;
-			else											   recordRelease[key] = false;
-
-			// We are are at the same hitobject if we are expecting a release. Go to the next hitobject if not
-			if (!recordRelease[key]) recHitobject[key] = OSUMANIA::getNextIndexOnColumn(hitobjects, key, KEYS, recHitobject[key]);
-
-			// record timing data
 			timing.data = deviation;
 			timing.key = key;
-			timing.pos = currFrame.pos;
-			timing.press = press;
-			timing.time = currFrame.time;
+			timing.press = true;
+			timing.time = currTime;
 
 			data.push_back(timing);
-		}
+			recTimes[key] = tapReleases[index].time;
 
-		// Check if we are done with every column
-		bool done = true;
-		for (int key = 0; key < KEYS; key++)
-			done &= (OSUMANIA::getNextIndexOnColumn(hitobjects, key, KEYS, recHitobject[key]) == OSUMANIA::MANIA_END);
-		if (done) break;
+			/// \tODO: FIX HOLD NOTES
+
+			// If a hold note
+			if (hitobjects[i]->isHitobjectLong())	
+			{
+				deviation = (tapReleases[index].time + tapReleases[index].data) - hitobjects[i]->getEndTime();
+
+				timing.data = deviation;
+				timing.key = key;
+				timing.press = true;
+				timing.time = hitobjects[i]->getEndTime();
+
+				data.push_back(timing);
+				recTimes[key] = tapReleases[index].time + tapReleases[index].data;
+			}
+		}
 	}
 
 	osu::SortByTime(data);
