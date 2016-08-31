@@ -31,6 +31,7 @@ AnalysisStruct::AnalysisStruct()
 	//beatmapAnalysis.AddAnalyzer(new Analyzer_NoteRatePerKey());
 	beatmapAnalysis.AddAnalyzer(new Analyzer_NoteRatePerKeyPrec());
 
+	beatmapAnalysis.AddAnalyzer(new Analyzer_PressReleaseIntervals());
 	beatmapAnalysis.AddAnalyzer(new Analyzer_TapDeviation());
 	beatmapAnalysis.AddAnalyzer(new Analyzer_AimDeviation());
 
