@@ -5,7 +5,7 @@ Window::Window(int _width , int _height)
 {
 	initOsWindow();
 
-	device = createDevice(video::EDT_SOFTWARE, dimension2d<u32>(_width, _height), 16, false, false, false, &reciever);
+	device = createDevice(video::EDT_OPENGL, dimension2d<u32>(_width, _height), 16, false, false, false, &reciever);
 		if (!device)
 		{
 			// \TODO: Print cause of error
