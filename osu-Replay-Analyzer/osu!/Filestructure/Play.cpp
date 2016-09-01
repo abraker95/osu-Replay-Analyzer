@@ -53,6 +53,9 @@ void Play::LoadBeatmap(std::string _beatmapFile)
 /// \TODO: Perhaps split this off to another thread
 void Play::LoadReplay(std::string _replayFile)
 {
+	if (beatmap == nullptr) return;			  // Make sure the beatmap the replay is for exists
+	if (beatmap->isValid() == false) return;  // Make sure the beatmap the replay is for is ok
+
 	if (replay != nullptr)
 		delete replay;
 
@@ -66,8 +69,9 @@ void Play::LoadReplay(std::string _replayFile)
 			timing.time += 24;
 	}
 
-	// Make sure the replay is valid before continuing
-	if (!replay->isValid())	return;
+	if (!replay->isValid())	return;									// Make sure the replay is valid before continuing
+	if (beatmap->getMD5() != replay->beatmapMD5) delete replay;		// Make sure it matches the required beatmap
+
 
 	beatmap->ResetModified();
 	setMods(REPLAY);
