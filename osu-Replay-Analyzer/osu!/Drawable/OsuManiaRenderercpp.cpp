@@ -136,6 +136,8 @@ void OsuManiaRenderer::RenderHitTimings(Window& _win)
 
 	for (osu::TIMING timing : *(analyzer->getData()))
 	{
+		if (timing.press == false) continue;  // don't render misses
+
 		if (BTWN(getStartTime(), timing.time + timing.data, getEndTime())) // hits
 		{
 			int hitXpos = timing.key * (this->width / KEYS) + (this->absXpos - this->width / 2);
@@ -146,7 +148,7 @@ void OsuManiaRenderer::RenderHitTimings(Window& _win)
 
 			_win.driver->draw2DRectangle(SColor(255, 255, 0, 255), rect<s32>(absXpos + hitXpos, absYpos + hitYpos, absXpos + hitXpos + width, absYpos + hitYpos + 2));
 		}
-		else if (BTWN(getStartTime(), timing.time, getEndTime())) // misses
+		/*else if (BTWN(getStartTime(), timing.time, getEndTime())) // misses
 		{
 			if (timing.data == INT_MAX)
 			{
@@ -158,7 +160,7 @@ void OsuManiaRenderer::RenderHitTimings(Window& _win)
 
 				_win.driver->draw2DRectangle(SColor(255, 200, 0, 0), rect<s32>(absXpos + hitXpos, absYpos + hitYpos, absXpos + hitXpos + width, absYpos + hitYpos + 3));
 			}	
-		}
+		}*/
 	}
 }
 
