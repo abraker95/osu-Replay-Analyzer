@@ -82,6 +82,7 @@
     <ClCompile Include="osu!\Analysis\Beatmap\TapEventIntervals.cpp" />
     <ClCompile Include="osu!\Analysis\Beatmap\Velocity.cpp" />
     <ClCompile Include="osu!\Analysis\Replay\aim-deviation.cpp" />
+    <ClCompile Include="osu!\Analysis\Replay\ApparentDifficulty.cpp" />
     <ClCompile Include="osu!\Analysis\Replay\PressReleaseIntervals.cpp" />
     <ClCompile Include="osu!\Analysis\Replay\tap-deviation.cpp" />
     <ClCompile Include="osu!\Analysis\Score\AimScore.cpp" />
@@ -159,6 +160,7 @@
     <ClInclude Include="osu!\Analysis\Beatmap\TapEventIntervals.h" />
     <ClInclude Include="osu!\Analysis\Beatmap\Velocity.h" />
     <ClInclude Include="osu!\Analysis\Replay\aim-deviation.h" />
+    <ClInclude Include="osu!\Analysis\Replay\ApparentDifficulty.h" />
     <ClInclude Include="osu!\Analysis\Replay\PressReleaseIntervals.h" />
     <ClInclude Include="osu!\Analysis\Replay\tap-deviation.h" />
     <ClInclude Include="osu!\Analysis\Score\AimScore.h" />

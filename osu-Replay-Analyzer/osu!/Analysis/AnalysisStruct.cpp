@@ -11,8 +11,9 @@
 #include "Beatmap\Difficulty\Reading.h"
 
 #include "Replay\PressReleaseIntervals.h"
-#include "Replay\aim-deviation.h"
 #include "Replay\tap-deviation.h"
+#include "Replay\aim-deviation.h"
+#include "Replay\ApparentDifficulty.h"
 
 #include "Score\AimScore.h"
 #include "Score\TapScore.h"
@@ -34,6 +35,7 @@ AnalysisStruct::AnalysisStruct()
 	beatmapAnalysis.AddAnalyzer(new Analyzer_PressReleaseIntervals());
 	beatmapAnalysis.AddAnalyzer(new Analyzer_TapDeviation());
 	beatmapAnalysis.AddAnalyzer(new Analyzer_AimDeviation());
+	beatmapAnalysis.AddAnalyzer(new Analyzer_ApperantDifficulty());
 
 	///beatmapAnalysis.AddAnalyzer(new Analyzer_Reading());
 

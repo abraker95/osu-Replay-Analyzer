@@ -321,6 +321,9 @@
     <ClCompile Include="osu!\Analysis\Replay\PressReleaseIntervals.cpp">
       <Filter>Source Files\osu!\Analysis\Replay</Filter>
     </ClCompile>
+    <ClCompile Include="osu!\Analysis\Replay\ApparentDifficulty.cpp">
+      <Filter>Source Files\osu!\Analysis\Replay</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="osu!\Filestructure\LZMA.h">
@@ -579,6 +582,9 @@
       <Filter>Header Files\math\MD5</Filter>
     </ClInclude>
     <ClInclude Include="osu!\Analysis\Replay\PressReleaseIntervals.h">
+      <Filter>Header Files\osu!\Analysis\Replay</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\Analysis\Replay\ApparentDifficulty.h">
       <Filter>Header Files\osu!\Analysis\Replay</Filter>
     </ClInclude>
   </ItemGroup>
