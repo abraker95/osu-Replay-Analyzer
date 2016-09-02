@@ -137,8 +137,8 @@ void Analyzer_TapDeviation::AnalyzeMania(Play* _play)
 	osu::TIMING timing;
 		timing.data = 0;
 
-	// Max deviation +/- where a miss is not counted
-	int MISS_DEVIATION = 500;
+	int MISS_DEVIATION = 100;	// Max deviation +/- where a miss is not counted
+	int NOHIT_DEVIATION = 150;	// // Min deviation /- where a key is not counted
 
 	Analyzer* analyzer = AnalysisStruct::beatmapAnalysis.getAnalyzer("Press-Release Intervals (ms)");
 	if (analyzer == nullptr) return;
@@ -163,51 +163,102 @@ void Analyzer_TapDeviation::AnalyzeMania(Play* _play)
 		std::vector<osu::TIMING>& tapReleases = tapRelaseIntervalsKeys[key];
 		int index = osu::FindTimingAt(tapReleases, currTime);
 		
-		if (index != 0)
-			if (tapReleases[index - 1].time > recTimes[key])
-				index--;
-
-		if (tapReleases[index].time < recTimes[key]) continue;
-
-		// MISS
-		if (!BTWN(currTime - MISS_DEVIATION, tapReleases[index].time, currTime + MISS_DEVIATION))
+		// Fastforward to latest recorded note
+		while (tapReleases[index].time <= recTimes[key])
 		{
-			timing.data = INT_MAX;
+			if (index == tapReleases.size() - 1) break;
+			index++;
+		}
+
+		// Find easliest non recorded timing
+		if (index > 0)
+		{
+			while (tapReleases[index - 1].time > recTimes[key])
+			{
+				index--;
+				if (index == 0) break;
+			}
+		}
+		
+		// No count if outside the no-hit threshold
+		if (tapReleases[index].time <= currTime - NOHIT_DEVIATION)
+		{
+			recTimes[key] = tapReleases[index].time;
+			i--;  // hitobject not counted, so go back and redo
+
+			continue;
+		}
+
+		// MISS if within the no-hit threshold
+		if (tapReleases[index].time <= currTime - MISS_DEVIATION)
+		{	
+			timing.data = currTime - tapReleases[index].time;
 			timing.key = key;
 			timing.press = false;
-			timing.time = currTime;
-
-			//data.push_back(timing);
-			recTimes[key] = tapReleases[index].time;
-		}
-		else // HIT
-		{
-			// Normal note
-			int deviation = tapReleases[index].time - currTime;
-
-			timing.data = deviation;
-			timing.key = key;
-			timing.press = true;
 			timing.time = currTime;
 
 			data.push_back(timing);
 			recTimes[key] = tapReleases[index].time;
 
-			/// \tODO: FIX HOLD NOTES
+			continue; // not to do the below	
+		}
 
-			// If a hold note
-			if (hitobjects[i]->isHitobjectLong())	
+		// MISS if within the no-hit threshold
+		if (tapReleases[index].time >= currTime + MISS_DEVIATION)
+		{
+			timing.data = currTime - tapReleases[index].time;
+			timing.key = key;
+			timing.press = false;
+			timing.time = currTime;
+
+			data.push_back(timing);
+			// Don't record this timing since it's not intended for this note
+
+			continue; // not to do the below	
+		}
+
+		if (hitobjects[i]->isHitobjectLong())
+		{
+			// MISS if tap when the hold note finished
+			if (tapReleases[index].time >= hitobjects[i]->getEndTime())
 			{
-				deviation = (tapReleases[index].time + tapReleases[index].data) - hitobjects[i]->getEndTime();
-
-				timing.data = deviation;
+				timing.data = currTime - tapReleases[index].time;
 				timing.key = key;
-				timing.press = true;
-				timing.time = hitobjects[i]->getEndTime();
+				timing.press = false;
+				timing.time = currTime;
 
 				data.push_back(timing);
-				recTimes[key] = tapReleases[index].time + tapReleases[index].data;
+				// Don't record this timing since it's not intended for this note
+
+				continue; // not to do the below
 			}
+		}
+
+	// HIT
+
+		// Normal note
+		int deviation = tapReleases[index].time - currTime;
+
+		timing.data = deviation;
+		timing.key = key;
+		timing.press = true;
+		timing.time = currTime;
+
+		data.push_back(timing);
+		recTimes[key] = tapReleases[index].time;
+
+		// If a hold note
+		if (hitobjects[i]->isHitobjectLong())	
+		{
+			deviation = (tapReleases[index].time + tapReleases[index].data) - hitobjects[i]->getEndTime();
+
+			timing.data = deviation;
+			timing.key = key;
+			timing.press = true;
+			timing.time = hitobjects[i]->getEndTime();
+
+			data.push_back(timing);
+			recTimes[key] = tapReleases[index].time + tapReleases[index].data;
 		}
 	}
 
