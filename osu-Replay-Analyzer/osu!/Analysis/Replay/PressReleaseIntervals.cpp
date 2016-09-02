@@ -109,6 +109,8 @@ void Analyzer_PressReleaseIntervals::AnalyzeMania(Play* _play)
 			}
 		}
 	}
+
+	osu::SortByTime(data);
 }
 
 void Analyzer_PressReleaseIntervals::AnalyzeDodge(Play* _play)
