@@ -8,6 +8,8 @@
 std::vector<GuiObj*> guiEnv;
 GuiObj* top;
 
+bool sorted;
+
 void UpdateGuiObjs(Window& _win)
 {
 	for (int i = 0; i < guiEnv.size(); i++)
@@ -33,10 +35,14 @@ bool sortGui(GuiObj* i, GuiObj* j)
 void SortGuiObjs()
 {
 	std::sort(guiEnv.begin(), guiEnv.end(), sortGui);
+	sorted = true;
 }
 
 int FindGuiObj(GuiObj* _guiObj)
 {
+	if(!sorted)
+		std::sort(guiEnv.begin(), guiEnv.end(), sortGui);
+
 	int start = 0;
 	int end = guiEnv.size() - 1;
 	int mid;
@@ -77,7 +83,7 @@ GuiObj::GuiObj(int _xpos, int _ypos, int _width, int _height, GuiObj* _parent)
 	guiEnv.push_back(this);
 	id = guiEnv.size() - 1;
 
-	std::sort(guiEnv.begin(), guiEnv.end(), sortGui);
+	sorted = false;
 }
 
 GuiObj::~GuiObj()
