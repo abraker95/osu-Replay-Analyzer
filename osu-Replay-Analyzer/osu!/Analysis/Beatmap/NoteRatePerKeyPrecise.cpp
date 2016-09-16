@@ -25,41 +25,63 @@ void Analyzer_NoteRatePerKeyPrec::AnalyzeMania(Play* _play)
 		timing.data = 0;
 		data.push_back({ hitobjects[0]->getTime() - 1, 0});
 
-	Analyzer* analyzer = AnalysisStruct::beatmapAnalysis.getAnalyzer("note rate (notes/s)");
-	if (analyzer == nullptr) return;
+	std::vector<int> prevIs, currIs;
+		prevIs.resize(KEYS);
+		currIs.resize(KEYS);
 
-	std::vector<osu::TIMING>& noteRates = *(analyzer->getData());
-	for (int i=0; i<noteRates.size(); i++)
+	for(int& prevI : prevIs) prevI = -1;
+	for(int& currI : currIs) currI = -1;
+
+	std::vector<int> currTimes, prevTimes;
+		currTimes.resize(KEYS);
+		prevTimes.resize(KEYS);
+
+	for (int& currTime : currTimes) currTime = OSUMANIA::MANIA_END;
+	for (int& prevTime : prevTimes) prevTime = OSUMANIA::MANIA_END;
+
+	long minInterval = INT_MAX;
+	int recKey = -1;
+
+	for (int i = 0; i < hitobjects.size(); i++)
 	{
-		long currTime = noteRates[i].time;
+		// Get current key
+		int key = OSUMANIA::getKey(hitobjects[i]->getPos().X, KEYS);
 
-		long minInterval = INT_MAX;
-		int recKey = -1;
+		prevTimes[key] = currTimes[key];
+		currTimes[key] = hitobjects[i]->getTime();
 
-		for (int key = 0; key < KEYS; key++)
+		// Record/reset only if the time has changed
+		if (currTimes[key] != prevTimes[key])
 		{
-			int currI = OSUMANIA::FindHitobjectAt(_play, currTime, key, false);
-			int nextI = OSUMANIA::getNextIndexOnColumn(hitobjects, key, KEYS, currI);
-
-			if (currI == OSUMANIA::MANIA_END)	continue;
-			if (nextI == OSUMANIA::MANIA_END)	continue;
-
-			long interval = hitobjects[nextI]->getTime() - hitobjects[currI]->getTime();
-			if (minInterval > interval)
+			// Make sure we found the min interval before recording it
+			if (minInterval != INT_MAX)
 			{
-				minInterval = interval;
-				recKey = key;
+				timing.time = prevTimes[recKey];
+				timing.data = 1000.0 / (double)minInterval;
+				timing.key = recKey;
+
+				data.push_back(timing);
 			}
+
+			minInterval = INT_MAX;
+			recKey = -1;
 		}
 
-		if (minInterval == INT_MAX) continue;
+		// Make sure we are not at beginning nor end
+		if (prevTimes[key] == OSUMANIA::MANIA_END || currTimes[key] == OSUMANIA::MANIA_END) continue;
 
-		timing.time = currTime;
-		timing.data = 1000.0 / (double)minInterval;
-		timing.key = recKey;
+		// Calc interval
+		long interval = currTimes[key] - prevTimes[key];
 
-		data.push_back(timing);
+		// Record if it is smaller than already recorded interval
+		if (minInterval > interval)
+		{
+			minInterval = interval;
+			recKey = key;
+		}
 	}
+
+	osu::SortByTime(data);
 }
 
 void Analyzer_NoteRatePerKeyPrec::AnalyzeDodge(Play* _play)
