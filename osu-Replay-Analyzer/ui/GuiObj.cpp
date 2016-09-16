@@ -40,8 +40,8 @@ void SortGuiObjs()
 
 int FindGuiObj(GuiObj* _guiObj)
 {
-	if(!sorted)
-		std::sort(guiEnv.begin(), guiEnv.end(), sortGui);
+	if (!sorted)
+		SortGuiObjs();
 
 	int start = 0;
 	int end = guiEnv.size() - 1;
