@@ -11,32 +11,18 @@ void Analyzer_NoteRate::AnalyzeStd(Play* _play)
 {
 	std::vector<Hitobject*>& hitobjects = _play->beatmap->getHitobjects();
 	osu::TIMING timing;
-	timing.data = 0;
+		timing.data = 0;
 
-	int i = 0, previ = 0;
-	double delay = 10.0;
-
-	for (int ms = 0; ms < hitobjects[hitobjects.size() - 1]->getTime(); ms += delay)
+	for (int i = 0; i < hitobjects.size(); i++)
 	{
-		// Let index catch up to the time. Bail if out of bounds
-		while (hitobjects[i]->getEndTime() < ms) i++;
-		if (i >= hitobjects.size()) break;
+		int j = i;
+		while (j--) if (hitobjects[i]->getTime() - hitobjects[j]->getTime() >= 1000) break;
 
-		// Out of bound check
-		if (!BTWN(1, i, hitobjects.size() - 1))
-			continue;
-
-		// previ - i needs to be at least 1 second apart
-		while (hitobjects[i]->getTime() - hitobjects[previ]->getTime() > 1000.0)
-		{
-			if (previ < hitobjects.size() - 1) previ++;
-			else break;
-		}
-
-		timing.data = i - previ;
+		timing.data = i - j;
 		timing.pos = vector2df(hitobjects[i]->getPos().X, hitobjects[i]->getPos().Y);
+		timing.key = i;
 		timing.press = false;
-		timing.time = ms;
+		timing.time = hitobjects[i]->getTime();
 
 		data.push_back(timing);
 	}
