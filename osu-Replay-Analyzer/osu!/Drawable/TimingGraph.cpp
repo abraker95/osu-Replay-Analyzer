@@ -134,22 +134,28 @@ void TimingGraph::drawHitobjectHitTimings(Window &_win)
 	if (beatmap == nullptr) return;
 
 	std::pair<int, int> viewTimes = this->getViewTimes();
-	int startIndex = 0, endIndex = beatmap->getHitobjects().size() - 1;
+	int startIndex = -1, endIndex = -1;
 
-	if (viewTimes.first > beatmap->getHitobjects()[0]->getTime())
+	std::vector<Hitobject*>& hitobjects = beatmap->getHitobjects();
+
+	if (viewTimes.first >= hitobjects[0]->getTime())
 		startIndex = beatmap->FindHitobjectAt(viewTimes.first);
 
-	if (viewTimes.second < beatmap->getHitobjects()[0]->getTime())
+	if (viewTimes.second <= hitobjects[hitobjects.size() - 1]->getTime())
 		endIndex = beatmap->FindHitobjectAt(viewTimes.second);
+
+	if (startIndex == -1 && endIndex == -1) return;
+	if (startIndex == -1 && endIndex != -1) startIndex = 0;
+	if (startIndex != -1 && endIndex == -1) endIndex = hitobjects.size() - 1;
 
 	for (int i = startIndex; i < endIndex; i++)
 	{
-		int hitobjectBegTime = beatmap->getHitobjects()[i]->getTime();
+		int hitobjectBegTime = hitobjects[i]->getTime();
 		int hitobjectEndTime = hitobjectBegTime;
 		
 		// get the actual end time if it is a slider
-		if (beatmap->getHitobjects()[i]->IsHitObjectType(SLIDER))
-			hitobjectEndTime = beatmap->getHitobjects()[i]->getSlider()->getEndTime();
+		if (hitobjects[i]->IsHitObjectType(SLIDER))
+			hitobjectEndTime = hitobjects[i]->getSlider()->getEndTime();
 		
 		int posBeg = (hitobjectBegTime - viewTimes.first)*zoom;
 		int posEnd = (hitobjectEndTime - viewTimes.first)*zoom;
