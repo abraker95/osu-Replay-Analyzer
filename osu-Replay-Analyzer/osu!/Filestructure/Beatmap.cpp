@@ -794,51 +794,25 @@ void Beatmap::GenerateSliderMetadata()
 
 // ------------ [Internal] -------------
 
+/// \TODO: Restore osu!std finding for the timing graph
 int Beatmap::FindHitobjectAt(int _time)
 {
 	int start = 0;
-	int end = this->origHitobjects.size() - 2;
+	int end = this->modHitobjects.size() - 2;
 	int mid;
 
 	while (start <= end)
 	{
 		mid = (start + end) / 2;
 
+		long time = this->modHitobjects[mid]->getTime();
+
 		// if time is exactly at the object, return that object
-		if (this->origHitobjects[mid]->getTime() == _time)
-		{
-			// make sure there is are no following objects at the same time
-			for (int i = mid; i < this->origHitobjects.size(); i++)
-				if (this->origHitobjects[mid]->getTime() == _time)
-					mid = i;
-
+		if (BTWN(this->modHitobjects[mid]->getTime(), _time, this->modHitobjects[mid + 1]->getTime()))
 			return mid;
-		}
-		// if the time is between 2 objects, return the next object
-		if(BTWN(this->origHitobjects[mid]->getTime(), _time, this->origHitobjects[mid + 1]->getTime()))
-		{
-			// make sure there is are no following objects at the same time
-			for (int i = mid + 1; i < this->origHitobjects.size(); i++)
-				if (BTWN(this->origHitobjects[mid]->getTime(), _time, this->origHitobjects[mid + 1]->getTime()))
-					mid = i;
 
-			return mid;
-		}
-
-	/*	// check if the object ends somewhere else
-		int objectType = hitObjects[mid]->getHitobjectType();
-		if (objectType & (HITOBJECTYPE::SLIDER | HITOBJECTYPE::MANIALONG))
-		{
-			if (BTWN(this->hitObjects[mid]->getTime(), _time, this->hitObjects[mid]->slider->getEndTime()))
-			{
-				return mid;
-			}
-		}*/
-		
-		int gettime = this->origHitobjects[mid]->getTime();
-		if (_time < this->origHitobjects[mid]->getTime())
-			end = mid - 1;
-		else start = mid + 1;
+		if (_time < time)	end = mid - 1;
+		else				start = mid + 1;
 	}
 
 	return 0;
