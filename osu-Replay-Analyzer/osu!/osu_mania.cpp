@@ -6,6 +6,28 @@ using namespace OSUMANIA;
 std::vector<std::vector<int>> hitobjectAtlas;
 std::string md5;
 
+void OSUMANIA::Column::Clear()
+{
+	timings.clear();
+	std::vector<long>().swap(timings);
+
+	indices.clear();
+	std::vector<int>().swap(indices);
+
+}
+
+void OSUMANIA::Column::Add(long _timing, int _index)
+{
+	timings.push_back(_timing);
+	indices.push_back(_index);
+}
+
+int OSUMANIA::Column::getSize()
+{
+	return MIN(timings.size(), indices.size());
+}
+
+
 void GenHitobjectAtlas(Play* _play)
 {
 	// Clear the vector

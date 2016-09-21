@@ -1,12 +1,25 @@
 #ifndef OSU_MANIA_H
 #define OSU_MANIA_H
 
+#include <vector>
+
 #include "../utils/mathUtils.h"
 #include "../osu!/Filestructure/Play.h"
 #include "osuStructs.h"
 
 namespace OSUMANIA
 {
+	struct Column
+	{
+		std::vector<long> timings;
+		std::vector<int>  indices;
+
+		void Clear();
+		void Add(long _timing, int _index);
+		int getSize();
+	};
+
+
 	const int MANIA_END = -1;
 
 	// dir = true -> look forward
