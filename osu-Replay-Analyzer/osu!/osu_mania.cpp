@@ -3,7 +3,7 @@
 
 using namespace OSUMANIA;
 
-std::vector<std::vector<int>> hitobjectAtlas;
+std::vector<OSUMANIA::Column> hitobjectAtlas;
 std::string md5;
 
 void OSUMANIA::Column::Clear()
@@ -31,68 +31,65 @@ int OSUMANIA::Column::getSize()
 void GenHitobjectAtlas(Play* _play)
 {
 	// Clear the vector
-	for (std::vector<int>& indices : hitobjectAtlas)
-	{
-		indices.clear();
-		std::vector<int>().swap(indices);
-	}
-	
-	hitobjectAtlas.clear();
-	std::vector<std::vector<int>>().swap(hitobjectAtlas);
+	for (OSUMANIA::Column& column : hitobjectAtlas)
+		column.Clear();
 
 	// Reserve space in vector
 	std::vector<Hitobject*> hitobjects = _play->beatmap->getHitobjects();
 	hitobjectAtlas.resize(_play->beatmap->getMods().getCS());
 
-	// Fill in vector with list of hitobject idices correspending the column the hitobject is at
+	// Fill in vector with list of hitobject indices correspending the column the hitobject is at
 	for (int i = 0; i < hitobjects.size(); i++)
-		hitobjectAtlas[getKey(hitobjects[i]->getPos().X, _play->beatmap->getMods().getCS())].push_back(i);
+	{
+		int key = getKey(hitobjects[i]->getPos().X, _play->beatmap->getMods().getCS());
+		hitobjectAtlas[key].Add(hitobjects[i]->getTime(), i);
+		
+		if(hitobjects[i]->isHitobjectLong())
+			hitobjectAtlas[key].Add(hitobjects[i]->getEndTime(), i);
+	}
+		
 
 	// record beatmap's signature for later checking
 	md5 = _play->beatmap->getMD5();
 }
 
-// dir = true -> look forward
-// dir = false -> look backward
+// dir = true -> look forward;				false -> look backward
 int OSUMANIA::FindHitobjectAt(Play* _play, long _time, int _key, bool _dir)
 {
 	// Regenerate the hitobject atlas if it's not the same beatmap
 	if (_play->beatmap->getMD5() != md5)
 		GenHitobjectAtlas(_play);
 
+	if (hitobjectAtlas.size() == 0) return MANIA_END;
+
 	int start = 0;
-	int end = hitobjectAtlas[_key].size() - 2;
+	int end = hitobjectAtlas[_key].getSize() - 2;
 	int mid;
 
-	std::vector<Hitobject*> hitobjects = _play->beatmap->getHitobjects();
+	std::vector<Hitobject*>& hitobjects = _play->beatmap->getHitobjects();
 	while (start <= end)
 	{
 		mid = (start + end) / 2;
 
-		int icurr = hitobjectAtlas[_key].at(mid);
-		int inext = hitobjectAtlas[_key].at(mid + 1);
+		int tCurr = hitobjectAtlas[_key].timings.at(mid);
+		int tNext = hitobjectAtlas[_key].timings.at(mid + 1);
 
-		// Between ends of a hold object
-		if (BTWN(hitobjects[icurr]->getTime(), _time, hitobjects[icurr]->getEndTime()))
+		int icurr = hitobjectAtlas[_key].indices.at(mid);
+		int inext = hitobjectAtlas[_key].indices.at(mid + 1);
+
+		// Between ends of a hold object or between some two objects
+		if (BTWN(tCurr, _time, tNext))
 		{
-			// Return next object if next object's timings overlap with this one
-			if (BTWN(hitobjects[inext]->getTime(), _time, hitobjects[inext]->getEndTime()))
-				return hitobjectAtlas[_key].at(mid + 1);
-			else
-				return hitobjectAtlas[_key].at(mid);
+			// Between some two objects
+			if (icurr != inext)	return icurr + (long)_dir;
+			else				return icurr;
 		}
 
-		// Between some two objects
-		if (BTWN(hitobjects[icurr]->getEndTime(), _time, hitobjects[inext]->getTime()))
-			return hitobjectAtlas[_key].at(mid + (long)_dir);
-
-		if (_time < hitobjects[icurr]->getTime())
-			end = mid - 1;
-		else
-			start = mid + 1;
+		if (_time < tCurr)	end = mid - 1;
+		else				start = mid + 1;
 	}
 
-	return -1;
+	return MANIA_END;
 }
 
 // Returns the key column based on the xpos of the note and the number of keys there are

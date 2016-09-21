@@ -22,9 +22,9 @@ namespace OSUMANIA
 
 	const int MANIA_END = -1;
 
-	// dir = true -> look forward
-	// dir = false -> look backward
-	int FindHitobjectAt(Play* _play, long _time, int _key, bool _dir);
+	// dir = true -> look forward;				false -> look backward
+	// start = true -> find start timing;		false -> find end timing
+	int FindHitobjectAt(Play* _play, long _time, int _key, bool _dir = false);
 
 	// Returns the key column based on the xpos of the note and the number of keys there are
 	int getKey(int _xpos, int _keys);
