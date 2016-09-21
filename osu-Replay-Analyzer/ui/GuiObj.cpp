@@ -138,6 +138,13 @@ void GuiObj::setMargin(int _right, int _btm)
 
 void GuiObj::setParent(GuiObj* _parent)
 {
+	int i = FindGuiObj(this);
+
+	if (i == -1) return;				// make sure we found the guiObj
+	if (guiEnv[i] != this) return;		// make sure it is indeed the guiObj (findGuiObj is working correctly?)
+
+	guiEnv.erase(guiEnv.begin() + i);	// the object will be managed by the parent instead
+	
 	parent = _parent;
 	//_parent->children.push_back(this);
 }
