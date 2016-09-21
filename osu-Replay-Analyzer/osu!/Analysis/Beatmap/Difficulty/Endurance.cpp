@@ -44,18 +44,20 @@ void Analyzer_Endurance::AnalyzeMania(Play* _play)
 		rawEndurances.resize(KEYS);
 		notes.resize(KEYS);
 
+	for (double& note : notes) note = 1.0;
+
 	for (osu::TIMING noteRate : noteRates)
 	{
 		if (noteRate.data == INFINITY) continue;
 		int key = noteRate.key;
 
 		if (noteRate.data >= staminaThreshold)	rawEndurances[key] += noteRate.data;
-		else									rawEndurances[key] -= rawEndurances[key] * 0.1;
+		else									rawEndurances[key] -= MIN(rawEndurances[key], rawEndurances[key] * 0.05 *(staminaThreshold / noteRate.data));
 
-		if (noteRate.data >= buildupThreshold)	notes[key]++;
-		else									notes[key] -= notes[key]*0.01;
+		if (noteRate.data >= buildupThreshold)	notes[key] += notes[key]*0.0004;
+		else									notes[key] -= MIN(notes[key], notes[key]*0.0001*(buildupThreshold / noteRate.data));
 
-		rawEndurances[key] += log10(notes[key] + 1);
+		rawEndurances[key] += notes[key];
 
 		double maxEndure = INT_MIN;
 		for (double rawEndurance : rawEndurances)
