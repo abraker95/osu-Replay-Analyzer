@@ -1,6 +1,8 @@
 #include "OsuManiaRenderer.h"
 #include "GamemodeRenderer.h"
 
+#include "../osu_mania.h"
+
 #include "../Filestructure/Play.h"
 #include "../../ui/drawUtils.h"
 
@@ -90,16 +92,27 @@ void OsuManiaRenderer::RenderVisible(Window& _win)
 {
 	Beatmap* beatmap = play->beatmap;
 	std::vector<Hitobject*>& hitobjects = beatmap->getHitobjects();
-
-	/// \TODO: Faster object search
-	for (int i = 0; i < hitobjects.size(); i++)
+	
+	int KEYS = beatmap->getMods().getCS();
+	for (int key = 0; key < KEYS; key++)
 	{
-		bool HoldStart = BTWN(hitobjects[i]->getTime(), getStartTime(), hitobjects[i]->getEndTime());
-		bool HoldEnd = BTWN(hitobjects[i]->getTime(), getEndTime(), hitobjects[i]->getEndTime());
-		bool circle = BTWN(getStartTime(), hitobjects[i]->getTime(), getEndTime());
+		int iCircleStart = OSUMANIA::FindHitobjectAt(play, getStartTime(), key, false);
+		int iCircleEnd = OSUMANIA::FindHitobjectAt(play, getEndTime(), key, true);
 		
-		if (HoldStart || HoldEnd || circle)
-			hitNotes[i]->Update(_win);
+		if ((iCircleEnd == OSUMANIA::MANIA_END) && (iCircleStart == OSUMANIA::MANIA_END)) continue;
+		if ((iCircleEnd != OSUMANIA::MANIA_END) && (iCircleStart == OSUMANIA::MANIA_END)) iCircleStart = 0;
+		if ((iCircleEnd == OSUMANIA::MANIA_END) && (iCircleStart != OSUMANIA::MANIA_END)) iCircleEnd = hitobjects.size() - 1;
+
+		for (int i = iCircleStart; i <= iCircleEnd; i++)
+		{
+			bool HoldStart = BTWN(hitobjects[i]->getTime(), getStartTime(), hitobjects[i]->getEndTime());
+			bool HoldEnd = BTWN(hitobjects[i]->getTime(), getEndTime(), hitobjects[i]->getEndTime());
+			bool circle = BTWN(getStartTime(), hitobjects[i]->getTime(), getEndTime());
+
+			if (HoldStart || HoldEnd || circle)
+				if (OSUMANIA::getKey(hitobjects[i]->getPos().X, KEYS) == key)
+					hitNotes[i]->Update(_win);
+		}
 	}
 }
 
