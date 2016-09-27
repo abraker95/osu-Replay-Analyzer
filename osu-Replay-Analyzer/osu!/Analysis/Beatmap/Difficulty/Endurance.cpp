@@ -52,10 +52,10 @@ void Analyzer_Endurance::AnalyzeMania(Play* _play)
 		int key = noteRate.key;
 
 		if (noteRate.data >= staminaThreshold)	rawEndurances[key] += noteRate.data;
-		else									rawEndurances[key] -= MIN(rawEndurances[key], rawEndurances[key] * 0.05 *(staminaThreshold / noteRate.data));
+		else									rawEndurances[key] -= MIN(rawEndurances[key], rawEndurances[key] * 0.05 *(staminaThreshold / MAX(noteRate.data, 1.0)));
 
 		if (noteRate.data >= buildupThreshold)	notes[key] += notes[key]*0.0004;
-		else									notes[key] -= MIN(notes[key], notes[key]*0.0001*(buildupThreshold / noteRate.data));
+		else									notes[key] -= MIN(notes[key], notes[key]*0.0001*(buildupThreshold / MAX(noteRate.data, 1.0)));
 
 		rawEndurances[key] += notes[key];
 
