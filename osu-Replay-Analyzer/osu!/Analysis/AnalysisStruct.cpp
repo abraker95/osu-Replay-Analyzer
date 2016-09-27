@@ -44,6 +44,8 @@ AnalysisStruct::AnalysisStruct()
 	// **************************
 	//       [DIFF DATA]
 	// **************************
+	///beatmapAnalysis.AddAnalyzer(new Analyzer_Reading());
+	beatmapAnalysis.AddAnalyzer(new Analyzer_Endurance());
 	beatmapAnalysis.AddAnalyzer(new Analyzer_TappingControl());
 
 
@@ -56,8 +58,6 @@ AnalysisStruct::AnalysisStruct()
 	beatmapAnalysis.AddAnalyzer(new Analyzer_AimDeviation());
 	beatmapAnalysis.AddAnalyzer(new Analyzer_ApperantDifficulty());
 
-	///beatmapAnalysis.AddAnalyzer(new Analyzer_Reading());
-	beatmapAnalysis.AddAnalyzer(new Analyzer_Endurance());
 
 
 	// **************************
