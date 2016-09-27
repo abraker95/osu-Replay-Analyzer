@@ -53,7 +53,7 @@ Analyzer* Analysis::getAnalyzer(std::string _analyzer)
 			return analyzer;
 	}
 
-	std::cout << "[Warning] Analyzer \"" << _analyzer << "\"not found!" << std::endl;
+	std::cout << "[Warning] Analyzer \"" << _analyzer << "\"not found! " << std::endl;
 	return nullptr;
 }
 
