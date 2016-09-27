@@ -11,6 +11,7 @@
 
 #include "Beatmap\Difficulty\Reading.h"
 #include "Beatmap\Difficulty\Endurance.h"
+#include "Beatmap\Difficulty\TappingControl.h"
 
 #include "Replay\PressReleaseIntervals.h"
 #include "Replay\tap-deviation.h"

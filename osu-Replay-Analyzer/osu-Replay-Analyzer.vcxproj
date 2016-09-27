@@ -74,6 +74,7 @@
     <ClCompile Include="osu!\Analysis\Analyzer.cpp" />
     <ClCompile Include="osu!\Analysis\Beatmap\Difficulty\Endurance.cpp" />
     <ClCompile Include="osu!\Analysis\Beatmap\Difficulty\Reading.cpp" />
+    <ClCompile Include="osu!\Analysis\Beatmap\Difficulty\TappingControl.cpp" />
     <ClCompile Include="osu!\Analysis\Beatmap\DistSize.cpp" />
     <ClCompile Include="osu!\Analysis\Beatmap\IntensityForHand.cpp" />
     <ClCompile Include="osu!\Analysis\Beatmap\NoteRate.cpp" />
@@ -154,6 +155,7 @@
     <ClInclude Include="osu!\Analysis\Analyzer.h" />
     <ClInclude Include="osu!\Analysis\Beatmap\Difficulty\Endurance.h" />
     <ClInclude Include="osu!\Analysis\Beatmap\Difficulty\Reading.h" />
+    <ClInclude Include="osu!\Analysis\Beatmap\Difficulty\TappingControl.h" />
     <ClInclude Include="osu!\Analysis\Beatmap\Distance-size.h" />
     <ClInclude Include="osu!\Analysis\Beatmap\IntensityForHand.h" />
     <ClInclude Include="osu!\Analysis\Beatmap\NoteRate.h" />
