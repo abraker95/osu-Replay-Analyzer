@@ -27,6 +27,9 @@ Analysis AnalysisStruct::scorepAnalysis;
 
 AnalysisStruct::AnalysisStruct()
 {
+	// **************************
+	//     [RAW BEATMAP DATA]
+	// **************************
 	beatmapAnalysis.AddAnalyzer(new Analyzer_Velocity());
 	beatmapAnalysis.AddAnalyzer(new Analyzer_DistSize());
 	beatmapAnalysis.AddAnalyzer(new Analyzer_NoteRate());
@@ -35,6 +38,17 @@ AnalysisStruct::AnalysisStruct()
 	//beatmapAnalysis.AddAnalyzer(new Analyzer_NoteRatePerKey());
 	beatmapAnalysis.AddAnalyzer(new Analyzer_NoteRatePerKeyPrec());
 
+	
+
+	// **************************
+	//       [DIFF DATA]
+	// **************************
+
+
+
+	// **************************
+	//     [RAW REPLAY DATA]
+	// **************************
 	beatmapAnalysis.AddAnalyzer(new Analyzer_PressReleaseIntervals());
 	beatmapAnalysis.AddAnalyzer(new Analyzer_TapDeviation());
 	beatmapAnalysis.AddAnalyzer(new Analyzer_AimDeviation());
@@ -43,8 +57,18 @@ AnalysisStruct::AnalysisStruct()
 	///beatmapAnalysis.AddAnalyzer(new Analyzer_Reading());
 	beatmapAnalysis.AddAnalyzer(new Analyzer_Endurance());
 
+
+	// **************************
+	//       [SCORE DATA]
+	// **************************
 	beatmapAnalysis.AddAnalyzer(new Analyzer_AimScore());
 	beatmapAnalysis.AddAnalyzer(new Analyzer_TapScore());
+
+
+
+	// **************************
+	//       [CHEAT DATA]
+	// **************************
 }
 
 static AnalysisStruct analysisStruct;
