@@ -4,6 +4,7 @@
 #include "Beatmap\NoteRate.h"
 #include "Beatmap\NoteRatePerKey.h"
 #include "Beatmap\NoteRatePerKeyPrecise.h"
+#include "Beatmap\NoteRateChangePerKey.h"
 #include "Beatmap\Overlaps.h"
 #include "Beatmap\Distance-size.h"
 #include "Beatmap\TapEventIntervals.h"
