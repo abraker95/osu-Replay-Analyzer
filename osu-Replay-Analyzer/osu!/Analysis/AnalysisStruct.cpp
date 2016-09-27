@@ -37,12 +37,14 @@ AnalysisStruct::AnalysisStruct()
 	///beatmapAnalysis.AddAnalyzer(new Analyzer_Overlaps());
 	//beatmapAnalysis.AddAnalyzer(new Analyzer_NoteRatePerKey());
 	beatmapAnalysis.AddAnalyzer(new Analyzer_NoteRatePerKeyPrec());
+	beatmapAnalysis.AddAnalyzer(new Analyzer_NoteRateChangePerKey());
 
 	
 
 	// **************************
 	//       [DIFF DATA]
 	// **************************
+	beatmapAnalysis.AddAnalyzer(new Analyzer_TappingControl());
 
 
 
