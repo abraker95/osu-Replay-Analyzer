@@ -5,7 +5,7 @@ compiler:
   - clang
   - gcc
 install: true
-script: bundle exec thor build
+#script: bundle exec thor build
 script: scons
   
 # uncomment and edit the following line if your project needs to run something other than `rake`:
