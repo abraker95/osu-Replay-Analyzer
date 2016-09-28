@@ -1,4 +1,6 @@
 language: C++
+os:
+  - windows
 compiler:
   - clang
   - gcc
