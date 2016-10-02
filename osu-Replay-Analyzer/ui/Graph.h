@@ -18,13 +18,14 @@ class Graph: public GuiObj
 		void SetStaticParam(std::vector<double> *_xVal, std::vector<double> *_yVal, double _maxVals);
 		
 		void SetMouseOverVal(bool _mouseOver);
-
 		void Clear();
 
 		double getXMin();	double getXMax();
 		double getYmin();	double getYMax();
 
 		void setWindow(double _xBeg, double _yBeg, double _xEnd, double _yEnd);
+		recti getWindow();
+
 		void Resize(int _width, int _height);
 
 	private:

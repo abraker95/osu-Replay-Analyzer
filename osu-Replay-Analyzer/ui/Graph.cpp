@@ -95,6 +95,11 @@ void Graph::setWindow(double _xBeg, double _yBeg, double _xEnd, double _yEnd)
 	xEnd = _xEnd;	yEnd = _yEnd;
 }
 
+recti Graph::getWindow()
+{
+	return recti(xBeg, yBeg, xEnd, yEnd);
+}
+
 void Graph::Resize(int _width, int _height)
 {
 	width = _width;
