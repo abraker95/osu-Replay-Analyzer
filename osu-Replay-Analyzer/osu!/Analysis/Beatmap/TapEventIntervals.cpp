@@ -88,6 +88,8 @@ void Analyzer_TapEventIntervals::AnalyzeStd(Play* _play)
 			data.push_back(timing);
 		}
 	}
+
+	osu::SortByTime(data);
 }
 
 void Analyzer_TapEventIntervals::AnalyzeCatch(Play* _play)
