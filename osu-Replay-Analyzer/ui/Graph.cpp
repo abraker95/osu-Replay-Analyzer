@@ -155,6 +155,11 @@ void Graph::UpdateInternal(Window &_win)
 	}
 
 	UpdateMouseOver(_win);
+
+	if (_win.reciever.IsKeyDown(KEY_KEY_Z))
+	{
+		UpdateZoom(_win);
+	}
 }
 
 void Graph::UpdateMouseOver(Window &_win)
