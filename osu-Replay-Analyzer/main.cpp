@@ -146,12 +146,12 @@ int main()
 		hdSlider.setRange(0, 1);
 		hdSlider.ClipPosTo(GuiObj::TOPRIGHT);
 
-	Button btnBeatmap(-130, 10, 100, 10);
 		btnBeatmap.ClipPosTo(GuiObj::TOPRIGHT);
+	Button btnBeatmap(2, 0, 100, 10);
 		btnBeatmap.setDepth(1);
 
-	Button btnReplay(-25, 10, 100, 10);
 		btnReplay.ClipPosTo(GuiObj::TOPRIGHT);
+	Button btnReplay(104, 0, 100, 10);
 		btnReplay.setDepth(1);
 
 	/// \TODO: Open file dialog box
@@ -179,11 +179,11 @@ int main()
 	HitTimingMarker hitTimingMarker(0, 0, &play, &viewTime);
 		hitTimingMarker.ClipPosTo(GuiObj::BTMLEFT);
 
-	GamemodeRenderer renderer(10, 10, win.getDimentions().Width, win.getDimentions().Height, &play, &viewTime);
+	GamemodeRenderer renderer(10, 20, win.getDimentions().Width, win.getDimentions().Height, &play, &viewTime);
 		renderer.ClipPosTo(GuiObj::TOPLEFT);
 		renderer.addClipDimTo(GuiObj::BTM);
 		renderer.addClipDimTo(GuiObj::RIGHT);
-		renderer.setMargin(250, 100);		
+		renderer.setMargin(250, 110);		
 
 	StatGraph graphs(0, -50, &viewTime);
 		graphs.ClipPosTo(GuiObj::BTMLEFT);
