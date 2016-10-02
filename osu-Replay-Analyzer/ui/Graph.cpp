@@ -163,7 +163,7 @@ void Graph::UpdateMouseOver(Window &_win)
 	{
 		position2di pos = _win.reciever.GetMouseState().positionCurr;
 		double percent = (double)(pos.X - absXpos) / (double)getDim().Width;
-		int index = vals.first.size() * percent;
+		int index = (vals.first.size() - 1) * percent;
 
 		mouseOver = core::stringw(vals.second._Get_container()[index]);
 	}
