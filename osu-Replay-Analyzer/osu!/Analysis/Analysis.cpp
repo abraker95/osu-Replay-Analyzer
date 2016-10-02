@@ -62,7 +62,7 @@ std::vector<std::string> Analysis::getValidAnalyzers()
 	std::vector<std::string> list;
 	for (Analyzer* analyzer : analyzers)
 	{
-		if (analyzer->getData()->size() != 0)
+		if (analyzer->isValid())
 			list.push_back(analyzer->getName());
 	}
 
