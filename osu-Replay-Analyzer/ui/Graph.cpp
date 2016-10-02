@@ -11,6 +11,8 @@ Graph::Graph(GuiObj* _parent) : GuiObj(0, 0, 0, 0, _parent)
 	table.AddValueMap(1000, SColor(255, 255, 100, 100));
 
 	setWindow(-10, -10, 10, 10);
+
+	mouseOverEnable = true;
 }
 
 Graph::Graph(int _xpos, int _ypos, int _width, int _height, GuiObj* _parent) : GuiObj(_xpos, _ypos, _width, _height, _parent)
@@ -23,6 +25,8 @@ Graph::Graph(int _xpos, int _ypos, int _width, int _height, GuiObj* _parent) : G
 	table.AddValueMap(1000, SColor(255, 255, 100, 100));
 
 	setWindow(-10, -10, 10, 10);
+
+	mouseOverEnable = true;
 }
 
 Graph::~Graph()
@@ -53,7 +57,7 @@ void Graph::SetStaticParam(std::vector<double> *_xVal, std::vector<double> *_yVa
 
 void Graph::SetMouseOverVal(bool _mouseOver)
 {
-	mouseOver = _mouseOver;
+	mouseOverEnable = _mouseOver;
 }
 
 void Graph::Clear()
@@ -119,7 +123,12 @@ void Graph::Draw(Window &_win)
 		_win.driver->draw2DLine(p1, p2, color);
 	}
 
-	_win.font->draw(core::stringw(yEnd), rect<s32>(absXpos, Val2Pos(yEnd, Y_AXIS), 100, 10), table.getColor(yEnd));
+	position2di pos = _win.reciever.GetMouseState().positionCurr;
+	_win.font->draw(mouseOver, rect<s32>(absXpos + pos.X, absYpos, 100, 10), SColor(255, 255, 255, 255));
+
+	/// \TODO: Handle errors concerning insufficient info to automatically determine graph size
+
+  ///  _win.font->draw(core::stringw(yEnd), rect<s32>(absXpos, Val2Pos(yEnd, Y_AXIS), 100, 10), table.getColor(yEnd));
 	//_win.font->draw(core::stringw(yEnd/2), rect<s32>(absXpos, Val2Pos(yEnd/2, Y_AXIS),absXpos + 100, 10), table.getColor(yEnd/2));
 	_win.font->draw(core::stringw(0), rect<s32>(absXpos, Val2Pos(0, Y_AXIS) - 10, 100, 10), table.getColor(0));
 
@@ -139,28 +148,22 @@ void Graph::UpdateInternal(Window &_win)
 		while (vals.first.size() > maxVals)		vals.first.pop();
 		while (vals.second.size() > maxVals)	vals.second.pop();
 	}
+
+	UpdateMouseOver(_win);
 }
 
 void Graph::UpdateMouseOver(Window &_win)
 {
-	/// \TODO
-
-	/*if (timings == nullptr)
-		return;
-
-	if (isMouseOnObj(_win, false))
+	if (isMouseOnObj(_win, false) && mouseOverEnable)
 	{
 		position2di pos = _win.reciever.GetMouseState().positionCurr;
+		double percent = (double)(pos.X - absXpos) / (double)getDim().Width;
+		int index = vals.first.size() * percent;
 
-		double maxTime = (*timings)[timings->size() - 1].time;
-		double time = getValue(0, maxTime, (double)pos.X / (double)velGraph.getDim().Width);
-		int index = MAX(FindTimingAt(*timings, time) - 1, 0);
-
-		mouseOver.first = pos.X;
-		mouseOver.second = core::stringw((*timings)[index].data);
+		mouseOver = core::stringw(vals.second._Get_container()[index]);
 	}
 	else
 	{
-		mouseOver.second = "";
-	}*/
+		mouseOver = "";
+	}
 }

@@ -61,7 +61,6 @@ void StatGraph::Draw(Window &_win)
 	std::string dataName = AnalysisStruct::beatmapAnalysis.getValidAnalyzers()[selection];
 
 	_win.driver->draw2DRectangleOutline(recti(absXpos + pos, absYpos, absXpos + pos + 1, absYpos + height), SColor(255, 255, 255, 255));
-	_win.font->draw(mouseOver.second, rect<s32>(absXpos + mouseOver.first, absYpos, 100, 10), SColor(255, 255, 255, 255));
 	_win.font->draw(core::stringw(dataName.data()), rect<s32>(absXpos + this->width/2, absYpos, 100, 10), SColor(255, 255, 255, 255));
 
 	graph.Update(_win);
@@ -75,23 +74,6 @@ void StatGraph::UpdateInternal(Window &_win)
 
 	if (timings == nullptr) return;
 	if (timings->size() == 0) return;
-
-	/// \TODO: This belongs in the Graph object
-	if (velGraph.isMouseOnObj(_win, false))
-	{
-		position2di pos = _win.reciever.GetMouseState().positionCurr;
-
-		double maxTime = (*timings)[timings->size() - 1].time;
-		double time = getValue(0, maxTime, (double)pos.X/(double)velGraph.getDim().Width);
-		int index = MAX(FindTimingAt(*timings, time) - 1, 0);
-
-		mouseOver.first = pos.X;
-		mouseOver.second = core::stringw((*timings)[index].data);
-	}
-	else
-	{
-		mouseOver.second = "";
-	}
 }
 
 void StatGraph::UpdateDataSelect()

@@ -28,8 +28,6 @@ class StatGraph : public GuiObj
 
 		std::vector<osu::TIMING>* timings;
 		int *viewtime;
-		std::pair<int, core::stringw> mouseOver;
-
 		int selection;
 
 		virtual void Draw(Window &_win);

@@ -38,11 +38,13 @@ class Graph: public GuiObj
 
 		double Val2Pos(double _val, AXIS _axis);
 
+		stringw mouseOver;
 		double *xVal, *yVal;
 		double xBeg, xEnd, yBeg, yEnd;
 		double maxVals;
 		bool cont;
-		bool mouseOver;
+
+		bool mouseOverEnable;
 
 		std::pair<std::queue<double>, std::queue<double>> vals;
 		ColorTable table;
