@@ -13,10 +13,10 @@ StatGraph::StatGraph(int _xpos, int _ypos, int *_viewtime) : GuiObj(_xpos, _ypos
 		graph.addClipDimTo(GuiObj::RIGHT);
 		graph.setMargin(20, 0);
 
-	btnUp = Button(-1, 0, 15, 10, this);
+	btnUp = Button(-1, 0, 15, 10, "", this);
 		btnUp.ClipPosTo(GuiObj::TOPRIGHT);
 
-	btnDwn = Button(-1, 1, 15, 10, this);
+	btnDwn = Button(-1, 1, 15, 10, "", this);
 		btnDwn.ClipPosTo(GuiObj::BTMRIGHT);	
 }
 

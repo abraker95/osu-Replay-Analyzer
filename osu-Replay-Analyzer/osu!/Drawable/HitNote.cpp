@@ -108,7 +108,7 @@ void HitNote::UpdateAbsPos(Window& _win)
 	int xpos = key * (parent->getDim().Width / numKeys) + (parent->getPos().X - parent->getDim().Width/2);
 
 	int hitPos = (*viewTime - hitobject->getTime());
-	int correction = std::max(0.0, (double)(((OsuManiaRenderer*)parent)->getStartTime() - hitobject->getTime()) * (*zoom));
+	int correction = MAX(0.0, (double)(((OsuManiaRenderer*)parent)->getStartTime() - hitobject->getTime()) * (*zoom));
 
 	ypos = (hitPos * (*zoom) + parent->getDim().Height) - height - correction;
 
@@ -123,8 +123,8 @@ void HitNote::UpdateAbsDim(Window& _win)
 
 	if (hitobject->getHitobjectType() & HITOBJECTYPE::MANIALONG)
 	{
-		int startTime = std::max(hitobject->getTime(), ((OsuManiaRenderer*)parent)->getStartTime());
-		int endTime = std::min(hitobject->getSlider()->getEndTime(), ((OsuManiaRenderer*)parent)->getEndTime());
+		int startTime = MAX(hitobject->getTime(), ((OsuManiaRenderer*)parent)->getStartTime());
+		int endTime = MIN(hitobject->getSlider()->getEndTime(), ((OsuManiaRenderer*)parent)->getEndTime());
 
 		height = (double)(endTime - startTime) * (*zoom) + 15;
 	}

@@ -40,7 +40,7 @@ DIR getRotDir(position2d<double> _p1, position2d<double> _ref, position2d<double
 position2d<double> getMidpoint(position2d<double> _p1, position2d<double> _p2);
 double getNormal(position2d<double> _p1, position2d<double> _p2);
 
-double addAngle(double _rad1, double rad2);
+double addAngle(double _rad1, double _rad2);
 
 double rad2deg(double _rad); 
 double deg2rad(double _deg);

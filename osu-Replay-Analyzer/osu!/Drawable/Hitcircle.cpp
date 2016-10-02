@@ -32,7 +32,7 @@ void Hitcircle::Draw(Window &_win)
 	SColor fade = SColor(255, edgeCol.getRed() * opacity, edgeCol.getGreen() * opacity, edgeCol.getBlue() * opacity);
 	
 	vector2df radius(this->width / 2.0, this->height / 2.0);
-	DrawArc(_win, this->absXpos, this->absYpos, std::min(radius.X, radius.Y), fade);
+	DrawArc(_win, this->absXpos, this->absYpos, MIN(radius.X, radius.Y), fade);
 
 	// draw slider
 	if (hitobject->IsHitObjectType(SLIDER))
@@ -176,8 +176,8 @@ void Hitcircle::UpdateDimentions()
 	xpos = hitobject->getPos().X*getWidthRatio();
 	ypos = hitobject->getPos().Y*getHeightRatio();
 
-	int diameter = std::min(CS2px(mods->getCS())*getWidthRatio(),
-							CS2px(mods->getCS())*getHeightRatio());
+	int diameter = MIN(CS2px(mods->getCS())*getWidthRatio(),
+					   CS2px(mods->getCS())*getHeightRatio());
 
 	width = diameter;
 	height = diameter;
