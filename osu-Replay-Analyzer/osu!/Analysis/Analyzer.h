@@ -10,6 +10,12 @@
 class Analyzer
 {
 	public:
+		enum FORMAT
+		{
+			CVS = 1,
+			XLM = 2
+		};
+
 		Analyzer(std::string _name);
 		virtual ~Analyzer();
 
@@ -18,7 +24,9 @@ class Analyzer
 
 		std::vector<osu::TIMING>* getData();
 		std::string getName() const;
+
 		void Clear();
+		void ExportData(FORMAT _format);
 
 	protected:
 		std::string name;
@@ -29,6 +37,9 @@ class Analyzer
 		virtual void AnalyzeTaiko(Play* _play) = 0;
 		virtual void AnalyzeMania(Play* _play) = 0;
 		virtual void AnalyzeDodge(Play* _play) = 0;
+
+		void ExportXLM();
+		void ExportCVS();
 };
 
 #endif // !ANALYZER_H
