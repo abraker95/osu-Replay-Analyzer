@@ -36,6 +36,11 @@ void StatGraph::Init()
 	double max = INT_MIN, min = INT_MAX;
 	for (osu::TIMING timing : *timings)
 	{
+		// Don't record for duplicate x values
+		if (xvals.size() > 0)
+			if (xvals[xvals.size() - 1] == timing.time)
+				continue;
+
 		xvals.push_back(timing.time);
 		yvals.push_back(timing.data);
 
