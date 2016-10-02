@@ -155,6 +155,7 @@ void Graph::UpdateInternal(Window &_win)
 	}
 
 	UpdateMouseOver(_win);
+	UpdatePos(_win);
 
 	if (_win.reciever.IsKeyDown(KEY_KEY_Z))
 	{
@@ -176,6 +177,7 @@ void Graph::UpdateMouseOver(Window &_win)
 	{
 		mouseOver = "";
 	}
+}
 
 void Graph::UpdateZoom(Window &_win)
 {
@@ -192,4 +194,22 @@ void Graph::UpdateZoom(Window &_win)
 	if (xBeg - xDelta >= vals.first._Get_container()[0])
 		xBeg -= xDelta;
 }
+
+void Graph::UpdatePos(Window &_win)
+{
+	if (!isMouseOnObj(_win, false)) return;
+
+	bool leftButton = _win.reciever.GetMouseState().LeftButtonDown;
+	if (!leftButton) return;
+
+	/// TODO: positionMove is not accurate, and therefore the positioning kinda shifts over time. 
+	///		  Shouldn't be too much of an issue, but do find a more accurate way if there is one
+	position2di posMove = _win.reciever.GetMouseState().positionMove;
+	int xDelta = -(posMove.X * (xEnd - xBeg) / getDim().Width);
+
+	if(xEnd + xDelta <= vals.first._Get_container()[vals.first.size() - 1])
+		xEnd += xDelta;
+
+	if (xBeg + xDelta >= vals.first._Get_container()[0])
+		xBeg += xDelta;
 }
