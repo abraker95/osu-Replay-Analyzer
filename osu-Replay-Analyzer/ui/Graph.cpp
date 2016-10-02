@@ -105,6 +105,22 @@ void Graph::Draw(Window &_win)
 	if (vals.second.size() == 0)	return;
 	if (vals.first.size() == 0)		return;
 
+	DrawGraph(_win);
+
+	position2di pos = _win.reciever.GetMouseState().positionCurr;
+	_win.font->draw(mouseOver, rect<s32>(absXpos + pos.X, absYpos, 100, 10), SColor(255, 255, 255, 255));
+
+	/// \TODO: Handle errors concerning insufficient info to automatically determine graph size
+
+  ///  _win.font->draw(core::stringw(yEnd), rect<s32>(absXpos, Val2Pos(yEnd, Y_AXIS), 100, 10), table.getColor(yEnd));
+	//_win.font->draw(core::stringw(yEnd/2), rect<s32>(absXpos, Val2Pos(yEnd/2, Y_AXIS),absXpos + 100, 10), table.getColor(yEnd/2));
+	_win.font->draw(core::stringw(0), rect<s32>(absXpos, Val2Pos(0, Y_AXIS) - 10, 100, 10), table.getColor(0));
+
+	_win.driver->draw2DRectangleOutline(recti(absXpos, absYpos, absXpos + width, absYpos + height), SColor(255, 255, 255, 255));
+}
+
+void Graph::DrawGraph(Window &_win)
+{
 	double sampleRate = MAX(1, vals.second.size() / width);
 	int i = sampleRate;
 	for (; i < vals.second.size(); i += sampleRate)
@@ -122,17 +138,6 @@ void Graph::Draw(Window &_win)
 
 		_win.driver->draw2DLine(p1, p2, color);
 	}
-
-	position2di pos = _win.reciever.GetMouseState().positionCurr;
-	_win.font->draw(mouseOver, rect<s32>(absXpos + pos.X, absYpos, 100, 10), SColor(255, 255, 255, 255));
-
-	/// \TODO: Handle errors concerning insufficient info to automatically determine graph size
-
-  ///  _win.font->draw(core::stringw(yEnd), rect<s32>(absXpos, Val2Pos(yEnd, Y_AXIS), 100, 10), table.getColor(yEnd));
-	//_win.font->draw(core::stringw(yEnd/2), rect<s32>(absXpos, Val2Pos(yEnd/2, Y_AXIS),absXpos + 100, 10), table.getColor(yEnd/2));
-	_win.font->draw(core::stringw(0), rect<s32>(absXpos, Val2Pos(0, Y_AXIS) - 10, 100, 10), table.getColor(0));
-
-	_win.driver->draw2DRectangleOutline(recti(absXpos, absYpos, absXpos + width, absYpos + height), SColor(255, 255, 255, 255));
 }
 
 void Graph::UpdateInternal(Window &_win)

@@ -32,8 +32,9 @@ class Graph: public GuiObj
 		};
 
 		virtual void Draw(Window &_win);
-		virtual void UpdateInternal(Window &_win);
+		void DrawGraph(Window &_win);
 
+		virtual void UpdateInternal(Window &_win);
 		void UpdateMouseOver(Window &_win);
 
 		double Val2Pos(double _val, AXIS _axis);
