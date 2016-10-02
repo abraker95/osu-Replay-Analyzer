@@ -21,6 +21,9 @@ class Graph: public GuiObj
 
 		void Clear();
 
+		double getXMin();	double getXMax();
+		double getYmin();	double getYMax();
+
 		void setWindow(double _xBeg, double _yBeg, double _xEnd, double _yEnd);
 		void Resize(int _width, int _height);
 

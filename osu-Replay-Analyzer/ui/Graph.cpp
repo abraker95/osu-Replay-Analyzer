@@ -66,6 +66,29 @@ void Graph::Clear()
 	while (vals.second.size() > 0)	vals.second.pop();
 }
 
+
+double Graph::getXMax()
+{
+	return vals.first._Get_container()[vals.first.size() - 1];
+}
+
+double Graph::getXMin()
+{
+	return vals.first._Get_container()[0];
+}
+
+double Graph::getYMax()
+{
+	/// \TODO: use cache or something. Going through this everytime is expensive
+	return 0;
+}
+
+double Graph::getYmin()
+{
+	/// \TODO: use cache or something. Going through this everytime is expensive
+	return 0;
+}
+
 void Graph::setWindow(double _xBeg, double _yBeg, double _xEnd, double _yEnd)
 {
 	xBeg = _xBeg;	yBeg = _yBeg;
