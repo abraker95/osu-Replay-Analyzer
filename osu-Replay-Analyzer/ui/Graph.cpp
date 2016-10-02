@@ -193,11 +193,20 @@ void Graph::UpdateInternal(Window &_win)
 
 void Graph::UpdateMouseOver(Window &_win)
 {
+	/// \TODO: Fix this. Something is throwing off the accuracy, so it ends up showing wrong values
 	if (isMouseOnObj(_win, false) && mouseOverEnable)
 	{
 		position2di pos = _win.reciever.GetMouseState().positionCurr;
-		double percent = (double)(pos.X - absXpos) / (double)getDim().Width;
-		int index = (vals.first.size() - 1) * percent;
+
+		// Convert mouse pos -> %
+		double viewPercent = (double)(pos.X - absXpos) / (double)getDim().Width;
+
+		// Use that to determine the x value
+		double xVal = getValue(xBeg, xEnd, viewPercent);
+
+		// Use the x value to detemine the index
+		double graphPercent = getPercent(vals.first._Get_container()[0], xVal, vals.first._Get_container()[vals.first.size() - 1]);
+		int index = getValue(0, vals.first.size() - 1, graphPercent);
 
 		mouseOver = core::stringw(vals.second._Get_container()[index]);
 	}
