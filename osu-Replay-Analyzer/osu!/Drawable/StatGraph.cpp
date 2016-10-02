@@ -8,10 +8,10 @@ StatGraph::StatGraph(int _xpos, int _ypos, int *_viewtime) : GuiObj(_xpos, _ypos
 	timings = nullptr;
 	selection = 0;
 
-	velGraph = Graph(this);
-		velGraph.Resize(0, this->height);
-		velGraph.addClipDimTo(GuiObj::RIGHT);
-		velGraph.setMargin(20, 0);
+	graph = Graph(this);
+		graph.Resize(0, this->height);
+		graph.addClipDimTo(GuiObj::RIGHT);
+		graph.setMargin(20, 0);
 
 	btnUp = Button(-1, 0, 15, 10, this);
 		btnUp.ClipPosTo(GuiObj::TOPRIGHT);
@@ -43,9 +43,9 @@ void StatGraph::Init()
 		min = MIN(timing.data, min);
 	}
 
-	velGraph.Clear();
-	velGraph.SetStaticParam(&velX, &velY, 1000);
-	velGraph.setWindow(0, min, velX[velX.size() - 1], max);
+	graph.Clear();
+	graph.SetStaticParam(&velX, &velY, 1000);
+	graph.setWindow(0, min, velX[velX.size() - 1], max);
 }
 
 
@@ -56,7 +56,7 @@ void StatGraph::Draw(Window &_win)
 	if (timings->size() == 0) return;
 
 	double maxTime = (*timings)[timings->size() - 1].time;
-	double pos = getValue(0, velGraph.getDim().Width, (*viewtime) / maxTime);
+	double pos = getValue(0, graph.getDim().Width, (*viewtime) / maxTime);
 
 	std::string dataName = AnalysisStruct::beatmapAnalysis.getValidAnalyzers()[selection];
 
@@ -64,7 +64,7 @@ void StatGraph::Draw(Window &_win)
 	_win.font->draw(mouseOver.second, rect<s32>(absXpos + mouseOver.first, absYpos, 100, 10), SColor(255, 255, 255, 255));
 	_win.font->draw(core::stringw(dataName.data()), rect<s32>(absXpos + this->width/2, absYpos, 100, 10), SColor(255, 255, 255, 255));
 
-	velGraph.Update(_win);
+	graph.Update(_win);
 	btnUp.Update(_win);
 	btnDwn.Update(_win);
 }

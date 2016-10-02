@@ -23,7 +23,7 @@ class StatGraph : public GuiObj
 			NUM_SELECTIONS
 		};
 
-		Graph velGraph;
+		Graph graph;
 		Button btnUp, btnDwn;
 
 		std::vector<osu::TIMING>* timings;
