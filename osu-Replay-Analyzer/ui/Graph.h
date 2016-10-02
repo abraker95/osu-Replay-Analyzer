@@ -36,6 +36,7 @@ class Graph: public GuiObj
 
 		virtual void UpdateInternal(Window &_win);
 		void UpdateMouseOver(Window &_win);
+		void UpdateZoom(Window &_win);
 
 		double Val2Pos(double _val, AXIS _axis);
 

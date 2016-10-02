@@ -171,4 +171,20 @@ void Graph::UpdateMouseOver(Window &_win)
 	{
 		mouseOver = "";
 	}
+
+void Graph::UpdateZoom(Window &_win)
+{
+	if (!isMouseOnObj(_win, false)) return;
+
+	position2di pos = _win.reciever.GetMouseState().positionCurr;
+
+	double step = (xEnd-xBeg) / 10.0; // amount of units to zoom in/out by
+	double xDelta = step*_win.reciever.getWheel();
+
+	if (xEnd + xDelta <= vals.first._Get_container()[vals.first.size() - 1])
+		xEnd += xDelta;
+
+	if (xBeg - xDelta >= vals.first._Get_container()[0])
+		xBeg -= xDelta;
+}
 }
