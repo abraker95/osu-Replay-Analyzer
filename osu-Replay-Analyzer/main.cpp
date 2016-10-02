@@ -146,12 +146,12 @@ int main()
 		hdSlider.setRange(0, 1);
 		hdSlider.ClipPosTo(GuiObj::TOPRIGHT);
 
-		btnBeatmap.ClipPosTo(GuiObj::TOPRIGHT);
-	Button btnBeatmap(2, 0, 100, 10);
+	Button btnBeatmap(2, 0, 100, 10, "Load Beatmap");
+		//btnBeatmap.ClipPosTo(GuiObj::TOPRIGHT);
 		btnBeatmap.setDepth(1);
 
-		btnReplay.ClipPosTo(GuiObj::TOPRIGHT);
-	Button btnReplay(104, 0, 100, 10);
+	Button btnReplay(104, 0, 100, 10, "Load Replay");
+		//btnReplay.ClipPosTo(GuiObj::TOPRIGHT);
 		btnReplay.setDepth(1);
 
 	/// \TODO: Open file dialog box

@@ -3,10 +3,12 @@
 
 Button::Button(GuiObj* _parent) : GuiObj(0, 0, 0, 0, _parent){}
 
-Button::Button(int _xpos, int _ypos, int _width, int _height, GuiObj* _parent) : GuiObj(_xpos, _ypos, _width, _height, _parent)
+Button::Button(int _xpos, int _ypos, int _width, int _height, std::string _label, GuiObj* _parent) : GuiObj(_xpos, _ypos, _width, _height, _parent)
 {
 	pressed = false;
 	triggered = false;
+
+	label = _label;
 
 	state = IDLE;
 	guiType = "Button";
@@ -55,6 +57,15 @@ void Button::Draw(Window &_win)
 			// ???
 			break;
 	}
+	
+	DrawLabel(_win);
+}
+
+void Button::DrawLabel(Window &_win)
+{
+	std::wstring widestr = std::wstring(label.begin(), label.end());
+	dimension2d<u32> textDim = _win.font->getDimension(widestr.c_str());
+	_win.font->draw(core::stringw(label.data()), rect<s32>(absXpos + getDim().Width / 2 - textDim.Width / 2, absYpos + getDim().Height / 2 - textDim.Height / 2, absXpos + 100, absYpos + 10), SColor(255, 255, 255, 255));
 }
 
 void Button::UpdateInternal(Window &_win)

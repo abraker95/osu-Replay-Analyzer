@@ -18,22 +18,22 @@ Scrollbar::Scrollbar(int _xpos, int _ypos, ORIENTATION _scrollBarOrientation, in
 			height = WIDTH;
 			width = _pxLength;
 
-			btnUp = new Button(0, 0 , WIDTH, WIDTH, this);
+			btnUp = new Button(0, 0 , WIDTH, WIDTH, "", this);
 				btnUp->ClipPosTo(TOPLEFT);
-			btnDown = new Button(0, 0, WIDTH, WIDTH, this);
+			btnDown = new Button(0, 0, WIDTH, WIDTH, "", this);
 				btnDown->ClipPosTo(TOPRIGHT);
-			scroller = new Button(0, 0, this->getScrollerLength(), WIDTH, this);
+			scroller = new Button(0, 0, this->getScrollerLength(), WIDTH, "", this);
 			break;
 
 		case VERTICAL:
 			height = _pxLength;
 			width = WIDTH;
 			
-			btnUp = new Button(0, 0, WIDTH, WIDTH, this);
+			btnUp = new Button(0, 0, WIDTH, WIDTH, "", this);
 				btnUp->ClipPosTo(TOPLEFT);
-			btnDown = new Button(0, 0, WIDTH, WIDTH, this);
+			btnDown = new Button(0, 0, WIDTH, WIDTH, "", this);
 				btnDown->ClipPosTo(BTMLEFT);
-			scroller = new Button(0, 0, WIDTH, this->getScrollerLength(), this);
+			scroller = new Button(0, 0, WIDTH, this->getScrollerLength(), "", this);
 			break;
 
 		default:

@@ -9,17 +9,17 @@ Dialog::Dialog(int _xpos, int _ypos, int _width, int _height, GuiObj* _parent) :
 		pane->addClipDimTo(BTM);
 		pane->addClipDimTo(RIGHT);
 
-	btnToggleMinimize = new Button(-24 - 4, 0, 12, 12, this);
+	btnToggleMinimize = new Button(-24 - 4, 0, 12, 12, "", this);
 		btnToggleMinimize->ClipPosTo(TOPRIGHT);
 
-	btnClose = new Button(-12 - 2, 0, 12, 12, this);
+	btnClose = new Button(-12 - 2, 0, 12, 12, "", this);
 		btnClose->ClipPosTo(TOPRIGHT);
 
-	titleBar = new Button(0, 0, _width, TITLEBAR_SIZE, this);
+	titleBar = new Button(0, 0, _width, TITLEBAR_SIZE, "", this);
 		titleBar->ClipPosTo(TOPLEFT);
 		titleBar->addClipDimTo(RIGHT);
 
-	resize = new Button(0, 0, 12, 12, this);
+	resize = new Button(0, 0, 12, 12, "", this);
 		resize->ClipPosTo(BTMRIGHT);
 
 	SetRelativeGuiLayer(resize, pane);
