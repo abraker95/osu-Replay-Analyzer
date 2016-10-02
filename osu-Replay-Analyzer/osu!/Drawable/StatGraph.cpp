@@ -30,22 +30,22 @@ void StatGraph::Init()
 	if (timings == nullptr)	return;
 	if (timings->size() == 0) return;
 
-	std::vector<double> velX;
-	std::vector<double> velY;
+	std::vector<double> xvals;
+	std::vector<double> yvals;
 
 	double max = INT_MIN, min = INT_MAX;
 	for (osu::TIMING timing : *timings)
 	{
-		velX.push_back(timing.time);
-		velY.push_back(timing.data);
+		xvals.push_back(timing.time);
+		yvals.push_back(timing.data);
 
 		max = MAX(timing.data, max);
 		min = MIN(timing.data, min);
 	}
 
 	graph.Clear();
-	graph.SetStaticParam(&velX, &velY, 1000);
-	graph.setWindow(0, min, velX[velX.size() - 1], max);
+	graph.SetStaticParam(&xvals, &yvals, 1000);
+	graph.setWindow(0, min, xvals[xvals.size() - 1], max);
 }
 
 
