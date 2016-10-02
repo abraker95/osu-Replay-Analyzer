@@ -52,6 +52,12 @@ static inline double PARITY(double val)
 	return ((ABS(val) / val - 1) / 2);
 }
 
+static inline double SIGN(double val)
+{
+	return ABS(val) / val;
+}
+
+
 // Linear interpolation
 // Percent: 0.0 -> 1.0
 static inline double lerp(double _low, double _hi, double _percent)
