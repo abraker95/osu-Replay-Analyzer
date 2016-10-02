@@ -40,6 +40,14 @@ void Analyzer::Analyze(Play* _play)
 	}
 }
 
+bool Analyzer::isValid()
+{
+	// Todo: Check for wierd values that may crash the display graph and attempt to fix them
+	// Validate();
+
+	return data.size() > 0;
+}
+
 std::vector<osu::TIMING>* Analyzer::getData()
 {
 	return &data;

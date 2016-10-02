@@ -14,6 +14,7 @@ class Analyzer
 		virtual ~Analyzer();
 
 		void Analyze(Play* _play);
+		bool isValid();
 
 		std::vector<osu::TIMING>* getData();
 		std::string getName() const;
