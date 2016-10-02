@@ -55,12 +55,17 @@ void StatGraph::Draw(Window &_win)
 	if (timings == nullptr)	return;
 	if (timings->size() == 0) return;
 
+	recti graphWindow = graph.getWindow();
+
 	double maxTime = (*timings)[timings->size() - 1].time;
-	double pos = getValue(0, graph.getDim().Width, (*viewtime) / maxTime);
+	double pos = getPercent(graphWindow.UpperLeftCorner.X, *viewtime, graphWindow.LowerRightCorner.X)*width;
+
+	// Draw white time marker
+	if(BTWN(graph.getPos().X, absXpos + pos, graph.getPos().X + graph.getDim().Width))
+		_win.driver->draw2DRectangleOutline(recti(absXpos + pos, absYpos, absXpos + pos + 1, absYpos + height), SColor(255, 255, 255, 255));
+
 
 	std::string dataName = AnalysisStruct::beatmapAnalysis.getValidAnalyzers()[selection];
-
-	_win.driver->draw2DRectangleOutline(recti(absXpos + pos, absYpos, absXpos + pos + 1, absYpos + height), SColor(255, 255, 255, 255));
 	_win.font->draw(core::stringw(dataName.data()), rect<s32>(absXpos + this->width/2, absYpos, 100, 10), SColor(255, 255, 255, 255));
 
 	graph.Update(_win);
