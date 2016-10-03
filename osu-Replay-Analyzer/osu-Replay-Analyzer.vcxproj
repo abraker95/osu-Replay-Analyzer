@@ -140,6 +140,9 @@
     <ClCompile Include="ui\Event.cpp" />
     <ClCompile Include="ui\Graph.cpp" />
     <ClCompile Include="ui\GuiObj.cpp" />
+    <ClCompile Include="ui\OS\Linux.cpp" />
+    <ClCompile Include="ui\OS\Mac.cpp" />
+    <ClCompile Include="ui\OS\Windows.cpp" />
     <ClCompile Include="ui\pane.cpp" />
     <ClCompile Include="ui\Scrollbar.cpp" />
     <ClCompile Include="ui\Slider.cpp" />
