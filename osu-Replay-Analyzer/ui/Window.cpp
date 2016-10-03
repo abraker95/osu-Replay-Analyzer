@@ -3,7 +3,7 @@
 
 Window::Window(int _width , int _height)
 {
-	initOsWindow();
+	///initOsWindows();
 
 	device = createDevice(video::EDT_OPENGL, dimension2d<u32>(_width, _height), 16, false, false, false, &reciever);
 		if (!device)
@@ -82,19 +82,4 @@ void Window::initOsWindow()
 	#ifdef _MAC
 		initMac();
 	#endif
-}
-
-void Window::initWindow()
-{
-
-}
-
-void Window::initLinux()
-{
-
-}
-
-void Window::initMac()
-{
-
 }
