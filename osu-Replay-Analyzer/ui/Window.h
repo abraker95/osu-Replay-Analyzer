@@ -36,7 +36,7 @@ class Window
 
 		void initOsWindow();
 
-		void initWindow();
+		void initWindows();
 		void initLinux();
 		void initMac();
 };
