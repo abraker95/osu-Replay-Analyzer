@@ -89,27 +89,26 @@ void OsuStdRenderer::RenderPaths(Window& _win)
 {
 	std::vector<Hitobject*>& hitobjects = play->beatmap->getHitobjects();
 	
-	int i = MIN(OSUSTANDARD::FindHitobjectAt(hitobjects, *viewTime) + 1, (int) hitobjects.size() - 2);
-	if (i >= (int)hitobjects.size() - 1)
-		return;
-
-	int numIter = 3;
-	if (hitobjects[i + 1]->isHitobjectLong()) numIter++;
-
-	std::vector<osu::TIMING> points = OSUSTANDARD::getPattern(hitobjects, numIter, 100, hitobjects[i + 1]->getTime(), true);
+	int i = OSUSTANDARD::FindHitobjectAt(hitobjects, *viewTime);
+	if (i - 1 < 0)	return;
 
 	double widthRatio = getDim().Width / 512.0;
 	double heightRatio = getDim().Height / 386.0;
 
-	if (points.size() < 2)
-		return;
+	long time = hitobjects[i - 1]->getTime() - 1;
+	osu::TIMING tickPoints[5];
+		tickPoints[0] = OSUSTANDARD::getNextTickPoint(hitobjects, time, &time);
+		tickPoints[1] = OSUSTANDARD::getNextTickPoint(hitobjects, time, &time);
+		tickPoints[2] = OSUSTANDARD::getNextTickPoint(hitobjects, time, &time);
+		tickPoints[3] = OSUSTANDARD::getNextTickPoint(hitobjects, time, &time);
+		tickPoints[4] = OSUSTANDARD::getNextTickPoint(hitobjects, time, &time);
 
-	for (int i = 0; i < points.size() - 1; i++)
+	for (int i = 0; i < 4; i++)
 	{
 		vector2di p1, p2;
-			p1 = vector2di(points[i].pos.X*widthRatio + this->absXpos, points[i].pos.Y*heightRatio + this->absYpos);
-			p2 = vector2di(points[i + 1].pos.X*widthRatio + this->absXpos, points[i + 1].pos.Y*heightRatio + this->absYpos);
-		
+		p1 = vector2di(tickPoints[i].pos.X*widthRatio + this->absXpos, tickPoints[i].pos.Y*heightRatio + this->absYpos);
+		p2 = vector2di(tickPoints[i + 1].pos.X*widthRatio + this->absXpos, tickPoints[i + 1].pos.Y*heightRatio + this->absYpos);
+
 		_win.driver->draw2DLine(p1, p2, SColor(255, 255, 0, 0));
 	}
 }
