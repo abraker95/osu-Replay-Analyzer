@@ -127,70 +127,92 @@ std::vector<osu::TIMING> OSUSTANDARD::getPattern(std::vector<Hitobject*>& _hitob
 }
 
 // Returns (pos), (time), and (is mid slider?) of the next tick point
-osu::TIMING OSUSTANDARD::getNextTickPoint(std::vector<Hitobject*>& _hitobjects, long* _time)
+osu::TIMING OSUSTANDARD::getNextTickPoint(std::vector<Hitobject*>& _hitobjects, long _time, long* _timeItr)
 {
 	osu::TIMING tickPoint;
-	int i = FindHitobjectAt(_hitobjects, *_time, true);
-	
-	// if we reached the end, make timing.data = -1
-	if (i >= _hitobjects.size() - 1) return osu::TIMING({0, -1}); 
+	int i = FindHitobjectAt(_hitobjects, _time, true);
 
-	// if the time is between 2 hitobjects, return the start of the next hitobject
-	if (!isHitobjectAt(_hitobjects, *_time - 1, *_time))
+	// if we reached the end, make timing.data = -1
+	if (i >= _hitobjects.size() - 1) return osu::TIMING({ 0, -1 });
+
+	// If the time is before the hitobject's starting point, then return the hitobject's starting point
+	if (_time < _hitobjects[i]->getTime())
 	{
-		*_time = _hitobjects[i + 1]->getTime();
+		irr::core::vector2d<double> pos = _hitobjects[i]->getPos();
+
+		tickPoint.pos = irr::core::vector2df(pos.X, pos.Y);
+		tickPoint.time = _hitobjects[i]->getTime();
+		tickPoint.data = 0;
+		tickPoint.press = false;
+
+		if (_timeItr != nullptr) *_timeItr = tickPoint.time;
+		return tickPoint;
+	}
+
+	// If the time if after the hitobject's starting point take action depending if the hitobject is a circle or a slider
+
+	// It's a circle, then return the next hitobject's starting point
+	if (!_hitobjects[i]->isHitobjectLong())
+	{
 		irr::core::vector2d<double> pos = _hitobjects[i + 1]->getPos();
 
 		tickPoint.pos = irr::core::vector2df(pos.X, pos.Y);
-		tickPoint.time = *_time;
+		tickPoint.time = _hitobjects[i + 1]->getTime();
 		tickPoint.data = 0;
 		tickPoint.press = false;
+
+		if (_timeItr != nullptr) *_timeItr = tickPoint.time;
 		return tickPoint;
 	}
-	else
+
+	// It's a slider, then go through the slider's ticks
+	if (_hitobjects[i]->isHitobjectLong())
 	{
-		// if it is a slider, return the next closest tick
-		if (_hitobjects[i]->isHitobjectLong())
-		{
-			SliderHitObject* slider = _hitobjects[i]->getSlider();
-			std::vector<int> ticks = slider->getTickTimes();
+		SliderHitObject* slider = _hitobjects[i]->getSlider();
+		std::vector<int> ticks = slider->getTickTimes();
 
-			for (int tick = 1; tick < ticks.size(); tick++)
+		for (int tick : ticks)
+		{
+			// If the time occures before a tick, return that tick
+			if (_time < tick)
 			{
-				if (BTWN(ticks[tick - 1], *_time, ticks[tick]))
-				{
-					*_time = ticks[tick];
-					irr::core::vector2d<double> pos = slider->GetSliderPos(ticks[tick]);
+				irr::core::vector2d<double> pos = slider->GetSliderPos(tick);
 
-					tickPoint.pos = irr::core::vector2df(pos.X, pos.Y);
-					tickPoint.time = *_time;
-					tickPoint.data = 0;
-					tickPoint.press = true;
-					return tickPoint;
-				}
+				tickPoint.pos = irr::core::vector2df(pos.X, pos.Y);
+				tickPoint.time = tick;
+				tickPoint.data = 0;
+				tickPoint.press = false;
+
+				if (_timeItr != nullptr) *_timeItr = tickPoint.time;
+				return tickPoint;
+
 			}
-
-			// else slider had no second tick
-			*_time = _hitobjects[i + 1]->getTime();
-			irr::core::vector2d<double> pos = _hitobjects[i + 1]->getPos();
-
-			tickPoint.pos = irr::core::vector2df(pos.X, pos.Y);
-			tickPoint.time = *_time;
-			tickPoint.data = 0;
-			tickPoint.press = false;
-			return tickPoint;
 		}
-		else // if it is a regular hitobject, return the start of the next hitobject
+
+		// The time is after all the slider's ticks. Check if the viewTime is after the slider's end
+		if (_time < _hitobjects[i]->getEndTime())
 		{
-			*_time = _hitobjects[i + 1]->getTime();
-			irr::core::vector2d<double> pos = _hitobjects[i + 1]->getPos();
+			irr::core::vector2d<double> pos = slider->GetSliderPos(_hitobjects[i]->getEndTime());
 
 			tickPoint.pos = irr::core::vector2df(pos.X, pos.Y);
-			tickPoint.time = *_time;
+			tickPoint.time = _hitobjects[i]->getEndTime();
 			tickPoint.data = 0;
 			tickPoint.press = false;
+
+			if (_timeItr != nullptr) *_timeItr = tickPoint.time;
 			return tickPoint;
 		}
+		
+		// Otherwise, the time is after the current hitobject, but before the start of the next hitobject. Return the next hitobject's starting point
+		irr::core::vector2d<double> pos = _hitobjects[i + 1]->getPos();
+
+		tickPoint.pos = irr::core::vector2df(pos.X, pos.Y);
+		tickPoint.time = _hitobjects[i + 1]->getTime();
+		tickPoint.data = 0;
+		tickPoint.press = false;
+
+		if (_timeItr != nullptr) *_timeItr = tickPoint.time;
+		return tickPoint;
 	}
 }
 

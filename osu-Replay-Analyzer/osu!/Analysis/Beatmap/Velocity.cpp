@@ -13,8 +13,8 @@ void Analyzer_Velocity::AnalyzeStd(Play* _play)
 
 	long time = 0;
 
-	osu::TIMING prevTickPoint = OSUSTANDARD::getNextTickPoint(hitobjects, &time);
-	osu::TIMING currTickPoint = OSUSTANDARD::getNextTickPoint(hitobjects, &time);
+	osu::TIMING prevTickPoint = OSUSTANDARD::getNextTickPoint(hitobjects, time, &time);
+	osu::TIMING currTickPoint = OSUSTANDARD::getNextTickPoint(hitobjects, time, &time);
 
 	while(true)
 	{
@@ -31,7 +31,7 @@ void Analyzer_Velocity::AnalyzeStd(Play* _play)
 		data.push_back(timing);
 
 		prevTickPoint = currTickPoint;
-		currTickPoint = OSUSTANDARD::getNextTickPoint(hitobjects, &time);
+		currTickPoint = OSUSTANDARD::getNextTickPoint(hitobjects, time, &time);
 
 		if (currTickPoint.data == -1) break;
 	}
