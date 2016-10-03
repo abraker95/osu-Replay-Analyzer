@@ -8,7 +8,7 @@
 class OsuStdRenderer: public GuiObj
 {
 	public:
-		OsuStdRenderer(Play* _play, int* _viewTime, GuiObj* _parent);
+		OsuStdRenderer(Play* _play, long* _viewTime, GuiObj* _parent);
 		virtual ~OsuStdRenderer();
 
 		enum Layer
@@ -38,7 +38,7 @@ class OsuStdRenderer: public GuiObj
 		std::vector<Hitcircle*> hitCircles;
 
 		Play* play;
-		int* viewTime;
+		long* viewTime;
 		Layer layerState;
 };
 

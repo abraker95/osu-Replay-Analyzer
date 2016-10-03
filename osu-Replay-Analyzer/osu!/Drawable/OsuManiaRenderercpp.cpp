@@ -8,7 +8,7 @@
 
 #include "../Analysis/AnalysisStruct.h"
 
-OsuManiaRenderer::OsuManiaRenderer(Play* _play, int* _viewTime, GuiObj* _parent) : GuiObj(0, 0, _parent->getDim().Width, _parent->getDim().Height, _parent)
+OsuManiaRenderer::OsuManiaRenderer(Play* _play, long* _viewTime, GuiObj* _parent) : GuiObj(0, 0, _parent->getDim().Width, _parent->getDim().Height, _parent)
 {
 	play = _play;
 	viewTime = _viewTime;

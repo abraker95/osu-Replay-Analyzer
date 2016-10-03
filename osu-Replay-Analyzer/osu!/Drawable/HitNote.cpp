@@ -10,7 +10,7 @@
 #include <iostream>
 #include <tuple>
 
-HitNote::HitNote(Mods* _mods, Hitobject* _hitobject, int* _viewTime, double* _zoom)
+HitNote::HitNote(Mods* _mods, Hitobject* _hitobject, long* _viewTime, double* _zoom)
 	: GuiObj(log2(_hitobject->getPos().X) * 300, 0, 50, 15)
 {
 	mods = _mods;

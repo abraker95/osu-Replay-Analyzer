@@ -18,8 +18,8 @@ extern double _widthRatio_, _heightRatio_;
 class GamemodeRenderer : public GuiObj 
 {
 	public:
-		GamemodeRenderer(int _xpos, int _ypos, int _width, int _hight, Play* _play, int* _viewTime);
-		void InitRenderer(Play* _play, int* _viewTime);
+		GamemodeRenderer(int _xpos, int _ypos, int _width, int _hight, Play* _play, long* _viewTime);
+		void InitRenderer(Play* _play, long* _viewTime);
 		
 		virtual ~GamemodeRenderer();
 		void setGamemode(GAMEMODE _gamemode);

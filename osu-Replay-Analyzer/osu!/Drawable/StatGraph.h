@@ -8,7 +8,7 @@
 class StatGraph : public GuiObj
 {
 	public:
-		StatGraph(int _xpos, int _ypos, int *_viewtime);
+		StatGraph(int _xpos, int _ypos, long *_viewtime);
 		virtual ~StatGraph();
 
 		void Init();
@@ -27,7 +27,7 @@ class StatGraph : public GuiObj
 		Button btnUp, btnDwn;
 
 		std::vector<osu::TIMING>* timings;
-		int *viewtime;
+		long *viewtime;
 		int selection;
 
 		virtual void Draw(Window &_win);

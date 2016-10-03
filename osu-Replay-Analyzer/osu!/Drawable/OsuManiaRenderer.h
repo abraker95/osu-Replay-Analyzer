@@ -8,7 +8,7 @@
 class OsuManiaRenderer : public GuiObj
 {
 	public:
-		OsuManiaRenderer(Play* _play, int* _viewTime, GuiObj* _parent);
+		OsuManiaRenderer(Play* _play, long* _viewTime, GuiObj* _parent);
 		virtual ~OsuManiaRenderer();
 
 		enum Layer
@@ -52,7 +52,7 @@ class OsuManiaRenderer : public GuiObj
 		std::vector<bool> visiblityPool;
 
 		Play* play;
-		int* viewTime;
+		long* viewTime;
 		Layer layerState;
 		double zoom;
 };

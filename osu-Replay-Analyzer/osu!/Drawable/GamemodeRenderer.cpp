@@ -3,7 +3,7 @@
 
 double _widthRatio_, _heightRatio_;
 
-GamemodeRenderer::GamemodeRenderer(int _xpos, int _ypos, int _width, int _height, Play* _play, int* _viewTime) : GuiObj(_xpos, _ypos, _width, _height)
+GamemodeRenderer::GamemodeRenderer(int _xpos, int _ypos, int _width, int _height, Play* _play, long* _viewTime) : GuiObj(_xpos, _ypos, _width, _height)
 {
 	stdRenderer = nullptr;
 	maniaRenderer = nullptr;
@@ -30,7 +30,7 @@ void GamemodeRenderer::setGamemode(GAMEMODE _gamemode)
 
 // --------- [PRIVATE] -----------
 
-void GamemodeRenderer::InitRenderer(Play* _play, int* _viewTime)
+void GamemodeRenderer::InitRenderer(Play* _play, long* _viewTime)
 {
 	DestroyRenderers();
 	if (_play->beatmap == nullptr)

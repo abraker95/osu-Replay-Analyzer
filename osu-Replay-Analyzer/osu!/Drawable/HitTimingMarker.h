@@ -10,7 +10,7 @@
 class HitTimingMarker : public GuiObj
 {
 	public:
-		HitTimingMarker(int _xpos, int _ypos, Play* _play, int* _viewTime);
+		HitTimingMarker(int _xpos, int _ypos, Play* _play, long* _viewTime);
 
 	private:
 		virtual void Draw(Window& _win);
@@ -43,7 +43,7 @@ class HitTimingMarker : public GuiObj
 		double timeZoom = 1050;
 		double viewZoom = 1500;
 
-		int* viewTime;
+		long* viewTime;
 		Play* play;
 };
 

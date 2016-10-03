@@ -13,12 +13,12 @@
 class HitNote : public GuiObj
 {
 public:
-	HitNote(Mods* _mods, Hitobject* _hitobject, int* _viewTime, double* _zoom);
+	HitNote(Mods* _mods, Hitobject* _hitobject, long* _viewTime, double* _zoom);
 
 private:
 	Mods *mods;
 	Hitobject *hitobject;
-	int *viewTime;
+	long *viewTime;
 	double *zoom;
 
 	SColor edgeCol;

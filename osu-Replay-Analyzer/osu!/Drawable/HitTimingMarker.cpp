@@ -1,7 +1,7 @@
 #include "HitTimingMarker.h"
 #include "../Analysis/AnalysisStruct.h"
 
-HitTimingMarker::HitTimingMarker(int _xpos, int _ypos, Play* _play, int* _viewTime) : GuiObj(_xpos, _ypos, 0, 10, nullptr)
+HitTimingMarker::HitTimingMarker(int _xpos, int _ypos, Play* _play, long* _viewTime) : GuiObj(_xpos, _ypos, 0, 10, nullptr)
 {
 	viewTime = _viewTime;
 	play = _play;

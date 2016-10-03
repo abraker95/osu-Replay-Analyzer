@@ -2,7 +2,7 @@
 #include "../../utils/mathUtils.h"
 #include "../Analysis/AnalysisStruct.h"
 
-StatGraph::StatGraph(int _xpos, int _ypos, int *_viewtime) : GuiObj(_xpos, _ypos, 0, 40, nullptr)
+StatGraph::StatGraph(int _xpos, int _ypos, long *_viewtime) : GuiObj(_xpos, _ypos, 0, 40, nullptr)
 {
 	viewtime = _viewtime;
 	timings = nullptr;

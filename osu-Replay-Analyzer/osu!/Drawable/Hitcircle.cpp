@@ -8,7 +8,7 @@
 #include <iostream>
 #include <tuple>
 
-Hitcircle::Hitcircle(Mods* _mods, Hitobject* _hitobject, int* _viewTime)
+Hitcircle::Hitcircle(Mods* _mods, Hitobject* _hitobject, long* _viewTime)
 	: GuiObj(_hitobject->getPos().X, _hitobject->getPos().Y, CS2px(_mods->getCS()), CS2px(_mods->getCS()))
 {
 	mods = _mods;

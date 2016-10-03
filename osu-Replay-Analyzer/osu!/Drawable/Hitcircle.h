@@ -13,13 +13,13 @@
 class Hitcircle: public GuiObj
 {
 	public:
-		Hitcircle(Mods* _mods, Hitobject* _hitobject, int* _viewTime);
+		Hitcircle(Mods* _mods, Hitobject* _hitobject, long* _viewTime);
 		virtual ~Hitcircle();
 
 	private:
 		Mods *mods;
 		Hitobject *hitobject;
-		int *viewTime;
+		long *viewTime;
 
 		SColor edgeCol;
 
