@@ -333,6 +333,15 @@
     <ClCompile Include="osu!\Analysis\Beatmap\Difficulty\TappingControl.cpp">
       <Filter>Source Files\osu!\Analysis\Beatmap\Difficulty</Filter>
     </ClCompile>
+    <ClCompile Include="ui\OS\Windows.cpp">
+      <Filter>Source Files\ui\OS</Filter>
+    </ClCompile>
+    <ClCompile Include="ui\OS\Linux.cpp">
+      <Filter>Source Files\ui\OS</Filter>
+    </ClCompile>
+    <ClCompile Include="ui\OS\Mac.cpp">
+      <Filter>Source Files\ui\OS</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="osu!\Filestructure\LZMA.h">
