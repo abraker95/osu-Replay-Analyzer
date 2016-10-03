@@ -72,7 +72,7 @@ double Window::getFPS() const
 void Window::initOsWindow()
 {
 	#ifdef _WIN32
-		initWindow();
+		initWindows();
 	#endif
 
 	#ifdef LINUX
