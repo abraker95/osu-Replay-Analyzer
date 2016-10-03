@@ -29,8 +29,8 @@ void Analyzer_TappingControl::AnalyzeMania(Play* _play)
 	osu::TIMING timing;
 		timing.data = 0;
 
-	std::vector<double> rawControl;
-		rawControl.resize(KEYS);
+	std::vector<double> rawControls;
+		rawControls.resize(KEYS);
 
 	for (osu::TIMING noteRateChange : noteRateChanges)
 	{
@@ -39,15 +39,15 @@ void Analyzer_TappingControl::AnalyzeMania(Play* _play)
 
 		osu::TIMING noteRate = noteRates[osu::FindTimingAt(noteRates, noteRateChange.time)];
 
-		if (noteRateChange.data > 0)	 rawControl[key] += 0.90*noteRateChange.data*noteRate.data;
-		else if(noteRateChange.data < 0) rawControl[key] -= 0.70*rawControl[key] * (1.0/noteRate.data);
-		else							 rawControl[key] -= 0.50*rawControl[key] * (1.0/noteRate.data);
+		if (noteRateChange.data > 0)	 rawControls[key] += 0.90*noteRateChange.data*noteRate.data;
+		else if(noteRateChange.data < 0) rawControls[key] -= 0.70*rawControls[key] * (1.0/noteRate.data);
+		else							 rawControls[key] -= 0.50*rawControls[key] * (1.0/noteRate.data);
 
 		double maxControl = INT_MIN;
-		for (double rawEndurance : rawControl)
+		for (double rawControl : rawControls)
 		{
-			if (maxControl < rawEndurance)
-				maxControl = rawEndurance;
+			if (maxControl < rawControl)
+				maxControl = rawControl;
 		}
 
 		timing.data = maxControl;
