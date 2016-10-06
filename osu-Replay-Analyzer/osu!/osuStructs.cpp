@@ -19,6 +19,8 @@ int osu::FindTimingAt(std::vector<TIMING>& _timings, double _time)
 		else
 			start = mid + 1;
 	}
+
+	return INT_MIN;
 }
 
 bool sortATimings(osu::TIMING i, osu::TIMING j)
