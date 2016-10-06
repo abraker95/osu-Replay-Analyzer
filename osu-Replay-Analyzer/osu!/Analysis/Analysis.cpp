@@ -63,7 +63,8 @@ std::vector<std::string> Analysis::getValidAnalyzers()
 	for (Analyzer* analyzer : analyzers)
 	{
 		if (analyzer->isValid())
-			list.push_back(analyzer->getName());
+			if(analyzer->getName().substr(0, 2) != "[]") // This controls which analyzers are graphable
+				list.push_back(analyzer->getName());
 	}
 
 	return list;
