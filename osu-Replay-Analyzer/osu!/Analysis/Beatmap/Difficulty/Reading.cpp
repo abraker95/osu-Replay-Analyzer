@@ -17,7 +17,7 @@ void Analyzer_Reading::AnalyzeStd(Play* _play)
 	std::vector<osu::TIMING>& timingsRate = *AnalysisStruct::beatmapAnalysis.getAnalyzer("note rate")->getData();
 	std::vector<osu::TIMING>& timingsVel = *AnalysisStruct::beatmapAnalysis.getAnalyzer("velocity (px/ms)")->getData();
 
-	vector2df avgCoor, distractor;
+	vector2d<double> avgCoor, distractor;
 	int i = 0, previ = 0;
 	double delay = 10.0;
 	double avgCoeff = 0.4; // higher coeff = more precise
@@ -64,7 +64,7 @@ void Analyzer_Reading::AnalyzeStd(Play* _play)
 		{
 			if (BTWN(ms - delay / 2.0, hitobjects[i]->getTime(), ms + delay / 2.0))
 			{
-				double dist = getDist(hitobjects[i]->getPos(), vector2d<double>(avgCoor.X, avgCoor.Y));
+				double dist = getDist(hitobjects[i]->getPos(), avgCoor);
 				double radius = CS2px(_play->getMod()->getCS()) / 2.0;
 				
 				const double divider = 1.0;			// SENSITIVE to nearest 1.0
@@ -80,7 +80,7 @@ void Analyzer_Reading::AnalyzeStd(Play* _play)
 			if (BTWN(hitobjects[i]->getTime(), ms, hitobjects[i]->getEndTime()))
 			{
 				vector2d<double> pos = hitobjects[i]->getSlider()->GetSliderPos(ms);
-				double dist = getDist(vector2d<double>(pos.X, pos.Y), vector2d<double>(avgCoor.X, avgCoor.Y));
+				double dist = getDist(pos, avgCoor);
 				double radius = CS2px(_play->getMod()->getCS()) / 2.0;
 				
 				const double divider = 1.0;          // SENSITIVE to nearest 1.0

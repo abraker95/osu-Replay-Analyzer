@@ -65,7 +65,7 @@ void Analyzer_NoteRatePerKey::AnalyzeMania(Play* _play)
 			if (count > maxCount)
 			{
 				timing.data = maxCount = count;
-				timing.pos = vector2df(OSUMANIA::getKey(hitobjects[i[key]]->getPos().X, KEYS), 0);
+				timing.pos = vector2d<double>(OSUMANIA::getKey(hitobjects[i[key]]->getPos().X, KEYS), 0);
 			}
 		}
 

@@ -68,7 +68,7 @@ void Analyzer_Overlaps::AnalyzeStd(Play* _play)
 		// compile info and record
 		timing.time = ms;
 		timing.key = i - iobj;  // allows to determine if there are any notes between the overlapping note
-		timing.pos = vector2df(hitobjects[i]->getPos().X, hitobjects[i]->getPos().Y);
+		timing.pos = hitobjects[i]->getPos();
 		timing.press = false;
 
 		data.push_back(timing);

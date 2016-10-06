@@ -37,8 +37,7 @@ void Analyzer_TapEventIntervals::AnalyzeStd(Play* _play)
 			else					timing.key = 2; // tap -> tap
 
 			// record position
-			irr::core::vector2d<double> pos = hitobjects[i]->getPos();
-			timing.pos = irr::core::vector2df(pos.X, pos.Y);
+			timing.pos = hitobjects[i]->getPos();
 
 			// record current time
 			timing.time = hitobjects[i]->getTime();
@@ -57,8 +56,7 @@ void Analyzer_TapEventIntervals::AnalyzeStd(Play* _play)
 		timing.key = 3; // tap -> hold
 
 		// record position
-		irr::core::vector2d<double> pos = hitobjects[i]->getPos();
-		timing.pos = irr::core::vector2df(pos.X, pos.Y);
+		timing.pos = hitobjects[i]->getPos();
 
 		// record current time
 		timing.time = hitobjects[i]->getEndTime();
@@ -78,9 +76,8 @@ void Analyzer_TapEventIntervals::AnalyzeStd(Play* _play)
 			if (currInterval > 150)	timing.key = 0; // release -> tap
 			else					timing.key = 2; // tap -> hold
 
-														// record position
-			irr::core::vector2d<double> pos = hitobjects[i]->getPos();
-			timing.pos = irr::core::vector2df(pos.X, pos.Y);
+			// record position
+			timing.pos = hitobjects[i]->getPos();
 
 			// record current time
 			timing.time = hitobjects[i + 1]->getTime();

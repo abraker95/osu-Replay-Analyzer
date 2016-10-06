@@ -1,5 +1,5 @@
 #include "NoteRate.h"
-#include "../../../utils/geometry.h"
+
 
 #include "../../osu_standard.h"
 #include "../../osu_mania.h"
@@ -19,7 +19,7 @@ void Analyzer_NoteRate::AnalyzeStd(Play* _play)
 		while (j--) if (hitobjects[i]->getTime() - hitobjects[j]->getTime() >= 1000) break;
 
 		timing.data = i - j;
-		timing.pos = vector2df(hitobjects[i]->getPos().X, hitobjects[i]->getPos().Y);
+		timing.pos = hitobjects[i]->getPos();
 		timing.key = i;
 		timing.press = false;
 		timing.time = hitobjects[i]->getTime();

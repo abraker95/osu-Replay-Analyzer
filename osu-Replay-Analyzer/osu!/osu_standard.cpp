@@ -67,7 +67,7 @@ std::vector<osu::TIMING> OSUSTANDARD::getPattern(std::vector<Hitobject*>& _hitob
 
 			if (sliderMidTime < _time)
 			{
-				point.pos = irr::core::vector2df(pos.X, pos.Y);
+				point.pos = pos;
 				point.time = _hitobjects[i]->getEndTime();
 				point.press = _newHitobject;
 				time = _hitobjects[i]->getTime();
@@ -76,7 +76,7 @@ std::vector<osu::TIMING> OSUSTANDARD::getPattern(std::vector<Hitobject*>& _hitob
 			}
 			else
 			{
-				point.pos = irr::core::vector2df(pos.X, pos.Y);
+				point.pos = pos;
 				point.time = startHitobject;
 				point.press = _newHitobject;
 				time = _hitobjects[i - 1]->getEndTime();
@@ -95,7 +95,7 @@ std::vector<osu::TIMING> OSUSTANDARD::getPattern(std::vector<Hitobject*>& _hitob
 		{
 			// record this point on the slider
 			osu::TIMING point;
-				point.pos = irr::core::vector2df(pos.X, pos.Y);
+				point.pos = pos;
 				point.time = _time;
 				point.press = _newHitobject;
 				points.push_back(point);
@@ -110,10 +110,8 @@ std::vector<osu::TIMING> OSUSTANDARD::getPattern(std::vector<Hitobject*>& _hitob
 	else
 	{
 		// record this hitobject
-		irr::core::vector2d<double> pos = _hitobjects[i]->getPos();
-
 		osu::TIMING point;
-			point.pos = irr::core::vector2df(pos.X, pos.Y);
+			point.pos = _hitobjects[i]->getPos();
 			point.time = _hitobjects[i]->getTime();
 			point.press = _newHitobject;
 		points.push_back(point);
@@ -133,14 +131,12 @@ osu::TIMING OSUSTANDARD::getNextTickPoint(std::vector<Hitobject*>& _hitobjects, 
 	int i = FindHitobjectAt(_hitobjects, _time, true);
 
 	// if we reached the end, make timing.data = -1
-	if (i >= _hitobjects.size() - 1) return osu::TIMING({ 0, -1 });
+	if (i >= _hitobjects.size() - 1) return osu::TIMING({ -1, -1 });
 
 	// If the time is before the hitobject's starting point, then return the hitobject's starting point
 	if (_time < _hitobjects[i]->getTime())
 	{
-		irr::core::vector2d<double> pos = _hitobjects[i]->getPos();
-
-		tickPoint.pos = irr::core::vector2df(pos.X, pos.Y);
+		tickPoint.pos = _hitobjects[i]->getPos();
 		tickPoint.time = _hitobjects[i]->getTime();
 		tickPoint.data = 0;
 		tickPoint.press = false;
@@ -154,9 +150,7 @@ osu::TIMING OSUSTANDARD::getNextTickPoint(std::vector<Hitobject*>& _hitobjects, 
 	// It's a circle, then return the next hitobject's starting point
 	if (!_hitobjects[i]->isHitobjectLong())
 	{
-		irr::core::vector2d<double> pos = _hitobjects[i + 1]->getPos();
-
-		tickPoint.pos = irr::core::vector2df(pos.X, pos.Y);
+		tickPoint.pos = _hitobjects[i + 1]->getPos();
 		tickPoint.time = _hitobjects[i + 1]->getTime();
 		tickPoint.data = 0;
 		tickPoint.press = false;
@@ -176,9 +170,7 @@ osu::TIMING OSUSTANDARD::getNextTickPoint(std::vector<Hitobject*>& _hitobjects, 
 			// If the time occures before a tick, return that tick
 			if (_time < tick)
 			{
-				irr::core::vector2d<double> pos = slider->GetSliderPos(tick);
-
-				tickPoint.pos = irr::core::vector2df(pos.X, pos.Y);
+				tickPoint.pos = slider->GetSliderPos(tick);
 				tickPoint.time = tick;
 				tickPoint.data = 0;
 				tickPoint.press = false;
@@ -192,9 +184,7 @@ osu::TIMING OSUSTANDARD::getNextTickPoint(std::vector<Hitobject*>& _hitobjects, 
 		// The time is after all the slider's ticks. Check if the viewTime is after the slider's end
 		if (_time < _hitobjects[i]->getEndTime())
 		{
-			irr::core::vector2d<double> pos = slider->GetSliderPos(_hitobjects[i]->getEndTime());
-
-			tickPoint.pos = irr::core::vector2df(pos.X, pos.Y);
+			tickPoint.pos = slider->GetSliderPos(_hitobjects[i]->getEndTime());
 			tickPoint.time = _hitobjects[i]->getEndTime();
 			tickPoint.data = 0;
 			tickPoint.press = false;
@@ -204,9 +194,7 @@ osu::TIMING OSUSTANDARD::getNextTickPoint(std::vector<Hitobject*>& _hitobjects, 
 		}
 		
 		// Otherwise, the time is after the current hitobject, but before the start of the next hitobject. Return the next hitobject's starting point
-		irr::core::vector2d<double> pos = _hitobjects[i + 1]->getPos();
-
-		tickPoint.pos = irr::core::vector2df(pos.X, pos.Y);
+		tickPoint.pos = _hitobjects[i + 1]->getPos();
 		tickPoint.time = _hitobjects[i + 1]->getTime();
 		tickPoint.data = 0;
 		tickPoint.press = false;

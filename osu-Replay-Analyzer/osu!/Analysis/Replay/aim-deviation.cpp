@@ -44,7 +44,7 @@ void Analyzer_AimDeviation::AnalyzeStd(Play* _play)
 
 				// record timing data
 				timing.data = getDist(posTarget, posPlayer);
-				timing.pos = vector2df(posTarget.X, posTarget.Y);
+				timing.pos = posTarget;
 				timing.press = true;
 				timing.time = replayStream[replayIndex].time;
 
@@ -59,7 +59,7 @@ void Analyzer_AimDeviation::AnalyzeStd(Play* _play)
 
 		// record timing data
 		timing.data = getDist(posTarget, posPlayer);
-		timing.pos = vector2df(posTarget.X, posTarget.Y);
+		timing.pos = posTarget;
 		timing.press = true;
 		timing.time = tapDeviation.time;
 
