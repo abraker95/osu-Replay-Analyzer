@@ -26,6 +26,8 @@ class Graph: public GuiObj
 		void setWindow(double _xBeg, double _yBeg, double _xEnd, double _yEnd);
 		recti getWindow();
 
+		void setTitle(std::string _title);
+
 		void Resize(int _width, int _height);
 
 	private:
@@ -45,6 +47,7 @@ class Graph: public GuiObj
 
 		double Val2Pos(double _val, AXIS _axis);
 
+		std::string title;
 		stringw mouseOver;
 		double *xVal, *yVal;
 		double xBeg, xEnd, yBeg, yEnd;

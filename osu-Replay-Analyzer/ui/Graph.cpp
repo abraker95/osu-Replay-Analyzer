@@ -100,6 +100,11 @@ recti Graph::getWindow()
 	return recti(xBeg, yBeg, xEnd, yEnd);
 }
 
+void Graph::setTitle(std::string _title)
+{
+	title = _title;
+}
+
 void Graph::Resize(int _width, int _height)
 {
 	width = _width;
@@ -136,7 +141,10 @@ void Graph::Draw(Window &_win)
 	DrawGraph(_win);
 
 	position2di pos = _win.reciever.GetMouseState().positionCurr;
+	int titleAlpha = 255 - isMouseOnObj(_win) * 150;
+	
 	_win.font->draw(mouseOver, rect<s32>(absXpos + pos.X, absYpos, 100, 10), SColor(255, 255, 255, 255));
+	_win.font->draw(core::stringw(title.data()), rect<s32>(absXpos + this->width / 2, absYpos, 100, 10), SColor(titleAlpha, 255, 255, 255));
 
 	/// \TODO: Handle errors concerning insufficient info to automatically determine graph size
 

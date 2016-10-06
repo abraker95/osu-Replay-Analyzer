@@ -69,9 +69,8 @@ void StatGraph::Draw(Window &_win)
 	if(BTWN(graph.getPos().X, absXpos + pos, graph.getPos().X + graph.getDim().Width))
 		_win.driver->draw2DRectangleOutline(recti(absXpos + pos, absYpos, absXpos + pos + 1, absYpos + height), SColor(255, 255, 255, 255));
 
-
-	std::string dataName = AnalysisStruct::beatmapAnalysis.getValidAnalyzers()[selection];
-	_win.font->draw(core::stringw(dataName.data()), rect<s32>(absXpos + this->width/2, absYpos, 100, 10), SColor(255, 255, 255, 255));
+	graph.setTitle(AnalysisStruct::beatmapAnalysis.getValidAnalyzers()[selection]);
+	
 
 	graph.Update(_win);
 	btnUp.Update(_win);
