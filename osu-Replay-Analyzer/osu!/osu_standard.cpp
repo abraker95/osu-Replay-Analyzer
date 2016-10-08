@@ -1,4 +1,7 @@
 #include "osu_standard.h"
+#include "osuCalc.h"
+
+#include "Filestructure\Play.h"
 
 // dir = true -> look forward
 // dir = false -> look backward
@@ -255,4 +258,187 @@ int OSUSTANDARD::getButtonState(int _prevKey, int _currKey, int _key)
 		state = 2; // release
 
 	return state;
+}
+
+int OSUSTANDARD::getNumHitobjectsVisibleAt(Play* _play, int _index, double _opacity)
+{
+	std::pair<int, int> indices = getIndicesVisibleAt(_play, _play->beatmap->getHitobjects()[_index]->getTime(), _opacity);
+	return indices.second - indices.first;
+}
+
+std::pair<int, int> OSUSTANDARD::getIndicesVisibleAt(Play* _play, int _time, double _opacity)
+{
+	std::vector<Hitobject*> hitobjects = _play->beatmap->getHitobjects();
+	int index = _play->beatmap->FindHitobjectAt(_time) - 1;
+	std::pair<int, int> range;
+
+	// Find first note visible
+	for (index = MAX(index, 0); index < hitobjects.size(); index++)
+	{
+		if (isVisibleAt(*hitobjects[index], _time, _play->getMod()->getAR(), _play->getMod()->getModifier().HD))
+			break;
+	}
+	range.first = index;
+
+	// Find last note visible
+	for (; index < hitobjects.size(); index++)
+	{
+		if (!(isVisibleAt(*hitobjects[index], _time, _play->getMod()->getAR(), _play->getMod()->getModifier().HD)))
+			break;
+	}
+	range.second = index;
+
+	return range;
+}
+
+
+bool OSUSTANDARD::isVisibleAt(Hitobject& _hitobject, int _time, double _AR, bool _hidden)
+{
+	double opacity = getOpacityAt(_hitobject, _time, _AR, _hidden);
+	if (opacity > 0.0)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+
+std::pair<int, int> OSUSTANDARD::getVisiblityTimes(Hitobject& _hitobject, double _AR, bool _hidden, double _opacityStart, double _opacityEnd)
+{
+	double preappTime = _hitobject.getTime() - AR2ms(_AR);	// Pre-appear time. Time the object start appearing
+	std::pair<int, int> times;
+
+	if (_hidden)
+	{
+		double fadeinDuration = 0.4*AR2ms(_AR);				// how long the fadein period is
+		double fadeinTimeEnd = preappTime + fadeinDuration; // When it is fully faded in
+
+		times.first = getValue(preappTime, fadeinTimeEnd, _opacityStart);
+
+
+		// If it's a slider, then the fade out period lasts from when it's fadedin to
+		// 70% to the time it the slider ends
+		if (_hitobject.IsHitObjectType(SLIDER))
+		{
+			double fadeoutDuration = (_hitobject.getEndTime() - fadeinTimeEnd); // how long the fadeout period is
+			double fadeoutTimeEnd = fadeinTimeEnd + fadeoutDuration;		   // When it is fully faded out
+			times.second = getValue(fadeinTimeEnd, fadeoutTimeEnd, 1.0 - _opacityEnd);
+
+			return times;
+		}
+		else
+		{
+			double fadeoutDuration = 0.7*(_hitobject.getTime() - fadeinTimeEnd);		// how long the fadeout period is
+			double fadeoutTimeEnd = fadeinTimeEnd + fadeoutDuration;	// When it is fully faded out
+			times.second = getValue(fadeinTimeEnd, fadeoutTimeEnd, 1.0 - _opacityStart); // <-- no this is not a mistake :D
+
+			return times;
+		}
+	}
+	else
+	{
+		double fadeinDuration = MIN(AR2ms(_AR), 400);		// how long the fadein period is
+		double fadeinTimeEnd = preappTime + fadeinDuration; // When it is fully faded in
+
+															// Fadein period always lasts from preamp time to 400 ms after preamp time or
+															// when the object needs to be hit, which ever is smaller
+		times.first = getValue(preappTime, fadeinTimeEnd, _opacityStart);
+
+		// If it is during the slider hold period, then it's fully visible.
+		// Otherwise, it's not visible anymore.
+		if (_hitobject.IsHitObjectType(SLIDER))
+		{
+			times.second = _hitobject.getEndTime();
+			return times;
+		}
+		else
+		{
+			times.second = _hitobject.getTime();
+			return times;
+		}
+	}
+}
+
+double OSUSTANDARD::getOpacityAt(Hitobject& _hitobject, int _time, double _AR, bool _hidden)
+{
+	double preampTime = _hitobject.getTime() - AR2ms(_AR);	// Time when the AR goes into effect
+
+	if (_hidden)
+	{
+		double fadeinDuration = 0.4*AR2ms(_AR);				// how long the fadein period is
+		double fadeinTimeEnd = preampTime + fadeinDuration; // When it is fully faded in
+
+															// Fadein period always lasts from preamp time to 40% from preamp time to hit time
+		double percentFadeIn = getPercent(preampTime, _time, fadeinTimeEnd);
+
+		// If it's not fully faded in, then we haven't gotten up to the later stuff 
+		if (percentFadeIn < 1.0)
+		{
+			return percentFadeIn;
+		}
+		else // fadeout
+		{
+			// If it's a slider, then the fade out period lasts from when it's fadedin to
+			// 70% to the time it the slider ends
+			if (_hitobject.IsHitObjectType(SLIDER))
+			{
+				double fadeoutDuration = (_hitobject.getSlider()->GetLastTickTime() - fadeinTimeEnd); // how long the fadeout period is
+				double fadeoutTimeEnd = fadeinTimeEnd + fadeoutDuration;		   // When it is fully faded out
+				return (1.0 - getPercent(fadeinTimeEnd, _time, fadeoutTimeEnd));
+			}
+			else
+			{
+				double fadeoutDuration = 0.7*(_hitobject.getTime() - fadeinTimeEnd);		// how long the fadeout period is
+				double fadeoutTimeEnd = fadeinTimeEnd + fadeoutDuration;	// When it is fully faded out
+				return (1.0 - getPercent(fadeinTimeEnd, _time, fadeoutTimeEnd));
+			}
+		}
+	}
+	else
+	{
+		double fadeinDuration = MIN(AR2ms(_AR), 400);		// how long the fadein period is
+		double fadeinTimeEnd = _hitobject.getTime(); // When it is fully faded in
+
+										   // Fadein period always lasts from preamp time to 400 ms after preamp time or
+										   // when the object needs to be hit, which ever is smaller
+		double percentFadeIn = getPercent(preampTime, _time, fadeinTimeEnd);
+
+		// If it's not fully faded in, then we haven't gotten up to the later stuff 
+		if (percentFadeIn < 1.0)
+		{
+			return percentFadeIn;
+		}
+		else // fadeout
+		{
+			// If it is during the slider hold period, then it's fully visible.
+			// Otherwise, it's not visible anymore.
+			if (_hitobject.IsHitObjectType(SLIDER))
+			{
+				if (_time > _hitobject.getEndTime())
+				{
+					// \TODO: Opacity when pressed and when missed
+					return 0.0;
+				}
+				else
+				{
+					return 1.0;
+				}
+			}
+			else
+			{
+				if (_time > _hitobject.getTime())
+				{
+					// \TODO: Opacity when pressed and when missed
+					return 0.0;
+				}
+				else
+				{
+					return 1.0;
+				}
+			}
+		}
+	}
 }

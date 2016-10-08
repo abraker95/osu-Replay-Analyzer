@@ -70,9 +70,7 @@ void OsuStdRenderer::Draw(Window& _win)
 
 void OsuStdRenderer::RenderVisible(Window& _win)
 {
-	Beatmap* beatmap = play->beatmap;
-	std::pair<int, int> visibilityTimes = beatmap->getIndicesVisibleAt(*viewTime, 0.3);
-
+	std::pair<int, int> visibilityTimes = OSUSTANDARD::getIndicesVisibleAt(play, *viewTime, 0.3);
 	for (int i = visibilityTimes.first; i < visibilityTimes.second; i++)
 	{
 		hitCircles[i]->Update(_win);

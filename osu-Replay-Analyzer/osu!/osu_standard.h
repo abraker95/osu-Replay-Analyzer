@@ -3,10 +3,14 @@
 
 #include <math.h>
 #include <vector>
+
 #include "../irrlicht/include/vector2d.h"
+
 #include "Filestructure\Hitobject.h"
 #include "Filestructure\SliderHitObject.h"
+
 #include "osuStructs.h"
+
 
 namespace OSUSTANDARD
 {
@@ -18,6 +22,12 @@ namespace OSUSTANDARD
 	
 	int getButtonState(int _prevKey, int _currKey);
 	int getButtonState(int _prevKey, int _currKey, int _key);
+
+	std::pair<int, int> getIndicesVisibleAt(Play* _play, int _time, double _opacity);
+	std::pair<int, int> getVisiblityTimes(Hitobject& _hitobject, double _AR, bool _hidden, double _opacityStart, double _opacityEnd);
+	bool isVisibleAt(Hitobject& _hitobject, int _time, double _AR, bool _hidden);
+	int getNumHitobjectsVisibleAt(Play* _play, int _index, double _opacity);
+	double getOpacityAt(Hitobject& _hitobject, int _time, double _AR, bool _hidden);
 }
 
 #endif

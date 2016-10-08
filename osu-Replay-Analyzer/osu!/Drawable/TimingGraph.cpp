@@ -2,11 +2,10 @@
 
 #include "../../irrlicht/include/irrlicht.h"
 #include "../../utils/mathUtils.h"
-#include "../osuCalc.h"
 #include "../../utils/Geometry.h"
-#include "../Filestructure/SliderHitObject.h"
-//#include "reaction.h"
-//#include "analysis.h"
+
+#include "../osuCalc.h"
+#include "../osu_standard.h"
 
 #include <iostream>
 
@@ -83,15 +82,15 @@ void TimingGraph::GenerateVisibilityTimings()
 	timingObjects.resize(beatmap->getHitobjects().size());
 	for (int i = 0; i < timingObjects.size(); i++)
 	{
-		std::pair<int, int> visibilityTimes = beatmap->getHitobjects()[i]->getVisiblityTimes(play->getMod()->getAR(), play->getMod()->getModifier().HD, 0.1, 0.1);
+		std::pair<int, int> visibilityTimes = OSUSTANDARD::getVisiblityTimes(*beatmap->getHitobjects()[i], play->getMod()->getAR(), play->getMod()->getModifier().HD, 0.1, 0.1);
 
 		if (layer <= 1)
 		{
 			int index1 = beatmap->FindHitobjectAt(visibilityTimes.first);
 			int index2 = beatmap->FindHitobjectAt(visibilityTimes.second);
 
-			layer = MAX(beatmap->getNumHitobjectsVisibleAt(index1, 0.1) + 1,
-				beatmap->getNumHitobjectsVisibleAt(index2, 0.1) + 1);
+			layer = MAX(OSUSTANDARD::getNumHitobjectsVisibleAt(play, index1, 0.1) + 1,
+						OSUSTANDARD::getNumHitobjectsVisibleAt(play, index2, 0.1) + 1);
 		}
 
 		int layerPos = -5 * layer;

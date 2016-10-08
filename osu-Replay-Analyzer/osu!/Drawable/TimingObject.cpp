@@ -1,6 +1,8 @@
 #include "TimingObject.h"
 #include "TimingGraph.h"
 
+#include "../osu_standard.h"
+
 TimingObject::TimingObject(int _xpos, int _ypos, int _width, int _height, Hitobject* _hitobject, Mods* _mods, TimingGraph* _timingGraph) : GuiObj(_xpos, _ypos, _width, _height, _timingGraph)
 {
 	state = IDLE;
@@ -95,7 +97,7 @@ void TimingObject::UpdateHitObjectTiming()
 void TimingObject::UpdatePosDim()
 {
 	std::pair<int, int> viewTimes = timingGraph->getViewTimes();
-	std::pair<int, int> visibilityTimes = hitobject->getVisiblityTimes(mods->getAR(), mods->getModifier().HD, 0.1, 0.1);
+	std::pair<int, int> visibilityTimes = OSUSTANDARD::getVisiblityTimes(*hitobject, mods->getAR(), mods->getModifier().HD, 0.1, 0.1);
 
 	int startPos = (visibilityTimes.first - viewTimes.first)*timingGraph->getZoom();
 	int endPos = (visibilityTimes.second - viewTimes.first)*timingGraph->getZoom();

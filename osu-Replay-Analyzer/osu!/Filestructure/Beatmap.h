@@ -51,10 +51,6 @@ class Beatmap
 		void ClearModified();
 		void ResetModified();
 
-		/// \TODO: Move these out of here
-		int getNumHitobjectsVisibleAt(int _index, double _opacity);
-		std::pair<int, int> getIndicesVisibleAt(int _time, double _opacity);
-
 		TimingPoint* getTimingPointAt(int _time);
 		Hitobject* getHitobjectAt(int _time);
 		int FindHitobjectAt(int _time);

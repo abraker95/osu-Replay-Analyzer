@@ -123,36 +123,6 @@ std::vector<Hitobject*>& Beatmap::getHitobjects()
 	return modHitobjects;
 }
 
-int Beatmap::getNumHitobjectsVisibleAt(int _index, double _opacity)
-{
-	std::pair<int, int> indices = getIndicesVisibleAt(modHitobjects[_index]->getTime(), _opacity);
-	return indices.second - indices.first;
-}
-
-std::pair<int, int> Beatmap::getIndicesVisibleAt(int _time, double _opacity)
-{
-	int index = this->FindHitobjectAt(_time) - 1;
-	std::pair<int, int> range;
-
-	// Find first note visible
-	for (index = max(index, 0); index < modHitobjects.size(); index++)
-	{
-		if (modHitobjects[index]->isVisibleAt(_time, mods.getAR(), mods.getModifier().HD))
-			break;
-	}
-	range.first = index;
-
-	// Find last note visible
-	for (; index < modHitobjects.size(); index++)
-	{
-		if (!(modHitobjects[index]->isVisibleAt(_time, mods.getAR(), mods.getModifier().HD)))
-			break;
-	}
-	range.second = index;
-
-	return range;
-}
-
 std::string Beatmap::getName()
 {
 	return metadata.artist + " - " + metadata.title + " (" + metadata.creator + ") [" + metadata.version + "]";

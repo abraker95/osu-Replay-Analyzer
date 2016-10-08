@@ -49,10 +49,6 @@ class Hitobject
 		int getEndTime();
 		void setTime(Beatmap* _beamap, int _time);
 
-		std::pair<int, int> getVisiblityTimes(double _AR, bool _hidden, double _opacityStart, double _opacityEnd);
-		bool isVisibleAt(int _time, double _AR, bool _hidden);
-		double getOpacityAt(int _time, double _AR, bool _hidden);
-
 		double GetCircleOverlapPercentage(int CS, Hitobject &c1);
 
 	protected:

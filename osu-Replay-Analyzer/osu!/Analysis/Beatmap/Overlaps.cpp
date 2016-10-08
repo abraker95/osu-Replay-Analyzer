@@ -34,7 +34,7 @@ void Analyzer_Overlaps::AnalyzeStd(Play* _play)
 		}
 
 		// Go back all the way when the current note first becomes visible and iterate over the visible notes.
-		std::pair<int, int> visibilityTimes = _play->beatmap->getIndicesVisibleAt(ms - AR2ms(_play->getMod()->getAR()), 0.0);
+		std::pair<int, int> visibilityTimes = OSUSTANDARD::getIndicesVisibleAt(_play, ms - AR2ms(_play->getMod()->getAR()), 0.0);
 
 		for (int i2 = visibilityTimes.first; i2 < visibilityTimes.second; i2++)
 		{
