@@ -14,6 +14,8 @@ namespace osu
 		bool press;		// generic boolean data (can be used to determine slider or not, pressed key or not, etc)
 
 		irr::core::vector2d<double> pos; // additional timing info for 2d coordinates
+
+		static const int INVAID = INT_MIN; // For checking if the timing is valid
 	};
 
 	int FindTimingAt(std::vector<TIMING>& _timings, double _time);
