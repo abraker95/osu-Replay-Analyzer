@@ -28,10 +28,8 @@ Hitcircle::~Hitcircle()
 
 void Hitcircle::Draw(Window &_win)
 {
-	/// \TODO: Known problem: pixel perfect overlaps causes circles to "blink"
-
-	SColor fade = SColor(255, edgeCol.getRed() * opacity, edgeCol.getGreen() * opacity, edgeCol.getBlue() * opacity);
 	double opacity = OSUSTANDARD::getOpacityAt(*hitobject, *(this->viewTime), mods->getAR(), mods->getModifier().HD);
+	SColor fade = SColor(255*opacity, edgeCol.getRed(), edgeCol.getGreen(), edgeCol.getBlue());
 	
 	vector2df radius(this->width / 2.0, this->height / 2.0);
 	DrawArc(_win, this->absXpos, this->absYpos, MIN(radius.X, radius.Y), fade);
