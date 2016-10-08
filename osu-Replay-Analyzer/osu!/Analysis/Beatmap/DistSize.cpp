@@ -6,7 +6,7 @@
 #include "../../osu_standard.h"
 #include "../../osu_mania.h"
 
-Analyzer_DistSize::Analyzer_DistSize() : Analyzer("dist/size (osu!px/osu!px)") {}
+Analyzer_DistSize::Analyzer_DistSize() : Analyzer("dist/size (dB)") {}
 Analyzer_DistSize::~Analyzer_DistSize() {}
 
 void Analyzer_DistSize::AnalyzeStd(Play* _play)
@@ -28,8 +28,9 @@ void Analyzer_DistSize::AnalyzeStd(Play* _play)
 		if (dist == INFINITY) dist = INT_MAX; // irrlitch has issues displaying infinity
 
 		double dist_size;
-		if (size == 0) dist_size = INT_MAX;
-		else		   dist_size = dist / size;
+			 if (size == 0) dist_size = INT_MAX;
+		else if (dist == 0) dist_size = 0;
+		else		  	    dist_size = 10*log(dist / size);
 
 		timing.data  = dist_size;
 		timing.pos   = currTickPoint.pos;
