@@ -138,7 +138,14 @@ TimingPoint* Beatmap::getTimingPointAt(int _time)
 	{
 		mid = (start + end) / 2;
 		if (BTWN(this->modTimingPoints[mid].offset, _time, this->modTimingPoints[mid + 1].offset - 1))
-			return &(this->modTimingPoints[mid]);
+		{
+			/// \TODO: check for latest inherited timing point
+			// check for the same timing on next timing point since it can be inherited
+			if (this->modTimingPoints[mid + 1].offset == this->modTimingPoints[mid].offset)
+				return &(this->modTimingPoints[mid + 1]);
+			else
+				return &(this->modTimingPoints[mid]);
+		}
 		else if (_time < this->modTimingPoints[mid].offset)
 			end = mid - 1;
 		else start = mid + 1;
