@@ -115,7 +115,7 @@ osu::TIMING OSUSTANDARD::getNextTickPoint(std::vector<Hitobject*>& _hitobjects, 
 			}
 		}
 
-		// The time is after all the slider's ticks. Check if the viewTime is after the slider's end
+		/*// The time is after all the slider's ticks. Check if the viewTime is after the slider's end
 		if (_time < _hitobjects[i]->getEndTime())
 		{
 			tickPoint.pos = slider->GetSliderPos(_hitobjects[i]->getEndTime());
@@ -125,7 +125,7 @@ osu::TIMING OSUSTANDARD::getNextTickPoint(std::vector<Hitobject*>& _hitobjects, 
 
 			if (_timeItr != nullptr) *_timeItr = tickPoint.time;
 			return tickPoint;
-		}
+		}*/
 		
 		// Otherwise, the time is after the current hitobject, but before the start of the next hitobject. Return the next hitobject's starting point
 		tickPoint.pos = _hitobjects[i + 1]->getPos();
