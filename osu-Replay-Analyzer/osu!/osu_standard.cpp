@@ -133,8 +133,8 @@ osu::TIMING OSUSTANDARD::getNextTickPoint(std::vector<Hitobject*>& _hitobjects, 
 	osu::TIMING tickPoint;
 	int i = FindHitobjectAt(_hitobjects, _time, true);
 
-	// if we reached the end, make timing.data = -1
-	if (i >= _hitobjects.size() - 1) return osu::TIMING({ osu::TIMING::INVAID, osu::TIMING::INVAID });
+	// if we reached the end, make timing.data INVALID
+	if (i >= _hitobjects.size() - 1) return osu::TIMING({});
 
 	// If the time is before the hitobject's starting point, then return the hitobject's starting point
 	if (_time < _hitobjects[i]->getTime())
