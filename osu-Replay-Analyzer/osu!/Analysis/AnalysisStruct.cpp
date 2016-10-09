@@ -8,6 +8,7 @@
 #include "Beatmap\Distance-size.h"
 #include "Beatmap\TapEventIntervals.h"
 #include "Beatmap\NumNotesVisible.h"
+#include "Beatmap\PathPerpendicularity.h"
 
 
 #include "Beatmap\Difficulty\Reading.h"
@@ -39,6 +40,7 @@ AnalysisStruct::AnalysisStruct()
 	beatmapAnalysis.AddAnalyzer(new Analyzer_NoteRatePerKeyPrec());
 	beatmapAnalysis.AddAnalyzer(new Analyzer_NoteRateChangePerKey());
 	beatmapAnalysis.AddAnalyzer(new Analyzer_NumNotesVisible());
+	beatmapAnalysis.AddAnalyzer(new Analyzer_PathPerpendicularity());
 
 
 	
