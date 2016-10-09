@@ -23,7 +23,7 @@ void Analyzer_NumNotesVisible::AnalyzeStd(Play* _play)
 
 	while(currTime.time < hitobjects[hitobjects.size() - 1]->getTime())
 	{
-		if (currTime.time == osu::TIMING::INVAID) break;
+		if (currTime.isInvalid()) break;
 		currTime = OSUSTANDARD::getNextTickPoint(hitobjects, currTime.time);
 
 		int numvisible = OSUSTANDARD::getNumHitobjectsVisibleAt(_play, OSUSTANDARD::FindHitobjectAt(hitobjects, currTime.time), 0.3);

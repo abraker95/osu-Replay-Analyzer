@@ -15,7 +15,9 @@ namespace osu
 
 		irr::core::vector2d<double> pos; // additional timing info for 2d coordinates
 
-		static const int INVAID = INT_MIN; // For checking if the timing is valid
+		static const int INVALID = INT_MIN; // For checking if the timing is valid
+		TIMING() : time(INVALID), data(INVALID), key(INVALID) {}
+		bool isInvalid() { return (time == INVALID || data == INVALID); }
 	};
 
 	int FindTimingAt(std::vector<TIMING>& _timings, double _time);

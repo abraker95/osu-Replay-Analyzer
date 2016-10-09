@@ -43,14 +43,15 @@ void Analyzer_NoteRate::AnalyzeMania(Play* _play)
 	std::vector<Hitobject*>& hitobjects = _play->beatmap->getHitobjects();
 	int KEYS = _play->beatmap->getMods().getCS();
 	
-	osu::TIMING timing;
-		timing.data = 0;
-
 	long currTime = hitobjects[0]->getTime();
 	std::vector<long> holdnoteEnds;
-		holdnoteEnds.resize(KEYS);
+	holdnoteEnds.resize(KEYS);
 
-	data.push_back({ currTime - 1, 0 }); // make the min be 0
+	osu::TIMING timing;
+		timing.data = 0;	// make the min be 0
+		timing.time = currTime - 1;
+
+	data.push_back(timing); 
 
 	int noteCount = 0;
 

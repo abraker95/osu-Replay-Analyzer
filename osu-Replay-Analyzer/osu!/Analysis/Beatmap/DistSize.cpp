@@ -42,7 +42,7 @@ void Analyzer_DistSize::AnalyzeStd(Play* _play)
 		prevTickPoint = currTickPoint;
 		currTickPoint = OSUSTANDARD::getNextTickPoint(hitobjects, time, &time);
 
-		if (currTickPoint.data == osu::TIMING::INVAID) break;
+		if (currTickPoint.isInvalid()) break;
 	}
 }
 
