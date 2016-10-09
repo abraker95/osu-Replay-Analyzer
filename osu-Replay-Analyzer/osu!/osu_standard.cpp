@@ -127,7 +127,7 @@ std::vector<osu::TIMING> OSUSTANDARD::getPattern(std::vector<Hitobject*>& _hitob
 	}
 }
 
-// Returns (pos), (time), and (is mid slider?) of the next tick point
+// Returns (pos), (time), (index), and (is slider?) of the next tick point
 osu::TIMING OSUSTANDARD::getNextTickPoint(std::vector<Hitobject*>& _hitobjects, long _time, long* _timeItr)
 {
 	osu::TIMING tickPoint;
@@ -141,8 +141,8 @@ osu::TIMING OSUSTANDARD::getNextTickPoint(std::vector<Hitobject*>& _hitobjects, 
 	{
 		tickPoint.pos = _hitobjects[i]->getPos();
 		tickPoint.time = _hitobjects[i]->getTime();
-		tickPoint.data = 0;
-		tickPoint.press = false;
+		tickPoint.data = i;
+		tickPoint.press = _hitobjects[i]->isHitobjectLong();
 
 		if (_timeItr != nullptr) *_timeItr = tickPoint.time;
 		return tickPoint;
@@ -155,8 +155,8 @@ osu::TIMING OSUSTANDARD::getNextTickPoint(std::vector<Hitobject*>& _hitobjects, 
 	{
 		tickPoint.pos = _hitobjects[i + 1]->getPos();
 		tickPoint.time = _hitobjects[i + 1]->getTime();
-		tickPoint.data = 0;
-		tickPoint.press = false;
+		tickPoint.data = i + 1;
+		tickPoint.press = _hitobjects[i + 1]->isHitobjectLong();
 
 		if (_timeItr != nullptr) *_timeItr = tickPoint.time;
 		return tickPoint;
@@ -175,8 +175,8 @@ osu::TIMING OSUSTANDARD::getNextTickPoint(std::vector<Hitobject*>& _hitobjects, 
 			{
 				tickPoint.pos = slider->GetSliderPos(tick);
 				tickPoint.time = tick;
-				tickPoint.data = 0;
-				tickPoint.press = false;
+				tickPoint.data = i;
+				tickPoint.press = true;
 
 				if (_timeItr != nullptr) *_timeItr = tickPoint.time;
 				return tickPoint;
@@ -189,8 +189,8 @@ osu::TIMING OSUSTANDARD::getNextTickPoint(std::vector<Hitobject*>& _hitobjects, 
 		{
 			tickPoint.pos = slider->GetSliderPos(_hitobjects[i]->getEndTime());
 			tickPoint.time = _hitobjects[i]->getEndTime();
-			tickPoint.data = 0;
-			tickPoint.press = false;
+			tickPoint.data = i;
+			tickPoint.press = true;
 
 			if (_timeItr != nullptr) *_timeItr = tickPoint.time;
 			return tickPoint;
@@ -199,8 +199,8 @@ osu::TIMING OSUSTANDARD::getNextTickPoint(std::vector<Hitobject*>& _hitobjects, 
 		// Otherwise, the time is after the current hitobject, but before the start of the next hitobject. Return the next hitobject's starting point
 		tickPoint.pos = _hitobjects[i + 1]->getPos();
 		tickPoint.time = _hitobjects[i + 1]->getTime();
-		tickPoint.data = 0;
-		tickPoint.press = false;
+		tickPoint.data = i + 1;
+		tickPoint.press = _hitobjects[i + 1]->isHitobjectLong();
 
 		if (_timeItr != nullptr) *_timeItr = tickPoint.time;
 		return tickPoint;
