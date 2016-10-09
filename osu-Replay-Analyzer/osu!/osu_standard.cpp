@@ -1,5 +1,6 @@
 #include "osu_standard.h"
 #include "osuCalc.h"
+#include "../utils/Geometry.h"
 
 #include "Filestructure\Play.h"
 
