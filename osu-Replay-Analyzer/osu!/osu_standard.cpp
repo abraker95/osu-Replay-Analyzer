@@ -37,94 +37,24 @@ int OSUSTANDARD::FindHitobjectAt(std::vector<Hitobject*>& _hitobjects, long _tim
 	}
 }
 
-std::vector<osu::TIMING> OSUSTANDARD::getPattern(std::vector<Hitobject*>& _hitobjects, int _num, double _interval, long _time, bool _skipSliders, bool _newHitobject)
+std::vector<osu::TIMING> OSUSTANDARD::getPattern(Play* _play, int _num, long _time, bool _skipSliders)
 {
-	// make sure we have something to get
-	if(_num <= 0) return std::vector<osu::TIMING>();
-
-	int i = FindHitobjectAt(_hitobjects, _time);
-	if (!BTWN(1, i, _hitobjects.size() - 1)) return std::vector<osu::TIMING>(); // Out of bound check
-
 	std::vector<osu::TIMING> points;
-	if (_hitobjects[i]->isHitobjectLong())
+	while(points.size() < _num )
 	{
-		long startHitobject = _hitobjects[i]->getTime();
-		long endHitobject = _hitobjects[i]->getEndTime();
-		irr::core::vector2d<double> pos = _hitobjects[i]->getSlider()->GetSliderPos(_time);
+		osu::TIMING point = getNextTickPoint(_play->beatmap->getHitobjects(), _time, &_time);
 
-		// if we are behind the slider
-		if (_time < startHitobject)
+		if (point.isInvalid()) break;
+		if (points.size() > 0)
 		{
-			// go record from previous slider's end
-			return getPattern(_hitobjects, _num - 1, _interval, _hitobjects[i]->getEndTime(), _skipSliders, false);
+			if (_skipSliders && (point.data == points[points.size() - 1].data)) continue; // index will be same if it's a 2nd point of a slider
+		//	if (CS2px(_play->getMod()->getCS()) < getDist(point.pos, points[points.size() - 1].pos)) continue; // Record if the cursor needs to move to that point
 		}
-		else if(_skipSliders)
-		{
-			// go iterate backwards, skipping middle of slider
-			long time;
-			long sliderMidTime = (endHitobject + startHitobject) / 2;
-			bool prevHitobject;
-
-			// record this slider's beginning or end point
-			osu::TIMING point;
-
-			if (sliderMidTime < _time)
-			{
-				point.pos = pos;
-				point.time = _hitobjects[i]->getEndTime();
-				point.press = _newHitobject;
-				time = _hitobjects[i]->getTime();
-
-				prevHitobject = false;
-			}
-			else
-			{
-				point.pos = pos;
-				point.time = startHitobject;
-				point.press = _newHitobject;
-				time = _hitobjects[i - 1]->getEndTime();
-
-				prevHitobject = true;
-			}
-	
-			points.push_back(point);
-
-			std::vector<osu::TIMING> newPoints;
-			newPoints = getPattern(_hitobjects, _num - 1, _interval, time, _skipSliders, prevHitobject);
-
-			return Merge(points, newPoints);
-		}
-		else
-		{
-			// record this point on the slider
-			osu::TIMING point;
-				point.pos = pos;
-				point.time = _time;
-				point.press = _newHitobject;
-				points.push_back(point);
-
-			// go to previous point on slider 
-			std::vector<osu::TIMING> newPoints;
-			newPoints = getPattern(_hitobjects, _num - 1, _interval, _time - _interval, _skipSliders);
-
-			return Merge(points, newPoints);
-		}
-	}
-	else
-	{
-		// record this hitobject
-		osu::TIMING point;
-			point.pos = _hitobjects[i]->getPos();
-			point.time = _hitobjects[i]->getTime();
-			point.press = _newHitobject;
-		points.push_back(point);
 		
-		// go to previous hitobject
-		std::vector<osu::TIMING> newPoints;
-		newPoints = getPattern(_hitobjects, _num - 1, _interval, _hitobjects[i - 1]->getEndTime(), _skipSliders, true);
-
-		return Merge(points, newPoints);
+		points.push_back(point);
 	}
+		
+	return points;
 }
 
 // Returns (pos), (time), (index), and (is slider?) of the next tick point

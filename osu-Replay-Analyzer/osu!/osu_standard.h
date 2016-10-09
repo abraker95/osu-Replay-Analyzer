@@ -17,7 +17,7 @@ namespace OSUSTANDARD
 	int FindHitobjectAt(std::vector<Hitobject*>& _hitobjects, long _time, bool _dir = false);
 	bool isHitobjectAt(std::vector<Hitobject*>& _hitobjects, long _prevTime, long _currTime);
 
-	std::vector<osu::TIMING> getPattern(std::vector<Hitobject*>& _hitobjects, int _num, double _interval, long _time, bool _skipSliders = false, bool _newHitobject = false);
+	std::vector<osu::TIMING> getPattern(Play* _play, int _num, long _time, bool _skipSliders = false);
 	osu::TIMING getNextTickPoint(std::vector<Hitobject*>& _hitobjects, long _time, long* _timeItr = nullptr);
 	
 	int getButtonState(int _prevKey, int _currKey);
