@@ -2,12 +2,13 @@
 
 #include "Beatmap\Velocity.h"
 #include "Beatmap\NoteRate.h"
-#include "Beatmap\NoteRatePerKey.h"
 #include "Beatmap\NoteRatePerKeyPrecise.h"
 #include "Beatmap\NoteRateChangePerKey.h"
 #include "Beatmap\Overlaps.h"
 #include "Beatmap\Distance-size.h"
 #include "Beatmap\TapEventIntervals.h"
+#include "Beatmap\NumNotesVisible.h"
+
 
 #include "Beatmap\Difficulty\Reading.h"
 #include "Beatmap\Difficulty\Endurance.h"
@@ -35,9 +36,10 @@ AnalysisStruct::AnalysisStruct()
 	beatmapAnalysis.AddAnalyzer(new Analyzer_NoteRate());
 	beatmapAnalysis.AddAnalyzer(new Analyzer_TapEventIntervals());
 	///beatmapAnalysis.AddAnalyzer(new Analyzer_Overlaps());
-	//beatmapAnalysis.AddAnalyzer(new Analyzer_NoteRatePerKey());
 	beatmapAnalysis.AddAnalyzer(new Analyzer_NoteRatePerKeyPrec());
 	beatmapAnalysis.AddAnalyzer(new Analyzer_NoteRateChangePerKey());
+	beatmapAnalysis.AddAnalyzer(new Analyzer_NumNotesVisible());
+
 
 	
 
