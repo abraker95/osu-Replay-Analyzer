@@ -202,7 +202,7 @@ void Graph::UpdateInternal(Window &_win)
 void Graph::UpdateMouseOver(Window &_win)
 {
 	/// \TODO: Fix this. Something is throwing off the accuracy, so it ends up showing wrong values
-	if (isMouseOnObj(_win, false) && mouseOverEnable)
+	if (isMouseOnObj(_win, false) && mouseOverEnable && vals.first.size() > 2)
 	{
 		position2di pos = _win.reciever.GetMouseState().positionCurr;
 
