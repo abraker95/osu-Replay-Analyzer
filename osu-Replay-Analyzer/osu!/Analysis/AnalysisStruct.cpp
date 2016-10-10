@@ -42,7 +42,7 @@ AnalysisStruct::AnalysisStruct()
 	beatmapAnalysis.AddAnalyzer(new Analyzer_NoteRateChangePerKey());
 	beatmapAnalysis.AddAnalyzer(new Analyzer_NumNotesVisible());
 	beatmapAnalysis.AddAnalyzer(new Analyzer_PathPerpendicularity());
-	beatmapAnalysis.AddAnalyzer(new Analyzer_ReadingRate());
+	beatmapAnalysis.AddAnalyzer(new Analyzer_ReadingIntensity());
 
 
 	
