@@ -22,7 +22,7 @@ void Analyzer_ReadingIntensity::AnalyzeStd(Play* _play)
 	while(true)
 	{
 		double readingRate = (currTickPoint.time - prevTickPoint.time) / ARms;
-		readingRate = ABS(10 * log(readingRate));  // This is not the actual reading intensity. It's the intensity if the pattern is unpredictable (overlaps, cluster, etc)
+		readingRate = MAX(0.0, -10 * log(readingRate));  // This is not the actual reading intensity. It's the intensity if the pattern is unpredictable (overlaps, cluster, etc)
 
 		timing.data  = readingRate;
 		timing.pos   = currTickPoint.pos;
