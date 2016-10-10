@@ -22,6 +22,10 @@ namespace osu
 
 	int FindTimingAt(std::vector<TIMING>& _timings, double _time);
 	void SortByTime(std::vector<TIMING>& _timings);
+
+	void ExpAverage(std::vector<TIMING>& _timings, double _factor);
+	void MovAverage(std::vector<TIMING>& _timings, int _blockSize);
+	void StpAverage(std::vector<TIMING>& _timings, int _blockSize);
 };
 
 #endif // !OSUSTRUCTS_H
