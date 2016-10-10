@@ -282,9 +282,6 @@
     <ClCompile Include="osu!\Analysis\Beatmap\Difficulty\Reading.cpp">
       <Filter>Source Files\osu!\Analysis\Beatmap\Difficulty</Filter>
     </ClCompile>
-    <ClCompile Include="osu!\Analysis\Beatmap\NoteRatePerKey.cpp">
-      <Filter>Source Files\osu!\Analysis\Beatmap</Filter>
-    </ClCompile>
     <ClCompile Include="osu!\Analysis\Beatmap\NoteRatePerKeyPrecise.cpp">
       <Filter>Source Files\osu!\Analysis\Beatmap</Filter>
     </ClCompile>
@@ -341,6 +338,12 @@
     </ClCompile>
     <ClCompile Include="ui\OS\Mac.cpp">
       <Filter>Source Files\ui\OS</Filter>
+    </ClCompile>
+    <ClCompile Include="osu!\Analysis\Beatmap\NumNotesVisible.cpp">
+      <Filter>Source Files\osu!\Analysis\Beatmap</Filter>
+    </ClCompile>
+    <ClCompile Include="osu!\Analysis\Beatmap\PathPerpendicularity.cpp">
+      <Filter>Source Files\osu!\Analysis\Beatmap</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -557,9 +560,6 @@
     <ClInclude Include="osu!\Analysis\Beatmap\Difficulty\Reading.h">
       <Filter>Header Files\osu!\Analysis\Beatmap\Difficulty</Filter>
     </ClInclude>
-    <ClInclude Include="osu!\Analysis\Beatmap\NoteRatePerKey.h">
-      <Filter>Header Files\osu!\Analysis\Beatmap</Filter>
-    </ClInclude>
     <ClInclude Include="osu!\Analysis\Beatmap\NoteRatePerKeyPrecise.h">
       <Filter>Header Files\osu!\Analysis\Beatmap</Filter>
     </ClInclude>
@@ -613,6 +613,12 @@
     </ClInclude>
     <ClInclude Include="osu!\Analysis\Beatmap\Difficulty\TappingControl.h">
       <Filter>Header Files\osu!\Analysis\Beatmap\Difficulty</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\Analysis\Beatmap\NumNotesVisible.h">
+      <Filter>Header Files\osu!\Analysis\Beatmap</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\Analysis\Beatmap\PathPerpendicularity.h">
+      <Filter>Header Files\osu!\Analysis\Beatmap</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
