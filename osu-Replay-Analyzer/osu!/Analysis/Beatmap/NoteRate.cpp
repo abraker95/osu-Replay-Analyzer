@@ -13,12 +13,12 @@ void Analyzer_NoteRate::AnalyzeStd(Play* _play)
 	osu::TIMING timing;
 		timing.data = 0;
 
-	for (int i = 0; i < hitobjects.size(); i++)
+	for (int i = 1; i < hitobjects.size(); i++)
 	{
-		int j = i;
-		while (j--) if (hitobjects[i]->getTime() - hitobjects[j]->getTime() >= 1000) break;
+		//int j = i;
+		//while (j--) if (hitobjects[i]->getTime() - hitobjects[j]->getTime() >= 1000) break;
 
-		timing.data = i - j;
+		timing.data = 1000.0/(hitobjects[i]->getTime() - hitobjects[i - 1]->getTime());
 		timing.pos = hitobjects[i]->getPos();
 		timing.key = i;
 		timing.press = false;
@@ -76,6 +76,7 @@ void Analyzer_NoteRate::AnalyzeMania(Play* _play)
 
 			timing.data = (double)noteCount / ((double)hitobjectTime - (double)currTime) * 1000.0;
 			timing.time = hitobjectTime;
+			timing.key = OSUMANIA::getKey(hitobjects[i]->getPos().X, KEYS);
 
 			// True = just presses, False = Presses and Releases
 			timing.press = true;
