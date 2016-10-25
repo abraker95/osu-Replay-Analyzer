@@ -50,10 +50,9 @@ AnalysisStruct::AnalysisStruct()
 	// **************************
 	//       [DIFF DATA]
 	// **************************
-	///beatmapAnalysis.AddAnalyzer(new Analyzer_Reading());
 	beatmapAnalysis.AddAnalyzer(new Analyzer_Endurance());
 	beatmapAnalysis.AddAnalyzer(new Analyzer_TappingControl());
-
+	beatmapAnalysis.AddAnalyzer(new Analyzer_Reading());
 
 
 	// **************************
