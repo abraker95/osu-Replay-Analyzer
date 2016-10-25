@@ -37,6 +37,8 @@ double getAbsoluteAngle(position2d<double> _p1, position2d<double> _p2);
 // Get the rotational direction
 DIR getRotDir(position2d<double> _p1, position2d<double> _ref, position2d<double> _p3);
 
+double getDotProduct(vector2d<double> _p1, vector2d<double> _p2, vector2d<double> _p3);
+
 position2d<double> getMidpoint(position2d<double> _p1, position2d<double> _p2);
 double getNormal(position2d<double> _p1, position2d<double> _p2);
 

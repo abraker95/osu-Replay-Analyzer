@@ -94,7 +94,7 @@ double getDirAngle(position2d<double> a, position2d<double> b, position2d<double
 	double dot = (ab.X * cb.X + ab.Y * cb.Y); // dot product
 	double cross = (ab.X * cb.Y - ab.Y * cb.X); // cross product
 
-	return atan2(cross, dot);;
+	return atan2(cross, dot);
 }
 
 // Returns 3 points make in radians between 0 and pi
@@ -119,6 +119,15 @@ double getAbsoluteAngle(position2d<double> _p1, position2d<double> _p2)
 position2d<double> getMidpoint(position2d<double> _p1, position2d<double> _p2)
 {
 	return position2d<double>(_p2.X + (_p1.X - _p2.X) / 2, _p2.Y + (_p1.Y - _p2.Y) / 2);
+}
+
+double getDotProduct(vector2d<double> _p1, vector2d<double> _p2, vector2d<double> _p3)
+{
+	double angle = getAngle(_p1, _p2, _p3);
+	double mag1 = getDist(_p1, _p2);
+	double mag2 = getDist(_p2, _p3);
+
+	return mag1*mag2*cos(angle);
 }
 
 double getNormal(position2d<double> _p1, position2d<double> _p2)
