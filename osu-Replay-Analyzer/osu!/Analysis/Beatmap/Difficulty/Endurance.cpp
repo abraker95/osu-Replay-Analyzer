@@ -49,6 +49,8 @@ void Analyzer_Endurance::AnalyzeMania(Play* _play)
 	for (osu::TIMING noteRate : noteRates)
 	{
 		if (noteRate.data == INFINITY) continue;
+		if (!BTWN(1, noteRate.key, KEYS)) continue;
+
 		int key = noteRate.key;
 
 		if (noteRate.data >= staminaThreshold)	rawEndurances[key] += noteRate.data;
