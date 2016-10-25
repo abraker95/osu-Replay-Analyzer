@@ -162,6 +162,7 @@ void Analyzer_TapDeviation::AnalyzeMania(Play* _play)
 		
 		std::vector<osu::TIMING>& tapReleases = tapRelaseIntervalsKeys[key];
 		int index = osu::FindTimingAt(tapReleases, currTime);
+		index = BOUND(0, index, tapReleases.size() - 1);
 		
 		// Fastforward to latest recorded note
 		while (tapReleases[index].time <= recTimes[key])

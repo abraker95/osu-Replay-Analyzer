@@ -20,7 +20,8 @@ int osu::FindTimingAt(std::vector<TIMING>& _timings, double _time)
 			start = mid + 1;
 	}
 
-	return INT_MIN;
+	if (_time < _timings[0].time)					return INT_MIN;
+	if (_time > _timings[_timings.size() - 1].time) return INT_MAX;
 }
 
 bool sortATimings(osu::TIMING i, osu::TIMING j)
