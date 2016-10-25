@@ -1,21 +1,65 @@
 #include "Overlaps.h"
+
 #include "../../osu_standard.h"
 #include "../../../utils/geometry.h"
 #include "../../osuCalc.h"
 
-Analyzer_Overlaps::Analyzer_Overlaps() : Analyzer("overlaps") {}
+Analyzer_Overlaps::Analyzer_Overlaps() : Analyzer("Overlap (%)") {}
 Analyzer_Overlaps::~Analyzer_Overlaps() {}
 
 void Analyzer_Overlaps::AnalyzeStd(Play* _play)
 {
 	std::vector<Hitobject*>& hitobjects = _play->beatmap->getHitobjects();
 	osu::TIMING timing;
-	timing.data = 0;
+		timing.data = 0;
 
+	double arMs = AR2ms(_play->getMod()->getAR());
+	double csPx = CS2px(_play->getMod()->getCS());
+
+	for(int i=0; i<hitobjects.size(); i++)
+	{
+		// Go back to when the object first appears
+		int j = i;
+		for (; hitobjects[j]->getTime() > hitobjects[i]->getTime() - arMs; j--) { if (j <= 0) break; }
+		j++;
+
+		// Iterate through all object between then and now
+		double overlapPercent = 0.0;
+		for (; j < i; j++)
+		{
+			// \TODO: This only gets the max overlap between 2 object. This can be inaccurate, and instead needs to be overlap
+			// between multiple object. However, there is difficutly in calculating overlaps between multiple objects geometricaly.
+			// When calculating overlaps between 3 objects, for instance, the overlaps between object A and B and A and C need to be 
+			// added up and then subracted by the overlap between A, B, and C. Getting the ovelap between A, B, C or any number of circles
+			// Is the hard part. This can also be done via bruteforce, by drawing the cicles and figuring out the darkes shaded area, but 
+			// that's not a viable option when calculating difficulty should take as little time as possible. 
+			//
+			// These sources may come in useful: 
+			// http://www.ambrsoft.com/TrigoCalc/Circles3/Intersection.htm
+			// http://mathworld.wolfram.com/Circle-CircleIntersection.html
+
+			osu::TIMING closest = OSUSTANDARD::FindClosest(*hitobjects[j], *hitobjects[i], 10);
+			double overlapArea = getCircleOverlapArea(csPx/2.0, closest.data);
+
+			overlapPercent = MAX(overlapPercent, overlapArea / getCircleArea(csPx/2.0));
+		}
+		
+		timing.data = overlapPercent;
+		timing.pos = hitobjects[i]->getPos();
+		timing.press = false;
+		timing.time = hitobjects[i]->getTime();
+
+		data.push_back(timing);
+	}
+	
+
+	/*
+	
 	int i = 0, previ = 0;
 	double delay = 10.0;
 	int iobj = 0;
 
+	
 	for (int ms = 0; ms < hitobjects[hitobjects.size() - 1]->getTime(); ms += delay)
 	{
 		// Let index catch up to the time. Bail if out of bounds
@@ -72,7 +116,7 @@ void Analyzer_Overlaps::AnalyzeStd(Play* _play)
 		timing.press = false;
 
 		data.push_back(timing);
-	}
+	}*/
 }
 
 void Analyzer_Overlaps::AnalyzeCatch(Play* _play)

@@ -37,12 +37,12 @@ AnalysisStruct::AnalysisStruct()
 	beatmapAnalysis.AddAnalyzer(new Analyzer_DistSize());
 	beatmapAnalysis.AddAnalyzer(new Analyzer_NoteRate());
 	beatmapAnalysis.AddAnalyzer(new Analyzer_TapEventIntervals());
-	///beatmapAnalysis.AddAnalyzer(new Analyzer_Overlaps());
 	beatmapAnalysis.AddAnalyzer(new Analyzer_NoteRatePerKeyPrec());
 	beatmapAnalysis.AddAnalyzer(new Analyzer_NoteRateChangePerKey());
 	beatmapAnalysis.AddAnalyzer(new Analyzer_NumNotesVisible());
 	beatmapAnalysis.AddAnalyzer(new Analyzer_PathPerpendicularity());
 	beatmapAnalysis.AddAnalyzer(new Analyzer_ReadingIntensity());
+	beatmapAnalysis.AddAnalyzer(new Analyzer_Overlaps());
 
 
 	
