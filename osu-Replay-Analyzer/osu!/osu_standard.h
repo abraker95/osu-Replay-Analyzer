@@ -19,7 +19,8 @@ namespace OSUSTANDARD
 
 	std::vector<osu::TIMING> getPattern(Play* _play, int _num, long _time, bool _skipSliders = false);
 	osu::TIMING getNextTickPoint(std::vector<Hitobject*>& _hitobjects, long _time, long* _timeItr = nullptr);
-	
+	osu::TIMING FindClosest(Hitobject& _h1, Hitobject& _h2, int itr = 1);
+
 	int getButtonState(int _prevKey, int _currKey);
 	int getButtonState(int _prevKey, int _currKey, int _key);
 

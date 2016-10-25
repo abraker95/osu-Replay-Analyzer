@@ -373,3 +373,33 @@ double OSUSTANDARD::getOpacityAt(Hitobject& _hitobject, int _time, double _AR, b
 		}
 	}
 }
+
+
+// _h1 - slider over (appears earlier), _h2 - slider under (appears later)
+osu::TIMING OSUSTANDARD::FindClosest(Hitobject& _h1, Hitobject& _h2, int itr)
+{
+	osu::TIMING timing;
+		timing.time = _h2.getTime();
+
+	long h1_start = _h1.getTime();
+	long h1_end = _h1.getEndTime();
+
+	long h2_start = _h2.getTime();
+	// Only the start position of the object in question matters. If you can figure out where it starts, you can follow the slider point
+
+	if (!_h1.isHitobjectLong())
+	{
+		timing.data = getDist(_h1.getPos(), _h2.getPos());
+		return timing;
+	}
+
+	double minDist = INT_MAX;
+	for (long t = h1_start; t < h1_end; t++)
+	{
+		double dist = getDist(_h1.getSlider()->GetSliderPos(t), _h2.getPos());
+		if (dist < minDist) minDist = dist;
+	}
+
+	timing.data = minDist;
+	return timing;
+}
