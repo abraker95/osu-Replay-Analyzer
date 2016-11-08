@@ -108,6 +108,9 @@ static std::vector<T> Merge(std::vector<T> first, std::vector<T> second)
 }
 
 // Guassian function
+// Param: _val = x value
+//		  _sigma = controls width
+//		  _norm = normalization flag (makes peak = 1.0)
 static double Guassian(double _val, double _sigma, bool _norm = true)
 {
 	double guass = 1.0 / (2.0 * _sigma*sqrt(M_PI))*exp(-((_val / (2.0*_sigma))*(_val / (2.0*_sigma))));
@@ -117,6 +120,8 @@ static double Guassian(double _val, double _sigma, bool _norm = true)
 }
 
 // Returns a triangle wave function
+// Param: _val = x value
+//		  _amp = amplitude
 static double Triangle(double _val, double _amp)
 {
 	return abs((fmod(_val + (_amp / 2.0), _amp)) - (_amp / 2.0));
