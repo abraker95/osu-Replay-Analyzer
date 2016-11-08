@@ -79,6 +79,7 @@
     <ClCompile Include="osu!\Analysis\Beatmap\IntensityForHand.cpp" />
     <ClCompile Include="osu!\Analysis\Beatmap\NoteRate.cpp" />
     <ClCompile Include="osu!\Analysis\Beatmap\NoteRateChangePerKey.cpp" />
+    <ClCompile Include="osu!\Analysis\Beatmap\NotesAR.cpp" />
     <ClCompile Include="osu!\Analysis\Beatmap\NumNotesVisible.cpp" />
     <ClCompile Include="osu!\Analysis\Beatmap\NoteRatePerKeyPrecise.cpp" />
     <ClCompile Include="osu!\Analysis\Beatmap\Overlaps.cpp" />
@@ -165,6 +166,7 @@
     <ClInclude Include="osu!\Analysis\Beatmap\IntensityForHand.h" />
     <ClInclude Include="osu!\Analysis\Beatmap\NoteRate.h" />
     <ClInclude Include="osu!\Analysis\Beatmap\NoteRateChangePerKey.h" />
+    <ClInclude Include="osu!\Analysis\Beatmap\NotesAR.h" />
     <ClInclude Include="osu!\Analysis\Beatmap\NumNotesVisible.h" />
     <ClInclude Include="osu!\Analysis\Beatmap\NoteRatePerKeyPrecise.h" />
     <ClInclude Include="osu!\Analysis\Beatmap\Overlaps.h" />

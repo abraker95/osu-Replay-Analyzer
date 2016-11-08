@@ -10,6 +10,7 @@
 #include "Beatmap\NumNotesVisible.h"
 #include "Beatmap\PathPerpendicularity.h"
 #include "Beatmap\ReadingIntensity.h"
+#include "Beatmap\NotesAR.h"
 
 
 #include "Beatmap\Difficulty\Reading.h"
@@ -41,6 +42,7 @@ AnalysisStruct::AnalysisStruct()
 	beatmapAnalysis.AddAnalyzer(new Analyzer_NoteRateChangePerKey());
 	beatmapAnalysis.AddAnalyzer(new Analyzer_NumNotesVisible());
 	beatmapAnalysis.AddAnalyzer(new Analyzer_PathPerpendicularity());
+	beatmapAnalysis.AddAnalyzer(new Analyzer_NotesAR());
 	beatmapAnalysis.AddAnalyzer(new Analyzer_ReadingIntensity());
 	beatmapAnalysis.AddAnalyzer(new Analyzer_Overlaps());
 
