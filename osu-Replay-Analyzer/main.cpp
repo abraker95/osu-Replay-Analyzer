@@ -129,7 +129,7 @@ int main()
 
 	double CS = 4;
 	double AR = 9;
-	int viewTime = 0;
+	long viewTime = 0;
 
 	bool hidden = false;
 
