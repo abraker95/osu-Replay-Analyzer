@@ -85,6 +85,7 @@
     <ClCompile Include="osu!\Analysis\Beatmap\Overlaps.cpp" />
     <ClCompile Include="osu!\Analysis\Beatmap\PathPerpendicularity.cpp" />
     <ClCompile Include="osu!\Analysis\Beatmap\ReadingIntensity.cpp" />
+    <ClCompile Include="osu!\Analysis\Beatmap\SpatialChaos.cpp" />
     <ClCompile Include="osu!\Analysis\Beatmap\TapEventIntervals.cpp" />
     <ClCompile Include="osu!\Analysis\Beatmap\Velocity.cpp" />
     <ClCompile Include="osu!\Analysis\Replay\aim-deviation.cpp" />
@@ -172,6 +173,7 @@
     <ClInclude Include="osu!\Analysis\Beatmap\Overlaps.h" />
     <ClInclude Include="osu!\Analysis\Beatmap\PathPerpendicularity.h" />
     <ClInclude Include="osu!\Analysis\Beatmap\ReadingIntensity.h" />
+    <ClInclude Include="osu!\Analysis\Beatmap\SpatialChaos.h" />
     <ClInclude Include="osu!\Analysis\Beatmap\TapEventIntervals.h" />
     <ClInclude Include="osu!\Analysis\Beatmap\Velocity.h" />
     <ClInclude Include="osu!\Analysis\Replay\aim-deviation.h" />

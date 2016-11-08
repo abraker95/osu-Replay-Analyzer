@@ -9,6 +9,7 @@
 #include "Beatmap\TapEventIntervals.h"
 #include "Beatmap\NumNotesVisible.h"
 #include "Beatmap\PathPerpendicularity.h"
+#include "Beatmap\SpatialChaos.h"
 #include "Beatmap\ReadingIntensity.h"
 #include "Beatmap\NotesAR.h"
 
@@ -43,6 +44,7 @@ AnalysisStruct::AnalysisStruct()
 	beatmapAnalysis.AddAnalyzer(new Analyzer_NumNotesVisible());
 	beatmapAnalysis.AddAnalyzer(new Analyzer_PathPerpendicularity());
 	beatmapAnalysis.AddAnalyzer(new Analyzer_NotesAR());
+	beatmapAnalysis.AddAnalyzer(new Analyzer_SpatialChaos());
 	beatmapAnalysis.AddAnalyzer(new Analyzer_ReadingIntensity());
 	beatmapAnalysis.AddAnalyzer(new Analyzer_Overlaps());
 

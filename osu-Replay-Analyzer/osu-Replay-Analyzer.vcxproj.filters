@@ -348,6 +348,9 @@
     <ClCompile Include="osu!\Analysis\Beatmap\NotesAR.cpp">
       <Filter>Source Files\osu!\Analysis\Beatmap</Filter>
     </ClCompile>
+    <ClCompile Include="osu!\Analysis\Beatmap\SpatialChaos.cpp">
+      <Filter>Source Files\osu!\Analysis\Beatmap</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="osu!\Filestructure\LZMA.h">
@@ -624,6 +627,9 @@
       <Filter>Header Files\osu!\Analysis\Beatmap</Filter>
     </ClInclude>
     <ClInclude Include="osu!\Analysis\Beatmap\NotesAR.h">
+      <Filter>Header Files\osu!\Analysis\Beatmap</Filter>
+    </ClInclude>
+    <ClInclude Include="osu!\Analysis\Beatmap\SpatialChaos.h">
       <Filter>Header Files\osu!\Analysis\Beatmap</Filter>
     </ClInclude>
   </ItemGroup>
