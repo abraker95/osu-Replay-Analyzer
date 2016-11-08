@@ -127,4 +127,82 @@ static double Triangle(double _val, double _amp)
 	return ABS((fmod(_val + (_amp / 2.0), _amp)) - (_amp / 2.0));
 }
 
+// Average
+static double Avg(std::vector<double>& _vals)
+{
+	double sum = 0.0;
+	for (double val : _vals) sum += val;
+
+	return sum / (double)_vals.size();
+}
+
+// Circular Average
+// Thanks http://webspace.ship.edu/pgmarr/Geo441/Lectures/Lec%2016%20-%20Directional%20Statistics.pdf
+static double CirclularAvg(std::vector<double>& _rads)
+{
+	double sumX = 0.0, sumY = 0.0;
+	for (double rad : _rads)
+	{
+		sumX += cos(rad);
+		sumY += sin(rad);
+	}
+
+	return atan2(sumY, sumX);
+}
+
+// Circular Average
+// Thanks http://webspace.ship.edu/pgmarr/Geo441/Lectures/Lec%2016%20-%20Directional%20Statistics.pdf
+static double CirclularAvg(std::vector<double>& _x, std::vector<double>& _y)
+{
+	double sumX = 0.0, sumY = 0.0;
+
+	for (double x : _x) sumX += x;
+	for (double y : _y) sumY += y;
+
+	return atan2(sumY, sumX);
+}
+
+// Variance
+static double Var(std::vector<double>& _vals)
+{
+	double avg = Avg(_vals);
+
+	double sum = 0.0;
+	for (double val : _vals) sum += ((val - avg) * (val - avg));
+
+	return sum / (double)_vals.size();
+}
+
+// Circular Variance
+// Thanks http://webspace.ship.edu/pgmarr/Geo441/Lectures/Lec%2016%20-%20Directional%20Statistics.pdf
+static double CirclularVar(std::vector<double>& _rads)
+{
+	double sumX = 0.0, sumY = 0.0;
+	for (double rad : _rads)
+	{
+		sumX += cos(rad);
+		sumY += sin(rad);
+	}
+
+	return 1.0 - (sqrt((sumY*sumY + sumX*sumX))/_rads.size());
+}
+
+// Circular Variance
+// Thanks http://webspace.ship.edu/pgmarr/Geo441/Lectures/Lec%2016%20-%20Directional%20Statistics.pdf
+static double CirclularVar(std::vector<double>& _x, std::vector<double>& _y)
+{
+	double sumX = 0.0, sumY = 0.0;
+
+	for (double x : _x) sumX += x;
+	for (double y : _y) sumY += y;
+
+	return 1.0 - (sqrt((sumY*sumY + sumX*sumX)) / _x.size());
+}
+
+// Standard Deviation
+static double StdDev(std::vector<double>& _vals)
+{
+	return sqrt(Var(_vals));
+}
+
 #endif
