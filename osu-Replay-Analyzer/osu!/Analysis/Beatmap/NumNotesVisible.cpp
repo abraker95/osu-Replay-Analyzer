@@ -6,7 +6,7 @@
 
 #include "../../../utils/Geometry.h"
 
-Analyzer_NumNotesVisible::Analyzer_NumNotesVisible() : Analyzer("Number of obejcts visible") {}
+Analyzer_NumNotesVisible::Analyzer_NumNotesVisible() : Analyzer("Number of objects visible") {}
 Analyzer_NumNotesVisible::~Analyzer_NumNotesVisible() {}
 
 void Analyzer_NumNotesVisible::AnalyzeStd(Play* _play)
@@ -19,13 +19,10 @@ void Analyzer_NumNotesVisible::AnalyzeStd(Play* _play)
 	double csPx = CS2px(_play->getMod()->getCS());
 
 	osu::TIMING currTime;
-		currTime.time = hitobjects[0]->getTime() - 1;
+		currTime = OSUSTANDARD::getNextTickPoint(hitobjects, hitobjects[0]->getTime() - 1);
 
 	while(currTime.time < hitobjects[hitobjects.size() - 1]->getTime())
 	{
-		if (currTime.isInvalid()) break;
-		currTime = OSUSTANDARD::getNextTickPoint(hitobjects, currTime.time);
-
 		int numvisible = OSUSTANDARD::getNumHitobjectsVisibleAt(_play, OSUSTANDARD::FindHitobjectAt(hitobjects, currTime.time), 0.3);
 
 		timing.data = numvisible;
@@ -34,6 +31,9 @@ void Analyzer_NumNotesVisible::AnalyzeStd(Play* _play)
 		timing.time = currTime.time;
 
 		data.push_back(timing);
+
+		currTime = OSUSTANDARD::getNextTickPoint(hitobjects, currTime.time);
+		if (currTime.isInvalid()) break;
 	}
 }
 
