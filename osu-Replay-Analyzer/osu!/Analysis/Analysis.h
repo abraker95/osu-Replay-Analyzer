@@ -14,7 +14,7 @@ class Analysis
 		virtual ~Analysis();
 
 		void AddAnalyzer(Analyzer* _analyzer);
-		void StartAnalysis(Play* _play, std::string _analyzer = "");
+		void StartAnalysis(Play* _play, std::string _analyzer = "", bool _print = true);
 		
 		Analyzer* getAnalyzer(std::string _analyzer);
 		std::vector<std::string> getValidAnalyzers();

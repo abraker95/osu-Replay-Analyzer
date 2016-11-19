@@ -19,13 +19,13 @@ void Analysis::AddAnalyzer(Analyzer* _analyzer)
 }
 
 
-void Analysis::StartAnalysis(Play* _play, std::string _analyzer)
+void Analysis::StartAnalysis(Play* _play, std::string _analyzer, bool _print)
 {
 	if (_analyzer == "")
 	{
 		for (Analyzer* analyzer : analyzers)
 		{
-			std::cout << "\t Starting " << analyzer->getName() << " analysis..." << std::endl;
+			if(_print) std::cout << "\t Starting " << analyzer->getName() << " analysis..." << std::endl;
 
 			analyzer->Clear();
 			analyzer->Analyze(_play);
@@ -36,7 +36,7 @@ void Analysis::StartAnalysis(Play* _play, std::string _analyzer)
 		Analyzer* analyzer = getAnalyzer(_analyzer);
 		if (analyzer == nullptr) return;
 
-		std::cout << "\t Starting " << analyzer->getName() << " analysis..." << std::endl;
+		if(_print) std::cout << "\t Starting " << analyzer->getName() << " analysis..." << std::endl;
 
 		analyzer->Clear();
 		analyzer->Analyze(_play);
