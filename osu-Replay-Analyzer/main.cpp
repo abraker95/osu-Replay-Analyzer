@@ -118,6 +118,32 @@ std::pair<std::string, std::string> getAnalyzerTXT()
 	return std::pair<std::string, std::string>(beatmapFile, replayFile);
 }
 
+std::pair<std::vector<std::string>, std::vector<std::string>> getAnalyzerListTXT()
+{
+	const std::string file = "analyzeList.txt";
+	std::vector<std::string> beatmapFiles, replayFiles;
+
+	std::ifstream analyzeFile(file);
+	if (analyzeFile.is_open())
+	{
+		while (analyzeFile.good())
+		{
+			std::string file;
+			getline(analyzeFile, file);
+
+			bool osuFile = (file.find_last_of(".osu") == (file.size() - 1));
+			bool osrFile = (file.find_last_of(".osr") == (file.size() - 1));
+
+			if (osuFile) beatmapFiles.push_back(file);
+			if (osrFile) replayFiles.push_back(file);
+		}
+
+		analyzeFile.close();
+	}
+
+	return std::pair<std::vector<std::string>, std::vector<std::string>>(beatmapFiles, replayFiles);
+}
+
 int main()
 {
 	const int RESX = 171+640;
@@ -146,11 +172,15 @@ int main()
 		hdSlider.setRange(0, 1);
 		hdSlider.ClipPosTo(GuiObj::TOPRIGHT);
 
-	Button btnBeatmap(2, 0, 100, 10, "Load Beatmap");
+	Button btnAnalyze(2, 0, 100, 10, "Mass Analyze");
+		//btnReplay.ClipPosTo(GuiObj::TOPRIGHT);
+		btnAnalyze.setDepth(1);
+
+	Button btnBeatmap(128, 0, 100, 10, "Load Beatmap");
 		//btnBeatmap.ClipPosTo(GuiObj::TOPRIGHT);
 		btnBeatmap.setDepth(1);
 
-	Button btnReplay(104, 0, 100, 10, "Load Replay");
+	Button btnReplay(232, 0, 100, 10, "Load Replay");
 		//btnReplay.ClipPosTo(GuiObj::TOPRIGHT);
 		btnReplay.setDepth(1);
 
@@ -218,6 +248,34 @@ int main()
 			win.font->draw(core::stringw(win.reciever.GetMouseState().positionCurr.X) + ", " + core::stringw(win.reciever.GetMouseState().positionCurr.Y), core::rect<s32>(RESX - 100, 40, 100, 10), video::SColor(255, 255, 255, 255));
 
 			UpdateGuiObjs(win);
+
+			if (btnAnalyze.isTriggered())
+			{
+				std::vector<std::string> beatmapFiles = getAnalyzerListTXT().first;
+				for (std::string beatmapFile : beatmapFiles)
+				{
+					cout << beatmapFile << endl;
+					play.LoadBeatmap(beatmapFile);
+
+					AnalysisStruct::beatmapAnalysis.StartAnalysis(&play, "", false);
+					if (play.beatmap->isValid())
+					{
+						std::vector<osu::TIMING>* endureDiff = AnalysisStruct::beatmapAnalysis.getAnalyzer("endurance diff")->getData();
+						if (endureDiff->size() != 0) cout << "\t" << "Endurance Difficulty: " << endureDiff->at(endureDiff->size() - 1).key << endl;
+
+						std::vector<osu::TIMING>* readingDiff = AnalysisStruct::beatmapAnalysis.getAnalyzer("reading diff")->getData();
+						if (readingDiff->size() != 0) cout << "\t" << "Reading Difficulty: " << readingDiff->at(readingDiff->size() - 1).key << endl;
+
+						std::vector<osu::TIMING>* tappingControl = AnalysisStruct::beatmapAnalysis.getAnalyzer("Tapping Control")->getData();
+						if (tappingControl->size() != 0) cout << "\t" << "Tapping Control: " << tappingControl->at(tappingControl->size() - 1).key << endl;
+
+						std::vector<osu::TIMING>* spatialComplexity = AnalysisStruct::beatmapAnalysis.getAnalyzer("Spatial Chaos (notes * px/ms)")->getData();
+						if (spatialComplexity->size() != 0) cout << "\t" << "Max spatial chaos: " << spatialComplexity->at(spatialComplexity->size() - 1).key << endl;
+					}
+
+					cout << endl;
+				}
+			}
 
 			if (btnBeatmap.isTriggered())
 			{
