@@ -14,7 +14,7 @@ void Analyzer_Reading::AnalyzeStd(Play* _play)
 	Database<Hitobject>& hitobjects = _play->beatmap->getHitobjects();
 	osu::TIMING timing;
 
-	std::vector<osu::TIMING>& timingsRate = *AnalysisStruct::beatmapAnalysis.getAnalyzer("note rate")->getData();
+	std::vector<osu::TIMING>& timingsRate = *AnalysisStruct::beatmapAnalysis.getAnalyzer("note rate (notes/s)")->getData();
 	std::vector<osu::TIMING>& timingsVel = *AnalysisStruct::beatmapAnalysis.getAnalyzer("velocity (px/ms)")->getData();
 
 	vector2d<double> avgCoor, distractor;
