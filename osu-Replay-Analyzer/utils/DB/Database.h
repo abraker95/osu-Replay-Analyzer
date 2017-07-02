@@ -64,7 +64,7 @@ class Database
 						entriesObj.erase(entriesObj.begin() + idxObj);
 				}
 
-				delete entriesObj[idxObj]
+				delete entriesVal[idxVal];
 				entriesVal.erase(entriesVal.begin() + idxVal);
 			}
 		}
@@ -83,7 +83,7 @@ class Database
 						entriesVal.erase(entriesVal.begin() + idxVal);
 				}
 
-				delete entriesObj[idxObj]
+				delete entriesObj[idxObj];
 				entriesObj.erase(entriesObj.begin() + idxObj);
 			}
 		}
@@ -124,7 +124,7 @@ class Database
 		int Find(T* _obj, bool _nearest)
 		{
 			// Find sorted object index
-			std::vector<int> foundObj = objFind(_obj, false);
+			std::vector<int> foundObj = ObjFind(_obj, false);
 			if (foundObj.size() == 0) return -1;
 
 			// Resolve it to sorted value index
