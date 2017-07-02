@@ -52,12 +52,12 @@ class Database
 
 		void Remove(int _val, std::vector<int> _select = std::vector<int>())
 		{
-			std::vector<int> foundVal = this->Find(_val, true);
+			std::vector<int> foundVal = this->Find(_val, false);
 			if (_select.size() == 0) _select = foundVal;
 
 			for (int idxVal : foundVal)
 			{
-				std::vector<int> foundObj = this->ObjFind(entriesVal[idxVal]->getObj(), true);
+				std::vector<int> foundObj = this->ObjFind(entriesVal[idxVal]->getObj(), false);
 				if (foundObj.size() > 0)
 				{
 					for (int idxObj : foundObj)
@@ -71,12 +71,12 @@ class Database
 
 		void Remove(T* _obj, std::vector<int> _select = std::vector<int>())
 		{
-			std::vector<int> foundObj = this->ObjFind(_obj, true);
+			std::vector<int> foundObj = this->ObjFind(_obj, false);
 			if (_select.size() == 0) _select = foundObj;
 
 			for (int idxObj : foundObj)
 			{
-				std::vector<int> foundVal = this->Find(*entriesObj[idxObj]->getVal(), true);
+				std::vector<int> foundVal = this->Find(*entriesObj[idxObj]->getVal(), false);
 				if (foundVal.size() > 0)
 				{
 					for (int idxVal : foundVal)
