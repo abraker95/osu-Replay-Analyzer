@@ -110,11 +110,8 @@ void Beatmap::ResetModified()
 	for (int i = 0; i < origHitobjects.size(); i++)
 	{
 		auto hitobject = origHitobjects[i];
-
-		if (hitobject->isHitobjectLong())
-			modHitobjects.Insert(new SliderHitObject(*hitobject->getSlider()), hitobject->getTime());
-		else
-			modHitobjects.Insert(new Hitobject(*hitobject), hitobject->getTime());
+		if (hitobject->isHitobjectLong()) modHitobjects.Insert(new SliderHitObject(*hitobject->getSlider()), hitobject->getTime());
+		else                              modHitobjects.Insert(new Hitobject(*hitobject), hitobject->getTime());
 	}
 }
 
@@ -187,30 +184,25 @@ void Beatmap::ParseBeatmapFormat(std::ifstream &_filepath)
 
 bool Beatmap::ParseBeatmapData(std::ifstream &_filepath)
 {
-	if (metadata.format != -1)
-	{
-		SECTION section = SECTION_NONE;
-		std::string line = "";
+	if (metadata.format == -1) return 0;
 
-		while (getline(_filepath, line))
-		{
-				 if (line == "[General]")		section = SECTION_GENERAL;
-			else if (line == "[Editor]")		section = SECTION_EDITOR;
-			else if (line == "[Metadata]")		section = SECTION_METADATA;
-			else if (line == "[Difficulty]")	section = SECTION_DIFFICULTY;
-			else if (line == "[Events]")		section = SECTION_EVENTS;
-			else if (line == "[TimingPoints]")	section = SECTION_TIMINGPOINTS;
-			else if (line == "[Colours]")		section = SECTION_COLOURS;
-			else if (line == "[HitObjects]")	section = SECTION_HITOBJECTS;
-			else ParseSection(_filepath, section, line);
-		}
+	SECTION section = SECTION_NONE;
+	std::string line = "";
 
-		return 1;
-	}
-	else
+	while (getline(_filepath, line))
 	{
-		return 0;
+		 	 if (line == "[General]")		section = SECTION_GENERAL;
+		else if (line == "[Editor]")		section = SECTION_EDITOR;
+		else if (line == "[Metadata]")		section = SECTION_METADATA;
+		else if (line == "[Difficulty]")	section = SECTION_DIFFICULTY;
+		else if (line == "[Events]")		section = SECTION_EVENTS;
+		else if (line == "[TimingPoints]")	section = SECTION_TIMINGPOINTS;
+		else if (line == "[Colours]")		section = SECTION_COLOURS;
+		else if (line == "[HitObjects]")	section = SECTION_HITOBJECTS;
+		else ParseSection(_filepath, section, line);
 	}
+
+	return 1;
 }
 
 
@@ -218,40 +210,15 @@ void Beatmap::ParseSection(std::ifstream &_filepath, SECTION _section, std::stri
 {
 	switch (_section)
 	{
-		case SECTION_GENERAL:
-			ParseGeneralSection(_filepath, _line);
-			break;
-
-		case SECTION_EDITOR:
-			ParseEditorSection(_filepath, _line);
-			break;
-
-		case SECTION_METADATA:
-			ParseMetadataSection(_filepath, _line);
-			break;
-
-		case SECTION_DIFFICULTY:
-			ParseDifficultysection(_filepath, _line);
-			break;
-
-		case SECTION_EVENTS:
-			ParseEventsSection(_filepath, _line);
-			break;
-
-		case SECTION_TIMINGPOINTS:
-			ParseTimingPointsSection(_filepath, _line);
-			break;
-
-		case SECTION_COLOURS:
-			ParseColourSection(_filepath, _line);
-			break;
-
-		case SECTION_HITOBJECTS:
-			ParseHitobjectsSection(_filepath, _line);
-			break;
-
-		default:
-			break;
+		case SECTION_GENERAL:      ParseGeneralSection(_filepath, _line);        break;
+		case SECTION_EDITOR:       ParseEditorSection(_filepath, _line);         break;
+		case SECTION_METADATA:     ParseMetadataSection(_filepath, _line);       break;
+		case SECTION_DIFFICULTY:   ParseDifficultysection(_filepath, _line);     break;
+		case SECTION_EVENTS:       ParseEventsSection(_filepath, _line);         break;
+		case SECTION_TIMINGPOINTS: ParseTimingPointsSection(_filepath, _line);   break;
+		case SECTION_COLOURS:      ParseColourSection(_filepath, _line);         break;
+		case SECTION_HITOBJECTS:   ParseHitobjectsSection(_filepath, _line);     break;
+		default:                                                                 break;
 	};
 }
 
@@ -262,8 +229,7 @@ bool Beatmap::ParseGeneralSection(std::ifstream &_filepath, std::string &_line)
 
 	do
 	{
-		if (_line == "")
-			break;
+		if (_line == "") break;
 
 		data = getStrAfter(_line, "AudioFilename: ");
 		if (data != "")
@@ -352,8 +318,7 @@ bool Beatmap::ParseEditorSection(std::ifstream &_filepath, std::string &_line)
 	
 	do
 	{
-		if (_line == "")
-			break;
+		if (_line == "") break;
 
 		data = getStrAfter(_line, "DistanceSpacing: ");
 		if (data != "")
@@ -393,8 +358,7 @@ bool Beatmap::ParseMetadataSection(std::ifstream &_filepath, std::string &_line)
 	
 	do
 	{
-		if (_line == "")
-			break;
+		if (_line == "") break;
 
 		data = getStrAfter(_line, "Title:");
 		if (data != "")
@@ -476,8 +440,7 @@ bool Beatmap::ParseDifficultysection(std::ifstream &_filepath, std::string &_lin
 	
 	do
 	{
-		if (_line == "")
-			break;
+		if (_line == "") break;
 
 		data = getStrAfter(_line, "HPDrainRate:");
 		if (data != "")
@@ -529,8 +492,7 @@ bool Beatmap::ParseEventsSection(std::ifstream &_filepath, std::string &_line)
 {	
 	do
 	{
-		if (_line == "")
-			break;
+		if (_line == "") break;
 
 		/* ignore */
 
@@ -543,18 +505,12 @@ bool Beatmap::ParseTimingPointsSection(std::ifstream &_filepath, std::string &_l
 {
 	do
 	{
-		if (_line == "")
-			break;
+		if (_line == "") break;
 
 		int status = this->ReadTimingpoints(_line);
-		if (status == -1)
-		{
-			return 0;
-		}
-		else
-		{
-			return 1;
-		}
+		if (status == -1) return 0;
+		else              return 1;
+
 	} while (getline(_filepath, _line));
 }
 
@@ -562,8 +518,7 @@ bool Beatmap::ParseColourSection(std::ifstream &_filepath, std::string &_line)
 {
 	do
 	{
-		if (_line == "")
-			break;
+		if (_line == "") break;
 
 		/* ignore */
 
@@ -576,18 +531,12 @@ bool Beatmap::ParseHitobjectsSection(std::ifstream &_filepath, std::string &_lin
 {
 	do
 	{
-		if (_line == "")
-			break;
+		if (_line == "") break;
 	
 		int status = this->ReadHitobjects(_line);
-		if (status == 0)
-		{
-			return 0;
-		}
-		else
-		{
-			return 1;
-		}
+		if (status == 0) return 0;
+		else             return 1;
+
 	} while (getline(_filepath, _line));
 }
 
@@ -779,98 +728,10 @@ int Beatmap::FindHitobjectAt(int _time)
 	std::vector<int> found = this->modHitobjects.Find(_time, true);
 	if (found.size() == 0) return 0;
 	else                   return found[0];
-
-	/*int start = 0;
-	int end = this->modHitobjects.size() - 2;
-	int mid;
-
-	while (start <= end)
-	{
-		mid = (start + end) / 2;
-
-		long time = this->modHitobjects[mid]->getTime();
-
-		// if time is exactly at the object, return that object
-		if (BTWN(this->modHitobjects[mid]->getTime(), _time, this->modHitobjects[mid + 1]->getTime()))
-			return mid;
-
-		if (_time < time)	end = mid - 1;
-		else				start = mid + 1;
-	}
-
-	return 0;*/
 }
-
-/*
-int Beatmap::FindHitobjectAt(int _time, bool _begEnd)
-{
-	int start = 0;
-	int end = this->origHitobjects.size() - 2;
-	int mid;
-
-	while (start <= end)
-	{
-		mid = (start + end) / 2;
-
-		// if time is exactly at the object, return that object
-		if (this->origHitobjects[mid]->getTime() == _time)
-		{
-			// make sure there is are no following objects at the same time
-			for (int i = mid; i < this->origHitobjects.size(); i++)
-				if (this->origHitobjects[mid]->getTime() == _time)
-					mid = i;
-
-			return mid;
-		}
-		// if the time is between 2 objects, return the next object
-		if(BTWN(this->origHitobjects[mid]->getTime(), _time, this->origHitobjects[mid + 1]->getTime()))
-		{
-			// make sure there is are no following objects at the same time
-			for (int i = mid + 1; i < this->origHitobjects.size(); i++)
-				if (BTWN(this->origHitobjects[mid]->getTime(), _time, this->origHitobjects[mid + 1]->getTime()))
-					mid = i;
-
-			return mid;
-		}
-
-		int gettime = this->origHitobjects[mid]->getTime();
-		if (_time < this->origHitobjects[mid]->getTime())
-			end = mid - 1;
-		else start = mid + 1;
-	}
-
-	return 0;
-}*/
-
-/*
-void Beatmap::SortEndTimes(int _left, int _right)
-{
-	int i = _left, int j = _right;
-	int pivot = hitObjectsTimeEnd[(_left + _right) / 2].second;
-
-	// partition 
-	while (i <= j)
-	{
-		while (hitObjectsTimeEnd[i].second < pivot) i++;
-		while (hitObjectsTimeEnd[i].second > pivot) j--;
-
-		if (i <= j)
-		{
-			swap(hitObjectsTimeEnd[i], hitObjectsTimeEnd[j]);
-			j--;   i++;
-		}
-	}
-
-	// recursion
-	if (_left < j) SortEndTimes(_left, j);
-	if (_left < j) SortEndTimes(i, _right);
-}*/
-
 
 void Beatmap::ClearObjects()
 {
 	origHitobjects.Clear();
-
-	origTimingPoints.clear();
-	std::vector<TimingPoint>().swap(origTimingPoints);
+	origTimingPoints.Clear();
 }

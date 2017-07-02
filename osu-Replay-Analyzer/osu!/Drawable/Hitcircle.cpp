@@ -101,23 +101,17 @@ int Hitcircle::getSliderTimeAt(int _index)
 
 void Hitcircle::IdleLogic(Window &_win)
 {
-	if (this->isMouseOnObj(_win, true))
-		state = HIGHLIGHTED;
-	else
-		edgeCol = IDLE_COLOR;
+	if (this->isMouseOnObj(_win, true)) state = HIGHLIGHTED;
+	else                                edgeCol = IDLE_COLOR;
 }
 
 void Hitcircle::HighlightedLogic(Window &_win)
 {
-	if (!this->isMouseOnObj(_win, true))
-		state = IDLE;
+	if (!this->isMouseOnObj(_win, true)) state = IDLE;
 	else
 	{
 		bool leftEdge = _win.reciever.GetMouseState().LeftButtonEdge;
-		if (leftEdge)
-		{
-			state = SELECTED;
-		}
+		if (leftEdge) state = SELECTED;
 
 		edgeCol = HIGHLIGHTED_COLOR;
 	}
@@ -131,8 +125,7 @@ void Hitcircle::SelectedLogic(Window &_win)
 	
 	// \TODO: Slider points; See if slider gen and update code can be simplified
 
-	if (!this->isMouseOnObj(_win, true) && leftEdge)
-		state = IDLE;
+	if (!this->isMouseOnObj(_win, true) && leftEdge) state = IDLE;
 	else if (leftButton)
 	{
 		// has to be += due the fact that x - xoffset = 0, 
@@ -152,21 +145,10 @@ void Hitcircle::UpdateInternal(Window &_win)
 
 	switch (state)
 	{
-		case IDLE:
-			IdleLogic(_win);
-			break;
-
-		case HIGHLIGHTED:
-			HighlightedLogic(_win);
-			break;
-
-		case SELECTED:
-			SelectedLogic(_win);
-			break;
-
-		default:
-			// ???
-			break;
+		case IDLE:		  IdleLogic(_win);		  break;
+		case HIGHLIGHTED: HighlightedLogic(_win); break;
+		case SELECTED:    SelectedLogic(_win);    break;
+		default:          /* ??? */               break;
 	}
 }
 
