@@ -35,7 +35,10 @@ void Analyzer_Reading::AnalyzeStd(Play* _play)
 		previ = i;
 
 		int iNoteRate = FindTimingAt(timingsRate, ms);
+		if (!BTWN(0, iNoteRate, timingsRate.size() - 1)) continue;
+
 		int iNoteVel = FindTimingAt(timingsVel, ms);
+		if (!BTWN(0, iNoteVel, timingsVel.size() - 1)) continue;
 
 		double noteRateVel = timingsVel[iNoteVel].data*timingsRate[iNoteRate].data;
 		const double diffCoeff = 1.02; // interpreted easiness of the note rate velocity. Use this to adjust interpreted reading difficulty. (higher = easier, SENSITIVE to nearest 0.01)
