@@ -6,6 +6,7 @@
 
 #include "../irrlicht/include/vector2d.h"
 
+#include "../utils/DB/Database.h"
 #include "Filestructure\Hitobject.h"
 #include "Filestructure\SliderHitObject.h"
 
@@ -14,11 +15,11 @@
 
 namespace OSUSTANDARD
 {
-	int FindHitobjectAt(std::vector<Hitobject*>& _hitobjects, long _time, bool _dir = false);
-	bool isHitobjectAt(std::vector<Hitobject*>& _hitobjects, long _prevTime, long _currTime);
+	//int FindHitobjectAt(Database<Hitobject>& _hitobjects, long _time, bool _dir = false);
+	bool isHitobjectAt(Database<Hitobject>& _hitobjects, long _prevTime, long _currTime);
 
 	std::vector<osu::TIMING> getPattern(Play* _play, int _num, long _time, bool _skipSliders = false);
-	osu::TIMING getNextTickPoint(std::vector<Hitobject*>& _hitobjects, long _time, long* _timeItr = nullptr);
+	osu::TIMING getNextTickPoint(Database<Hitobject>& _hitobjects, long _time, long* _timeItr = nullptr);
 	osu::TIMING FindClosest(Hitobject& _h1, Hitobject& _h2, int itr = 1);
 
 	int getButtonState(int _prevKey, int _currKey);

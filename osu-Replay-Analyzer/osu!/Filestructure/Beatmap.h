@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 
+#include "../../utils/DB/Database.h"
 #include "../osuEnums.h"
 #include "TimingPoint.h"
 #include "Hitobject.h"
@@ -42,7 +43,7 @@ class Beatmap
 		std::string getName();
 		std::string getMD5();
 		GAMEMODE getGamemode();
-		std::vector<Hitobject*>& getHitobjects();
+		Database<Hitobject>& getHitobjects();
 
 		Mods getMods();
 		Diff& getDiff();
@@ -75,7 +76,9 @@ class Beatmap
 		GAMEMODE gamemode;
 
 		std::vector<TimingPoint> origTimingPoints, modTimingPoints;
-		std::vector<Hitobject*> origHitobjects, modHitobjects;
+		
+		//std::vector<Hitobject*> origHitobjects, modHitobjects;
+		Database<Hitobject> origHitobjects, modHitobjects;
 
 		/// \NOTE: unused for now
 		std::vector<std::pair<Hitobject*, int>> hitObjectsTimeStart;

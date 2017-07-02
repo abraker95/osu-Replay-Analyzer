@@ -20,7 +20,7 @@ void Analyzer_NoteRatePerKeyPrec::AnalyzeTaiko(Play* _play){}
 void Analyzer_NoteRatePerKeyPrec::AnalyzeMania(Play* _play)
 {
 	int KEYS = _play->beatmap->getMods().getCS();
-	std::vector<Hitobject*>& hitobjects = _play->beatmap->getHitobjects();
+	Database<Hitobject>& hitobjects = _play->beatmap->getHitobjects();
 	osu::TIMING timing;
 		timing.data = 0;
 		timing.time = hitobjects[0]->getTime() - 1;

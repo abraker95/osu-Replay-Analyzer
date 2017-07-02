@@ -78,16 +78,16 @@ void OsuStdRenderer::RenderVisible(Window& _win)
 
 	double widthRatio = getDim().Width / 512.0;
 	double heightRatio = getDim().Height / 386.0;
-
-	int i = OSUSTANDARD::FindHitobjectAt(play->beatmap->getHitobjects(), *viewTime);
+	
+	int i = play->beatmap->getHitobjects().Find(*viewTime, true)[0];
 	DrawArc(_win, play->beatmap->getHitobjects()[i]->getPos().X*widthRatio + this->absXpos, play->beatmap->getHitobjects()[i]->getPos().Y*heightRatio + this->absYpos, 5, SColor(255, 255, 0, 0));
 }
 
 void OsuStdRenderer::RenderPaths(Window& _win)
 {
-	std::vector<Hitobject*>& hitobjects = play->beatmap->getHitobjects();
+	Database<Hitobject>& hitobjects = play->beatmap->getHitobjects();
 	
-	int i = OSUSTANDARD::FindHitobjectAt(hitobjects, *viewTime);
+	int i = hitobjects.Find(*viewTime, true)[0];
 	if (i - 1 < 0)	return;
 
 	double widthRatio = getDim().Width / 512.0;

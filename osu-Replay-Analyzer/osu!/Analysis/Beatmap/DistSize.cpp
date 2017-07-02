@@ -11,7 +11,7 @@ Analyzer_DistSize::~Analyzer_DistSize() {}
 
 void Analyzer_DistSize::AnalyzeStd(Play* _play)
 {
-	std::vector<Hitobject*>& hitobjects = _play->beatmap->getHitobjects();
+	Database<Hitobject>& hitobjects = _play->beatmap->getHitobjects();
 	osu::TIMING timing;
 	timing.data = 0;
 

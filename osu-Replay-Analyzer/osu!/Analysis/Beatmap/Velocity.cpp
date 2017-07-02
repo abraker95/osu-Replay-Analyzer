@@ -7,7 +7,7 @@ Analyzer_Velocity::~Analyzer_Velocity(){}
 
 void Analyzer_Velocity::AnalyzeStd(Play* _play)
 {
-	std::vector<Hitobject*>& hitobjects = _play->beatmap->getHitobjects();
+	Database<Hitobject>& hitobjects = _play->beatmap->getHitobjects();
 	osu::TIMING timing;
 	timing.data = 0;
 

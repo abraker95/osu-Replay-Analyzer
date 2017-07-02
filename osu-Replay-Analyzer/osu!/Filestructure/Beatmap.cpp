@@ -92,12 +92,7 @@ std::string Beatmap::getMD5()
 
 void Beatmap::ClearModified()
 {
-	if (modHitobjects.size() == 0) return;
-	for (Hitobject* hitobject : modHitobjects)
-		delete hitobject;
-
-	modHitobjects.clear();
-	std::vector<Hitobject*>().swap(modHitobjects);
+	modHitobjects.Clear();
 
 	modTimingPoints.clear();
 	std::vector<TimingPoint>().swap(modTimingPoints);
@@ -109,16 +104,18 @@ void Beatmap::ResetModified()
 	ClearModified();
 	modTimingPoints = origTimingPoints;
 
-	for (Hitobject* hitobject : origHitobjects)
+	for (int i = 0; i < origHitobjects.size(); i++)
 	{
+		auto hitobject = origHitobjects[i];
+
 		if (hitobject->isHitobjectLong())
-			modHitobjects.push_back(new SliderHitObject(*hitobject->getSlider()));
+			modHitobjects.Insert(new SliderHitObject(*hitobject->getSlider()), hitobject->getTime());
 		else
-			modHitobjects.push_back(new Hitobject(*hitobject));
+			modHitobjects.Insert(new Hitobject(*hitobject), hitobject->getTime());
 	}
 }
 
-std::vector<Hitobject*>& Beatmap::getHitobjects()
+Database<Hitobject>& Beatmap::getHitobjects()
 {
 	return modHitobjects;
 }
@@ -157,8 +154,8 @@ TimingPoint* Beatmap::getTimingPointAt(int _time)
 
 Hitobject* Beatmap::getHitobjectAt(int _time)
 {
-	int index = this->FindHitobjectAt(_time);
-	return this->modHitobjects[index];
+	std::vector<Hitobject*> hitObjects = this->modHitobjects.Get(_time);
+	return (hitObjects.size() == 0)? nullptr: hitObjects[0];
 }
 
 //---------------- [PRIVATE] ----------------------
@@ -630,20 +627,18 @@ int Beatmap::ReadHitobjects(std::string line)
 	/// \TODO: color hacks types
 	if (type & HITOBJECTYPE::CIRCLE)
 	{
-		this->origHitobjects.push_back(new Hitobject(objectData));
+		Hitobject* hitObject = new Hitobject(objectData);
+		this->origHitobjects.Insert(hitObject, hitObject->getTime());
 
-		//this->hitObjectsTimeStart.push_back(std::pair<Hitobject*, int>(hitObject, hitObject->getTime()));
-		//this->hitObjectsTimeEnd.push_back(std::pair<Hitobject*, int>(hitObject, hitObject->getTime()));
 		return 1;
 	}
 
 	if (type & HITOBJECTYPE::SLIDER)
 	{
 		FileReader::tokenize(objectData[5], sliderData, "|");
-		this->origHitobjects.push_back(new SliderHitObject(objectData, sliderData));
+		SliderHitObject* hitObject = new SliderHitObject(objectData, sliderData);
+		this->origHitobjects.Insert(hitObject, hitObject->getTime());
 
-		//this->hitObjectsTimeStart.push_back(std::pair<Hitobject*, int>(hitObject, hitObject->getTime()));
-		//this->hitObjectsTimeEnd.push_back(std::pair<Hitobject*, int>(hitObject, hitObject->slider->getEndTime()));
 		return 1;
 	}
 
@@ -656,10 +651,9 @@ int Beatmap::ReadHitobjects(std::string line)
 	if (type & HITOBJECTYPE::MANIALONG)
 	{
 		FileReader::tokenize(objectData[5], sliderData, "|");
-		this->origHitobjects.push_back(new SliderHitObject(objectData, sliderData));
+		SliderHitObject* hitObject = new SliderHitObject(objectData, sliderData);
+		this->origHitobjects.Insert(hitObject, hitObject->getTime());
 
-		//this->hitObjectsTimeStart.push_back(std::pair<Hitobject*, int>(hitObject, hitObject->getTime()));
-		//this->hitObjectsTimeEnd.push_back(std::pair<Hitobject*, int>(hitObject, hitObject->slider->getEndTime()));
 		return 0;
 	}
 
@@ -711,8 +705,10 @@ void Beatmap::PrepareTimingPoints()
 
 void Beatmap::PrepareSliderData()
 {
-	for (auto& hitObject : this->modHitobjects)
+	for (int i = 0; i < modHitobjects.size(); i++)
 	{
+		auto hitObject = modHitobjects[i];
+
 		// Make sure this is a slider
 		if (!hitObject->isHitobjectLong()) continue;
 
@@ -747,8 +743,10 @@ void Beatmap::PrepareSliderData()
 
 void Beatmap::GenerateSliderMetadata()
 {
-	for (auto& hitObject : this->modHitobjects)
+	for (int i = 0; i < modHitobjects.size(); i++)
 	{
+		auto hitObject = modHitobjects[i];
+
 		// Make sure this is a slider
 		if (!hitObject->IsHitObjectType(HITOBJECTYPE::SLIDER))
 			continue;
@@ -774,7 +772,11 @@ void Beatmap::GenerateSliderMetadata()
 /// \TODO: Restore osu!std finding for the timing graph
 int Beatmap::FindHitobjectAt(int _time)
 {
-	int start = 0;
+	std::vector<int> found = this->modHitobjects.Find(_time, true);
+	if (found.size() == 0) return 0;
+	else                   return found[0];
+
+	/*int start = 0;
 	int end = this->modHitobjects.size() - 2;
 	int mid;
 
@@ -792,14 +794,14 @@ int Beatmap::FindHitobjectAt(int _time)
 		else				start = mid + 1;
 	}
 
-	return 0;
+	return 0;*/
 }
 
 /*
 int Beatmap::FindHitobjectAt(int _time, bool _begEnd)
 {
 	int start = 0;
-	int end = this->hitObjects.size() - 2;
+	int end = this->origHitobjects.size() - 2;
 	int mid;
 
 	while (start <= end)
@@ -807,39 +809,28 @@ int Beatmap::FindHitobjectAt(int _time, bool _begEnd)
 		mid = (start + end) / 2;
 
 		// if time is exactly at the object, return that object
-		if (this->hitObjects[mid]->getTime() == _time)
+		if (this->origHitobjects[mid]->getTime() == _time)
 		{
 			// make sure there is are no following objects at the same time
-			for (int i = mid; i < this->hitObjects.size(); i++)
-				if (this->hitObjects[mid]->getTime() == _time)
+			for (int i = mid; i < this->origHitobjects.size(); i++)
+				if (this->origHitobjects[mid]->getTime() == _time)
 					mid = i;
 
 			return mid;
 		}
-
 		// if the time is between 2 objects, return the next object
-		if (BTWN(this->hitObjects[mid]->getTime(), _time, this->hitObjects[mid + 1]->getTime()))
+		if(BTWN(this->origHitobjects[mid]->getTime(), _time, this->origHitobjects[mid + 1]->getTime()))
 		{
 			// make sure there is are no following objects at the same time
-			for (int i = mid + 1; i < this->hitObjects.size(); i++)
-				if (BTWN(this->hitObjects[mid]->getTime(), _time, this->hitObjects[mid + 1]->getTime()))
+			for (int i = mid + 1; i < this->origHitobjects.size(); i++)
+				if (BTWN(this->origHitobjects[mid]->getTime(), _time, this->origHitobjects[mid + 1]->getTime()))
 					mid = i;
 
 			return mid;
 		}
 
-		// check if the object ends somewhere else
-		int objectType = hitObjects[mid]->getHitobjectType();
-		if (objectType & (HITOBJECTYPE::SLIDER | HITOBJECTYPE::MANIALONG))
-		{
-			if (BTWN(this->hitObjects[mid]->getTime(), _time, this->hitObjects[mid]->slider->getEndTime()))
-			{
-				return mid;
-			}
-		}
-
-		int gettime = this->hitObjects[mid]->getTime();
-		if (_time < this->hitObjects[mid]->getTime())
+		int gettime = this->origHitobjects[mid]->getTime();
+		if (_time < this->origHitobjects[mid]->getTime())
 			end = mid - 1;
 		else start = mid + 1;
 	}
@@ -874,12 +865,7 @@ void Beatmap::SortEndTimes(int _left, int _right)
 
 void Beatmap::ClearObjects()
 {
-	if (origHitobjects.size() == 0) return;
-	for (auto* hitobject : origHitobjects)
-		delete hitobject;
-	
-	origHitobjects.clear();
-	std::vector<Hitobject*>().swap(origHitobjects);
+	origHitobjects.Clear();
 
 	origTimingPoints.clear();
 	std::vector<TimingPoint>().swap(origTimingPoints);

@@ -10,7 +10,7 @@ Analyzer_NotesAR::~Analyzer_NotesAR() {}
 
 void Analyzer_NotesAR::AnalyzeStd(Play* _play)
 {
-	std::vector<Hitobject*>& hitobjects = _play->beatmap->getHitobjects();
+	Database<Hitobject>& hitobjects = _play->beatmap->getHitobjects();
 	osu::TIMING timing;
 		timing.data = 0;
 

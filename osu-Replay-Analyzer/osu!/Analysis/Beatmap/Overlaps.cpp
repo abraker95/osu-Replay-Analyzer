@@ -9,7 +9,7 @@ Analyzer_Overlaps::~Analyzer_Overlaps() {}
 
 void Analyzer_Overlaps::AnalyzeStd(Play* _play)
 {
-	std::vector<Hitobject*>& hitobjects = _play->beatmap->getHitobjects();
+	Database<Hitobject>& hitobjects = _play->beatmap->getHitobjects();
 	osu::TIMING timing;
 		timing.data = 0;
 

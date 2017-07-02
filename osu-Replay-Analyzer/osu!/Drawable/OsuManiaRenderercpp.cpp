@@ -91,7 +91,7 @@ void OsuManiaRenderer::Draw(Window& _win)
 void OsuManiaRenderer::RenderVisible(Window& _win)
 {
 	Beatmap* beatmap = play->beatmap;
-	std::vector<Hitobject*>& hitobjects = beatmap->getHitobjects();
+	Database<Hitobject>& hitobjects = beatmap->getHitobjects();
 	
 	int KEYS = beatmap->getMods().getCS();
 	for (int key = 0; key < KEYS; key++)

@@ -175,7 +175,7 @@ double getCircleOverlapArea(double _radius, double _dist)
 /// \TODO: This currently return only the first overlap detected. Do we need to keep checking for more in case of crazy sliders?
 double GetHitobjectOverlapArea(Play *_play, int _indexA, int _indexB)
 {
-	std::vector<Hitobject*>& hitobjects = _play->beatmap->getHitobjects();
+	Database<Hitobject>& hitobjects = _play->beatmap->getHitobjects();
 
 	// out of bounds check
 	if (!(BTWN(0, _indexA, hitobjects.size() - 1) && BTWN(0, _indexB, hitobjects.size() - 1)))

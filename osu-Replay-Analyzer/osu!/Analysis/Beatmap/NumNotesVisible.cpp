@@ -11,7 +11,7 @@ Analyzer_NumNotesVisible::~Analyzer_NumNotesVisible() {}
 
 void Analyzer_NumNotesVisible::AnalyzeStd(Play* _play)
 {
-	std::vector<Hitobject*>& hitobjects = _play->beatmap->getHitobjects();
+	Database<Hitobject>& hitobjects = _play->beatmap->getHitobjects();
 	osu::TIMING timing;
 		timing.data = 0;
 
@@ -23,7 +23,7 @@ void Analyzer_NumNotesVisible::AnalyzeStd(Play* _play)
 
 	while(currTime.time < hitobjects[hitobjects.size() - 1]->getTime())
 	{
-		int numvisible = OSUSTANDARD::getNumHitobjectsVisibleAt(_play, OSUSTANDARD::FindHitobjectAt(hitobjects, currTime.time), 0.3);
+		int numvisible = OSUSTANDARD::getNumHitobjectsVisibleAt(_play, hitobjects.Find(currTime.time, true)[0], 0.3);
 
 		timing.data = numvisible;
 		timing.pos = currTime.pos;

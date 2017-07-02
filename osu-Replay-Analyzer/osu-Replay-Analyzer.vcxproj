@@ -242,6 +242,8 @@
     <ClInclude Include="ui\Scrollbar.h" />
     <ClInclude Include="ui\Slider.h" />
     <ClInclude Include="ui\Window.h" />
+    <ClInclude Include="utils\DB\Database.h" />
+    <ClInclude Include="utils\DB\EntryDB.h" />
     <ClInclude Include="utils\Geometry.h" />
     <ClInclude Include="utils\Lambert.h" />
     <ClInclude Include="utils\LambertW.h" />

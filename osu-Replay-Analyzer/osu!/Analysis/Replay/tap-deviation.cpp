@@ -13,7 +13,7 @@ Analyzer_TapDeviation::~Analyzer_TapDeviation() {}
 void Analyzer_TapDeviation::AnalyzeStd(Play* _play)
 {
 	if (_play->replay->isValid() == false) return;
-	std::vector<Hitobject*>& hitobjects = _play->beatmap->getHitobjects();
+	Database<Hitobject>& hitobjects = _play->beatmap->getHitobjects();
 
 	osu::TIMING timing;
 	timing.data = 0;
@@ -48,7 +48,8 @@ void Analyzer_TapDeviation::AnalyzeStd(Play* _play)
 			 timeTarget = hitobjects[recHitobject]->getCloserTime(currFrame.time);
 
 		// find the object closest to this event
-		int index = OSUSTANDARD::FindHitobjectAt(hitobjects, currFrame.time, timePlayer <= timeTarget);
+		
+		int index = hitobjects.Find(currFrame.time, true)[0];
 		
 		// Skip spinners
 		if (hitobjects[index]->getHitobjectType() == HITOBJECTYPE::SPINNER)
@@ -128,7 +129,7 @@ void Analyzer_TapDeviation::AnalyzeMania(Play* _play)
 {
 	if (_play->replay->isValid() == false) return;
 
-	std::vector<Hitobject*>& hitobjects = _play->beatmap->getHitobjects();
+	Database<Hitobject>& hitobjects = _play->beatmap->getHitobjects();
 	int KEYS = _play->beatmap->getMods().getCS();
 
 	std::vector<long> recTimes;	recTimes.resize(KEYS);

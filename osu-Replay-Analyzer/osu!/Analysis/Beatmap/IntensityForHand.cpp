@@ -23,7 +23,7 @@ void Analyzer_IntensityForHand::AnalyzeMania(Play* _play)
 	const int HOLD    = 3;
 
 	int KEYS = _play->beatmap->getMods().getCS();
-	std::vector<Hitobject*>& hitobjects = _play->beatmap->getHitobjects();
+	Database<Hitobject>& hitobjects = _play->beatmap->getHitobjects();
 	osu::TIMING timing;
 		timing.data = 0;
 

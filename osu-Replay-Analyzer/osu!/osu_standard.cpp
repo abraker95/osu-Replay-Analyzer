@@ -1,3 +1,5 @@
+#include <vector>
+
 #include "osu_standard.h"
 #include "osuCalc.h"
 #include "../utils/Geometry.h"
@@ -6,7 +8,7 @@
 
 // dir = true -> look forward
 // dir = false -> look backward
-int OSUSTANDARD::FindHitobjectAt(std::vector<Hitobject*>& _hitobjects, long _time, bool _dir)
+/*int OSUSTANDARD::FindHitobjectAt(std::vector<Hitobject*>& _hitobjects, long _time, bool _dir)
 {
 	int start = 0;
 	int end = _hitobjects.size() - 2;
@@ -36,7 +38,7 @@ int OSUSTANDARD::FindHitobjectAt(std::vector<Hitobject*>& _hitobjects, long _tim
 		else 
 			start = mid + 1;
 	}
-}
+}*/
 
 std::vector<osu::TIMING> OSUSTANDARD::getPattern(Play* _play, int _num, long _time, bool _skipSliders)
 {
@@ -59,44 +61,48 @@ std::vector<osu::TIMING> OSUSTANDARD::getPattern(Play* _play, int _num, long _ti
 }
 
 // Returns (pos), (time), (index), and (is slider?) of the next tick point
-osu::TIMING OSUSTANDARD::getNextTickPoint(std::vector<Hitobject*>& _hitobjects, long _time, long* _timeItr)
+osu::TIMING OSUSTANDARD::getNextTickPoint(Database<Hitobject>& _hitobjects, long _time, long* _timeItr)
 {
 	osu::TIMING tickPoint;
-	int i = FindHitobjectAt(_hitobjects, _time, true);
-
-	// if we reached the end, make timing.data INVALID
-	if (i >= _hitobjects.size() - 1) return osu::TIMING({});
+	std::vector<int> idx = _hitobjects.Find(_time, true);
+	if(idx.size() == 0) return osu::TIMING({});
+	
+	Hitobject* hitobject = _hitobjects[idx[0]];
+	if(hitobject == nullptr) return osu::TIMING({});
 
 	// If the time is before the hitobject's starting point, then return the hitobject's starting point
-	if (_time < _hitobjects[i]->getTime())
+	if (_time < hitobject->getTime())
 	{
-		tickPoint.pos = _hitobjects[i]->getPos();
-		tickPoint.time = _hitobjects[i]->getTime();
-		tickPoint.data = i;
-		tickPoint.press = _hitobjects[i]->isHitobjectLong();
+		tickPoint.pos = hitobject->getPos();
+		tickPoint.time = hitobject->getTime();
+		tickPoint.data = idx[0];
+		tickPoint.press = hitobject->isHitobjectLong();
 
 		if (_timeItr != nullptr) *_timeItr = tickPoint.time;
 		return tickPoint;
 	}
 
-	// If the time if after the hitobject's starting point take action depending if the hitobject is a circle or a slider
+	// If the time if after  or at the hitobject's starting point take action depending if the hitobject is a circle or a slider
 
 	// It's a circle, then return the next hitobject's starting point
-	if (!_hitobjects[i]->isHitobjectLong())
+	if (!hitobject->isHitobjectLong())
 	{
-		tickPoint.pos = _hitobjects[i + 1]->getPos();
-		tickPoint.time = _hitobjects[i + 1]->getTime();
-		tickPoint.data = i + 1;
-		tickPoint.press = _hitobjects[i + 1]->isHitobjectLong();
+		hitobject = _hitobjects[idx[0] + 1];
+		if (hitobject == nullptr) return osu::TIMING({});
+
+		tickPoint.pos = hitobject->getPos();
+		tickPoint.time = hitobject->getTime();
+		tickPoint.data = idx[0] + 1;
+		tickPoint.press = hitobject->isHitobjectLong();
 
 		if (_timeItr != nullptr) *_timeItr = tickPoint.time;
 		return tickPoint;
 	}
 
 	// It's a slider, then go through the slider's ticks
-	if (_hitobjects[i]->isHitobjectLong())
+	if (hitobject->isHitobjectLong())
 	{
-		SliderHitObject* slider = _hitobjects[i]->getSlider();
+		SliderHitObject* slider = hitobject->getSlider();
 		std::vector<int> ticks = slider->getTickTimes();
 
 		for (int tick : ticks)
@@ -106,7 +112,7 @@ osu::TIMING OSUSTANDARD::getNextTickPoint(std::vector<Hitobject*>& _hitobjects, 
 			{
 				tickPoint.pos = slider->GetSliderPos(tick);
 				tickPoint.time = tick;
-				tickPoint.data = i;
+				tickPoint.data = idx[0];
 				tickPoint.press = true;
 
 				if (_timeItr != nullptr) *_timeItr = tickPoint.time;
@@ -127,20 +133,26 @@ osu::TIMING OSUSTANDARD::getNextTickPoint(std::vector<Hitobject*>& _hitobjects, 
 			return tickPoint;
 		}*/
 		
-		// Otherwise, the time is after the current hitobject, but before the start of the next hitobject. Return the next hitobject's starting point
-		tickPoint.pos = _hitobjects[i + 1]->getPos();
-		tickPoint.time = _hitobjects[i + 1]->getTime();
-		tickPoint.data = i + 1;
-		tickPoint.press = _hitobjects[i + 1]->isHitobjectLong();
+		// Otherwise, the time is after the current hitobject, but before the start of the next hitobject. Fastforward to the next hitobject after or during requested time
+	//	while (_hitobjects[++i]->getTime() < _time)
+		{
+			hitobject = _hitobjects[idx[0] + 1];
+			if (hitobject == nullptr) return osu::TIMING({});
+
+			tickPoint.pos = hitobject->getPos();
+			tickPoint.time = hitobject->getTime();
+			tickPoint.data = idx[0] + 1;
+			tickPoint.press = hitobject->isHitobjectLong();
+		}
 
 		if (_timeItr != nullptr) *_timeItr = tickPoint.time;
 		return tickPoint;
 	}
 }
 
-bool OSUSTANDARD::isHitobjectAt(std::vector<Hitobject*>& _hitobjects, long _prevTime, long _currTime)
+bool OSUSTANDARD::isHitobjectAt(Database<Hitobject>& _hitobjects, long _prevTime, long _currTime)
 {
-	int i = FindHitobjectAt(_hitobjects, _currTime);
+	int i = _hitobjects.Find(_currTime, true)[0];
 	if (BTWN(_prevTime, _hitobjects[i]->getTime(), _currTime)) return true;						// a normal note
 	if (BTWN(_hitobjects[i]->getTime(), _currTime, _hitobjects[i]->getEndTime())) return true;  // a hold note
 
@@ -199,7 +211,7 @@ int OSUSTANDARD::getNumHitobjectsVisibleAt(Play* _play, int _index, double _opac
 
 std::pair<int, int> OSUSTANDARD::getIndicesVisibleAt(Play* _play, int _time, double _opacity)
 {
-	std::vector<Hitobject*> hitobjects = _play->beatmap->getHitobjects();
+	Database<Hitobject>& hitobjects = _play->beatmap->getHitobjects();
 	int index = _play->beatmap->FindHitobjectAt(_time) - 1;
 	std::pair<int, int> range;
 

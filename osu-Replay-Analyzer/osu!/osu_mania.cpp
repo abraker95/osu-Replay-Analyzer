@@ -35,7 +35,7 @@ void GenHitobjectAtlas(Play* _play)
 		column.Clear();
 
 	// Reserve space in vector
-	std::vector<Hitobject*> hitobjects = _play->beatmap->getHitobjects();
+	Database<Hitobject> hitobjects = _play->beatmap->getHitobjects();
 	hitobjectAtlas.resize(_play->beatmap->getMods().getCS());
 
 	// Fill in vector with list of hitobject indices correspending the column the hitobject is at
@@ -66,7 +66,7 @@ int OSUMANIA::FindHitobjectAt(Play* _play, long _time, int _key, bool _dir)
 	int end = hitobjectAtlas[_key].getSize() - 2;
 	int mid;
 
-	std::vector<Hitobject*>& hitobjects = _play->beatmap->getHitobjects();
+	Database<Hitobject>& hitobjects = _play->beatmap->getHitobjects();
 	while (start <= end)
 	{
 		mid = (start + end) / 2;
@@ -135,7 +135,7 @@ int OSUMANIA::getNextIndexOnColumn(std::vector<Hitobject*>& _hitobjects, int _co
 
 int OSUMANIA::getNumPressesOnNextTiming(Play* _play, int* _iNote)
 {
-	std::vector<Hitobject*> hitojects = _play->beatmap->getHitobjects();
+	Database<Hitobject>& hitojects = _play->beatmap->getHitobjects();
 	if (hitojects.size() <= *_iNote + 1) return 0;
 
 	int notes = 1;

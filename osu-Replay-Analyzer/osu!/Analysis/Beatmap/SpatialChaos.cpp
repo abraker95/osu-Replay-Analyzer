@@ -19,7 +19,7 @@ void Analyzer_SpatialChaos::AnalyzeStd(Play* _play)
 
 	// ---------------------
 
-	std::vector<Hitobject*>& hitobjects = _play->beatmap->getHitobjects();
+	Database<Hitobject>& hitobjects = _play->beatmap->getHitobjects();
 	osu::TIMING timing;
 		timing.data = 0;
 		timing.key = 0;
@@ -56,7 +56,7 @@ void Analyzer_SpatialChaos::AnalyzeStd(Play* _play)
 
 		double distVar = Var(magnitudes);
 		double dirVar = CirclularVar(dirMagXs, dirMagYs);
-		int numNotes = OSUSTANDARD::getNumHitobjectsVisibleAt(_play, OSUSTANDARD::FindHitobjectAt(hitobjects, currTickPoint.time), 0.3);
+		int numNotes = OSUSTANDARD::getNumHitobjectsVisibleAt(_play, hitobjects.Find(currTickPoint.time, true)[0], 0.3);
 
 		int index = osu::FindTimingAt(velocities, currTickPoint.time);
 		double vel = velocities[index].data;

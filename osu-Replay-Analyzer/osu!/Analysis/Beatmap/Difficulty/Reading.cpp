@@ -11,7 +11,7 @@ Analyzer_Reading::~Analyzer_Reading() {}
 
 void Analyzer_Reading::AnalyzeStd(Play* _play)
 {
-	std::vector<Hitobject*>& hitobjects = _play->beatmap->getHitobjects();
+	Database<Hitobject>& hitobjects = _play->beatmap->getHitobjects();
 	osu::TIMING timing;
 
 	std::vector<osu::TIMING>& timingsRate = *AnalysisStruct::beatmapAnalysis.getAnalyzer("note rate")->getData();

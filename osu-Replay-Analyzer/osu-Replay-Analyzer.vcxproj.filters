@@ -91,6 +91,9 @@
     <Filter Include="Source Files\math\MD5">
       <UniqueIdentifier>{e52ef29c-c444-47d1-af09-c4a5b82f5b63}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\math\DB">
+      <UniqueIdentifier>{d7b097df-045a-410d-8daf-631b619464e1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -631,6 +634,12 @@
     </ClInclude>
     <ClInclude Include="osu!\Analysis\Beatmap\SpatialChaos.h">
       <Filter>Header Files\osu!\Analysis\Beatmap</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\DB\EntryDB.h">
+      <Filter>Header Files\math\DB</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\DB\Database.h">
+      <Filter>Header Files\math\DB</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

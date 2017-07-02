@@ -13,7 +13,7 @@ Analyzer_AimDeviation::~Analyzer_AimDeviation() {}
 void Analyzer_AimDeviation::AnalyzeStd(Play* _play)
 {
 	if (_play->replay->isValid() == false) return;
-	std::vector<Hitobject*>& hitobjects = _play->beatmap->getHitobjects();
+	Database<Hitobject>& hitobjects = _play->beatmap->getHitobjects();
 
 	std::vector<osu::TIMING>& tapDeviations = *AnalysisStruct::beatmapAnalysis.getAnalyzer("Tap Deviation (ms)")->getData();
 	osu::TIMING timing;
@@ -25,7 +25,7 @@ void Analyzer_AimDeviation::AnalyzeStd(Play* _play)
 		if (tapDeviation.press != true) continue; // don't record non presses
 
 		// find the object
-		int i = OSUSTANDARD::FindHitobjectAt(hitobjects, tapDeviation.time, tapDeviation.data <= 0);
+		int i = hitobjects.Find(tapDeviation.time, true)[0];
 		vector2d<double> posTarget, posPlayer;
 
 		// Iterate on sliders

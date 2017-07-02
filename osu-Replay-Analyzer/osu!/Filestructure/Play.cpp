@@ -138,8 +138,10 @@ void Play::ApplyTimings()
 	}
 
 	// Mod hitobject timings
-	for (auto hitobject : this->beatmap->modHitobjects)
+	for (int i = 0; i < beatmap->modHitobjects.size(); i++)
 	{
+		Hitobject* hitobject = beatmap->modHitobjects[i];
+
 		hitobject->time += adjustedOffset;
 		hitobject->time /= divisor;
 
@@ -182,8 +184,10 @@ void Play::ApplyVisual()
 	if (activeMods.getModifier().HR)
 	{
 		// flip on the x axis
-		for (auto &hitobject : this->beatmap->modHitobjects)
+		for(int i = 0; i < beatmap->modHitobjects.size(); i++)
 		{
+			Hitobject* hitobject = beatmap->modHitobjects[i];
+
 			// Flip hitobject's position
 			hitobject->setPos(irr::core::vector2d<double>(hitobject->getPos().X, 384 - hitobject->getPos().Y));
 			

@@ -15,7 +15,7 @@ Analyzer_TapEventIntervals::~Analyzer_TapEventIntervals(){}
 
 void Analyzer_TapEventIntervals::AnalyzeStd(Play* _play)
 {
-	std::vector<Hitobject*>& hitobjects = _play->beatmap->getHitobjects();
+	Database<Hitobject>& hitobjects = _play->beatmap->getHitobjects();
 	osu::TIMING timing;
 	timing.data = 0;
 
@@ -101,7 +101,7 @@ void Analyzer_TapEventIntervals::AnalyzeTaiko(Play* _play)
 
 void Analyzer_TapEventIntervals::AnalyzeMania(Play* _play)
 {
-	std::vector<Hitobject*>& hitobjects = _play->beatmap->getHitobjects();
+	Database<Hitobject>& hitobjects = _play->beatmap->getHitobjects();
 	int KEYS = _play->beatmap->getMods().getCS();
 	
 	osu::TIMING timing;

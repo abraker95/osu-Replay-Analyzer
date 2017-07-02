@@ -9,7 +9,7 @@ Analyzer_NoteRate::~Analyzer_NoteRate() {}
 
 void Analyzer_NoteRate::AnalyzeStd(Play* _play)
 {
-	std::vector<Hitobject*>& hitobjects = _play->beatmap->getHitobjects();
+	Database<Hitobject>& hitobjects = _play->beatmap->getHitobjects();
 	osu::TIMING timing;
 		timing.data = 0;
 
@@ -40,7 +40,7 @@ void Analyzer_NoteRate::AnalyzeTaiko(Play* _play)
 
 void Analyzer_NoteRate::AnalyzeMania(Play* _play)
 {
-	std::vector<Hitobject*>& hitobjects = _play->beatmap->getHitobjects();
+	Database<Hitobject>& hitobjects = _play->beatmap->getHitobjects();
 	int KEYS = _play->beatmap->getMods().getCS();
 	
 	long currTime = hitobjects[0]->getTime();

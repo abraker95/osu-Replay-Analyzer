@@ -10,7 +10,7 @@ Analyzer_PathPerpendicularity::~Analyzer_PathPerpendicularity() {}
 
 void Analyzer_PathPerpendicularity::AnalyzeStd(Play* _play)
 {
-	std::vector<Hitobject*>& hitobjects = _play->beatmap->getHitobjects();
+	Database<Hitobject>& hitobjects = _play->beatmap->getHitobjects();
 	osu::TIMING timing;
 		timing.data = 0;
 

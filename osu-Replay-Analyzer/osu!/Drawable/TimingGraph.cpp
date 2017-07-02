@@ -135,7 +135,7 @@ void TimingGraph::drawHitobjectHitTimings(Window &_win)
 	std::pair<int, int> viewTimes = this->getViewTimes();
 	int startIndex = -1, endIndex = -1;
 
-	std::vector<Hitobject*>& hitobjects = beatmap->getHitobjects();
+	Database<Hitobject>& hitobjects = beatmap->getHitobjects();
 
 	if (viewTimes.first >= hitobjects[0]->getTime())
 		startIndex = beatmap->FindHitobjectAt(viewTimes.first);
