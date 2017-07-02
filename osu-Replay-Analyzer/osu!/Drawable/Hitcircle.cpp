@@ -31,36 +31,35 @@ void Hitcircle::Draw(Window &_win)
 	double opacity = OSUSTANDARD::getOpacityAt(*hitobject, *(this->viewTime), mods->getAR(), mods->getModifier().HD);
 	SColor fade = SColor(255*opacity, edgeCol.getRed(), edgeCol.getGreen(), edgeCol.getBlue());
 	
+	// Draw the hitcircle
 	vector2df radius(this->width / 2.0, this->height / 2.0);
 	DrawArc(_win, this->absXpos, this->absYpos, MIN(radius.X, radius.Y), fade);
 
-	// draw slider
-	if (hitobject->IsHitObjectType(SLIDER))
+	// If not draw slider, we're done
+	if (!hitobject->IsHitObjectType(SLIDER)) return;
+
+	// If it's just a stationary slider, there is no point drawing the sliderbody
+	double velocity = hitobject->getSlider()->getVelocity();
+	if (velocity == 0.0) return;
+
+	double itrStep = 1.0 / velocity;
+	long startTime = hitobject->getTime(),
+  		 endTime = hitobject->getSlider()->getEndTime();
+
+	itrStep = (((double)endTime - (double)startTime) / itrStep > MAX_SLIDER_ITR_STEPS)? (((double)endTime - (double)startTime) / MAX_SLIDER_ITR_STEPS): itrStep;
+	for (double t = startTime; t < endTime - itrStep; t += itrStep)
 	{
-		double velocity = hitobject->getSlider()->getVelocity();
-		double itrStep = 1.0 / velocity;
-	
-		long startTime = hitobject->getTime(),
-			 endTime = hitobject->getSlider()->getEndTime();
-		 
-		if (velocity != 0.0)
-		{
-			for (double t = startTime; t < endTime - itrStep; t += MAX(1, itrStep))
-			{
-				vector2d<double> currSliderPoint = hitobject->getSlider()->GetSliderPos(t);
-				vector2d<double> nextSliderPoint = hitobject->getSlider()->GetSliderPos(MIN(t + itrStep, endTime - itrStep));
+		vector2d<double> currSliderPoint = hitobject->getSlider()->GetSliderPos(t);
+		vector2d<double> nextSliderPoint = hitobject->getSlider()->GetSliderPos(t + itrStep);
 
-				_win.driver->draw2DLine(vector2di(currSliderPoint.X*getWidthRatio() + parent->getPos().X, currSliderPoint.Y*getHeightRatio() + parent->getPos().Y),
-										vector2di(nextSliderPoint.X*getWidthRatio() + parent->getPos().X, nextSliderPoint.Y*getHeightRatio() + parent->getPos().Y),
-										fade);
-
-				//_win.driver->drawPixel(sliderPoint.X*getWidthRatio() + parent->getPos().X, sliderPoint.Y*getHeightRatio() + parent->getPos().Y, fade);
-
-				if (BTWN(t, *(this->viewTime), t + itrStep))
-					DrawArc(_win, currSliderPoint.X*getWidthRatio() + parent->getPos().X, currSliderPoint.Y*getHeightRatio() + parent->getPos().Y, 5, fade);  // draw slider point
-			}
-		}
+		_win.driver->draw2DLine(vector2di(currSliderPoint.X*getWidthRatio() + parent->getPos().X, currSliderPoint.Y*getHeightRatio() + parent->getPos().Y),
+								vector2di(nextSliderPoint.X*getWidthRatio() + parent->getPos().X, nextSliderPoint.Y*getHeightRatio() + parent->getPos().Y),
+								fade);
 	}
+
+	// draw slider point
+	vector2d<double> sliderPoint = hitobject->getSlider()->GetSliderPos(*(this->viewTime));
+	DrawArc(_win, sliderPoint.X*getWidthRatio() + parent->getPos().X, sliderPoint.Y*getHeightRatio() + parent->getPos().Y, 5, fade);
 }
 
 /*position2di Hitcircle::getEndPoint()

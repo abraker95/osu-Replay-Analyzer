@@ -34,6 +34,8 @@ class Hitcircle: public GuiObj
 		const SColor HIGHLIGHTED_COLOR = SColor(255, 255, 255, 255);
 		const SColor SELECTED_COLOR = SColor(255, 255, 100, 100);
 
+		const double MAX_SLIDER_ITR_STEPS = 100.0; 
+
 		void IdleLogic(Window &_win);
 		void HighlightedLogic(Window &_win);
 		void SelectedLogic(Window &_win);
