@@ -5,16 +5,21 @@ template <typename T>
 class EntryDB
 {
 	public:
-		EntryDB(T* _obj, int _val)
+		bool manage;
+
+		EntryDB(T* _obj, int _val, bool _manage)
 		{
 			obj = _obj;
 			val = new int(_val);
+			manage = _manage;
 		}
 
 		~EntryDB()
 		{
 			delete val;
-			delete obj;
+
+			if(manage)
+				delete obj;
 		}
 
 		T* getObj()

@@ -15,11 +15,11 @@ class Database
 		Database() {}
 		~Database() { Clear(); }
 
-		void Insert(T* _entry, int _val)
+		void Insert(T* _entry, int _val, bool manage = true)
 		{	
 			assert(entriesObj.size() == entriesVal.size());
 
-			EntryDB<T>* entry = new EntryDB<T>(_entry, _val);
+			EntryDB<T>* entry = new EntryDB<T>(_entry, _val, manage);
 
 			bool empty = (this->entriesObj.size() == 0) && (this->entriesVal.size() == 0);
 			if (empty)
@@ -180,6 +180,14 @@ class Database
 
 			std::vector<EntryDB<T>*>().swap(entriesObj);
 			std::vector<EntryDB<T>*>().swap(entriesVal);
+		}
+
+		void setManage(T* _obj, bool _manage)
+		{
+			std::vector<int> found = ObjFind(_obj, false);
+			if (found.size() == 0) return;
+
+			entriesObj[found[0]]->manage = _manage;
 		}
 
 		int size()
