@@ -80,7 +80,10 @@ class Database
 				if (foundVal.size() > 0)
 				{
 					for (int idxVal : foundVal)
-						entriesVal.erase(entriesVal.begin() + idxVal);
+					{
+						if (entriesVal[idxVal]->getObj() == _obj)
+							entriesVal.erase(entriesVal.begin() + idxVal);
+					}
 				}
 
 				delete entriesObj[idxObj];
