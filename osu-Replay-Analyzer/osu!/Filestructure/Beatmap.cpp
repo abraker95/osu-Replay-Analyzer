@@ -93,16 +93,19 @@ std::string Beatmap::getMD5()
 void Beatmap::ClearModified()
 {
 	modHitobjects.Clear();
-
-	modTimingPoints.clear();
-	std::vector<TimingPoint>().swap(modTimingPoints);
+	modTimingPoints.Clear();
 }
 
 void Beatmap::ResetModified()
 {
 	// reset diffs, timingpoints, and modified hitobjects
 	ClearModified();
-	modTimingPoints = origTimingPoints;
+	
+	for (int i = 0; i < origTimingPoints.size(); i++)
+	{
+		auto timingPoint = origTimingPoints[i];
+		modTimingPoints.Insert(new TimingPoint(*timingPoint), timingPoint->offset);
+	}
 
 	for (int i = 0; i < origHitobjects.size(); i++)
 	{
@@ -134,22 +137,22 @@ TimingPoint* Beatmap::getTimingPointAt(int _time)
 	while (start <= end)
 	{
 		mid = (start + end) / 2;
-		if (BTWN(this->modTimingPoints[mid].offset, _time, this->modTimingPoints[mid + 1].offset - 1))
+		if (BTWN(modTimingPoints[mid]->offset, _time, modTimingPoints[mid + 1]->offset - 1))
 		{
 			/// \TODO: check for latest inherited timing point
 			// check for the same timing on next timing point since it can be inherited
-			if (this->modTimingPoints[mid + 1].offset == this->modTimingPoints[mid].offset)
-				return &(this->modTimingPoints[mid + 1]);
+			if (modTimingPoints[mid + 1]->offset == modTimingPoints[mid]->offset)
+				return modTimingPoints[mid + 1];
 			else
-				return &(this->modTimingPoints[mid]);
+				return modTimingPoints[mid];
 		}
-		else if (_time < this->modTimingPoints[mid].offset)
+		else if (_time < modTimingPoints[mid]->offset)
 			end = mid - 1;
 		else start = mid + 1;
 	}
 
 	/// \TODO: Test the fuck out of this. I think it's bugged 
-	return &this->modTimingPoints[modTimingPoints.size() - 1];
+	return modTimingPoints[modTimingPoints.size() - 1];
 }
 
 Hitobject* Beatmap::getHitobjectAt(int _time)
@@ -591,30 +594,30 @@ bool Beatmap::ParseHitobjectsSection(std::ifstream &_filepath, std::string &_lin
 
 int Beatmap::ReadTimingpoints(std::string line)
 {
-	TimingPoint tPoint;
+	TimingPoint* tPoint = new TimingPoint;
 	std::vector<std::string> tokens;
 	FileReader::tokenize(line, tokens, ",");
 
 	// Make sure we got the correct data
 	if (tokens.size() < 2) return 0;
 
-	tPoint.offset = atoi(tokens[0].c_str());
-	tPoint.beatInterval = atof(tokens[1].c_str());
+	tPoint->offset = atoi(tokens[0].c_str());
+	tPoint->beatInterval = atof(tokens[1].c_str());
 
-	if (tokens.size() > 6)		tPoint.inherited = !atoi(tokens[6].c_str());
-	else						tPoint.inherited = 0;
+	if (tokens.size() > 6)		tPoint->inherited = !atoi(tokens[6].c_str());
+	else						tPoint->inherited = 0;
 
 	// Old maps don't have metres
-	if (tokens.size() >= 3)		tPoint.meter = atoi(tokens[2].c_str());
-	else						tPoint.meter = 4;
+	if (tokens.size() >= 3)		tPoint->meter = atoi(tokens[2].c_str());
+	else						tPoint->meter = 4;
 
-	if (tPoint.offset == -1 || tPoint.meter == -1)
+	if (tPoint->offset == -1 || tPoint->meter == -1)
 	{
 		// Wrong timing point data!
 		return -1;
 	}
 
-	this->origTimingPoints.push_back(tPoint);
+	this->origTimingPoints.Insert(tPoint, tPoint->offset);
 	return 1;
 }
 
@@ -673,16 +676,17 @@ void Beatmap::PrepareTimingPoints()
 	double oldbeat = -100;
 	int base = 0;
 
-	for (auto& TP : this->modTimingPoints)
+	for (int i = 0; i < modTimingPoints.size(); i++)
 	{
-		if (TP.inherited)
+		TimingPoint* TP = modTimingPoints[i];
+		if (TP->inherited)
 		{
-			TP.beatLength = base;
+			TP->beatLength = base;
 
-			if (TP.beatInterval <= 0)
+			if (TP->beatInterval <= 0)
 			{
-				SliderMult = TP.beatInterval;
-				oldbeat = TP.beatInterval;
+				SliderMult = TP->beatInterval;
+				oldbeat = TP->beatInterval;
 			}
 			else
 				SliderMult = oldbeat;
@@ -690,16 +694,16 @@ void Beatmap::PrepareTimingPoints()
 		else
 		{
 			SliderMult = -100;
-			BPM = TP.getBPM(true);
-			TP.beatLength = TP.beatInterval;
-			base = TP.beatInterval;
+			BPM = TP->getBPM(true);
+			TP->beatLength = TP->beatInterval;
+			base = TP->beatInterval;
 
 			if (this->bpmMin > BPM)	this->bpmMin = BPM;
 			if (this->bpmMax < BPM)	this->bpmMax = BPM;
 		}
 
-		TP.BPM = BPM;
-		TP.sm = SliderMult;
+		TP->BPM = BPM;
+		TP->sm = SliderMult;
 	}
 }
 

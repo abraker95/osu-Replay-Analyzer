@@ -130,11 +130,13 @@ void Play::ApplyTimings()
 		adjustedOffset = 24;
 
 	// Mod timing points
-	for (auto &tp : this->beatmap->modTimingPoints)
+	for(int i = 0; i < beatmap->modTimingPoints.size(); i++)
 	{
-		if (tp.beatInterval > 0)
-			tp.beatInterval /= divisor;
-		tp.offset = ceil((double)tp.offset / divisor) + (double)adjustedOffset;
+		TimingPoint* tp = beatmap->modTimingPoints[i];
+
+		if (tp->beatInterval > 0)
+			tp->beatInterval /= divisor;
+		tp->offset = ceil((double)tp->offset / divisor) + (double)adjustedOffset;
 	}
 
 	// Mod hitobject timings

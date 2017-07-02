@@ -75,9 +75,9 @@ class Beatmap
 		Metadata metadata;
 		GAMEMODE gamemode;
 
-		std::vector<TimingPoint> origTimingPoints, modTimingPoints;
 		
 		//std::vector<Hitobject*> origHitobjects, modHitobjects;
+		Database<TimingPoint> origTimingPoints, modTimingPoints;
 		Database<Hitobject> origHitobjects, modHitobjects;
 
 		/// \NOTE: unused for now
