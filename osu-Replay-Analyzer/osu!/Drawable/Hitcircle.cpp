@@ -45,7 +45,7 @@ void Hitcircle::Draw(Window &_win)
 		 
 		if (velocity != 0.0)
 		{
-			for (double t = startTime; t < endTime - itrStep; t += itrStep)
+			for (double t = startTime; t < endTime - itrStep; t += MAX(1, itrStep))
 			{
 				vector2d<double> currSliderPoint = hitobject->getSlider()->GetSliderPos(t);
 				vector2d<double> nextSliderPoint = hitobject->getSlider()->GetSliderPos(MIN(t + itrStep, endTime - itrStep));
