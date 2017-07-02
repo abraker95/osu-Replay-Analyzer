@@ -1,14 +1,16 @@
 #include "GuiObj.h"
 #include "../utils/mathUtils.h"
+#include "../utils/DB/Database.h"
 
 #include <vector>
 
 //	#define DEBUG
 
-std::vector<GuiObj*> guiEnv;
+Database<GuiObj> guiEnv;
 GuiObj* top;
 
 bool sorted;
+
 
 void UpdateGuiObjs(Window& _win)
 {
@@ -31,36 +33,9 @@ bool sortGui(GuiObj* i, GuiObj* j)
 	return i < j;
 }
 
-
-void SortGuiObjs()
-{
-	std::sort(guiEnv.begin(), guiEnv.end(), sortGui);
-	sorted = true;
-}
-
 int FindGuiObj(GuiObj* _guiObj)
 {
-	if (!sorted)
-		SortGuiObjs();
-
-	int start = 0;
-	int end = guiEnv.size() - 1;
-	int mid;
-
-	while (start <= end)
-	{
-		mid = (start + end) / 2;
-
-		if (guiEnv[mid] == _guiObj)
-			return mid;
-
-		if (_guiObj < guiEnv[mid])
-			end = mid - 1;
-		else
-			start = mid + 1;
-	}
-
-	return -1;
+	return guiEnv.Find(_guiObj, false);
 }
 
 
@@ -80,7 +55,7 @@ GuiObj::GuiObj(int _xpos, int _ypos, int _width, int _height, GuiObj* _parent)
 	marginRight = 0;
 	marginBtm = 0;
 
-	guiEnv.push_back(this);
+	guiEnv.Insert(this, (int)this);
 	id = guiEnv.size() - 1;
 
 	sorted = false;
@@ -88,12 +63,8 @@ GuiObj::GuiObj(int _xpos, int _ypos, int _width, int _height, GuiObj* _parent)
 
 GuiObj::~GuiObj()
 {
-	int i = FindGuiObj(this);
-
-	if (i == -1) return;				// make sure we found the guiObj
-	if (guiEnv[i] != this) return;		// make sure it is indeed the guiObj (findGuiObj is working correctly?)
-	
-	guiEnv.erase(guiEnv.begin() + i);
+	guiEnv.setManage(this, false);
+	guiEnv.Remove(this);
 }
 
 void GuiObj::Update(Window& _win)
@@ -138,15 +109,11 @@ void GuiObj::setMargin(int _right, int _btm)
 
 void GuiObj::setParent(GuiObj* _parent)
 {
-	int i = FindGuiObj(this);
-
-	if (i == -1) return;				// make sure we found the guiObj
-	if (guiEnv[i] != this) return;		// make sure it is indeed the guiObj (findGuiObj is working correctly?)
-
-	guiEnv.erase(guiEnv.begin() + i);	// the object will be managed by the parent instead
+	guiEnv.setManage(this, false);
+	guiEnv.Remove(this);
 	
 	parent = _parent;
-	//_parent->children.push_back(this);
+	parent->children.Insert(this, (int)this);
 }
 
 core::vector2di GuiObj::getPos() const

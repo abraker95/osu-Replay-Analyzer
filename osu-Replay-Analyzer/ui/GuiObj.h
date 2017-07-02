@@ -2,13 +2,14 @@
 #define GUIOBJ_H
 
 #include <string>
+#include "../utils/DB/Database.h"
 #include "Window.h"
 
 class GuiObj
 {
-//	friend class GuiObj;
-
 	public:
+		virtual ~GuiObj();
+
 		enum CLIPPOS
 		{
 							  NONEPOS = 0,
@@ -48,15 +49,14 @@ class GuiObj
 
 	protected:
 		GuiObj(int _xpos, int _ypos, int _width, int _height, GuiObj* _parent = nullptr);
-		virtual ~GuiObj();
-
+		
 		int xpos, ypos;
 		int absXpos, absYpos;
 		int width, height;
 		int marginRight, marginBtm;
 		
 		GuiObj* parent;
-		//std::vector<GuiObj*> children;
+		Database<GuiObj> children;
 		
 		int id;
 		int depth;
@@ -76,7 +76,6 @@ class GuiObj
 
 
 void UpdateGuiObjs(Window& _win);
-void SortGuiObjs();
 void SetRelativeGuiLayer(GuiObj* _top, GuiObj* _btm);
 int FindGuiObj(GuiObj* _guiObj);
 
