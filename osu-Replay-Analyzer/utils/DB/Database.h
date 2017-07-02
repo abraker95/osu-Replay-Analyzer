@@ -19,35 +19,34 @@ class Database
 		{	
 			assert(entriesObj.size() == entriesVal.size());
 
-			EntryDB<T>* entryObj = new EntryDB<T>(_entry, _val);
-			EntryDB<T>* entryVal = new EntryDB<T>(_entry, _val);
+			EntryDB<T>* entry = new EntryDB<T>(_entry, _val);
 
 			bool empty = (this->entriesObj.size() == 0) && (this->entriesVal.size() == 0);
 			if (empty)
 			{
-				this->entriesObj.push_back(entryObj);
-				this->entriesVal.push_back(entryVal);
+				this->entriesObj.push_back(entry);
+				this->entriesVal.push_back(entry);
 				return;
 			}
 
 			if(this->entriesObj[entriesObj.size() - 1]->getObjAddr() < (void*)_entry)
 			{
-				this->entriesObj.push_back(entryObj);
+				this->entriesObj.push_back(entry);
 			}
 			else
 			{
 				std::vector<int> idxObj = this->ObjFind(_entry, true);
-				this->entriesObj.insert(entriesObj.begin() + idxObj[0], entryObj);
+				this->entriesObj.insert(entriesObj.begin() + idxObj[0], entry);
 			}
 
 			if (*(this->entriesVal[entriesVal.size() - 1]->getVal()) < _val)
 			{
-				this->entriesVal.push_back(entryVal);
+				this->entriesVal.push_back(entry);
 			}
 			else
 			{
 				std::vector<int> idxVal = this->Find(_val, true);
-				this->entriesVal.insert(entriesVal.begin() + idxVal[0], entryVal);
+				this->entriesVal.insert(entriesVal.begin() + idxVal[0], entry);
 			}
 		}
 
@@ -62,10 +61,7 @@ class Database
 				if (foundObj.size() > 0)
 				{
 					for (int idxObj : foundObj)
-					{
-						delete entriesObj[idxObj]
 						entriesObj.erase(entriesObj.begin() + idxObj);
-					}
 				}
 
 				delete entriesObj[idxObj]
@@ -84,10 +80,7 @@ class Database
 				if (foundVal.size() > 0)
 				{
 					for (int idxVal : foundVal)
-					{
-						delete entriesVal[idxVal]
 						entriesVal.erase(entriesVal.begin() + idxVal);
-					}
 				}
 
 				delete entriesObj[idxObj]
@@ -127,7 +120,6 @@ class Database
 			if (_nearest) return std::vector<int>({ mid });
 			else          return std::vector<int>();
 		}
-
 
 		int Find(T* _obj, bool _nearest)
 		{
@@ -178,24 +170,8 @@ class Database
 		{
 			assert(entriesObj.size() == entriesVal.size());
 
-			for (EntryDB<T>* entry : entriesObj)
-			{
-				if (entry != nullptr)
-				{
-					delete entry;
-					entry = nullptr;
-				}
-			}
-
-			for (EntryDB<T>* entry : entriesVal)
-			{
-				if (entry != nullptr)
-				{
-					delete entry;
-					entry = nullptr;
-				}
-			}
-
+			for (EntryDB<T>* entry : entriesObj) delete entry;
+		
 			entriesObj.clear();
 			entriesVal.clear();
 

@@ -13,11 +13,8 @@ class EntryDB
 
 		~EntryDB()
 		{
-			if (val != nullptr)
-			{
-				delete val;
-				val = nullptr;
-			}
+			delete val;
+			delete obj;
 		}
 
 		T* getObj()
