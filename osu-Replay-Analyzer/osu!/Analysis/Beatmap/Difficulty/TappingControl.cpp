@@ -28,7 +28,10 @@ void Analyzer_TappingControl::AnalyzeStd(Play* _play)
 		if (noteRateChanges[i].data == INFINITY) continue;
 		int key = noteRateChanges[i].key;
 
-		osu::TIMING noteRate = noteRates[osu::FindTimingAt(noteRates, noteRateChanges[i].time)];
+		int t = osu::FindTimingAt(noteRates, noteRateChanges[i].time);
+		if (!BTWN(0, t, noteRateChanges.size() - 1)) continue;
+
+		osu::TIMING noteRate = noteRates[t];
 
 		const double MAX_INFLUENCE = 0.9;
 		double influencers = noteRate.data /* pow(noteRateChanges[i - 1].data / 10.0, 10)*/;
