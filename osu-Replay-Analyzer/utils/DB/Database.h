@@ -131,7 +131,7 @@ class Database
 			if (foundObj.size() == 0) return -1;
 
 			// Resolve it to sorted value index
-			std::vector<int> foundVal = Find(entriesObj[foundObj[0]]->getVal())
+			std::vector<int> foundVal = Find(*(entriesObj[foundObj[0]]->getVal()), false);
 			if (foundVal.size() == 0) return -1;
 
 			return foundVal[0];
