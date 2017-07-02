@@ -17,17 +17,38 @@ class Database
 
 		void Insert(T* _entry, int _val)
 		{	
-			std::vector<int> idxObj = this->ObjFind(_entry, true);
-			std::vector<int> idxVal = this->Find(_val, true);
+			assert(entriesObj.size() == entriesVal.size());
 
 			EntryDB<T>* entryObj = new EntryDB<T>(_entry, _val);
 			EntryDB<T>* entryVal = new EntryDB<T>(_entry, _val);
 
-			if (this->entriesObj.size() == 0) this->entriesObj.push_back(entryObj);
-			else                              this->entriesObj.insert(entriesObj.begin() + idxObj[0], entryObj);
+			bool empty = (this->entriesObj.size() == 0) && (this->entriesVal.size() == 0);
+			if (empty)
+			{
+				this->entriesObj.push_back(entryObj);
+				this->entriesVal.push_back(entryVal);
+				return;
+			}
 
-			if (this->entriesVal.size() == 0) this->entriesVal.push_back(entryVal);
-			else							  this->entriesVal.insert(entriesVal.begin() + idxVal[0], entryVal);
+			if(this->entriesObj[entriesObj.size() - 1]->getObjAddr() < (void*)_entry)
+			{
+				this->entriesObj.push_back(entryObj);
+			}
+			else
+			{
+				std::vector<int> idxObj = this->ObjFind(_entry, true);
+				this->entriesObj.insert(entriesObj.begin() + idxObj[0], entryObj);
+			}
+
+			if (*(this->entriesVal[entriesVal.size() - 1]->getVal()) < _val)
+			{
+				this->entriesVal.push_back(entryVal);
+			}
+			else
+			{
+				std::vector<int> idxVal = this->Find(_val, true);
+				this->entriesVal.insert(entriesVal.begin() + idxVal[0], entryVal);
+			}
 		}
 
 		void Remove(int _val, std::vector<int> _select = std::vector<int>())
