@@ -35,7 +35,7 @@ void GenHitobjectAtlas(Play* _play)
 		column.Clear();
 
 	// Reserve space in vector
-	Database<Hitobject> hitobjects = _play->beatmap->getHitobjects();
+	Database<Hitobject>& hitobjects = _play->beatmap->getHitobjects();
 	hitobjectAtlas.resize(_play->beatmap->getMods().getCS());
 
 	// Fill in vector with list of hitobject indices correspending the column the hitobject is at

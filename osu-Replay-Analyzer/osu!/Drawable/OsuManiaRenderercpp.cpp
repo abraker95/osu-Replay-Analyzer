@@ -19,7 +19,7 @@ OsuManiaRenderer::OsuManiaRenderer(Play* _play, long* _viewTime, GuiObj* _parent
 
 OsuManiaRenderer::~OsuManiaRenderer()
 {
-	ClearHitnotes();
+	children.Clear();
 }
 
 void OsuManiaRenderer::SetLayers(int _layer)
@@ -30,26 +30,17 @@ void OsuManiaRenderer::SetLayers(int _layer)
 
 // ---------- [PRIVATE] ----------
 
-void OsuManiaRenderer::ClearHitnotes()
-{
-	for (HitNote* note : hitNotes)
-		if (note != nullptr)
-			delete note;
-
-	hitNotes.clear();
-	std::vector<HitNote*>().swap(hitNotes);
-}
 
 void OsuManiaRenderer::GenerateHitNotes()
 {
-	ClearHitnotes();
+	children.Clear();
 	Beatmap* beatmap = play->beatmap;
 
 	hitNotes.resize(beatmap->getHitobjects().size());
 	for (int i = 0; i < hitNotes.size(); i++)
 	{
 		hitNotes[i] = new HitNote(play->getMod(), beatmap->getHitobjects()[i], viewTime, &zoom);
-			hitNotes[i]->setParent(this);
+		hitNotes[i]->setParent(this);
 	}
 }
 
@@ -62,30 +53,11 @@ void OsuManiaRenderer::Draw(Window& _win)
 {
 	_win.driver->draw2DRectangleOutline(recti(absXpos, absYpos, absXpos + width, absYpos + height), SColor(255, 255, 255, 255));
 
-	if (layerState & VISIBLE)
-	{
-		this->RenderVisible(_win);
-	}
-
-	if (layerState & REPLAY)
-	{
-		this->RenderReplay(_win);
-	}
-
-	if (layerState & TIMINGS)
-	{
-		this->RenderTimings(_win);
-	}
-
-	if (layerState & HITIMINGS)
-	{
-		this->RenderHitTimings(_win);
-	}
-
-	if (layerState & TAPPINGDIFFS)
-	{
-		this->RenderTappingDiffs(_win);
-	}
+	if (layerState & VISIBLE)      this->RenderVisible(_win);
+	if (layerState & REPLAY)       this->RenderReplay(_win); 
+	if (layerState & TIMINGS)      this->RenderTimings(_win);
+	if (layerState & HITIMINGS)    this->RenderHitTimings(_win);
+	if (layerState & TAPPINGDIFFS) this->RenderTappingDiffs(_win);
 }
 
 void OsuManiaRenderer::RenderVisible(Window& _win)
