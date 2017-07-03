@@ -80,21 +80,10 @@ void HitNote::UpdateInternal(Window &_win)
 {
 	switch (state)
 	{
-	case IDLE:
-		IdleLogic(_win);
-		break;
-
-	case HIGHLIGHTED:
-		HighlightedLogic(_win);
-		break;
-
-	case SELECTED:
-		SelectedLogic(_win);
-		break;
-
-	default:
-		// ???
-		break;
+		case IDLE:        IdleLogic(_win);         break;
+		case HIGHLIGHTED: HighlightedLogic(_win);  break;
+		case SELECTED:    SelectedLogic(_win);     break;
+		default:          /* ??? */                break;
 	}
 }
 

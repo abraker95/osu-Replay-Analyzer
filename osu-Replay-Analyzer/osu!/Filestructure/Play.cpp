@@ -23,14 +23,9 @@ Play::Play()
 
 Play::~Play()
 {
-	if (beatmap != nullptr)
-		delete beatmap;
-
-	if (replay != nullptr)
-		delete replay;
-
-	if (scoreEngine != nullptr)
-		delete scoreEngine;
+	if (beatmap != nullptr) delete beatmap;
+	if (replay != nullptr)  delete replay;
+	if (scoreEngine != nullptr) delete scoreEngine;
 }
 
 /// \TODO: Perhaps split this off to another thread
@@ -86,20 +81,10 @@ void Play::setMods(ModSource _source)
 	/// \TODO: Prevent chnanging certain mod on specific gamemodes (like mania and CS)
 	switch (_source)
 	{
-		case BEATMAP:
-			activeMods = beatmap->getMods();
-			break;
-
-		case REPLAY:
-			activeMods = replay->getMods();
-			break;
-
-		case CUSTOM:
-			activeMods = this->custom;
-			break;
-
-		default:
-			break;
+		case BEATMAP: activeMods = beatmap->getMods();  break;
+		case REPLAY:  activeMods = replay->getMods();   break;
+		case CUSTOM:  activeMods = this->custom;        break;
+		default:                                        break;
 	}
 
 	ApplyMods();

@@ -93,28 +93,12 @@ void GamemodeRenderer::Draw(Window& _win)
 		
 	switch (gamemode)
 	{
-		case OSU_STANDARD:
-			RenderOsuStandard(_win);
-			break;
-
-		case OSU_CATCH:
-			RenderOsuCatch(_win);
-			break;
-
-		case OSU_TAIKO:
-			RenderOsuTaiko(_win);
-			break;
-
-		case OSU_MANIA:
-			RenderOsuMania(_win);
-			break;
-
-		case OSU_DODGE:
-			RenderOsuDodge(_win);
-			break;
-		
-		default:
-			break;
+		case OSU_STANDARD: RenderOsuStandard(_win);  break;
+		case OSU_CATCH:    RenderOsuCatch(_win);     break;
+		case OSU_TAIKO:    RenderOsuTaiko(_win);     break;
+		case OSU_MANIA:    RenderOsuMania(_win);     break;
+		case OSU_DODGE:    RenderOsuDodge(_win);     break;
+		default:                                     break;
 	}
 }
 
